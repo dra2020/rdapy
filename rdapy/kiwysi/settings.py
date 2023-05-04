@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+#
+# GLOBAL SETTINGS ACROSS kiwysic/*.py
+
+# CONSTANTS FOR SAMPLE TUPLES
+
+INDEX = 0
+VALUE = 1
+
+
+# END
+
+
+# ALL CONSTANTS ARE VISIBLE EVERYWHERE
