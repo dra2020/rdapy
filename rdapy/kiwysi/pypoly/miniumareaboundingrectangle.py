@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-#
-# TODO - Compare using shapely's minimum_rotated_rectangle property, instead of this.
-#
-# From:
-# - https://stackoverflow.com/questions/13542855/python-help-to-implement-an-algorithm-to-find-the-minimum-area-rectangle-for-gi/14675742#14675742
-# - https://gis.stackexchange.com/questions/22895/finding-minimum-area-rectangle-for-given-points
+
+"""
+MINIMUM AREA BOUNDING RECTANGLE
+
+From:
+- https://stackoverflow.com/questions/13542855/python-help-to-implement-an-algorithm-to-find-the-minimum-area-rectangle-for-gi/14675742#14675742
+- https://gis.stackexchange.com/questions/22895/finding-minimum-area-rectangle-for-given-points
+
+TODO - Compare using shapely's minimum_rotated_rectangle property, instead of this.
+"""
 
 import numpy as np
 from scipy.spatial import ConvexHull
@@ -19,13 +23,14 @@ def minimum_bounding_rectangle(points):
     :rval: an nx2 matrix of coordinates
     """
     from scipy.ndimage.interpolation import rotate
-    pi2 = np.pi/2.
+
+    pi2 = np.pi / 2.0
 
     # get the convex hull for the points
     hull_points = points[ConvexHull(points).vertices]
 
     # calculate edge angles
-    edges = np.zeros((len(hull_points)-1, 2))
+    edges = np.zeros((len(hull_points) - 1, 2))
     edges = hull_points[1:] - hull_points[:-1]
 
     angles = np.zeros((len(edges)))
@@ -36,16 +41,14 @@ def minimum_bounding_rectangle(points):
 
     # find rotation matrices
     # XXX both work
-    rotations = np.vstack([
-        np.cos(angles),
-        np.cos(angles-pi2),
-        np.cos(angles+pi2),
-        np.cos(angles)]).T
-#     rotations = np.vstack([
-#         np.cos(angles),
-#         -np.sin(angles),
-#         np.sin(angles),
-#         np.cos(angles)]).T
+    rotations = np.vstack(
+        [np.cos(angles), np.cos(angles - pi2), np.cos(angles + pi2), np.cos(angles)]
+    ).T
+    #     rotations = np.vstack([
+    #         np.cos(angles),
+    #         -np.sin(angles),
+    #         np.sin(angles),
+    #         np.cos(angles)]).T
     rotations = rotations.reshape((-1, 2, 2))
 
     # apply rotations to the hull
@@ -75,3 +78,10 @@ def minimum_bounding_rectangle(points):
     rval[3] = np.dot([x1, y1], r)
 
     return rval
+
+
+# LIMIT WHAT GETS EXPORTED.
+
+__all__ = ["minimum_bounding_rectangle"]
+
+### END ###

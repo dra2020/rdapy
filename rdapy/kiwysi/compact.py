@@ -9,8 +9,6 @@ from shapely.ops import transform
 from shapely.ops import unary_union  # Supersedes cascaded_union
 
 from .pypoly import *
-from .settings import *
-from .utils import *
 
 
 def score_shape(shp, geodesic=True):

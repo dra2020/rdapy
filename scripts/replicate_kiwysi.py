@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-#
-# SAMPLE CODE TO REPLICATE THE KIWYSI COMPACTNESS MODEL
+
+"""
+SAMPLE CODE TO REPLICATE THE KIWYSI COMPACTNESS MODEL
+"""
 
 from pyproj import CRS
-
 from rdapy import *
 
 

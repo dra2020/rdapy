@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
-#
-# POLYGON ATTRIBUTES: AREA, PERIMETER, DIAMETER
+
+"""
+POLYGON ATTRIBUTES: AREA, PERIMETER, DIAMETER
+
+- Either do flat / projected calculations, using whatever projection is
+  associated with the shape -- it should be in meters, e.g., Albers equal-area
+  conic 
+- Or do geodesic calculations that take into account the curvative of
+  the earth. Handle both MultiPolygons and Polygons.
+"""
 
 from geographiclib.geodesic import Geodesic
 
 from .smallestenclosingcircle import make_circle
 from .polygoncoordinates import get_polygon_coordinates, get_polygons_coordinates
-
-
-# Calculate the area, perimeter, and diameter for a shape:
-# - Either do flat / projected calculations, using whatever projection is
-#   associated with the shape -- it should be in meters, e.g., Albers equal-area
-#   conic -- or do geodesic calculations that take into account the curvative of
-#   the earth. Handle both MultiPolygons and Polygons.
 
 
 def get_polygon_attributes(shp, geodesic=True):
@@ -52,8 +53,10 @@ def _get_geodesic_attributes(shp):
 
 
 def _get_geodesic_attributes_poly(shp, geod=Geodesic.WGS84):
-    # If a Polygon has no interiors (holes), just compute the area of it.
-    # If it has interiors though, subtract the area of each hole.
+    """
+    If a Polygon has no interiors (holes), just compute the area of it.
+    If it has interiors though, subtract the area of each hole.
+    """
 
     # NOTE - Shapely points are in (lon, lat) order ...
     list_pts = get_polygon_coordinates(shp)
@@ -128,9 +131,8 @@ def _get_geodesic_attributes_multipoly(shp):
     return abs(area_mp), abs(perimeter_mp), abs(diameter_mp)
 
 
-# END
-
-
 # LIMIT WHAT GETS EXPORTED.
 
 __all__ = ["get_polygon_attributes"]
+
+### END ###

@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-#
-# EXTRACT THE EXTERIOR COORDINATES OF A POLYGON OR MULTIPOLYGON
+
+"""
+EXTRACT THE EXTERIOR COORDINATES OF A POLYGON OR MULTIPOLYGON
+"""
 
 from shapely.geometry import Polygon, MultiPolygon
 
 
 def get_polygon_coordinates(geometry):
-    """
-    Extract exterior & interior coordinates from a single polygon.
+    """Extract exterior & interior coordinates from a single polygon.
 
     Parameters
     ----------
@@ -39,8 +40,7 @@ def get_polygon_coordinates(geometry):
 
 
 def get_polygons_coordinates(geometry):
-    """
-    Extract exterior coordinates from polygon(s).
+    """Extract exterior coordinates from polygon(s).
 
     Parameters
     ----------
@@ -111,9 +111,9 @@ def get_polygons_coordinates(geometry):
 
 #     return polygon_coord_strs
 
-# END
-
 
 # LIMIT WHAT GETS EXPORTED.
 
 __all__ = ["get_polygon_coordinates", "get_polygons_coordinates"]
+
+### END ###
