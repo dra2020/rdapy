@@ -54,7 +54,7 @@ def _get_geodesic_attributes(shp):
         return abs(area), abs(perimeter), abs(diameter)
 
 
-def _get_geodesic_attributes_poly(shp, geod=Geodesic.WGS84):
+def _get_geodesic_attributes_poly(shp):
     """
     If a Polygon has no interiors (holes), just compute the area of it.
     If it has interiors though, subtract the area of each hole.
@@ -91,7 +91,7 @@ def _get_geodesic_attributes_poly(shp, geod=Geodesic.WGS84):
     lon2 = lon + r
     lat2 = lat
 
-    geo_dict1 = geod.Inverse(lat1, lon1, lat2, lon2)
+    geo_dict1 = Geodesic.WGS84.Inverse(lat1, lon1, lat2, lon2)  # type: ignore
     lon_s12 = geo_dict1["s12"]
 
     lon3 = lon
@@ -99,7 +99,7 @@ def _get_geodesic_attributes_poly(shp, geod=Geodesic.WGS84):
     lon4 = lon
     lat4 = lat + r
 
-    geo_dict2 = geod.Inverse(lat3, lon3, lat4, lon4)
+    geo_dict2 = Geodesic.WGS84.Inverse(lat3, lon3, lat4, lon4)  # type: ignore
     lat_s12 = geo_dict2["s12"]
 
     diameter = max(lon_s12, lat_s12)
@@ -108,8 +108,8 @@ def _get_geodesic_attributes_poly(shp, geod=Geodesic.WGS84):
     return abs(area), abs(perimeter), abs(diameter)
 
 
-def _create_geopoly_from_pts(pts, geod=Geodesic.WGS84):
-    p = geod.Polygon()
+def _create_geopoly_from_pts(pts):
+    p = Geodesic.WGS84.Polygon()  # type: ignore
 
     for pt in pts:
         # NOTE - ... but Geodesic needs them in (lat, lon) order!

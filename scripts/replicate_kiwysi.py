@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-SAMPLE CODE TO REPLICATE THE KIWYSI COMPACTNESS MODEL
+Run this code to replicate the KIWYSI compactness model against the sample shapes.
 """
 
 from pyproj import CRS
@@ -27,3 +27,5 @@ featureize_shapes(source_shapes, featureized_shapes)
 
 # Replicate predicted compactness scores from sample shapes
 score_shapes(source_shapes, predictions)
+
+### END ###
