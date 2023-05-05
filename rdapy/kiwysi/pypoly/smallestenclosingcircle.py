@@ -42,6 +42,8 @@ def make_circle(points):
     for i, p in enumerate(shuffled):
         if c is None or not is_in_circle(c, p):
             c = _make_circle_one_point(shuffled[: i + 1], p)
+    assert c is not None  # Added 05/05/23
+
     return c
 
 
@@ -50,7 +52,7 @@ def _make_circle_one_point(points, p):
     c = (p[0], p[1], 0.0)
     for i, q in enumerate(points):
         if not is_in_circle(c, q):
-            if c[2] == 0.0:
+            if c[2] == 0.0:  # type: ignore
                 c = make_diameter(p, q)
             else:
                 c = _make_circle_two_points(points[: i + 1], p, q)

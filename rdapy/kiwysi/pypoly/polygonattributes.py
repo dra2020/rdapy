@@ -28,7 +28,9 @@ def get_polygon_attributes(shp, geodesic=True):
 
 
 def _get_projected_attributes(shp):
-    # Units are whatever the units of the project are!
+    """
+    Units are whatever the units of the project are!
+    """
     area = shp.area
     perimeter = shp.length
 
