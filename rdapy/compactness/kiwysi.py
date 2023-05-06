@@ -31,7 +31,23 @@ def score_shape(shp, geodesic=True):
 
 
 def score_features(features):
-    # SmartFeatures PCA model (including Schwartzberg)
+    """SmartFeatures PCA model (including Schwartzberg)
+
+    FIXME - Looking at the TypeScript code in dra-analytics, it appears that this is the
+    original, INCORRECT, model which I revised to this on 01/25/21. WTF?!?
+
+    const model: number[] = [
+        3.0428861122,       // sym_x
+        4.5060390447,       // sym_y
+        -22.7768820155,     // reock
+        -24.1176096770,     // bbox
+        -107.9434473497,    // polsby
+        -67.1088897240,     // hull
+        -1.2981693414       // schwartzberg
+    ];
+
+    """
+
     model = (
         [0.317566717356693],  # sym_x
         [0.32545234315137],  # sym_y
