@@ -1,4 +1,4 @@
-# rdapy/kiwysic/__init__.py
+# rdapy/compactness/__init__.py
 
 from .report import (
     load_features,
@@ -22,4 +22,4 @@ from .kiwysi import (
     calc_schwartzberg,
 )
 
-name = "kiwysic"
+name = "compactness"

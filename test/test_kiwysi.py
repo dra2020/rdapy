@@ -10,25 +10,9 @@ from pytest import approx
 
 class TestKIWYSI:
     def test_first_20(self) -> None:
-        """
-        describe('Score the first 20 reference shapes', () =>
-        {
-            test('Using async/await', async () =>
-            {
-                const featureEntries: T.FeaturesEntry[] = FU.readFeatureSets('testdata/compactness/first20/smartfeats_first20.csv');
-                const shapes: GeoJSON.FeatureCollection = await FU.readShapefile('./testdata/compactness/first20/first20.shp');
+        """Replicate predictions for the first 20 shapes against the original, INCORRECT PCA model.
 
-                for (let i in featureEntries)
-                {
-                const featureEntry: T.FeaturesEntry = featureEntries[i];
-                const score: number = featureEntry.score;
-
-                const prediction: number = kiwysiScoreShapeRAW(shapes.features[i], T.PCAModel.Original);
-
-                expect(prediction).toBeCloseTo(score, 1);
-                }
-            });
-        });
+        Verifies correct *featureization* of the first 20 shapes.
         """
 
         sample_features_csv = "testdata/compactness/first20/smartfeats_first20.csv"
@@ -37,28 +21,18 @@ class TestKIWYSI:
         sample_shapes_shp = "testdata/compactness/first20"
         source_shapes, _ = load_shapes(sample_shapes_shp, id="OBJECTID")
 
-        assert True  # TODO
+        for i, t in enumerate(predictions):
+            score = t[VALUE]
+            prediction = score_shape(
+                source_shapes[i][VALUE], geodesic=True, revised=False
+            )
+
+            assert prediction == approx(score, abs=1)
 
     def test_evenly_spaced_20(self) -> None:
-        """
-        describe('Score the evenly spaced 20 reference shapes', () =>
-        {
-            test('Using async/await', async () =>
-            {
-                const featureEntries: T.FeaturesEntry[] = FU.readFeatureSets('testdata/compactness/evenlyspaced20/evenlyspaced20.csv');
-                const shapes: GeoJSON.FeatureCollection = await FU.readShapefile('./testdata/compactness/evenlyspaced20/evenlyspaced20.shp');
+        """Replicate predictions for 20 evenly spaces shapes against the revised, CORRECT PCA model.
 
-                for (let i in featureEntries)
-                {
-                const featureEntry: T.FeaturesEntry = featureEntries[i];
-                const score: number = featureEntry.score;
-
-                const prediction: number = kiwysiScoreShapeRAW(shapes.features[i], T.PCAModel.Revised);
-
-                expect(prediction).toBeCloseTo(score, 0);
-                }
-            });
-        });
+        Verifies both correct *featureization* and the correct PCA model.
         """
 
         sample_features_csv = "testdata/compactness/evenlyspaced20/evenlyspaced20.csv"
@@ -67,7 +41,13 @@ class TestKIWYSI:
         sample_shapes_shp = "testdata/compactness/evenlyspaced20"
         source_shapes, _ = load_shapes(sample_shapes_shp, id="GEOID")
 
-        assert True
+        for i, t in enumerate(predictions):
+            score = t[VALUE]
+            prediction = score_shape(
+                source_shapes[i][VALUE], geodesic=True, revised=True
+            )
+
+            assert prediction == approx(score, abs=1)
 
 
 ### END ###

@@ -5,6 +5,8 @@ DEBUG
 """
 
 from pyproj import CRS
+from pytest import approx
+
 from rdapy import *
 
 """
@@ -34,11 +36,14 @@ featureized_shapes, predictions = load_features(sample_features_csv)
 sample_shapes_shp = "testdata/compactness/first20"
 source_shapes, _ = load_shapes(sample_shapes_shp, id="OBJECTID")
 
-for i in range(len(sample_features_csv)):
-    score = predictions[i][VALUE]
-    prediction = score_shape(source_shapes[i][VALUE], geodesic=True)
+for i, t in enumerate(predictions):
+    score = t[VALUE]
+    prediction = score_shape(source_shapes[i][VALUE], geodesic=True, revised=False)
 
-    continue
+    print(f"{i+1}: Prediction = {prediction}, Score = {score}")
+
+    assert prediction == approx(score, abs=1)
+    pass
 
 pass
 

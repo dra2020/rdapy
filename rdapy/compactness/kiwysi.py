@@ -35,44 +35,58 @@ from shapely.ops import unary_union  # Supersedes cascaded_union
 from .pypoly import *
 
 
-def score_shape(shp, geodesic=True):
+def score_shape(shp, *, geodesic=True, revised=True):
     features = featureize_shape(shp, geodesic)
-    score = score_features(features)
+    score = score_features(features, revised=revised)
 
     return score
 
 
-def score_features(features):
-    """SmartFeatures PCA model (including Schwartzberg)
+def score_features(features, *, revised=True):
+    """SmartFeatures PCA model (including Schwartzberg)"""
 
-    The original, INCORRECT, model is:
+    if revised:
+        return apply_PCA_model_REVISED(features)
+    else:
+        return apply_PCA_model_ORIGINAL(features)
 
-    model = (
-        [0.317566717356693],  # sym_x
-        [0.32545234315137],  # sym_y
-        [0.32799567316863],  # reock
-        [0.411560782484889],  # bbox
-        [0.412187169816954],  # polsby
-        [0.420085928286392],  # hull
-        [0.412187169816954],  # schwartzberg
-    )
-    """
 
-    model = (
-        [3.0428861122],  # sym_x
-        [4.5060390447],  # sym_y
-        [-22.7768820155],  # reock
-        [-24.1176096770],  # bbox
-        [-107.9434473497],  # polsby
-        [-67.1088897240],  # hull
-        [-1.2981693414],  # schwartzberg
-    )  # Revised 01/25/21
+def apply_PCA_model_REVISED(features):
+    """The REVISED SmartFeatures PCA model (including Schwartzberg)"""
+
+    model = [
+        3.0428861122,  # sym_x
+        4.5060390447,  # sym_y
+        -22.7768820155,  # reock
+        -24.1176096770,  # bbox
+        -107.9434473497,  # polsby
+        -67.1088897240,  # hull
+        -1.2981693414,  # schwartzberg
+    ]  # Revised 01/25/21
 
     intercept = 145.6420811716
 
-    score = np.dot(features, model)[0] + intercept
+    score = np.dot(features, model) + intercept
     normalized_score = score
-    # normalized_score = (score * 11) + 50
+
+    return normalized_score
+
+
+def apply_PCA_model_ORIGINAL(features):
+    """original, INCORRECT SmartFeatures PCA model (including Schwartzberg)"""
+
+    model = [
+        0.317566717356693,  # sym_x
+        0.32545234315137,  # sym_y
+        0.32799567316863,  # reock
+        0.411560782484889,  # bbox
+        0.412187169816954,  # polsby
+        0.420085928286392,  # hull
+        0.412187169816954,  # schwartzberg
+    ]
+
+    score = np.dot(features, model)
+    normalized_score = (score * 11) + 50
 
     return normalized_score
 
