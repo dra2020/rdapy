@@ -12,6 +12,18 @@ Their six "smart features" plus Schwartzberg:
 5 - polsby (POPOLSBYPOPPERLSBY)
 6 - hull (Hull(D))
 7 - schwartzberg (SCHWARTZBERG)
+
+TODO
+
+- Resolve model parameters
+- Invert the 1–100 rank so bigger is better
+
+    // Constrain values to the range [1–100]
+    kiwysiRank = Math.min(Math.max(kiwysiRank, 1), 100);
+    // Raw KIWYSI scores ("ranks") are 1–100 where smaller is better
+    // Round & invert into scores where bigger is better [0–100]
+    const kiwysiScore: number = 100 - Math.round(kiwysiRank) + 1
+
 """
 
 import math
@@ -36,17 +48,7 @@ def score_features(features):
     FIXME - Looking at the TypeScript code in dra-analytics, it appears that this is the
     original, INCORRECT, model which I revised to this on 01/25/21. WTF?!?
 
-    const model: number[] = [
-        3.0428861122,       // sym_x
-        4.5060390447,       // sym_y
-        -22.7768820155,     // reock
-        -24.1176096770,     // bbox
-        -107.9434473497,    // polsby
-        -67.1088897240,     // hull
-        -1.2981693414       // schwartzberg
-    ];
-
-    """
+    The original, INCORRECT, model is:
 
     model = (
         [0.317566717356693],  # sym_x
@@ -57,6 +59,17 @@ def score_features(features):
         [0.420085928286392],  # hull
         [0.412187169816954],  # schwartzberg
     )
+    """
+
+    model = (
+        [3.0428861122],  # sym_x
+        [4.5060390447],  # sym_y
+        [-22.7768820155],  # reock
+        [-24.1176096770],  # bbox
+        [-107.9434473497],  # polsby
+        [-67.1088897240],  # hull
+        [-1.2981693414],  # schwartzberg
+    )  # Revised 01/25/21
 
     score = np.dot(features, model)[0]
     normalized_score = (score * 11) + 50
