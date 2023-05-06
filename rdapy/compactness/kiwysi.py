@@ -45,9 +45,6 @@ def score_shape(shp, geodesic=True):
 def score_features(features):
     """SmartFeatures PCA model (including Schwartzberg)
 
-    FIXME - Looking at the TypeScript code in dra-analytics, it appears that this is the
-    original, INCORRECT, model which I revised to this on 01/25/21. WTF?!?
-
     The original, INCORRECT, model is:
 
     model = (
@@ -71,8 +68,11 @@ def score_features(features):
         [-1.2981693414],  # schwartzberg
     )  # Revised 01/25/21
 
-    score = np.dot(features, model)[0]
-    normalized_score = (score * 11) + 50
+    intercept = 145.6420811716
+
+    score = np.dot(features, model)[0] + intercept
+    normalized_score = score
+    # normalized_score = (score * 11) + 50
 
     return normalized_score
 
@@ -325,6 +325,9 @@ def calc_schwartzberg(shp, geodesic=True):
 
     # NOTE - Use P/C here, not C/P as Azavea describes.
     return perimeter / ((2 * math.pi) * math.sqrt(area / math.pi))
+
+
+### FOR TESTING ###
 
 
 # LIMIT WHAT GETS EXPORTED.

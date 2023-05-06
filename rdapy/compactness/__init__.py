@@ -6,6 +6,8 @@ from .report import (
     score_shapes,
     score_featureized_shapes,
     featureize_shapes,
+    INDEX,
+    VALUE,
 )
 from .kiwysi import (
     score_shape,
