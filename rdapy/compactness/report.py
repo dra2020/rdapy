@@ -43,13 +43,13 @@ def load_features(samples_csv):
     return samples, predictions
 
 
-def load_shapes(shp_file):
+def load_shapes(shp_file: str, id: str = "OBJECTID"):
     shapes_by_id = []
     with fiona.Env():
         with fiona.open(shp_file) as source:
             meta = source.meta
             for item in source:
-                obj_id = item["properties"]["OBJECTID"]
+                obj_id = item["properties"][id]
                 shp = shape(item["geometry"])
                 shapes_by_id.append((obj_id, shp))
 
