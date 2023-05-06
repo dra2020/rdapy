@@ -10,10 +10,10 @@ from rdapy import *
 
 # Load the sample shapes and the features derived from them
 
-sample_shapes_shp = "testdata/kiwysi/first20"
+sample_shapes_shp = "testdata/compactness/first20"
 source_shapes, _ = load_shapes(sample_shapes_shp)
 
-sample_features_csv = "testdata/kiwysi/smartfeats_first20.csv"
+sample_features_csv = "testdata/compactness/first20/smartfeats_first20.csv"
 featureized_shapes, predictions = load_features(sample_features_csv)
 
 

@@ -56,13 +56,16 @@ def load_shapes(shp_file: str, id: str = "OBJECTID"):
     return shapes_by_id, meta
 
 
+### REPORTS ###
+
+
 def score_shapes(sample_shapes, predictions, geodesic=True):
     print()
     print("Predicted compactness scores (for shapes):")
     print("-" * 64)
     for i in range(len(sample_shapes)):
         shp = sample_shapes[i][VALUE]
-        calc = score_shape(shp, geodesic)
+        calc = score_shape(shp, geodesic=geodesic, revised=False)
         correct = predictions[i][VALUE]
         print(
             "Sample {:2} - Prediction = {:.2f}, Answer = {:.2f}, Delta % = {:>+6.1%}".format(
@@ -78,7 +81,7 @@ def score_featureized_shapes(featureized_shapes, predictions):
     print("Predicted compactness scores (for features):")
     print("-" * 64)
     for i in range(len(featureized_shapes)):
-        calc = score_features(featureized_shapes[i][VALUE])
+        calc = score_features(featureized_shapes[i][VALUE], revised=False)
         correct = predictions[i][VALUE]
         print(
             "Sample {:2} - Prediction = {:.2f}, Answer = {:.2f}, Delta % = {:>+6.1%}".format(

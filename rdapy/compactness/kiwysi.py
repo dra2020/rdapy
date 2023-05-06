@@ -15,7 +15,7 @@ Their six "smart features" plus Schwartzberg:
 
 TODO
 
-- Resolve model parameters
+- Refactor report.py
 - Invert the 1–100 rank so bigger is better
 
     // Constrain values to the range [1–100]
