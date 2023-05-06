@@ -46,12 +46,12 @@ def score_features(features, *, revised=True):
     """SmartFeatures PCA model (including Schwartzberg)"""
 
     if revised:
-        return apply_PCA_model_REVISED(features)
+        return _apply_PCA_model_REVISED(features)
     else:
-        return apply_PCA_model_ORIGINAL(features)
+        return _apply_PCA_model_ORIGINAL(features)
 
 
-def apply_PCA_model_REVISED(features):
+def _apply_PCA_model_REVISED(features):
     """The REVISED SmartFeatures PCA model (including Schwartzberg)"""
 
     model = [
@@ -72,7 +72,7 @@ def apply_PCA_model_REVISED(features):
     return normalized_score
 
 
-def apply_PCA_model_ORIGINAL(features):
+def _apply_PCA_model_ORIGINAL(features):
     """original, INCORRECT SmartFeatures PCA model (including Schwartzberg)"""
 
     model = [
@@ -113,7 +113,7 @@ def calc_sym_x(shp, geodesic=True):
     """
 
     cx, _ = mean_centroid(shp)
-    reflected_x_shp = transform(reflect_x(cx), shp)
+    reflected_x_shp = transform(_reflect_x(cx), shp)
 
     comp_x_shp = shp.union(reflected_x_shp)
     # comp_x_shp = unary_union([shp.buffer(0), reflected_x_shp.buffer(0)])
@@ -148,7 +148,7 @@ def calc_sym_y(shp, geodesic=True):
     """
 
     _, cy = mean_centroid(shp)
-    reflected_y_shp = transform(reflect_y(cy), shp)
+    reflected_y_shp = transform(_reflect_y(cy), shp)
 
     comp_y_shp = shp.union(reflected_y_shp)
     # comp_y_shp = unary_union([shp.buffer(0), reflected_y_shp.buffer(0)])
@@ -169,11 +169,11 @@ def calc_sym_y(shp, geodesic=True):
     return comp_area / shp_area
 
 
-def reflect_x(x0):
+def _reflect_x(x0):
     return lambda x, y: (2 * x0 - x, y)
 
 
-def reflect_y(y0):
+def _reflect_y(y0):
     return lambda x, y: (x, 2 * y0 - y)
 
 
