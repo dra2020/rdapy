@@ -1,6 +1,6 @@
 # rdapy/compactness/__init__.py
 
-from .report import (
+from .helpers import (
     load_features,
     load_shapes,
     score_shapes,
@@ -11,7 +11,6 @@ from .report import (
 )
 from .kiwysi import (
     score_shape,
-    score_features,
     featureize_shape,
     calc_sym_x,
     calc_sym_y,
@@ -20,6 +19,9 @@ from .kiwysi import (
     calc_polsby,
     calc_hull,
     calc_schwartzberg,
+    score_features,
+    rate_shape,
+    rank_shape,
 )
 
 name = "compactness"

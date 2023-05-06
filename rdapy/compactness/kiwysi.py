@@ -2,28 +2,6 @@
 
 """
 AARON KAUFMAN & GARY KING'S "KIWYSI" COMPACTNESS MODEL
-
-Their six "smart features" plus Schwartzberg:
-
-1 - sym_x (X-SYMMETRY)
-2 - sym_y (Y-SYMMETRY)
-3 - reock (REOCK)
-4 - bbox (BOUNDING-BOX)
-5 - polsby (POPOLSBYPOPPERLSBY)
-6 - hull (Hull(D))
-7 - schwartzberg (SCHWARTZBERG)
-
-TODO
-
-- Refactor report.py
-- Invert the 1–100 rank so bigger is better
-
-    // Constrain values to the range [1–100]
-    kiwysiRank = Math.min(Math.max(kiwysiRank, 1), 100);
-    // Raw KIWYSI scores ("ranks") are 1–100 where smaller is better
-    // Round & invert into scores where bigger is better [0–100]
-    const kiwysiScore: number = 100 - Math.round(kiwysiRank) + 1
-
 """
 
 import math
@@ -42,53 +20,22 @@ def score_shape(shp, *, geodesic=True, revised=True):
     return score
 
 
-def score_features(features, *, revised=True):
-    """SmartFeatures PCA model (including Schwartzberg)"""
+def rank_shape(score: float) -> int:
+    """Constrain values to integers in the range [1–100].
 
-    if revised:
-        return _apply_PCA_model_REVISED(features)
-    else:
-        return _apply_PCA_model_ORIGINAL(features)
+    Smaller is better.
+    """
 
-
-def _apply_PCA_model_REVISED(features):
-    """The REVISED SmartFeatures PCA model (including Schwartzberg)"""
-
-    model = [
-        3.0428861122,  # sym_x
-        4.5060390447,  # sym_y
-        -22.7768820155,  # reock
-        -24.1176096770,  # bbox
-        -107.9434473497,  # polsby
-        -67.1088897240,  # hull
-        -1.2981693414,  # schwartzberg
-    ]  # Revised 01/25/21
-
-    intercept = 145.6420811716
-
-    score = np.dot(features, model) + intercept
-    normalized_score = score
-
-    return normalized_score
+    return round(min(max(score, 1), 100))
 
 
-def _apply_PCA_model_ORIGINAL(features):
-    """original, INCORRECT SmartFeatures PCA model (including Schwartzberg)"""
+def rate_shape(rank: int) -> int:
+    """Inverted a [1–100] rank to [0–100] rating where bigger is better."""
 
-    model = [
-        0.317566717356693,  # sym_x
-        0.32545234315137,  # sym_y
-        0.32799567316863,  # reock
-        0.411560782484889,  # bbox
-        0.412187169816954,  # polsby
-        0.420085928286392,  # hull
-        0.412187169816954,  # schwartzberg
-    ]
+    return 100 - rank + 1
 
-    score = np.dot(features, model)
-    normalized_score = (score * 11) + 50
 
-    return normalized_score
+### FEATURES ###
 
 
 def featureize_shape(shp, geodesic=True):
@@ -112,7 +59,7 @@ def calc_sym_x(shp, geodesic=True):
     See below.
     """
 
-    cx, _ = mean_centroid(shp)
+    cx, _ = _mean_centroid(shp)
     reflected_x_shp = transform(_reflect_x(cx), shp)
 
     comp_x_shp = shp.union(reflected_x_shp)
@@ -147,7 +94,7 @@ def calc_sym_y(shp, geodesic=True):
     5. Take the ratio of the area of that union* and the area of the original shape
     """
 
-    _, cy = mean_centroid(shp)
+    _, cy = _mean_centroid(shp)
     reflected_y_shp = transform(_reflect_y(cy), shp)
 
     comp_y_shp = shp.union(reflected_y_shp)
@@ -177,7 +124,7 @@ def _reflect_y(y0):
     return lambda x, y: (x, 2 * y0 - y)
 
 
-def mean_centroid(shp):
+def _mean_centroid(shp):
     """An alternate definition of centroid, following Aaron's R code:
 
     centroid_x = mean(df$x, na.rm=T)
@@ -341,14 +288,62 @@ def calc_schwartzberg(shp, geodesic=True):
     return perimeter / ((2 * math.pi) * math.sqrt(area / math.pi))
 
 
-### FOR TESTING ###
+### PCA MODEL ###
+
+
+def score_features(features, *, revised=True):
+    """SmartFeatures PCA model (including Schwartzberg)"""
+
+    if revised:
+        return _apply_PCA_model_REVISED(features)
+    else:
+        return _apply_PCA_model_ORIGINAL(features)
+
+
+def _apply_PCA_model_REVISED(features):
+    """The REVISED SmartFeatures PCA model (including Schwartzberg)"""
+
+    model = [
+        3.0428861122,  # sym_x
+        4.5060390447,  # sym_y
+        -22.7768820155,  # reock
+        -24.1176096770,  # bbox
+        -107.9434473497,  # polsby
+        -67.1088897240,  # hull
+        -1.2981693414,  # schwartzberg
+    ]  # Revised 01/25/21
+
+    intercept = 145.6420811716
+
+    score = np.dot(features, model) + intercept
+    normalized_score = score
+
+    return normalized_score
+
+
+def _apply_PCA_model_ORIGINAL(features):
+    """original, INCORRECT SmartFeatures PCA model (including Schwartzberg)"""
+
+    model = [
+        0.317566717356693,  # sym_x
+        0.32545234315137,  # sym_y
+        0.32799567316863,  # reock
+        0.411560782484889,  # bbox
+        0.412187169816954,  # polsby
+        0.420085928286392,  # hull
+        0.412187169816954,  # schwartzberg
+    ]
+
+    score = np.dot(features, model)
+    normalized_score = (score * 11) + 50
+
+    return normalized_score
 
 
 # LIMIT WHAT GETS EXPORTED.
 
 __all__ = [
     "score_shape",
-    "score_features",
     "featureize_shape",
     "calc_sym_x",
     "calc_sym_y",
@@ -357,4 +352,7 @@ __all__ = [
     "calc_polsby",
     "calc_hull",
     "calc_schwartzberg",
+    "score_features",
+    "rank_shape",
+    "rate_shape",
 ]
