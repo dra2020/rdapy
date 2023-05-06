@@ -9,7 +9,7 @@ import csv
 from shapely.geometry import shape
 import fiona
 
-from .compact import score_shape, score_features, featureize_shape
+from .kiwysi import score_shape, score_features, featureize_shape
 
 # CONSTANTS FOR SAMPLE TUPLES
 

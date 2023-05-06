@@ -1,13 +1,13 @@
 # rdapy/kiwysic/__init__.py
 
-from .helpers import (
+from .report import (
     load_features,
     load_shapes,
     score_shapes,
     score_featureized_shapes,
     featureize_shapes,
 )
-from .compact import (
+from .kiwysi import (
     score_shape,
     score_features,
     featureize_shape,
