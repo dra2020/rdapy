@@ -1,5 +1,5 @@
 # rdapy/__init__.py
 
-from .kiwysi import *
+from .compactness import *
 
 name = "rdapy"
