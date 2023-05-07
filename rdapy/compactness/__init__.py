@@ -1,13 +1,8 @@
 # rdapy/compactness/__init__.py
 
-from .helpers import (
+from .readwrite import (
     load_features,
     load_shapes,
-    score_shapes,
-    score_featureized_shapes,
-    featureize_shapes,
-    INDEX,
-    VALUE,
 )
 from .features import (
     calc_sym_x,

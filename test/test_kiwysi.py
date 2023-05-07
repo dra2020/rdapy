@@ -8,6 +8,10 @@ from rdapy.compactness import *
 from pytest import approx
 
 
+INDEX: int = 0
+VALUE: int = 1
+
+
 class TestKIWYSI:
     def test_first_20(self) -> None:
         """Replicate predictions for the first 20 shapes against the original, INCORRECT PCA model.

@@ -9,26 +9,8 @@ from pytest import approx
 
 from rdapy import *
 
-"""
-describe('Score the first 20 reference shapes', () =>
-{
-    test('Using async/await', async () =>
-    {
-        const featureEntries: T.FeaturesEntry[] = FU.readFeatureSets('testdata/compactness/first20/smartfeats_first20.csv');
-        const shapes: GeoJSON.FeatureCollection = await FU.readShapefile('./testdata/compactness/first20/first20.shp');
-
-        for (let i in featureEntries)
-        {
-        const featureEntry: T.FeaturesEntry = featureEntries[i];
-        const score: number = featureEntry.score;
-
-        const prediction: number = kiwysiScoreShapeRAW(shapes.features[i], T.PCAModel.Original);
-
-        expect(prediction).toBeCloseTo(score, 1);
-        }
-    });
-});
-"""
+INDEX: int = 0
+VALUE: int = 1
 
 sample_features_csv = "testdata/compactness/first20/smartfeats_first20.csv"
 featureized_shapes, predictions = load_features(sample_features_csv)
