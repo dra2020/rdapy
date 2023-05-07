@@ -162,7 +162,9 @@ def calc_bbox(shp, geodesic=True) -> float:
     shp_pts: list = [[p[0], p[1]] for l in get_polygons_coordinates(shp) for p in l]
 
     # Find the minimum area bounding rectangle (not a simple bounding box)
-    bbox_pts = minimum_bounding_rectangle(np.array(shp_pts))  # TODO
+    bbox_pts: np.ndarray[Any, np.dtype[np.float64]] = minimum_bounding_rectangle(
+        np.array(shp_pts)
+    )
     bbox_shp: Polygon = Polygon([[p[0], p[1]] for p in bbox_pts])
 
     # Get the area of the two shapes
