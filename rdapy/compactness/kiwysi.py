@@ -4,15 +4,8 @@
 AARON KAUFMAN & GARY KING'S "KIWYSI" COMPACTNESS MODEL
 """
 
-# TODO - DELETE
-# import math
 import numpy as np
 
-# from shapely.geometry import Polygon
-# from shapely.ops import transform
-# from shapely.ops import unary_union  # Supersedes cascaded_union
-
-# from .pypoly import *
 from .features import *
 
 
@@ -113,3 +106,5 @@ __all__ = [
     "rank_shape",
     "rate_shape",
 ]
+
+### END ###

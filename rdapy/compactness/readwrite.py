@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 
 """
-OUTPUT HELPERS
+KIWYSI READ HELPERS
 """
 
 import csv
 
 from shapely.geometry import shape
 import fiona
-
-from .kiwysi import score_shape, score_features, featureize_shape
 
 
 def load_features(samples_csv):
@@ -51,7 +49,6 @@ def load_shapes(shp_file: str, id: str = "OBJECTID"):
     return shapes_by_id, meta
 
 
-# END
-
-
 # DON'T LIMIT WHAT GETS EXPORTED
+
+### END ###
