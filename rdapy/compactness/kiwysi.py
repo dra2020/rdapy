@@ -5,12 +5,14 @@ AARON KAUFMAN & GARY KING'S "KIWYSI" COMPACTNESS MODEL
 """
 
 import numpy as np
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, MultiPolygon
 
 from .features import *
 
 
-def score_shape(shp: Polygon, *, geodesic: bool = True, revised: bool = True) -> float:
+def score_shape(
+    shp: Polygon | MultiPolygon, *, geodesic: bool = True, revised: bool = True
+) -> float:
     features: list[float] = featureize_shape(shp, geodesic)
     score = score_features(features, revised=revised)
 
@@ -32,7 +34,7 @@ def rate_shape(rank: int) -> int:
     return 100 - rank + 1
 
 
-def featureize_shape(shp: Polygon, geodesic: bool = True) -> list[float]:
+def featureize_shape(shp: Polygon | MultiPolygon, geodesic: bool = True) -> list[float]:
     features: list[float] = []
 
     features.append(calc_sym_x(shp, geodesic))

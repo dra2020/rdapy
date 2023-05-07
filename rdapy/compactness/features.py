@@ -15,7 +15,7 @@ compactness model plus Schwartzberg:
 
 import math
 import numpy as np
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, MultiPolygon
 from shapely.ops import transform
 from shapely.ops import unary_union  # Supersedes cascaded_union
 
@@ -25,7 +25,7 @@ from nptyping import NDArray
 from .pypoly import *
 
 
-def calc_sym_x(shp: Polygon, geodesic: bool = True) -> float:
+def calc_sym_x(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
     """FEATURE 1: X-SYMMETRY
 
     The same as Y-SYMMETRY except reflect the district D around a horizontal line going through the centroid.
@@ -36,9 +36,9 @@ def calc_sym_x(shp: Polygon, geodesic: bool = True) -> float:
     cx: float
 
     cx, _ = _mean_centroid(shp)
-    reflected_x_shp: Polygon = transform(_reflect_x(cx), shp)
+    reflected_x_shp: Polygon | MultiPolygon = transform(_reflect_x(cx), shp)
 
-    comp_x_shp: Polygon = shp.union(reflected_x_shp)
+    comp_x_shp: Polygon | MultiPolygon = shp.union(reflected_x_shp)
 
     shp_area: float
     comp_area: float
@@ -49,7 +49,7 @@ def calc_sym_x(shp: Polygon, geodesic: bool = True) -> float:
     return comp_area / shp_area
 
 
-def calc_sym_y(shp: Polygon, geodesic: bool = True) -> float:
+def calc_sym_y(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
     """FEATURE 2: Y-SYMMETRY
 
     The area of a district overlapping with its reflection around a vertical line going through the centroid,
@@ -66,9 +66,9 @@ def calc_sym_y(shp: Polygon, geodesic: bool = True) -> float:
     cy: float
 
     _, cy = _mean_centroid(shp)
-    reflected_y_shp: Polygon = transform(_reflect_y(cy), shp)
+    reflected_y_shp: Polygon | MultiPolygon = transform(_reflect_y(cy), shp)
 
-    comp_y_shp: Polygon = shp.union(reflected_y_shp)
+    comp_y_shp: Polygon | MultiPolygon = shp.union(reflected_y_shp)
 
     shp_area: float
     comp_area: float
@@ -87,7 +87,7 @@ def _reflect_y(y0: float) -> Callable[..., tuple[float, float]]:
     return lambda x, y: (x, 2 * y0 - y)
 
 
-def _mean_centroid(shp: Polygon) -> tuple[float, float]:
+def _mean_centroid(shp: Polygon | MultiPolygon) -> tuple[float, float]:
     """An alternate definition of centroid, following Aaron's R code:
 
     centroid_x = mean(df$x, na.rm=T)
@@ -124,7 +124,7 @@ def _mean_centroid(shp: Polygon) -> tuple[float, float]:
     return (x_tot / n, y_tot / n)
 
 
-def calc_reock(shp: Polygon, geodesic: bool = True) -> float:
+def calc_reock(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
     """FEATURE 3: REOCK
 
     Reock is the primary measure of the dispersion of district shapes, calculated as
@@ -152,7 +152,7 @@ def calc_reock(shp: Polygon, geodesic: bool = True) -> float:
     return area / (math.pi * (radius**2))
 
 
-def calc_bbox(shp: Polygon, geodesic: bool = True) -> float:
+def calc_bbox(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
     """FEATURE 4: "BOUNDING-BOX"
 
     This is shorthand for the ratio of the area of the district to the area of the minimum bounding box of the district.
@@ -178,7 +178,7 @@ def calc_bbox(shp: Polygon, geodesic: bool = True) -> float:
     return district_area / bbox_area
 
 
-def calc_polsby(shp: Polygon, geodesic: bool = True) -> float:
+def calc_polsby(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
     """FEATURE 5: POLSBYPOPPER
 
     Polsby-Popper is the primary measure of the indentation of district shapes,
@@ -207,7 +207,7 @@ def calc_polsby(shp: Polygon, geodesic: bool = True) -> float:
     return (4 * math.pi) * (area / perimeter**2)
 
 
-def calc_hull(shp: Polygon, geodesic: bool = True) -> float:
+def calc_hull(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
     """FEATURE 6: Hull(D)
 
     Convex Hull is a secondary measure of the dispersion of district shapes,
@@ -220,7 +220,7 @@ def calc_hull(shp: Polygon, geodesic: bool = True) -> float:
     basically the shortest unstretched rubber band that fits around the shape.
     """
 
-    ch_shp: Polygon = shp.convex_hull
+    ch_shp: Polygon | MultiPolygon = shp.convex_hull
 
     _: Any
     shp_area: float
@@ -232,7 +232,7 @@ def calc_hull(shp: Polygon, geodesic: bool = True) -> float:
     return shp_area / hull_area
 
 
-def calc_schwartzberg(shp: Polygon, geodesic: bool = True) -> float:
+def calc_schwartzberg(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
     """FEATURE 7: SCHWARTZBERG
 
     Schwartzberg is a secondary measure of the
