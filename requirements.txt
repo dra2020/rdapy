@@ -8,6 +8,7 @@ Fiona==1.9.3
 geographiclib==2.0
 iniconfig==2.0.0
 munch==2.5.0
+nptyping==2.5.0
 numpy==1.24.3
 packaging==23.1
 pluggy==1.0.0

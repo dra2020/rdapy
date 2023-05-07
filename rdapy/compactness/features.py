@@ -19,39 +19,37 @@ from shapely.geometry import Polygon
 from shapely.ops import transform
 from shapely.ops import unary_union  # Supersedes cascaded_union
 
+from typing import Any, Callable
+from nptyping import NDArray
+
 from .pypoly import *
 
 
-def calc_sym_x(shp, geodesic=True):
+def calc_sym_x(shp, geodesic=True) -> float:
     """FEATURE 1: X-SYMMETRY
 
     The same as Y-SYMMETRY except reflect the district D around a horizontal line going through the centroid.
     See below.
     """
 
+    _: Any
+    cx: float
+
     cx, _ = _mean_centroid(shp)
-    reflected_x_shp = transform(_reflect_x(cx), shp)
+    reflected_x_shp: Polygon = transform(_reflect_x(cx), shp)
 
-    comp_x_shp = shp.union(reflected_x_shp)
-    # comp_x_shp = unary_union([shp.buffer(0), reflected_x_shp.buffer(0)])
+    comp_x_shp: Polygon = shp.union(reflected_x_shp)
 
-    # print("X: Unary =", (comp_x_shp2.geom_type == 'Polygon'),
-    #       len(comp_x_shp2.interiors))
-    # print("X: Union =", (comp_x_shp.geom_type == 'Polygon'),
-    #       len(comp_x_shp.interiors))
+    shp_area: float
+    comp_area: float
 
     shp_area, _, _ = get_polygon_attributes(shp, geodesic)
     comp_area, _, _ = get_polygon_attributes(comp_x_shp, geodesic)
 
-    # orig_area, _, _ = get_polygon_attributes(comp_x_shp2, geodesic)
-    # print("orig_area =", orig_area, "x_area =", comp_area)
-
-    # print("dist_area =", shp_area, "x_area =", comp_area, "cx =", cx)
-
     return comp_area / shp_area
 
 
-def calc_sym_y(shp, geodesic=True):
+def calc_sym_y(shp, geodesic=True) -> float:
     """FEATURE 2: Y-SYMMETRY
 
     The area of a district overlapping with its reflection around a vertical line going through the centroid,
@@ -64,74 +62,69 @@ def calc_sym_y(shp, geodesic=True):
     5. Take the ratio of the area of that union* and the area of the original shape
     """
 
+    _: Any
+    cy: float
+
     _, cy = _mean_centroid(shp)
-    reflected_y_shp = transform(_reflect_y(cy), shp)
+    reflected_y_shp: Polygon = transform(_reflect_y(cy), shp)
 
-    comp_y_shp = shp.union(reflected_y_shp)
-    # comp_y_shp = unary_union([shp.buffer(0), reflected_y_shp.buffer(0)])
+    comp_y_shp: Polygon = shp.union(reflected_y_shp)
 
-    # print("Y: Unary =", (comp_y_shp2.geom_type == 'Polygon'),
-    #       len(comp_y_shp2.interiors))
-    # print("Y: Union =", (comp_y_shp.geom_type == 'Polygon'),
-    #       len(comp_y_shp.interiors))
+    shp_area: float
+    comp_area: float
 
     shp_area, _, _ = get_polygon_attributes(shp, geodesic)
     comp_area, _, _ = get_polygon_attributes(comp_y_shp, geodesic)
 
-    # orig_area, _, _ = get_polygon_attributes(comp_y_shp2, geodesic)
-    # print("orig_area =", orig_area, "y_area =", comp_area)
-
-    # print("dist_area =", shp_area, "y_area =", comp_area, "cy =", cy)
-
     return comp_area / shp_area
 
 
-def _reflect_x(x0):
+def _reflect_x(x0) -> Callable[..., tuple[float, float]]:
     return lambda x, y: (2 * x0 - x, y)
 
 
-def _reflect_y(y0):
+def _reflect_y(y0) -> Callable[..., tuple[float, float]]:
     return lambda x, y: (x, 2 * y0 - y)
 
 
-def _mean_centroid(shp):
+def _mean_centroid(shp) -> tuple[float, float]:
     """An alternate definition of centroid, following Aaron's R code:
 
     centroid_x = mean(df$x, na.rm=T)
     centroid_y = mean(df$y, na.rm=T)
     """
 
-    n = 0
-    x_tot = 0
-    y_tot = 0
+    n: int = 0
+    x_tot: float = 0
+    y_tot: float = 0
 
-    # NOTE - These two methods yield the same result
-    if True:
-        # NOTE - Shapely points are in (lon, lat) order ...
-        pts = [p for l in get_polygons_coordinates(shp) for p in l]
+    # These two methods yield the same result
+    # 1 - NOTE: Shapely points are in (lon, lat) order ...
+    pts: list = [p for l in get_polygons_coordinates(shp) for p in l]
 
-        for p in pts:
-            n += 1
-            x_tot += p[0]
-            y_tot += p[1]
-    else:
-        if shp.geom_type == "Polygon":
-            for p in shp.exterior.coords:
-                n += 1
-                x_tot += p[0]
-                y_tot += p[1]
+    for p in pts:
+        n += 1
+        x_tot += p[0]
+        y_tot += p[1]
 
-        else:  # == 'MultiPolygon
-            for single_poly in shp.geoms:
-                for p in single_poly.exterior.coords:
-                    n += 1
-                    x_tot += p[0]
-                    y_tot += p[1]
+    # 2
+    # if shp.geom_type == "Polygon":
+    #     for p in shp.exterior.coords:
+    #         n += 1
+    #         x_tot += p[0]
+    #         y_tot += p[1]
+
+    # else:  # == 'MultiPolygon
+    #     for single_poly in shp.geoms:
+    #         for p in single_poly.exterior.coords:
+    #             n += 1
+    #             x_tot += p[0]
+    #             y_tot += p[1]
 
     return (x_tot / n, y_tot / n)
 
 
-def calc_reock(shp, geodesic=True):
+def calc_reock(shp, geodesic=True) -> float:
     """FEATURE 3: REOCK
 
     Reock is the primary measure of the dispersion of district shapes, calculated as
@@ -149,33 +142,41 @@ def calc_reock(shp, geodesic=True):
     where r is the radius of the minimum bounding circle.
     """
 
+    area: float
+    diameter: float
+    radius: float
+
     area, _, diameter = get_polygon_attributes(shp, geodesic)
     radius = diameter / 2
 
     return area / (math.pi * (radius**2))
 
 
-def calc_bbox(shp, geodesic=True):
+def calc_bbox(shp, geodesic=True) -> float:
     """FEATURE 4: "BOUNDING-BOX"
 
     This is shorthand for the ratio of the area of the district to the area of the minimum bounding box of the district.
     """
 
     # Get the shape's exterior points in a single flat list
-    shp_pts = [[p[0], p[1]] for l in get_polygons_coordinates(shp) for p in l]
+    shp_pts: list = [[p[0], p[1]] for l in get_polygons_coordinates(shp) for p in l]
 
     # Find the minimum area bounding rectangle (not a simple bounding box)
-    bbox_pts = minimum_bounding_rectangle(np.array(shp_pts))
-    bbox_shp = Polygon([[p[0], p[1]] for p in bbox_pts])
+    bbox_pts = minimum_bounding_rectangle(np.array(shp_pts))  # TODO
+    bbox_shp: Polygon = Polygon([[p[0], p[1]] for p in bbox_pts])
 
     # Get the area of the two shapes
+
+    district_area: float
+    bbox_area: float
+
     district_area, _, _ = get_polygon_attributes(shp, geodesic)
     bbox_area, _, _ = get_polygon_attributes(bbox_shp, geodesic)
 
     return district_area / bbox_area
 
 
-def calc_polsby(shp, geodesic=True):
+def calc_polsby(shp, geodesic=True) -> float:
     """FEATURE 5: POLSBYPOPPER
 
     Polsby-Popper is the primary measure of the indentation of district shapes,
@@ -195,12 +196,16 @@ def calc_polsby(shp, geodesic=True):
     PP = 4π * (A / P^2)
     """
 
+    _: Any
+    area: float
+    perimeter: float
+
     area, perimeter, _ = get_polygon_attributes(shp, geodesic)
 
     return (4 * math.pi) * (area / perimeter**2)
 
 
-def calc_hull(shp, geodesic=True):
+def calc_hull(shp, geodesic=True) -> float:
     """FEATURE 6: Hull(D)
 
     Convex Hull is a secondary measure of the dispersion of district shapes,
@@ -213,7 +218,11 @@ def calc_hull(shp, geodesic=True):
     basically the shortest unstretched rubber band that fits around the shape.
     """
 
-    ch_shp = shp.convex_hull
+    ch_shp: Polygon = shp.convex_hull
+
+    _: Any
+    shp_area: float
+    hull_area: float
 
     shp_area, _, _ = get_polygon_attributes(shp, geodesic)
     hull_area, _, _ = get_polygon_attributes(ch_shp, geodesic)
@@ -221,7 +230,7 @@ def calc_hull(shp, geodesic=True):
     return shp_area / hull_area
 
 
-def calc_schwartzberg(shp, geodesic=True):
+def calc_schwartzberg(shp, geodesic=True) -> float:
     """FEATURE 7: SCHWARTZBERG
 
     Schwartzberg is a secondary measure of the
@@ -251,6 +260,10 @@ def calc_schwartzberg(shp, geodesic=True):
 
     NOTE - Aaron's feature matches the verbal description of P/C (feature_helpers.R).
     """
+
+    _: Any
+    area: float
+    perimeter: float
 
     area, perimeter, _ = get_polygon_attributes(shp, geodesic)
 
