@@ -5,12 +5,13 @@ AARON KAUFMAN & GARY KING'S "KIWYSI" COMPACTNESS MODEL
 """
 
 import numpy as np
+from shapely.geometry import Polygon
 
 from .features import *
 
 
-def score_shape(shp, *, geodesic=True, revised=True):
-    features = featureize_shape(shp, geodesic)
+def score_shape(shp: Polygon, *, geodesic: bool = True, revised: bool = True) -> float:
+    features: list[float] = featureize_shape(shp, geodesic)
     score = score_features(features, revised=revised)
 
     return score
@@ -31,8 +32,8 @@ def rate_shape(rank: int) -> int:
     return 100 - rank + 1
 
 
-def featureize_shape(shp, geodesic=True):
-    features = []
+def featureize_shape(shp: Polygon, geodesic: bool = True) -> list[float]:
+    features: list[float] = []
 
     features.append(calc_sym_x(shp, geodesic))
     features.append(calc_sym_y(shp, geodesic))
@@ -48,7 +49,7 @@ def featureize_shape(shp, geodesic=True):
 ### PCA MODEL ###
 
 
-def score_features(features, *, revised=True):
+def score_features(features: list[float], *, revised: bool = True) -> float:
     """SmartFeatures PCA model (including Schwartzberg)"""
 
     if revised:
@@ -57,10 +58,10 @@ def score_features(features, *, revised=True):
         return _apply_PCA_model_ORIGINAL(features)
 
 
-def _apply_PCA_model_REVISED(features):
-    """The REVISED SmartFeatures PCA model (including Schwartzberg)"""
+def _apply_PCA_model_REVISED(features: list[float]) -> float:
+    """The revised (CORRECT) SmartFeatures PCA model (including Schwartzberg)"""
 
-    model = [
+    model: list[float] = [
         3.0428861122,  # sym_x
         4.5060390447,  # sym_y
         -22.7768820155,  # reock
@@ -70,18 +71,21 @@ def _apply_PCA_model_REVISED(features):
         -1.2981693414,  # schwartzberg
     ]  # Revised 01/25/21
 
-    intercept = 145.6420811716
+    intercept: float = 145.6420811716
 
-    score = np.dot(features, model) + intercept
-    normalized_score = score
+    score: float = np.dot(features, model) + intercept
+    normalized_score: float = score
 
     return normalized_score
 
 
-def _apply_PCA_model_ORIGINAL(features):
-    """original, INCORRECT SmartFeatures PCA model (including Schwartzberg)"""
+def _apply_PCA_model_ORIGINAL(features: list[float]) -> float:
+    """The original (INCORRECT) SmartFeatures PCA model (including Schwartzberg)
 
-    model = [
+    For *testing* purposes only.
+    """
+
+    model: list[float] = [
         0.317566717356693,  # sym_x
         0.32545234315137,  # sym_y
         0.32799567316863,  # reock
@@ -91,8 +95,8 @@ def _apply_PCA_model_ORIGINAL(features):
         0.412187169816954,  # schwartzberg
     ]
 
-    score = np.dot(features, model)
-    normalized_score = (score * 11) + 50
+    score: float = np.dot(features, model)
+    normalized_score: float = (score * 11) + 50
 
     return normalized_score
 
