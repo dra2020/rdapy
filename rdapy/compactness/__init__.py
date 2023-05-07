@@ -9,16 +9,17 @@ from .helpers import (
     INDEX,
     VALUE,
 )
-from .kiwysi import (
-    score_shape,
-    featureize_shape,
+from .features import (
     calc_sym_x,
     calc_sym_y,
     calc_reock,
     calc_bbox,
     calc_polsby,
     calc_hull,
-    calc_schwartzberg,
+)
+from .kiwysi import (
+    score_shape,
+    featureize_shape,
     score_features,
     rate_shape,
     rank_shape,
