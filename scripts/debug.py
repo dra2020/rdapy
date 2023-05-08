@@ -17,7 +17,7 @@ shapes = [item[VALUE] for item in shapes]  # discard the id
 scorecard_path = "testdata/compactness/NC-116th-Congressional/expected.json"
 scorecard = read_json(scorecard_path)
 
-make_compactness_scorecard(shapes)
+scorecard: dict = make_compactness_scorecard(shapes)
 
 pass
 
