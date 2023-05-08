@@ -2,6 +2,8 @@
 
 """
 READ/WRITE ROUTINES
+
+TODO - Cut this down to just what's needed.
 """
 
 import os
