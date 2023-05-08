@@ -10,7 +10,7 @@ from .features import *
 from .kiwysi import *
 
 
-def make_compactness_scorecard(shapes: list[Polygon | MultiPolygon]) -> dict:
+def calc_compactness(shapes: list[Polygon | MultiPolygon]) -> dict:
     """Compute Reock, Polsby-Popper, and KIWYSI compactness for a set of districts and by district."""
 
     tot_reock: float = 0
