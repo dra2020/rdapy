@@ -55,10 +55,9 @@ class TestKIWYSI:
             assert prediction == approx(score, abs=1)
 
     def test_rank_shape(self) -> None:
-        assert rank_shape(77.6086471426305) == 78
-        assert rank_shape(77.2586455094345) == 77
-        assert rank_shape(25.00594161) == 25
-        assert rank_shape(-32.4080845) == 1
+        assert rank_shape(102.3) == 100.0
+        assert rank_shape(77.2586455094345) == 77.2586455094345
+        assert rank_shape(-32.4080845) == 1.0
 
     def test_rate_shape(self) -> None:
         assert rate_shape(1) == 100

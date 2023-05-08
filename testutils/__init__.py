@@ -5,5 +5,6 @@ from .compactness import (
     load_shapes,
 )
 from .readwrite import *
+from .equal import *
 
 name = "testutils"

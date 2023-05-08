@@ -20,21 +20,20 @@ def calc_compactness(shapes: list[Polygon | MultiPolygon]) -> dict:
     by_district: list[dict] = list()
 
     for i, shp in enumerate(shapes):
-        print(f"Processing shape {i + 1} of {len(shapes)}...")
         features: list[float] = featureize_shape(shp)
 
         reock_flat: float = calc_reock(shp, geodesic=False)
         polsby_flat: float = calc_polsby(shp, geodesic=False)
 
-        kiwysi_rank: int = rank_shape(score_features(features))
+        kiwysi_rank: float = rank_shape(score_features(features))
 
         tot_reock += reock_flat
         tot_polsby += polsby_flat
         tot_kiwysi += kiwysi_rank
 
         measures: dict = {
-            "rawReock": reock_flat,
-            "rawPolsby": polsby_flat,
+            "reock": reock_flat,
+            "polsby": polsby_flat,
             "kiwysiRank": kiwysi_rank,
         }
         by_district.append(measures)
@@ -43,14 +42,14 @@ def calc_compactness(shapes: list[Polygon | MultiPolygon]) -> dict:
     avg_polsby: float = tot_polsby / len(shapes)
     avg_kiwysi: float = round(tot_kiwysi / len(shapes))
 
-    scorecard: dict = {
+    results: dict = {
         "avgReock": avg_reock,
         "avgPolsby": avg_polsby,
         "avgKIWYSI": avg_kiwysi,
         "byDistrict": by_district,
     }
 
-    return scorecard
+    return results
 
 
 ### END ###

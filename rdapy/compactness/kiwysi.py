@@ -19,13 +19,13 @@ def score_shape(
     return score
 
 
-def rank_shape(score: float) -> int:
-    """Constrain values to integers in the range [1–100].
+def rank_shape(raw_rank: float) -> float:
+    """Constrain values to the range [1–100].
 
     Smaller is better.
     """
 
-    return round(min(max(score, 1), 100))
+    return min(max(raw_rank, 1.0), 100.0)
 
 
 def rate_shape(rank: int) -> int:
