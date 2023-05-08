@@ -19,23 +19,37 @@ expected = read_json(expected_path)
 
 actual: dict = calc_compactness(shapes)
 
-print(f"avgReock: {actual['avgReock']} | {expected['avgReock']}")
-print(f"avgPolsby: {actual['avgPolsby']} | {expected['avgPolsby']}")
-print(f"avgKIWYSI: {actual['avgKIWYSI']} | {expected['avgKIWYSI']}")
+assert approx_equal(actual["avgReock"], expected["avgReock"], abs=0.005)
+assert approx_equal(actual["avgPolsby"], expected["avgPolsby"], abs=0.005)
+assert approx_equal(actual["avgKIWYSI"], expected["avgKIWYSI"], abs=0.005)
 
 for i in range(len(actual["byDistrict"])):
     print(f"District {i+1}")
+
     print(
-        f"  reock: {actual['byDistrict'][i]['reock']} | {expected['byDistrict'][i]['reock']}"
+        f"  Reock: {actual['byDistrict'][i]['reock']} | {expected['byDistrict'][i]['reock']}"
     )
-    print(
-        f"  polsby: {actual['byDistrict'][i]['polsby']} | {expected['byDistrict'][i]['polsby']}"
-    )
-    print(
-        f"  kiwysiRank: {actual['byDistrict'][i]['kiwysiRank']} | {expected['byDistrict'][i]['kiwysiRank']}"
+    assert approx_equal(
+        actual["byDistrict"][i]["reock"], expected["byDistrict"][i]["reock"], abs=0.005
     )
 
-# assert dict_approx_equal(actual, expected, int_threshold=1)
+    print(
+        f"  Polsby: {actual['byDistrict'][i]['polsby']} | {expected['byDistrict'][i]['polsby']}"
+    )
+    assert approx_equal(
+        actual["byDistrict"][i]["polsby"],
+        expected["byDistrict"][i]["polsby"],
+        abs=0.005,
+    )
+
+    print(
+        f"  KIWYSI: {actual['byDistrict'][i]['kiwysiRank']} | {expected['byDistrict'][i]['kiwysiRank']}"
+    )
+    assert approx_equal(
+        round(actual["byDistrict"][i]["kiwysiRank"]),
+        round(expected["byDistrict"][i]["kiwysiRank"]),
+        abs=0.005,
+    )
 
 pass
 
