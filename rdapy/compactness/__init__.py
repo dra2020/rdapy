@@ -15,5 +15,6 @@ from .kiwysi import (
     rate_shape,
     rank_shape,
 )
+from .compactness import make_compactness_scorecard
 
 name = "compactness"
