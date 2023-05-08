@@ -5,6 +5,7 @@ TEST KIWYSI COMPACTNESS MODEL
 """
 
 from rdapy.compactness import *
+from testutils import *
 from pytest import approx
 
 

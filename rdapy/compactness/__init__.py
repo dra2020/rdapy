@@ -1,9 +1,5 @@
 # rdapy/compactness/__init__.py
 
-from .readwrite import (
-    load_features,
-    load_shapes,
-)
 from .features import (
     calc_sym_x,
     calc_sym_y,
