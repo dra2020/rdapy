@@ -9,10 +9,10 @@ from pytest import approx
 from typing import Any
 
 
-def approx_equal(x: float, y: float, abs: float = 1e-6) -> bool:
+def approx_equal(x: float, y: float, places: int = 6) -> bool:
     """Check if two floats are approximately equal"""
 
-    return x == approx(y, abs=abs)
+    return x == approx(y, abs=(10 ** (-places)) * 0.5)
 
 
 def dict_approx_equal(actual: dict, expected: dict, int_threshold: int = 0) -> bool:

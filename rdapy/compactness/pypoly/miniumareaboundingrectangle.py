@@ -6,8 +6,6 @@ MINIMUM AREA BOUNDING RECTANGLE
 From:
 - https://stackoverflow.com/questions/13542855/python-help-to-implement-an-algorithm-to-find-the-minimum-area-rectangle-for-gi/14675742#14675742
 - https://gis.stackexchange.com/questions/22895/finding-minimum-area-rectangle-for-given-points
-
-TODO - Compare using shapely's minimum_rotated_rectangle property, instead of this.
 """
 
 import numpy as np

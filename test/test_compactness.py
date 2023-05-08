@@ -25,25 +25,25 @@ class TestCompactness:
 
         actual: dict = calc_compactness(shapes)
 
-        assert approx_equal(actual["avgReock"], expected["avgReock"], abs=0.005)
-        assert approx_equal(actual["avgPolsby"], expected["avgPolsby"], abs=0.005)
-        assert approx_equal(actual["avgKIWYSI"], expected["avgKIWYSI"], abs=0.005)
+        assert approx_equal(actual["avgReock"], expected["avgReock"], places=2)
+        assert approx_equal(actual["avgPolsby"], expected["avgPolsby"], places=2)
+        assert approx_equal(actual["avgKIWYSI"], expected["avgKIWYSI"], places=2)
 
         for i in range(len(actual["byDistrict"])):
             assert approx_equal(
                 actual["byDistrict"][i]["reock"],
                 expected["byDistrict"][i]["reock"],
-                abs=0.005,
+                places=2,
             )
             assert approx_equal(
                 actual["byDistrict"][i]["polsby"],
                 expected["byDistrict"][i]["polsby"],
-                abs=0.005,
+                places=2,
             )
             assert approx_equal(
                 round(actual["byDistrict"][i]["kiwysiRank"]),
                 round(expected["byDistrict"][i]["kiwysiRank"]),
-                abs=0.005,
+                places=2,
             )
 
 
