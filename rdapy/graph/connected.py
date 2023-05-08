@@ -6,12 +6,11 @@ CONTIGUOUS - Is a district in a plan fully connected?
 
 from typing import Any
 
-
-OUT_OF_STATE: str = "OUT_OF_STATE"
+from .constants import *
 
 
 def is_connected(geos: list[Any], adjacency: dict[Any, list[Any]]) -> bool:
-    """Make sure a graph is fully connected,
+    """Is a graph is fully connected?
     i.e., w/o regard to the virtual state boundary "shapes".
 
     Kenshi's iterative implementation of the recursive algorithm
@@ -44,9 +43,6 @@ def is_connected(geos: list[Any], adjacency: dict[Any, list[Any]]) -> bool:
 
 # LIMIT WHAT GETS EXPORTED.
 
-__all__ = [
-    "is_connected",
-    "OUT_OF_STATE",
-]
+__all__ = ["is_connected"]
 
 ### END ###
