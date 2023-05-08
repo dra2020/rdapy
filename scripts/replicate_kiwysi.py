@@ -4,7 +4,7 @@
 Run this code to replicate the KIWYSI compactness model against the sample shapes.
 """
 
-from pyproj import CRS
+
 from rdapy import *
 
 INDEX: int = 0
