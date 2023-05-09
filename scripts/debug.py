@@ -4,36 +4,16 @@
 DEBUG
 """
 
-from rdapy.graph import *
+from rdapy.equal import *
 from testutils import *
 
 from collections import defaultdict
 
-plan_path = "testdata/graph/SAMPLE-BG-map.csv"
-graph_path = "testdata/graph/SAMPLE-BG-graph.json"
-
-
-def check_contiguity(plan_path: str, graph_path: str) -> bool:
-    """Test helper for is_connected()"""
-
-    plan_rows = read_csv(plan_path, [str, int])
-    graph = read_json(graph_path)
-
-    plan: dict[str, int | str] = {row["GEOID"]: row["DISTRICT"] for row in plan_rows}
-    inverted_plan: defaultdict[int | str, set[str]] = defaultdict(set)
-    for k, v in plan.items():
-        inverted_plan[v].add(k)
-
-    for id, geos in inverted_plan.items():
-        connected: bool = is_connected(list(geos), graph)
-
-        if not connected:
-            return False
-
-    return True
-
-
-assert check_contiguity(plan_path, graph_path)
+profile: dict = read_json("testdata/population/population-NC-116th.json")
+max_pop: int = max(profile["byDistrict"])
+min_pop: int = min(profile["byDistrict"])
+target_pop: int = profile["targetSize"]
+print(calc_population_deviation(max_pop, min_pop, target_pop))
 
 pass
 
