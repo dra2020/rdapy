@@ -53,7 +53,9 @@ def district_totals(CxD: list[list[float]]) -> list[float]:
     return totals
 
 
-def reduceCSplits(CxD: list[list[float]], dTotals: list[float]) -> list[list[float]]:
+def reduceCountySplits(
+    CxD: list[list[float]], dTotals: list[float]
+) -> list[list[float]]:
     """Consolidate *whole districts* (w/in one county) UP into dummy district 0, county by county."""
 
     # Create the reduced template
@@ -76,42 +78,39 @@ def reduceCSplits(CxD: list[list[float]], dTotals: list[float]) -> list[list[flo
     return CxDreducedC
 
 
-"""
-// Consolidate *whole counties* (w/in one district) LEFT into the dummy county 0,
-//   district by district.
-export function reduceDSplits(CxD: T.CxD, countyTotals: number[]): number[][]
-{
-  // Create the reduced template
-  let CxDreducedD: number[][] = U.deepCopy(CxD);
-  CxDreducedD.map(row => row.unshift(0));
-  const nC = CxDreducedD[0].length;
-  const nD = CxDreducedD.length;
+def reduceDistrictSplits(
+    CxD: list[list[float]], cTotals: list[float]
+) -> list[list[float]]:
+    """Consolidate *whole counties* (w/in one district) LEFT into the dummy county 0, district by district."""
 
-  for (let i = 0; i < nD; i++)
-  {
-    // Skip the virtual county 0
-    for (let j = 1; j < nC; j++)
-    {
-      let split_total = CxDreducedD[i][j];
+    # Create the reduced template
+    CxDreducedD: list[list[float]] = copy.deepcopy(CxD)
+    for row in CxDreducedD:
+        row.insert(0, 0.0)
+    nC: int = len(CxDreducedD[0])
+    nD: int = len(CxDreducedD)
 
-      if (split_total > 0)
-      {
-        if (U.areRoughlyEqual(split_total, countyTotals[j - 1], U.EQUAL_TOLERANCE))
-        {
-          CxDreducedD[i][0] += split_total;
-          CxDreducedD[i][j] = 0;
-        }
-      }
-    }
-  }
+    for i in range(nD):
+        # Skip the virtual county 0
+        for j in range(1, nC):
+            split_total: float = CxDreducedD[i][j]
 
-  return CxDreducedD;
-}
+            if split_total > 0:
+                if math.isclose(split_total, cTotals[j - 1], abs_tol=1e-6):
+                    CxDreducedD[i][0] += split_total
+                    CxDreducedD[i][j] = 0
 
-"""
+    return CxDreducedD
+
 
 # LIMIT WHAT GETS EXPORTED.
 
-__all__ = ["split_score", "county_totals", "district_totals", "reduceCSplits"]
+__all__ = [
+    "split_score",
+    "county_totals",
+    "district_totals",
+    "reduceCountySplits",
+    "reduceDistrictSplits",
+]
 
 ### END ###

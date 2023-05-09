@@ -77,7 +77,7 @@ class TestSplitting:
         assert vector_approx_equal(dTActual, dTExpected, places=0)
 
         # Reduce county & district splits
-        rCActual: list[list[float]] = reduceCSplits(CxD, dTActual)
+        rCActual: list[list[float]] = reduceCountySplits(CxD, dTActual)
         rCExpected: list[list[float]] = [
             [0, 0, 0, 0, 0, 0, 0, 3551121, 0, 0, 0, 0, 0, 0, 0],
             [
@@ -124,7 +124,53 @@ class TestSplitting:
         ]
         assert matrix_approx_equal(rCActual, rCExpected, places=0)
 
-        # rDActual: list[list[float]] = reduceDSplits(rC, cTActual)
+        rDActual: list[list[float]] = reduceDistrictSplits(CxD, cTActual)
+        rDExpected: list[list[float]] = [
+            [
+                359045,
+                0,
+                0,
+                0,
+                26230,
+                0,
+                0,
+                0,
+                2994,
+                1635,
+                0,
+                92091,
+                197708,
+                0,
+                30521,
+                0,
+            ],
+            [131346, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 578878, 0, 0, 0, 0],
+            [47420, 0, 0, 0, 0, 0, 0, 0, 225734, 0, 0, 309294, 545, 0, 0, 127231],
+            [
+                20489,
+                0,
+                0,
+                0,
+                27367,
+                0,
+                0,
+                0,
+                37268,
+                198551,
+                0,
+                0,
+                177517,
+                0,
+                180512,
+                68520,
+            ],
+            [0, 0, 0, 0, 0, 0, 0, 0, 710224, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 710224, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 710224, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 710225, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 710224, 0, 0, 0, 0, 0, 0, 0],
+        ]
+        assert matrix_approx_equal(rDActual, rDExpected, places=0)
 
         # TODO - More tests ...
 
