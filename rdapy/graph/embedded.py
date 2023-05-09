@@ -22,55 +22,36 @@ def is_embedded(
     * If there are 2 or more neighboring districts.
     """
 
-    feature_ids: set[int | str]
+    feature_ids: set[str] = inverted_plan[district_id]
 
-    return False
+    if not feature_ids:
+        return True
 
+    neighboring_districts: set[int | str] = set()
 
-"""
-//
-// A district is NOT a "donut hole" district:
-// * If any neighbor is 'OUT_OF_STATE'; or
-// * If there are 2 or more neighboring districts.
-//
+    for geoid in feature_ids:
+        neighbors: list[str] = graph[geoid]
 
+        for neighbor in neighbors:
+            if neighbor == OUT_OF_STATE:
+                return False
 
-export function isEmbedded(districtID: number, featureIDs: T.FeatureGroup, plan: T.PlanByGeoID, graph: T.ContiguityGraph, bLog: boolean = false): boolean
-{
-let neighboringDistricts = new Set();
-let featuresToCheck = Array.from(featureIDs);
+            neighboring_district: int | str = plan[neighbor]
 
-if (U.isArrayEmpty(featuresToCheck)) return true;
+            # Assume that a missing district assignment means that the feature is
+            # "water-only" AND part of the border (vs.internal) and, therefore,
+            # not in the plan / map.
 
-for (let feature of featuresToCheck)
-{
-    // Get its neighbors (including the virtual "out of bounds" ones)
-    let neighbors = G.neighbors(feature, graph);
+            if neighboring_district == None:
+                return False
 
-    for (let neighbor of neighbors)
-    {
-    if (G.isOutOfBounds(neighbor)) return false;
+            if neighboring_district != district_id:
+                neighboring_districts.add(neighboring_district)
+                if len(neighboring_districts) > 1:
+                    return False
 
-    let neighboringDistrict = G.getDistrict(neighbor, plan);
+    return True
 
-    // Assume that a missing district assignment means that the feature is
-    // "water-only" AND part of the border (vs.internal) and, therefore,
-    // not in the plan / map.
-
-    if (neighboringDistrict == undefined) return false;
-
-    if (neighboringDistrict != districtID)
-    {
-        neighboringDistricts.add(neighboringDistrict);
-
-        if (neighboringDistricts.size > 1) return false;
-    }
-    }
-}
-
-return true;
-}
-"""
 
 # LIMIT WHAT GETS EXPORTED.
 
