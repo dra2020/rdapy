@@ -16,7 +16,7 @@ dTActual: list[float] = district_totals(CxD)
 
 # Reduce county & district splits
 
-rDActual: list[list[float]] = reduceDistrictSplits(CxD, cTActual)
+rDActual: list[list[float]] = reduce_district_splits(CxD, cTActual)
 rDExpected: list[list[float]] = [
     [
         359045,

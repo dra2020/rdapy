@@ -77,7 +77,7 @@ class TestSplitting:
         assert vector_approx_equal(dTActual, dTExpected, places=0)
 
         # Reduce county & district splits
-        rCActual: list[list[float]] = reduceCountySplits(CxD, dTActual)
+        rCActual: list[list[float]] = reduce_county_splits(CxD, dTActual)
         rCExpected: list[list[float]] = [
             [0, 0, 0, 0, 0, 0, 0, 3551121, 0, 0, 0, 0, 0, 0, 0],
             [
@@ -124,7 +124,7 @@ class TestSplitting:
         ]
         assert matrix_approx_equal(rCActual, rCExpected, places=0)
 
-        rDActual: list[list[float]] = reduceDistrictSplits(CxD, cTActual)
+        rDActual: list[list[float]] = reduce_district_splits(CxD, cTActual)
         rDExpected: list[list[float]] = [
             [
                 359045,
@@ -171,6 +171,41 @@ class TestSplitting:
             [0, 0, 0, 0, 0, 0, 0, 0, 710224, 0, 0, 0, 0, 0, 0, 0],
         ]
         assert matrix_approx_equal(rDActual, rDExpected, places=0)
+
+        # Calculate county & district weights
+        wExpected: list[float] = [
+            0.011,
+            0.021,
+            0.021,
+            0.008,
+            0.006,
+            0.001,
+            0.003,
+            0.597,
+            0.031,
+            0.017,
+            0.153,
+            0.059,
+            0.007,
+            0.033,
+            0.031,
+        ]
+        wActual: list[float] = calc_county_weights(cTActual)
+        assert vector_approx_equal(wActual, wExpected, places=3)
+
+        xExpected: list[float] = [
+            0.111,
+            0.111,
+            0.111,
+            0.111,
+            0.111,
+            0.111,
+            0.111,
+            0.111,
+            0.111,
+        ]
+        xActual: list[float] = calc_district_weights(dTActual)
+        assert vector_approx_equal(xActual, xExpected, places=3)
 
         # TODO - More tests ...
 

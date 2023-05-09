@@ -53,7 +53,7 @@ def district_totals(CxD: list[list[float]]) -> list[float]:
     return totals
 
 
-def reduceCountySplits(
+def reduce_county_splits(
     CxD: list[list[float]], dTotals: list[float]
 ) -> list[list[float]]:
     """Consolidate *whole districts* (w/in one county) UP into dummy district 0, county by county."""
@@ -78,7 +78,7 @@ def reduceCountySplits(
     return CxDreducedC
 
 
-def reduceDistrictSplits(
+def reduce_district_splits(
     CxD: list[list[float]], cTotals: list[float]
 ) -> list[list[float]]:
     """Consolidate *whole counties* (w/in one district) LEFT into the dummy county 0, district by district."""
@@ -103,12 +103,42 @@ def reduceDistrictSplits(
     return CxDreducedD
 
 
+def calc_county_weights(totals: list[float]) -> list[float]:
+    """Calculate county weights from the county population totals"""
+
+    nC: int = len(totals)
+    cTotal: float = sum(totals)
+
+    w: list[float] = [0.0] * nC
+
+    for j in range(nC):
+        w[j] = totals[j] / cTotal
+
+    return w
+
+
+def calc_district_weights(totals: list[float]) -> list[float]:
+    """Calculate district weights from the district population totals"""
+
+    nD: int = len(totals)
+    dTotal: float = sum(totals)
+
+    x: list[float] = [0.0] * nD
+
+    for i in range(nD):
+        x[i] = totals[i] / dTotal
+
+    return x
+
+
 __all__ = [
     "split_score",
     "county_totals",
     "district_totals",
-    "reduceCountySplits",
-    "reduceDistrictSplits",
+    "reduce_county_splits",
+    "reduce_district_splits",
+    "calc_county_weights",
+    "calc_district_weights",
 ]
 
 ### END ###
