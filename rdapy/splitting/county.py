@@ -103,32 +103,73 @@ def reduce_district_splits(
     return CxDreducedD
 
 
-def calc_county_weights(totals: list[float]) -> list[float]:
+def calc_county_weights(county_totals: list[float]) -> list[float]:
     """Calculate county weights from the county population totals"""
 
-    nC: int = len(totals)
-    cTotal: float = sum(totals)
+    nC: int = len(county_totals)
+    cTotal: float = sum(county_totals)
 
     w: list[float] = [0.0] * nC
 
     for j in range(nC):
-        w[j] = totals[j] / cTotal
+        w[j] = county_totals[j] / cTotal
 
     return w
 
 
-def calc_district_weights(totals: list[float]) -> list[float]:
+def calc_district_weights(district_totals: list[float]) -> list[float]:
     """Calculate district weights from the district population totals"""
 
-    nD: int = len(totals)
-    dTotal: float = sum(totals)
+    nD: int = len(district_totals)
+    dTotal: float = sum(district_totals)
 
     x: list[float] = [0.0] * nD
 
     for i in range(nD):
-        x[i] = totals[i] / dTotal
+        x[i] = district_totals[i] / dTotal
 
     return x
+
+
+# TODO - HERE ...
+def calc_county_fractions(
+    CxD: list[list[float]], county_totals: list[float]
+) -> list[list[float]]:
+    """Calculate county fractions from the county-district splits and the county population totals"""
+
+    nD: int = len(CxD)
+    nC: int = len(CxD[0])
+
+    f: list[list[float]] = [[0.0] * nC for i in range(nD)]
+
+    for j in range(nC):
+        for i in range(nD):
+            if county_totals[j] > 0:
+                f[i][j] = CxD[i][j] / county_totals[j]
+            else:
+                f[i][j] = 0.0
+
+    return f
+
+
+def calc_district_fractions(
+    CxD: list[list[float]], district_totals: list[float]
+) -> list[list[float]]:
+    """Calculate district fractions from the county-district splits and the district population totals"""
+
+    nD: int = len(CxD)
+    nC: int = len(CxD[0])
+
+    g: list[list[float]] = [[0.0] * nC for i in range(nD)]
+
+    for j in range(nC):
+        for i in range(nD):
+            if district_totals[i] > 0:
+                g[i][j] = CxD[i][j] / district_totals[i]
+            else:
+                g[i][j] = 0.0
+
+    return g
 
 
 __all__ = [
@@ -139,6 +180,8 @@ __all__ = [
     "reduce_district_splits",
     "calc_county_weights",
     "calc_district_weights",
+    "calc_county_fractions",
+    "calc_district_fractions",
 ]
 
 ### END ###

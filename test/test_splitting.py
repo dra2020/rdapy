@@ -77,7 +77,7 @@ class TestSplitting:
         assert vector_approx_equal(dTActual, dTExpected, places=0)
 
         # Reduce county & district splits
-        rCActual: list[list[float]] = reduce_county_splits(CxD, dTActual)
+        rCActual: list[list[float]] = reduce_county_splits(CxD, dTExpected)
         rCExpected: list[list[float]] = [
             [0, 0, 0, 0, 0, 0, 0, 3551121, 0, 0, 0, 0, 0, 0, 0],
             [
@@ -124,7 +124,7 @@ class TestSplitting:
         ]
         assert matrix_approx_equal(rCActual, rCExpected, places=0)
 
-        rDActual: list[list[float]] = reduce_district_splits(CxD, cTActual)
+        rDActual: list[list[float]] = reduce_district_splits(CxD, cTExpected)
         rDExpected: list[list[float]] = [
             [
                 359045,
@@ -190,7 +190,7 @@ class TestSplitting:
             0.033,
             0.031,
         ]
-        wActual: list[float] = calc_county_weights(cTActual)
+        wActual: list[float] = calc_county_weights(cTExpected)
         assert vector_approx_equal(wActual, wExpected, places=3)
 
         xExpected: list[float] = [
@@ -204,8 +204,232 @@ class TestSplitting:
             0.111,
             0.111,
         ]
-        xActual: list[float] = calc_district_weights(dTActual)
+        xActual: list[float] = calc_district_weights(dTExpected)
         assert vector_approx_equal(xActual, xExpected, places=3)
+
+        # Calculate county & district fractions
+        # fExpected: list[list[float]] = [
+        #     [
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.9303,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #     ],
+        #     [
+        #         1.0000,
+        #         0.0000,
+        #         1.0000,
+        #         0.4894,
+        #         1.0000,
+        #         1.0000,
+        #         0.0000,
+        #         0.0008,
+        #         0.0082,
+        #         1.0000,
+        #         0.0939,
+        #         0.5261,
+        #         0.0000,
+        #         0.1446,
+        #         0.0000,
+        #     ],
+        #     [
+        #         0.0000,
+        #         1.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.5905,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #     ],
+        #     [
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0591,
+        #         0.0000,
+        #         0.0000,
+        #         0.3155,
+        #         0.0015,
+        #         1.0000,
+        #         0.0000,
+        #         0.6500,
+        #     ],
+        #     [
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.5106,
+        #         0.0000,
+        #         0.0000,
+        #         1.0000,
+        #         0.0098,
+        #         0.9918,
+        #         0.0000,
+        #         0.0000,
+        #         0.4724,
+        #         0.0000,
+        #         0.8554,
+        #         0.3500,
+        #     ],
+        #     [
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #     ],
+        #     [
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #     ],
+        #     [
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #     ],
+        #     [
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #     ],
+        #     [
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #         0.0000,
+        #     ],
+        # ]
+        # fActual: list[list[float]] = calc_county_fractions(CxD, cTExpected)
+        # assert matrix_approx_equal(fActual, fExpected, places=3)
+
+        # gExpected: list[list[float]] = [
+        #     [
+        #         0.5055,
+        #         0,
+        #         0,
+        #         0,
+        #         0.0369,
+        #         0,
+        #         0,
+        #         0,
+        #         0.0042,
+        #         0.0023,
+        #         0,
+        #         0.1297,
+        #         0.2784,
+        #         0,
+        #         0.043,
+        #         0,
+        #     ],
+        #     [0.1849, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.8151, 0, 0, 0, 0],
+        #     [0.0668, 0, 0, 0, 0, 0, 0, 0, 0.3178, 0, 0, 0.4355, 0.0008, 0, 0, 0.1791],
+        #     [
+        #         0.0288,
+        #         0,
+        #         0,
+        #         0,
+        #         0.0385,
+        #         0,
+        #         0,
+        #         0,
+        #         0.0525,
+        #         0.2796,
+        #         0,
+        #         0,
+        #         0.2499,
+        #         0,
+        #         0.2542,
+        #         0.0965,
+        #     ],
+        #     [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        #     [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        #     [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        #     [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        #     [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        # ]
+        # gActual: list[list[float]] = calc_district_fractions(CxD, dTExpected)
+        # assert matrix_approx_equal(gActual, gExpected, places=3)
 
         # TODO - More tests ...
 
