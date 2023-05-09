@@ -133,8 +133,6 @@ def _get_geodesic_attributes_multipoly(shp):
     return abs(area_mp), abs(perimeter_mp), abs(diameter_mp)
 
 
-# LIMIT WHAT GETS EXPORTED.
-
 __all__ = ["get_polygon_attributes"]
 
 ### END ###

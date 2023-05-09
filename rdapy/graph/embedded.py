@@ -53,8 +53,6 @@ def is_embedded(
     return True
 
 
-# LIMIT WHAT GETS EXPORTED.
-
 __all__ = ["is_embedded"]
 
 ### END ###

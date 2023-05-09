@@ -103,8 +103,6 @@ def _apply_PCA_model_ORIGINAL(features: list[float]) -> float:
     return normalized_score
 
 
-# LIMIT WHAT GETS EXPORTED.
-
 __all__ = [
     "score_shape",
     "featureize_shape",

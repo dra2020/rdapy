@@ -78,8 +78,6 @@ def minimum_bounding_rectangle(points):
     return rval
 
 
-# LIMIT WHAT GETS EXPORTED.
-
 __all__ = ["minimum_bounding_rectangle"]
 
 ### END ###

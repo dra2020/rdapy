@@ -103,8 +103,6 @@ def reduceDistrictSplits(
     return CxDreducedD
 
 
-# LIMIT WHAT GETS EXPORTED.
-
 __all__ = [
     "split_score",
     "county_totals",

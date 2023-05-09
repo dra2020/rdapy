@@ -41,8 +41,6 @@ def is_connected(geos: list[Any], adjacency: dict[Any, list[Any]]) -> bool:
     return len(visited) == len(all_geos)
 
 
-# LIMIT WHAT GETS EXPORTED.
-
 __all__ = ["is_connected"]
 
 ### END ###

@@ -112,8 +112,6 @@ def get_polygons_coordinates(geometry):
 #     return polygon_coord_strs
 
 
-# LIMIT WHAT GETS EXPORTED.
-
 __all__ = ["get_polygon_coordinates", "get_polygons_coordinates"]
 
 ### END ###

@@ -27,8 +27,6 @@ def reproject_shapes(source_shapes, crs_in, crs_out):
     return new_shapes
 
 
-# LIMIT WHAT GETS EXPORTED.
-
 __all__ = ["reproject_shape", "reproject_shapes"]
 
 ### END ###
