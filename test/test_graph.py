@@ -38,5 +38,8 @@ class TestGraph:
         }
         assert is_connected(geos, adjacency)
 
+    def test_is_embedded(self) -> None:
+        assert True  # TODO
+
 
 ### END ###

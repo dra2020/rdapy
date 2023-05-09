@@ -4,52 +4,27 @@
 DEBUG
 """
 
-from rdapy.compactness import *
+from rdapy.graph import *
 from testutils import *
 
-INDEX: int = 0
-VALUE: int = 1
+from collections import defaultdict
 
-shapes_path = "testdata/compactness/NC-116th-Congressional"
-shapes, _ = load_shapes(shapes_path, id="id")
-shapes = [item[VALUE] for item in shapes]  # discard the id
 
-expected_path = "testdata/compactness/NC-116th-Congressional/expected.json"
-expected = read_json(expected_path)
+plan_path = "testdata/graph/SAMPLE-BG-map.csv"
+plan_rows = read_csv(plan_path, [str, int])
 
-actual: dict = calc_compactness(shapes)
+graph_path = "testdata/graph/SAMPLE-BG-graph.json"
+graph = read_json(graph_path)
 
-assert approx_equal(actual["avgReock"], expected["avgReock"], places=2)
-assert approx_equal(actual["avgPolsby"], expected["avgPolsby"], places=2)
-assert approx_equal(actual["avgKIWYSI"], expected["avgKIWYSI"], places=2)
+plan: dict[str, int | str] = {row["GEOID"]: row["DISTRICT"] for row in plan_rows}
+inverted_plan: defaultdict[int | str, set[str]] = defaultdict(set)
+for k, v in plan.items():
+    inverted_plan[v].add(k)
 
-for i in range(len(actual["byDistrict"])):
-    print(f"District {i+1}")
+for id, features in inverted_plan.items():
+    embedded: bool = is_embedded(id, plan, inverted_plan, graph)
 
-    print(
-        f"  Reock: {actual['byDistrict'][i]['reock']} | {expected['byDistrict'][i]['reock']}"
-    )
-    assert approx_equal(
-        actual["byDistrict"][i]["reock"], expected["byDistrict"][i]["reock"], places=2
-    )
-
-    print(
-        f"  Polsby: {actual['byDistrict'][i]['polsby']} | {expected['byDistrict'][i]['polsby']}"
-    )
-    assert approx_equal(
-        actual["byDistrict"][i]["polsby"],
-        expected["byDistrict"][i]["polsby"],
-        places=2,
-    )
-
-    print(
-        f"  KIWYSI: {actual['byDistrict'][i]['kiwysiRank']} | {expected['byDistrict'][i]['kiwysiRank']}"
-    )
-    assert approx_equal(
-        round(actual["byDistrict"][i]["kiwysiRank"]),
-        round(expected["byDistrict"][i]["kiwysiRank"]),
-        places=2,
-    )
+    print(f"{id}: {embedded}")
 
 pass
 
