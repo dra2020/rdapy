@@ -3,5 +3,6 @@
 from .compactness import *
 from .graph import *
 from .equal import *
+from .splitting import *
 
 name = "rdapy"
