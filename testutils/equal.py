@@ -15,12 +15,27 @@ def approx_equal(x: float, y: float, places: int = 6) -> bool:
     return x == approx(y, abs=(10 ** (-places)) * 0.5)
 
 
-def array_approx_equal(
+def vector_approx_equal(
     actual: list[float | int], expected: list[float | int], places: int = 6
 ) -> bool:
-    """Check if two arrays of numbers are approximately equal"""
+    """Check if two vectors of numbers are approximately equal"""
+
+    if len(actual) != len(expected):
+        return False
 
     return actual == approx(expected, abs=(10 ** (-places)) * 0.5)
+
+
+def matrix_approx_equal(
+    actual: list[list[float | int]], expected: list[list[float | int]], places: int = 6
+) -> bool:
+    """Check if a 2D matrix of numbers are approximately equal"""
+
+    for i in range(len(actual)):
+        if not vector_approx_equal(actual[i], expected[i], places):
+            return False
+
+    return True
 
 
 def dict_approx_equal(actual: dict, expected: dict, int_threshold: int = 0) -> bool:
