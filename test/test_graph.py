@@ -58,10 +58,35 @@ class TestGraph:
         }
         assert is_connected(geos, adjacency)
 
-    def test_is_embedded(self) -> None:
+    def test_is_embedded_BG(self) -> None:
         plan_path = "testdata/graph/SAMPLE-BG-map.csv"
         graph_path = "testdata/graph/SAMPLE-BG-graph.json"
         assert check_embeddedness(plan_path, graph_path)
+
+        plan_path = "testdata/graph/SAMPLE-BG-map-hole.csv"
+        graph_path = "testdata/graph/SAMPLE-BG-graph.json"
+        assert not check_embeddedness(plan_path, graph_path)
+
+    def test_is_embedded_GRID(self) -> None:
+        plan_path = "testdata/graph/grid-4-square.csv"
+        graph_path = "testdata/graph/grid-graph.json"
+        assert check_embeddedness(plan_path, graph_path)
+
+        plan_path = "testdata/graph/grid-stray-1.csv"
+        graph_path = "testdata/graph/grid-graph.json"
+        assert check_embeddedness(plan_path, graph_path)
+
+        plan_path = "testdata/graph/grid-stray-2.csv"
+        graph_path = "testdata/graph/grid-graph.json"
+        assert check_embeddedness(plan_path, graph_path)
+
+        plan_path = "testdata/graph/grid-corner.csv"
+        graph_path = "testdata/graph/grid-graph.json"
+        assert check_embeddedness(plan_path, graph_path)
+
+        plan_path = "testdata/graph/grid-donut.csv"
+        graph_path = "testdata/graph/grid-graph.json"
+        assert not check_embeddedness(plan_path, graph_path)
 
 
 ### END ###
