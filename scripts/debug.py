@@ -4,16 +4,13 @@
 DEBUG
 """
 
-from rdapy.equal import *
+from rdapy.splitting import *
 from testutils import *
 
-from collections import defaultdict
-
-profile: dict = read_json("testdata/population/population-NC-116th.json")
-max_pop: int = max(profile["byDistrict"])
-min_pop: int = min(profile["byDistrict"])
-target_pop: int = profile["targetSize"]
-print(calc_population_deviation(max_pop, min_pop, target_pop))
+sample: dict = read_json("testdata/splitting/samples/splitting-AZ-benchmark.json")
+CxD: list[list[float]] = sample["countyByDistrict"]
+cT: list[float] = county_totals(CxD)
+dT: list[float] = district_totals(CxD)
 
 pass
 

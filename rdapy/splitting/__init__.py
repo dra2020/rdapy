@@ -1,4 +1,4 @@
-# rdapy/equal/__init__.py
+# rdapy/splitting/__init__.py
 
 from .county import *
 

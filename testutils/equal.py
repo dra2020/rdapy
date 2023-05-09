@@ -15,6 +15,14 @@ def approx_equal(x: float, y: float, places: int = 6) -> bool:
     return x == approx(y, abs=(10 ** (-places)) * 0.5)
 
 
+def array_approx_equal(
+    actual: list[float | int], expected: list[float | int], places: int = 6
+) -> bool:
+    """Check if two arrays of numbers are approximately equal"""
+
+    return actual == approx(expected, abs=(10 ** (-places)) * 0.5)
+
+
 def dict_approx_equal(actual: dict, expected: dict, int_threshold: int = 0) -> bool:
     """Check if two dictionaries are approximately equal"""
 

@@ -34,5 +34,45 @@ class TestSplitting:
         # No splits
         assert approx_equal(split_score([]), 1.0, places=2)
 
+    def test_county_district_totals(self) -> None:
+        sample: dict = read_json(
+            "testdata/splitting/samples/splitting-AZ-benchmark.json"
+        )
+        CxD: list[list[float]] = sample["countyByDistrict"]
+        cTActual: list[float] = county_totals(CxD)
+        dTActual: list[float] = district_totals(CxD)
+
+        cTExpected: list[float] = [
+            71518,
+            131346,
+            134421,
+            53597,
+            37220,
+            8437,
+            20489,
+            3817117,
+            200186,
+            107449,
+            980263,
+            375770,
+            47420,
+            211033,
+            195751,
+        ]
+        dTExpected: list[float] = [
+            710224,
+            710224,
+            710224,
+            710224,
+            710224,
+            710224,
+            710224,
+            710225,
+            710224,
+        ]
+
+        assert array_approx_equal(cTActual, cTExpected, places=0)
+        assert array_approx_equal(dTActual, dTExpected, places=0)
+
 
 ### END ###
