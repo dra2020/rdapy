@@ -140,7 +140,7 @@ def calc_county_fractions(
     nD: int = len(CxD)
     nC: int = len(CxD[0])
 
-    f: list[list[float]] = [[0.0] * nC for i in range(nD)]
+    f: list[list[float]] = [[0.0] * nC for d in range(nD)]
 
     for j in range(nC):
         for i in range(nD):
@@ -160,7 +160,7 @@ def calc_district_fractions(
     nD: int = len(CxD)
     nC: int = len(CxD[0])
 
-    g: list[list[float]] = [[0.0] * nC for i in range(nD)]
+    g: list[list[float]] = [[0.0] * nC for d in range(nD)]
 
     for j in range(nC):
         for i in range(nD):
