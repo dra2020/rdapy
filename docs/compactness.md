@@ -1,0 +1,3 @@
+# Compactness
+
+TODO
