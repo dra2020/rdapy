@@ -8,8 +8,8 @@ DRA-specific functionality.
 
 These are all the categories:
 
-- [Compactness](./docs/compactness.md): Various measures of compactness.
-- [Equal](./docs/equal.md): Population deviation & 'roughly' equal population.
-- [Graph](./docs/graph.md): Checks for contiguity & embeddedness.
-- [Partisan](./docs/partisan.md): Various measures of partisan bias & responsiveness, as well as support for rank-vote graphs and seats-votes curves.
-- [Splitting](./docs/splitting.md): County- & district-splitting and COI splitting.
+- [Compactness](./docs/compactness.md): Various measures of compactness
+- [Equal](./docs/equal.md): Population deviation
+- [Graph](./docs/graph.md): Checks for contiguity & embeddedness
+- [Partisan](./docs/partisan.md): Various measures of partisan bias & responsiveness, as well as support for rank-vote graphs and seats-votes curves
+- [Splitting](./docs/splitting.md): County- & district-splitting and COI splitting
