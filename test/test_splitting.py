@@ -68,20 +68,20 @@ class TestSplitting:
         fActual: list[list[float]] = calc_county_fractions(CxD, counties)
         wActual: list[float] = calc_county_weights(counties)
 
-        assert matrix_approx_equal(fActual, fExpected, places=3)
-        assert vector_approx_equal(wActual, wExpected, places=3)
+        assert matrix_approx_equal(fActual, fExpected, places=4)
+        assert vector_approx_equal(wActual, wExpected, places=4)
 
-        assert approx_equal(county_split_score(0, fExpected), 1.0, places=3)
-        assert approx_equal(county_split_score(1, fExpected), 1.0, places=3)
-        assert approx_equal(county_split_score(2, fExpected), 1.4142, places=3)
-        assert approx_equal(county_split_score(3, fExpected), 1.0, places=3)
-        assert approx_equal(county_split_score(4, fExpected), 1.0, places=3)
-        assert approx_equal(county_split_score(5, fExpected), 1.4029, places=3)
-        assert approx_equal(county_split_score(6, fExpected), 1.0, places=3)
+        assert approx_equal(county_split_score(0, fExpected), 1.0, places=4)
+        assert approx_equal(county_split_score(1, fExpected), 1.0, places=4)
+        assert approx_equal(county_split_score(2, fExpected), 1.4142, places=4)
+        assert approx_equal(county_split_score(3, fExpected), 1.0, places=4)
+        assert approx_equal(county_split_score(4, fExpected), 1.0, places=4)
+        assert approx_equal(county_split_score(5, fExpected), 1.4029, places=4)
+        assert approx_equal(county_split_score(6, fExpected), 1.0, places=4)
 
-        assert approx_equal(county_splitting(fActual, wActual), 1.0737, places=3)
+        assert approx_equal(county_splitting(fActual, wActual), 1.0737, places=4)
         assert approx_equal(
-            calc_county_splitting(CxD, districts, counties), 1.0737, places=3
+            calc_county_splitting(CxD, districts, counties), 1.0737, places=4
         )
 
         # District splitting
@@ -89,17 +89,17 @@ class TestSplitting:
         gActual: list[list[float]] = calc_district_fractions(CxD, districts)
         xActual: list[float] = calc_district_weights(districts)
 
-        assert matrix_approx_equal(gActual, gExpected, places=3)
-        assert vector_approx_equal(xActual, xExpected, places=3)
+        assert matrix_approx_equal(gActual, gExpected, places=4)
+        assert vector_approx_equal(xActual, xExpected, places=4)
 
-        assert approx_equal(district_split_score(0, gExpected), 1.7121, places=3)
-        assert approx_equal(district_split_score(1, gExpected), 1.3416, places=3)
-        assert approx_equal(district_split_score(2, gExpected), 1.2845, places=3)
-        assert approx_equal(district_split_score(3, gExpected), 1.3416, places=3)
+        assert approx_equal(district_split_score(0, gExpected), 1.7121, places=4)
+        assert approx_equal(district_split_score(1, gExpected), 1.3416, places=4)
+        assert approx_equal(district_split_score(2, gExpected), 1.2845, places=4)
+        assert approx_equal(district_split_score(3, gExpected), 1.3416, places=4)
 
-        assert approx_equal(district_splitting(gActual, xActual), 1.4200, places=3)
+        assert approx_equal(district_splitting(gActual, xActual), 1.4200, places=4)
         assert approx_equal(
-            calc_district_splitting(CxD, districts, counties), 1.4200, places=3
+            calc_district_splitting(CxD, districts, counties), 1.4200, places=4
         )
 
     def test_rightthand_example(self) -> None:
@@ -134,17 +134,17 @@ class TestSplitting:
         fActual: list[list[float]] = calc_county_fractions(CxD, counties)
         wActual: list[float] = calc_county_weights(counties)
 
-        assert matrix_approx_equal(fActual, fExpected, places=3)
-        assert vector_approx_equal(wActual, wExpected, places=3)
+        assert matrix_approx_equal(fActual, fExpected, places=4)
+        assert vector_approx_equal(wActual, wExpected, places=4)
 
-        assert approx_equal(county_split_score(0, fExpected), 1.0, places=3)
-        assert approx_equal(county_split_score(1, fExpected), 1.3938, places=3)
-        assert approx_equal(county_split_score(2, fExpected), 2.0, places=3)
-        assert approx_equal(county_split_score(3, fExpected), 1.6667, places=3)
+        assert approx_equal(county_split_score(0, fExpected), 1.0, places=4)
+        assert approx_equal(county_split_score(1, fExpected), 1.3938, places=4)
+        assert approx_equal(county_split_score(2, fExpected), 2.0, places=4)
+        assert approx_equal(county_split_score(3, fExpected), 1.6667, places=4)
 
-        assert approx_equal(county_splitting(fActual, wActual), 1.5886, places=3)
+        assert approx_equal(county_splitting(fActual, wActual), 1.5886, places=4)
         assert approx_equal(
-            calc_county_splitting(CxD, districts, counties), 1.5886, places=3
+            calc_county_splitting(CxD, districts, counties), 1.5886, places=4
         )
 
         # District splitting
@@ -152,17 +152,17 @@ class TestSplitting:
         gActual: list[list[float]] = calc_district_fractions(CxD, districts)
         xActual: list[float] = calc_district_weights(districts)
 
-        assert matrix_approx_equal(gActual, gExpected, places=3)
-        assert vector_approx_equal(xActual, xExpected, places=3)
+        assert matrix_approx_equal(gActual, gExpected, places=4)
+        assert vector_approx_equal(xActual, xExpected, places=4)
 
-        assert approx_equal(district_split_score(0, gExpected), 1.7020, places=3)
-        assert approx_equal(district_split_score(1, gExpected), 1.6690, places=3)
-        assert approx_equal(district_split_score(2, gExpected), 1.3416, places=3)
-        assert approx_equal(district_split_score(3, gExpected), 1.3416, places=3)
+        assert approx_equal(district_split_score(0, gExpected), 1.7020, places=4)
+        assert approx_equal(district_split_score(1, gExpected), 1.6690, places=4)
+        assert approx_equal(district_split_score(2, gExpected), 1.3416, places=4)
+        assert approx_equal(district_split_score(3, gExpected), 1.3416, places=4)
 
-        assert approx_equal(district_splitting(gActual, xActual), 1.5136, places=3)
+        assert approx_equal(district_splitting(gActual, xActual), 1.5136, places=4)
         assert approx_equal(
-            calc_district_splitting(CxD, districts, counties), 1.5136, places=3
+            calc_district_splitting(CxD, districts, counties), 1.5136, places=4
         )
 
     def test_reduce_splits(self) -> None:
@@ -199,8 +199,8 @@ class TestSplitting:
             [0, 0, 0, 0, 50, 50, 50],
         ]
 
-        assert matrix_approx_equal(reduce_county_splits(splits, dT), rC, places=3)
-        assert matrix_approx_equal(reduce_district_splits(splits, cT), rD, places=3)
+        assert matrix_approx_equal(reduce_county_splits(splits, dT), rC, places=4)
+        assert matrix_approx_equal(reduce_district_splits(splits, cT), rD, places=4)
 
         # Whole districts
 
@@ -223,7 +223,7 @@ class TestSplitting:
             [0, 0, 0, 0, 0, 0],
         ]
 
-        assert matrix_approx_equal(reduce_county_splits(splits, dT), rC, places=3)
+        assert matrix_approx_equal(reduce_county_splits(splits, dT), rC, places=4)
 
         # Large county
 
@@ -246,7 +246,7 @@ class TestSplitting:
             [75, 0, 75, 0, 0, 0],
         ]
 
-        assert matrix_approx_equal(reduce_county_splits(splits, dT), rC, places=3)
+        assert matrix_approx_equal(reduce_county_splits(splits, dT), rC, places=4)
 
         # Whole counties
 
@@ -267,7 +267,7 @@ class TestSplitting:
             [0, 0, 0, 0, 100, 50, 0],
             [100, 0, 50, 0, 0, 0, 0],
         ]
-        assert matrix_approx_equal(reduce_district_splits(splits, cT), rD, places=3)
+        assert matrix_approx_equal(reduce_district_splits(splits, cT), rD, places=4)
 
         # Small counties
 
@@ -288,7 +288,7 @@ class TestSplitting:
             [0, 0, 0, 0, 0, 75, 75],
             [0, 0, 0, 0, 50, 50, 50],
         ]
-        assert matrix_approx_equal(reduce_district_splits(splits, cT), rD, places=3)
+        assert matrix_approx_equal(reduce_district_splits(splits, cT), rD, places=4)
 
     def test_AZ_splitting(self) -> None:
         sample: dict = read_json(
@@ -637,7 +637,7 @@ class TestSplitting:
             ],
         ]
         fActual: list[list[float]] = calc_county_fractions(rCExpected, cTExpected)
-        assert matrix_approx_equal(fActual, fExpected, places=3)
+        assert matrix_approx_equal(fActual, fExpected, places=4)
 
         gExpected: list[list[float]] = [
             [
@@ -685,7 +685,7 @@ class TestSplitting:
             [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
         ]
         gActual: list[list[float]] = calc_district_fractions(rDExpected, dTExpected)
-        assert matrix_approx_equal(gActual, gExpected, places=3)
+        assert matrix_approx_equal(gActual, gExpected, places=4)
 
         # Calculate county & district splitting scores
         cActual: float = calc_county_splitting_reduced(CxD, dTExpected, cTExpected)
