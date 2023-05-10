@@ -105,7 +105,65 @@ class TestSplitting:
     def test_rightthand_example(self) -> None:
         """Righthand examples from P. 2 of Moon Duchin's Appendix"""
 
-        assert True  # TODO
+        CxD: list[list[float]] = [
+            [50, 30, 20, 0],
+            [0, 60, 20, 20],
+            [0, 0, 20, 80],
+            [0, 0, 20, 80],
+        ]
+        counties: list[float] = [50, 90, 80, 180]
+        fExpected: list[list[float]] = [
+            [1.0, 0.3333333333333333, 0.25, 0.0],
+            [0.0, 0.6666666666666666, 0.25, 0.1111111111111111],
+            [0.0, 0.0, 0.25, 0.4444444444444444],
+            [0.0, 0.0, 0.25, 0.4444444444444444],
+        ]
+        wExpected = [0.125, 0.225, 0.2, 0.45]
+
+        districts: list[float] = [100, 100, 100, 100]
+        gExpected: list[list[float]] = [
+            [0.5, 0.3, 0.2, 0.0],
+            [0.0, 0.6, 0.2, 0.2],
+            [0.0, 0.0, 0.2, 0.8],
+            [0.0, 0.0, 0.2, 0.8],
+        ]
+        xExpected = [0.25, 0.25, 0.25, 0.25]
+
+        # County splitting
+
+        fActual: list[list[float]] = calc_county_fractions(CxD, counties)
+        wActual: list[float] = calc_county_weights(counties)
+
+        assert matrix_approx_equal(fActual, fExpected, places=3)
+        assert vector_approx_equal(wActual, wExpected, places=3)
+
+        assert approx_equal(county_split_score(0, fExpected), 1.0, places=3)
+        assert approx_equal(county_split_score(1, fExpected), 1.3938, places=3)
+        assert approx_equal(county_split_score(2, fExpected), 2.0, places=3)
+        assert approx_equal(county_split_score(3, fExpected), 1.6667, places=3)
+
+        assert approx_equal(county_splitting(fActual, wActual), 1.5886, places=3)
+        assert approx_equal(
+            calc_county_splitting(CxD, districts, counties), 1.5886, places=3
+        )
+
+        # District splitting
+
+        gActual: list[list[float]] = calc_district_fractions(CxD, districts)
+        xActual: list[float] = calc_district_weights(districts)
+
+        assert matrix_approx_equal(gActual, gExpected, places=3)
+        assert vector_approx_equal(xActual, xExpected, places=3)
+
+        assert approx_equal(district_split_score(0, gExpected), 1.7020, places=3)
+        assert approx_equal(district_split_score(1, gExpected), 1.6690, places=3)
+        assert approx_equal(district_split_score(2, gExpected), 1.3416, places=3)
+        assert approx_equal(district_split_score(3, gExpected), 1.3416, places=3)
+
+        assert approx_equal(district_splitting(gActual, xActual), 1.5136, places=3)
+        assert approx_equal(
+            calc_district_splitting(CxD, districts, counties), 1.5136, places=3
+        )
 
     def test_reduce_splits(self) -> None:
         """Reduce splits test cases"""

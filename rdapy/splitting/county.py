@@ -257,7 +257,10 @@ def calc_county_splitting_reduced(
 def calc_county_splitting(
     CxD: list[list[float]], district_totals: list[float], county_totals: list[float]
 ) -> float:
-    """Calculate the county splitting score for a plan."""
+    """Calculate the county splitting score for a plan.
+
+    *FOR TESTING*
+    """
 
     f: list[list[float]] = calc_county_fractions(CxD, county_totals)
     w: list[float] = calc_county_weights(county_totals)
@@ -284,7 +287,10 @@ def calc_district_splitting_reduced(
 def calc_district_splitting(
     CxD: list[list[float]], district_totals: list[float], county_totals: list[float]
 ) -> float:
-    """Calculate the district splitting score for a plan."""
+    """Calculate the district splitting score for a plan.
+
+    *FOR TESTING*
+    """
 
     g: list[list[float]] = calc_district_fractions(CxD, district_totals)
     x: list[float] = calc_district_weights(district_totals)
