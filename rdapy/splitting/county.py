@@ -243,7 +243,7 @@ def district_splitting(g: list[list[float]], x: list[float]) -> float:
 def calc_county_splitting_reduced(
     CxD: list[list[float]], district_totals: list[float], county_totals: list[float]
 ) -> float:
-    """Calculate the county splitting score for a plan."""
+    """Calculate the reduced county splitting score for a plan."""
 
     rC: list[list[float]] = reduce_county_splits(CxD, district_totals)
     f: list[list[float]] = calc_county_fractions(rC, county_totals)
@@ -254,10 +254,23 @@ def calc_county_splitting_reduced(
     return rawSqEnt_DC
 
 
+def calc_county_splitting(
+    CxD: list[list[float]], district_totals: list[float], county_totals: list[float]
+) -> float:
+    """Calculate the county splitting score for a plan."""
+
+    f: list[list[float]] = calc_county_fractions(CxD, county_totals)
+    w: list[float] = calc_county_weights(county_totals)
+
+    SqEnt_DC: float = county_splitting(f, w)
+
+    return SqEnt_DC
+
+
 def calc_district_splitting_reduced(
     CxD: list[list[float]], district_totals: list[float], county_totals: list[float]
 ) -> float:
-    """Calculate the district splitting score for a plan."""
+    """Calculate the reduced district splitting score for a plan."""
 
     rD: list[list[float]] = reduce_district_splits(CxD, county_totals)
     g: list[list[float]] = calc_district_fractions(rD, district_totals)
@@ -266,6 +279,19 @@ def calc_district_splitting_reduced(
     rawSqEnt_CD: float = district_splitting(g, x)
 
     return rawSqEnt_CD
+
+
+def calc_district_splitting(
+    CxD: list[list[float]], district_totals: list[float], county_totals: list[float]
+) -> float:
+    """Calculate the district splitting score for a plan."""
+
+    g: list[list[float]] = calc_district_fractions(CxD, district_totals)
+    x: list[float] = calc_district_weights(district_totals)
+
+    SqEnt_CD: float = district_splitting(g, x)
+
+    return SqEnt_CD
 
 
 __all__ = [
@@ -285,6 +311,8 @@ __all__ = [
     "district_splitting",
     "calc_county_splitting_reduced",
     "calc_district_splitting_reduced",
+    "calc_county_splitting",
+    "calc_district_splitting",
 ]
 
 ### END ###

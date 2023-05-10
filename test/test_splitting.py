@@ -81,7 +81,7 @@ class TestSplitting:
 
         assert approx_equal(county_splitting(fActual, wActual), 1.0737, places=3)
         assert approx_equal(
-            calc_county_splitting_reduced(CxD, districts, counties), 1.0737, places=3
+            calc_county_splitting(CxD, districts, counties), 1.0737, places=3
         )
 
         # District splitting
@@ -98,9 +98,9 @@ class TestSplitting:
         assert approx_equal(district_split_score(3, gExpected), 1.3416, places=3)
 
         assert approx_equal(district_splitting(gActual, xActual), 1.4200, places=3)
-        # assert approx_equal(
-        #     calc_district_splitting_reduced(CxD, districts, counties), 1.4200, places=3
-        # )
+        assert approx_equal(
+            calc_district_splitting(CxD, districts, counties), 1.4200, places=3
+        )
 
     def test_rightthand_example(self) -> None:
         """Righthand examples from P. 2 of Moon Duchin's Appendix"""
