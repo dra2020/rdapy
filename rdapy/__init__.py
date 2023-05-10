@@ -8,6 +8,7 @@ from .compactness import (
     calc_bbox,
     calc_polsby,
     calc_hull,
+    calc_schwartzberg,
     score_shape,
     rate_shape,
     rank_shape,

@@ -7,6 +7,7 @@ from .features import (
     calc_bbox,
     calc_polsby,
     calc_hull,
+    calc_schwartzberg,
 )
 from .kiwysi import (
     score_shape,

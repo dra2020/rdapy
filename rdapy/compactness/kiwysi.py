@@ -13,6 +13,8 @@ from .features import *
 def score_shape(
     shp: Polygon | MultiPolygon, *, geodesic: bool = True, revised: bool = True
 ) -> float:
+    """Feature-ize a shape and then score it [1-100], smaller is better."""
+
     features: list[float] = featureize_shape(shp, geodesic)
     score = score_features(features, revised=revised)
 
