@@ -168,7 +168,127 @@ class TestSplitting:
     def test_reduce_splits(self) -> None:
         """Reduce splits test cases"""
 
-        assert True  # TODO
+        splits: list[list[float]]
+        cT: list[float]
+        dT: list[float]
+        rC: list[list[float]]
+        rD: list[list[float]]
+
+        # No reductions
+
+        splits = [
+            [50, 50, 50, 0, 0, 0],
+            [50, 50, 50, 0, 0, 0],
+            [0, 0, 0, 50, 50, 50],
+            [0, 0, 0, 50, 50, 50],
+        ]
+        cT = [100, 100, 100, 100, 100, 100]
+        dT = [150, 150, 150, 150]
+
+        rC = [
+            [0, 0, 0, 0, 0, 0],
+            [50, 50, 50, 0, 0, 0],
+            [50, 50, 50, 0, 0, 0],
+            [0, 0, 0, 50, 50, 50],
+            [0, 0, 0, 50, 50, 50],
+        ]
+        rD = [
+            [0, 50, 50, 50, 0, 0, 0],
+            [0, 50, 50, 50, 0, 0, 0],
+            [0, 0, 0, 0, 50, 50, 50],
+            [0, 0, 0, 0, 50, 50, 50],
+        ]
+
+        assert matrix_approx_equal(reduce_county_splits(splits, dT), rC, places=3)
+        assert matrix_approx_equal(reduce_district_splits(splits, cT), rD, places=3)
+
+        # Whole districts
+
+        splits = [
+            [150, 0, 0, 0, 0, 0],
+            [25, 25, 25, 25, 25, 25],
+            [0, 0, 150, 0, 0, 0],
+            [0, 0, 0, 100, 25, 25],
+            [0, 150, 0, 0, 0, 0],
+        ]
+        cT = [175, 175, 175, 125, 50, 50]
+        dT = [150, 150, 150, 150, 150]
+
+        rC = [
+            [150, 150, 150, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [25, 25, 25, 25, 25, 25],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 100, 25, 25],
+            [0, 0, 0, 0, 0, 0],
+        ]
+
+        assert matrix_approx_equal(reduce_county_splits(splits, dT), rC, places=3)
+
+        # Large county
+
+        splits = [
+            [75, 0, 75, 0, 0, 0],
+            [0, 150, 0, 0, 0, 0],
+            [0, 150, 0, 0, 0, 0],
+            [0, 0, 50, 50, 25, 25],
+            [75, 0, 75, 0, 0, 0],
+        ]
+        cT = [150, 300, 200, 50, 25, 25]
+        dT = [150, 150, 150, 150, 150]
+
+        rC = [
+            [0, 300, 0, 0, 0, 0],
+            [75, 0, 75, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 50, 50, 25, 25],
+            [75, 0, 75, 0, 0, 0],
+        ]
+
+        assert matrix_approx_equal(reduce_county_splits(splits, dT), rC, places=3)
+
+        # Whole counties
+
+        splits = [
+            [100, 50, 0, 0, 0, 0],
+            [0, 0, 0, 50, 100, 0],
+            [0, 50, 100, 0, 0, 0],
+            [0, 0, 0, 100, 50, 0],
+            [0, 50, 0, 0, 0, 100],
+        ]
+        cT = [100, 150, 100, 150, 150, 100]
+        dT = [150, 150, 150, 150, 150]
+
+        rD = [
+            [100, 0, 50, 0, 0, 0, 0],
+            [0, 0, 0, 0, 50, 100, 0],
+            [100, 0, 50, 0, 0, 0, 0],
+            [0, 0, 0, 0, 100, 50, 0],
+            [100, 0, 50, 0, 0, 0, 0],
+        ]
+        assert matrix_approx_equal(reduce_district_splits(splits, cT), rD, places=3)
+
+        # Small counties
+
+        splits = [
+            [75, 0, 0, 75, 0, 0],
+            [0, 25, 25, 0, 0, 100],
+            [50, 0, 0, 50, 50, 0],
+            [0, 0, 0, 0, 75, 75],
+            [0, 0, 0, 50, 50, 50],
+        ]
+        cT = [125, 25, 25, 175, 175, 225]
+        dT = [150, 150, 150, 150, 150]
+
+        rD = [
+            [0, 75, 0, 0, 75, 0, 0],
+            [50, 0, 0, 0, 0, 0, 100],
+            [0, 50, 0, 0, 50, 50, 0],
+            [0, 0, 0, 0, 0, 75, 75],
+            [0, 0, 0, 0, 50, 50, 50],
+        ]
+        assert matrix_approx_equal(reduce_district_splits(splits, cT), rD, places=3)
 
     def test_AZ_splitting(self) -> None:
         sample: dict = read_json(
