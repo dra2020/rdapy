@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-TEST SPLITTING
+TEST COUNTY-DISTRICT SPLITTING
 """
 
 
@@ -9,7 +9,7 @@ from rdapy.splitting import *
 from testutils import *
 
 
-class TestSplitting:
+class TestCountyDistrictSplitting:
     def test_split_score(self) -> None:
         """These tests replicate the examples at the end of Section 6.1.1 of Moon Duchin's Appendix."""
 
