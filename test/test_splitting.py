@@ -431,7 +431,12 @@ class TestSplitting:
         gActual: list[list[float]] = calc_district_fractions(rDExpected, dTExpected)
         assert matrix_approx_equal(gActual, gExpected, places=3)
 
-        # TODO - More tests ...
+        # Calculate county & district splitting scores
+        cActual: float = calc_county_splitting_reduced(CxD, dTExpected, cTExpected)
+        assert approx_equal(cActual, 1.3523, places=4)
+
+        dActual: float = calc_district_splitting_reduced(CxD, dTExpected, cTExpected)
+        assert approx_equal(dActual, 1.4240, places=4)
 
 
 ### END ###
