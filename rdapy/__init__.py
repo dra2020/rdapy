@@ -14,6 +14,13 @@ from .compactness import (
 )
 from .graph import is_connected, is_embedded, OUT_OF_STATE
 from .equal import calc_population_deviation
-from .splitting import calc_splitting, split_score  # TODO: More
+from .splitting import (
+    calc_county_district_splitting,
+    split_score,
+    calc_coi_splitting,
+    uncertainty_of_membership,
+    effective_splits,
+)
+from .partisan import *  # TODO: constrain
 
 name = "rdapy"

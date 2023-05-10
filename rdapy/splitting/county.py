@@ -8,7 +8,7 @@ import math
 import copy
 
 
-def calc_splitting(CxD: list[list[float]]) -> dict:
+def calc_county_district_splitting(CxD: list[list[float]]) -> dict:
     """Calculate the county & district splitting scores for a plan."""
 
     dT: list[float] = district_totals(CxD)
@@ -301,7 +301,7 @@ def calc_district_splitting(
 
 
 __all__ = [
-    "calc_splitting",
+    "calc_county_district_splitting",
     "split_score",
     "county_totals",
     "district_totals",
