@@ -269,6 +269,7 @@ def calc_district_splitting_reduced(
 
 
 __all__ = [
+    "calc_splitting",
     "split_score",
     "county_totals",
     "district_totals",
