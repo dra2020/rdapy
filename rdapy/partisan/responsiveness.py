@@ -37,10 +37,10 @@ def count_competitive_districts(Vf_array: list[float]) -> int:
 def est_competitive_districts(Vf_array: list[float]) -> float:
     """cD - The estimated # of competitive districts"""
 
-    return sum([_est_district_competitiveness(v) for v in Vf_array])
+    return sum([est_district_competitiveness(v) for v in Vf_array])
 
 
-def _est_district_competitiveness(Vf: float) -> float:
+def est_district_competitiveness(Vf: float) -> float:
     """Estimate the district competitiveness, a synonym for responsiveness."""
 
     return _est_district_responsiveness(Vf)

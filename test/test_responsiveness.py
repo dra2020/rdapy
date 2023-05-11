@@ -10,6 +10,35 @@ from testutils import *
 
 
 class TestResponsivenessMetrics:
+    def test_count_competitive_districts(self) -> None:
+        # 3 of 7 competitive
+        Vf_array: list[float] = [
+            0.40,
+            0.45 - EPSILON,
+            0.45,
+            0.50,
+            0.55,
+            0.55 + EPSILON,
+            0.60,
+        ]
+        assert count_competitive_districts(Vf_array) == 3
+
+    def test_district_competitiveness_UNCOMPRESSED(self) -> None:
+        # 40.1515% share
+        assert approx_equal(est_district_competitiveness(0.401515), 0.027433)
+
+        # 45.0000% share
+        assert approx_equal(est_district_competitiveness(0.450000), 0.377952)
+
+        # 50.1515% share
+        assert approx_equal(est_district_competitiveness(0.501515), 0.999087)
+
+        # 55.0000% share
+        assert approx_equal(est_district_competitiveness(0.550000), 0.377952)
+
+        # 60.1515% share
+        assert approx_equal(est_district_competitiveness(0.601515), 0.022181)
+
     def test_MIR(self) -> None:
         actual: Optional[float]
 
