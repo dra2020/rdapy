@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Metrics:
+Competitiveness & responsiveness metrics:
 
 * Cn = Count the # of competitive districts, defined as [45–55%]
 * cD = The estimated # of competitive districts

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-TEST BIAS METRICS
+TEST COMPETITIVENESS & RESPONSIVENESS METRICS
 """
 
 

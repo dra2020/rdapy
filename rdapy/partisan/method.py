@@ -108,13 +108,14 @@ def est_statewide_seats_prob(vpi_by_district):
     return sum([est_seat_probability(vpi) for vpi in vpi_by_district])
 
 
-def est_seat_probability(vpi: float, range: Optional[list[float]] = None) -> float:
-    """TODO"""
+def est_seat_probability(vpi: float) -> float:
+    """Estimate the probability of a seat win for district, given a VPI.
 
-    if range is None:
-        range = [0.25, 0.75]
-    else:
-        raise NotImplementedError  # TODO
+    Snap to 0 or 1 if outside the range [0.25, 0.75] over which the seats-votes
+    curve is inferred.
+    """
+
+    range: list[float] = [0.25, 0.75]
 
     if vpi < range[0]:
         return 0.0
@@ -130,10 +131,10 @@ def seat_probability_fn(vpi: float):
     return 0.5 * (1 + erf((vpi - 0.50) / (0.02 * sqrt(8))))
 
 
-def est_seats(Vf_array: list[float], range: Optional[list[float]] = None) -> float:
+def est_seats(Vf_array: list[float]) -> float:
     """The estimated # of Democratic seats, using seat probabilities"""
 
-    return sum([est_seat_probability(vpi, range) for vpi in Vf_array])
+    return sum([est_seat_probability(vpi) for vpi in Vf_array])
 
 
 # Infer inverse S/V curve
