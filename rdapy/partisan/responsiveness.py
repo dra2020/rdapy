@@ -3,10 +3,14 @@
 """
 Metrics:
 
+* Cn = Count the # of competitive districts, defined as [45–55%]
+* cD = The estimated # of competitive districts
+* cDf = The estimated % of competitive districts (cD / N)
+* r = Responsiveness (little 'r') at the statewide vote share (Vf)
 * R = Big 'R'
 * MIR = Minimal inverse responsiveness
-
-TODO
+* rD = The estimated fractional # of responsive districts
+* rDf = The estimated fractional % of responsive districts (rD / N)
 """
 
 from typing import Optional
@@ -16,33 +20,49 @@ from .utils import *
 from .constants import *
 
 
-# Estimate responsiveness (R) at the statewide vote share
+# COMPETITIVENESS
+
+
+def count_competitive_districts(Vf_array: list[float]) -> int:
+    """Cn - Count the # of competitive districts, defined as [45–55%]."""
+
+    count: int = 0
+    for v in Vf_array:
+        if (v >= 0.45) and (v <= 0.55):
+            count += 1
+
+    return count
+
+
+def est_competitive_districts(Vf_array: list[float]) -> float:
+    """cD - The estimated # of competitive districts"""
+
+    return sum([_est_district_competitiveness(v) for v in Vf_array])
+
+
+def _est_district_competitiveness(Vf: float) -> float:
+    """Estimate the district competitiveness, a synonym for responsiveness."""
+
+    return _est_district_responsiveness(Vf)
+
+
+# RESPONSIVENESS
+
+# LITTLE 'r'
 
 
 def est_responsiveness(statewide_vote_share, sv_curve_pts, total_seats):
-    VOTE_SHARE = 0
+    """Estimate responsiveness (little 'r') at the statewide vote share (Vf)"""
+
+    VOTE_SHARE: int = 0  # Index of vote share in a (V, S) point tuple
 
     V1, S1 = lower_bracket(sv_curve_pts, statewide_vote_share, VOTE_SHARE)
     V2, S2 = upper_bracket(sv_curve_pts, statewide_vote_share, VOTE_SHARE)
 
     # NOTE - To get a proper slope, normalize the seat delta into a fraction!
-    R = ((S2 - S1) / total_seats) / (V2 - V1)
+    r: float = ((S2 - S1) / total_seats) / (V2 - V1)
 
-    return R
-
-
-# Estimate the number of responsive districts [R(d)], given a set of VPI's
-
-
-def est_responsive_districts(vpi_by_district):
-    return sum([est_district_responsiveness(vpi) for vpi in vpi_by_district])
-
-
-# Estimate the responsiveness of a district, given a VPI
-
-
-def est_district_responsiveness(vpi):
-    return 1 - 4 * (est_seat_probability(vpi) - 0.5) ** 2
+    return r
 
 
 # BIG 'R': Defined in Footnote 22 on P. 10
@@ -58,16 +78,6 @@ def calc_big_R(Vf: float, Sf: float) -> Optional[float]:
 
 
 # MINIMAL INVERSE RESPONSIVENESS
-
-
-def _is_balanced(Vf: float) -> bool:
-    """Is the statewide vote share balanced?"""
-
-    lower: float = 0.45
-    upper: float = 0.55
-    b_balanced: bool = False if (Vf > upper) or (Vf < lower) else True
-
-    return b_balanced
 
 
 def calc_minimal_inverse_responsiveness(Vf: float, r: float) -> Optional[float]:
@@ -89,6 +99,31 @@ def calc_minimal_inverse_responsiveness(Vf: float, r: float) -> Optional[float]:
         MIR = max(MIR, 0.0)
 
         return MIR
+
+
+def _is_balanced(Vf: float) -> bool:
+    """Is the statewide vote share balanced?"""
+
+    lower: float = 0.45
+    upper: float = 0.55
+    b_balanced: bool = False if (Vf > upper) or (Vf < lower) else True
+
+    return b_balanced
+
+
+# RESPONSIVE DISTRICTS
+
+
+def est_responsive_districts(vpi_by_district):
+    """Estimate the # of responsive districts [R(d)], given a set of VPI's"""
+
+    return sum([_est_district_responsiveness(vpi) for vpi in vpi_by_district])
+
+
+def _est_district_responsiveness(vpi):
+    """Estimate the responsiveness of a district, given a VPI"""
+
+    return 1 - 4 * (est_seat_probability(vpi) - 0.5) ** 2
 
 
 ### END ###
