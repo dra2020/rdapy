@@ -2,7 +2,10 @@
 
 from math import erf, sqrt, isclose
 from scipy.interpolate import interp1d
-import numpy as np
+
+# import numpy as np
+
+from typing import Optional
 
 from .utils import *
 
@@ -92,12 +95,42 @@ def est_statewide_seats_prob(vpi_by_district):
     return sum([est_seat_probability(vpi) for vpi in vpi_by_district])
 
 
-# Estimate the probability of a seat win for district, given a VPI
+###
 
 
-def est_seat_probability(vpi):
+def est_seat_probability(vpi: float, range: Optional[list[float]] = None) -> float:
+    """TODO"""
+
+    if range is None:
+        range = [0.25, 0.75]
+    else:
+        raise NotImplementedError  # TODO
+
+    if vpi < range[0]:
+        return 0.0
+    elif vpi > range[1]:
+        return 1.0
+    else:
+        return seat_probability_fn(vpi)
+
+
+def seat_probability_fn(vpi: float):
+    """Estimate the probability of a seat win for district, given a VPI"""
+
     return 0.5 * (1 + erf((vpi - 0.50) / (0.02 * sqrt(8))))
 
+
+def est_seats(Vf_array: list[float], range: Optional[list[float]] = None) -> float:
+    """The estimated # of Democratic seats, using seat probabilities"""
+
+    return sum([est_seat_probability(vpi, range) for vpi in Vf_array])
+
+
+"""
+"""
+
+
+###
 
 # Estimate the S/V seats measure of bias (@ V = 50%)
 

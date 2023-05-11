@@ -1,260 +1,386 @@
 #!/usr/bin/env python3
 
-from math import erf, sqrt, isclose
+"""
+Metrics:
+
+* ^S# = the Democratic seats closest to proportional
+* ^S% = the corresponding Democratic seat share
+* S! = the estimated number of Democratic seats using first past the post
+* S# = the estimated Democratic seats, using seat probabilities
+* S% = the estimated Democratic seat share fraction, calculated as S# / N
+
+* B% [bias] = the bias calculated as S% – ^S%
+
+* BS_50 = Seat bias as a fraction of N
+* BV_50 = Votes bias as a fraction
+* decl = Declination
+* GS = Global symmetry
+* gamma = Gamma 
+
+* EG = Efficiency gap as a fraction
+* BS_V = Seats bias @ <V> (geometric)
+* PR = Disproportionality
+* MM = Mean – median difference using statewide Vf
+* TO = Turnout bias
+* MM' = Mean – median difference using average district v 
+* LO = Lopsided outcomes
+
+* R = Big 'R'
+* MIR = Minimal inverse responsiveness
+
+By convention, '+' = R bias; '-' = D bias
+"""
+
+from math import isclose, pi, atan
 from scipy.interpolate import interp1d
-import numpy as np
+import statistics
 
+from typing import Optional
+
+from .method import est_seats, est_seat_probability
 from .utils import *
+from .constants import *
+
+### BASIC BIAS ###
 
 
-# INFER AN S/V CURVE
+def best_seats(N: int, Vf: float) -> int:
+    """^S# - The # of Democratic seats closest to proportional @ statewide Vf
+
+    The "expected number of seats" from http://bit.ly/2Fcuf4q
+    """
+    return round((N * Vf) - EPSILON)
 
 
-def infer_sv_points(
-    statewide_vote_share, vpi_by_district, proportional=True, fptp=False
-):
-    sv_curve_pts = []
-    vpis_at_half_share = []
+def best_seat_share(seats: int, N: int) -> float:
+    """^S% - The corresponding Democratic seat share @ statewide Vf"""
 
-    for shifted_vote_share in shift_range(statewide_vote_share):
-        shifted_vpis = shift_districts(
-            statewide_vote_share, vpi_by_district, shifted_vote_share, proportional
-        )
-        shifted_seats = est_statewide_seats(shifted_vpis, fptp)
-        sv_curve_pts.append((shifted_vote_share, shifted_seats))
-
-        # Squirrel away the inferred VPIs by district at V = 0.5
-        if isclose(shifted_vote_share, 0.5):
-            vpis_at_half_share = shifted_vpis
-
-    return sv_curve_pts, vpis_at_half_share
+    return seats / N
 
 
-# SHIFT DISTRICTS EITHER PROPORTIONALLY OR UNIFORMLY
+def est_seat_share(seats: float, N: int) -> float:
+    """S% - The estimated Democratic seat share fraction"""
+
+    return seats / N
 
 
-def shift_districts(
-    statewide_vote_share, vpi_by_district, shifted_vote_share, proportional=True
-):
-    if proportional:
-        return shift_districts_proportionally(
-            statewide_vote_share, vpi_by_district, shifted_vote_share
-        )
-    else:
-        return shift_districts_uniformly(
-            statewide_vote_share, vpi_by_district, shifted_vote_share
-        )
+def calc_disproportionality_from_best(est_Sf: float, best_Sf: float) -> float:
+    """B% - The deviation from proportionality calculated as ^S% — S%"""
+
+    return best_Sf - est_Sf
 
 
-def shift_districts_uniformly(
-    statewide_vote_share, vpi_by_district, shifted_vote_share
-):
-    shift = shifted_vote_share - statewide_vote_share
-    shifted_vpis = [(v + shift) for v in vpi_by_district]
+### ADVANCED BIAS ###
 
-    return shifted_vpis
+# SEATS BIAS -- John Nagle's simple seat bias @ 50% (alpha), a fractional # of seats.
 
 
-def shift_districts_proportionally(
-    statewide_vote_share, vpi_by_district, shifted_vote_share
-):
-    if shifted_vote_share < statewide_vote_share:
-        # Shift down: D's to R's
-        proportion = shifted_vote_share / statewide_vote_share
-        shifted_vpis = [(v * proportion) for v in vpi_by_district]
-    elif shifted_vote_share > statewide_vote_share:
-        # Shift up: R's to D's
-        proportion = (1 - shifted_vote_share) / (1 - statewide_vote_share)
-        shifted_vpis = [(1 - (1 - v) * proportion) for v in vpi_by_district]
-    else:
-        # No shift: shift = actual
-        shifted_vpis = vpi_by_district
+def est_seats_bias(sv_curve_pts: list[tuple[float, float]], total_seats: int) -> float:
+    """BS_50 - Seats bias as a fraction of N"""
 
-    return shifted_vpis
-
-
-# ESTIMATE THE STATEWIDE SEATS, GIVEN VPI'S BY DISTRICT,
-# EITHER PROBABILISTICALLY OR BY FIRST PAST THE POST
-
-
-def est_statewide_seats(vpi_by_district, fptp=False):
-    if fptp:
-        return est_statewide_seats_fptp(vpi_by_district)
-    else:
-        return est_statewide_seats_prob(vpi_by_district)
-
-
-def est_statewide_seats_fptp(vpi_by_district):
-    return sum([1.0 for vpi in vpi_by_district if (vpi > 0.5)])
-
-
-def est_statewide_seats_prob(vpi_by_district):
-    return sum([est_seat_probability(vpi) for vpi in vpi_by_district])
-
-
-# Estimate the probability of a seat win for district, given a VPI
-
-
-def est_seat_probability(vpi):
-    return 0.5 * (1 + erf((vpi - 0.50) / (0.02 * sqrt(8))))
-
-
-# Estimate the S/V seats measure of bias (@ V = 50%)
-
-
-def est_seats_bias(sv_curve_pts, total_seats):
-    d_seats = d_seats_at_half_share(sv_curve_pts)
-    r_seats = total_seats - d_seats
+    d_seats: float = _d_seats_at_half_share(sv_curve_pts)
+    r_seats: float = total_seats - d_seats
 
     return (r_seats - d_seats) / 2.0
 
 
-def d_seats_at_half_share(sv_curve_pts):
+def _d_seats_at_half_share(sv_curve_pts: list[tuple[float, float]]) -> float:
     close_pts = [pt for pt in sv_curve_pts if isclose(pt[0], 0.5)]
     _, d_seats = next(iter(close_pts))
 
     return d_seats
 
 
-# Instead expressed as a percentage of the # of districts
+# VOTES BIAS -- John Nagle's simple vote bias @ 50% (alpha2), a percentage.
 
 
-def est_seats_bias_pct(seats_bias, total_seats):
-    return seats_bias / float(total_seats)
+def est_votes_bias(sv_curve_pts: list[tuple[float, float]], total_seats: int) -> float:
+    """BV_50 - Votes bias as a fraction"""
 
+    half_seats: float = float(total_seats) / 2.0
 
-# Interpolate the S/V votes measure of bias (for half the seats)
-
-
-def est_votes_bias(sv_curve_pts, total_seats):
-    half_seats = float(total_seats) / 2.0
-
-    x = [x for x, y in sv_curve_pts]
-    y = [y for x, y in sv_curve_pts]
+    x: list[float] = [x for x, y in sv_curve_pts]
+    y: list[float] = [y for x, y in sv_curve_pts]
     fn = interp1d(y, x, kind="cubic")
 
     return fn(half_seats) - 0.50
 
 
-# Estimate responsiveness (R) at the statewide vote share
+# GEOMETRIC SEATS BIAS (@ V = statewide vote share)
 
 
-def est_responsiveness(statewide_vote_share, sv_curve_pts, total_seats):
-    VOTE_SHARE = 0
+def est_geometric_seats_bias(
+    statewide_vote_share: float, b_gs_pts: list[tuple[float, float]]
+) -> float:
+    """BS_V - Estimate geometric seats bias (@ V = statewide vote share)"""
 
-    V1, S1 = lower_bracket(sv_curve_pts, statewide_vote_share, VOTE_SHARE)
-    V2, S2 = upper_bracket(sv_curve_pts, statewide_vote_share, VOTE_SHARE)
-
-    # NOTE - To get a proper slope, normalize the seat delta into a fraction!
-    R = ((S2 - S1) / total_seats) / (V2 - V1)
-
-    return R
-
-
-# Estimate the number of responsive districts [R(d)], given a set of VPI's
-
-
-def est_responsive_districts(vpi_by_district):
-    return sum([est_district_responsiveness(vpi) for vpi in vpi_by_district])
-
-
-# Estimate the responsiveness of a district, given a VPI
-
-
-def est_district_responsiveness(vpi):
-    return 1 - 4 * (est_seat_probability(vpi) - 0.5) ** 2
-
-
-# Infer inverse S/V curve
-
-
-def infer_inverse_sv_points(ndistricts, statewide_vote_share, sv_pts):
-    inverse_sv_curve_pts = []
-
-    for v_d, s_d in sv_pts:
-        v_r = 1 - v_d
-        s_r = ndistricts - s_d  # # of seats, not seat share!
-        inverse_sv_curve_pts.append((v_r, s_r))
-
-    inverse_sv_curve_pts = sorted(inverse_sv_curve_pts, key=lambda pt: [pt[0]])
-
-    return inverse_sv_curve_pts
-
-
-# Infer a Bias of Geometric Seats (B_GS) curve
-
-
-def infer_geometric_seats_bias_points(n_pts, d_sv_pts, r_sv_pts):
-    b_gs_pts = []
-
-    for i in range(0, n_pts):
-        v_r, s_r = r_sv_pts[i]
-        v_d, s_d = d_sv_pts[i]
-
-        # NOTE - By convention: '+' = R bias; '-' = D bias
-        b_gs = 0.5 * (s_r - s_d)
-
-        b_gs_pts.append((v_d, b_gs))
-
-    return b_gs_pts
-
-
-# Estimate geometric seats bias (@ V = statewide vote share)
-
-
-def est_geometric_seats_bias(statewide_vote_share, b_gs_pts):
-    x = [x for x, y in b_gs_pts]
-    y = [y for x, y in b_gs_pts]
+    x: list[float] = [x for x, y in b_gs_pts]
+    y: list[float] = [y for x, y in b_gs_pts]
     fn = interp1d(x, y, kind="cubic")
 
     return fn(statewide_vote_share)
 
 
-# Instead expressed as a percentage of the # of districts
+# EFFICIENCY GAP
 
 
-def est_geometric_seats_bias_pct(b_gs, total_seats):
-    return b_gs / float(total_seats)
+def calc_efficiency_gap(vote_share: float, seat_share: float) -> float:
+    """EG - Calculate the efficiency gap
+
+    NOTE - This alternate formulation is consistent with the rest of our metrics,
+    where '+' = R bias; '-' = D bias. It's *not* the same as the other common version:
+
+    EG = (Seat Share – 50%)  – (2 × (Vote Share – 50%))
+    """
+
+    EG: float = (2 * (vote_share - 0.5)) - (seat_share - 0.5)
+
+    return EG
 
 
-# Estimate geometric votes bias (for the statewide seat share)
+# MEAN–MEDIAN DIFFERENCE
 
 
-def est_geometric_votes_bias(d_sv_pts, r_sv_pts, statewide_seats):
-    x = [x for x, y in r_sv_pts]
-    y = [y for x, y in r_sv_pts]
-    fn = interp1d(y, x, kind="cubic")
+def calc_mean_median_difference(
+    Vf_array: list[float], Vf: Optional[float] = None
+) -> float:
+    """Both:
+    * MM  - Mean – median difference using statewide Vf -and-
+    * MM' - Mean – median difference using average district Vf
+    """
 
-    v_r = fn(statewide_seats)
+    benchmark: float = Vf if Vf else statistics.mean(Vf_array)
+    median_Vf: float = statistics.median(Vf_array)
 
-    x = [x for x, y in d_sv_pts]
-    y = [y for x, y in d_sv_pts]
-    fn = interp1d(y, x, kind="cubic")
+    difference: float = benchmark - median_Vf
 
-    v_d = fn(statewide_seats)
-
-    # NOTE - By convention: '+' = R bias; '-' = D bias
-    return 0.5 * (v_d - v_r)
-
-
-# Calculate the efficiency gap
-# NOTE - This version is consistent with the rest of our metrics.
-#   It's not the same as the version I've seen elsewhere, namely:
-#   EG = (Seat Share – 50%)  – (2 × (Vote Share – 50%))
+    return difference
 
 
-def efficiency_gap(vote_share, seat_share):
-    return (-1 * (seat_share - 0.5)) + (2 * (vote_share - 0.5))
+# DECLINATION and helpers
 
 
-# Calculate new gamma measure
-# g = 50 + r<V>(<V>-50) – S(<V>)
-def calc_gamma(plan):
-    return (
-        0.5
-        + plan.responsiveness * (plan.statewide_vote_share - 0.5)
-        - (plan.predicted_D_seats / plan.districts)
-    ) * 100
+def key_RV_points(Vf_array: list[float]) -> dict[str, float]:
+    """Calculate the key declination r(v) points, defined in Fig. 16.
+
+    NOTE - District vote shares are D shares, so party A = Rep & B = Dem.
+    """
+
+    n_districts: int = len(Vf_array)
+    est_S: float = est_seats(Vf_array)
+
+    Sb: float = est_seat_share(est_S, n_districts)  # Sb = Sf
+    Ra: float = (1 + Sb) / 2
+    Rb: float = Sb / 2
+
+    Va: float = sum([est_seat_probability(1 - v) * (1 - v) for v in Vf_array]) / (
+        n_districts - est_S
+    )
+    Vb: float = (
+        1.0 - sum([est_seat_probability(v) * v for v in Vf_array]) / est_S
+    )  # Vb = Vf
+
+    # Make sure the results are in range (no floating point errors)
+    Vb = min(Vb, 0.50)
+    Va = max(Va, 0.50)
+
+    key_points: dict[str, float] = {
+        "Sb": Sb,
+        "Ra": Ra,
+        "Rb": Rb,
+        "Va": Va,
+        "Vb": Vb,
+    }
+
+    return key_points
+
+
+def _is_a_sweep(Sf: float, n_districts: int) -> bool:
+    """Did one party win all the seats?"""
+
+    one_district: float = 1 / n_districts
+    b_sweep: bool = True if Sf > (1 - one_district) or Sf < one_district else False
+
+    return b_sweep
+
+
+def _radians_to_degrees(radians: float) -> float:
+    """Convert radians to degrees"""
+
+    degrees: float = radians * (180 / pi)
+
+    return degrees
+
+
+def calc_declination(Vf_array: list[float]) -> Optional[float]:
+    """Declination is calculated using the key r(v) points, defined in Fig. 16.
+
+    NOTE - District vote shares are D shares, so party A = Rep & B = Dem.
+    """
+
+    key_points: dict[str, float] = key_RV_points(Vf_array)
+    Sb: float = key_points["Sb"]
+    Ra: float = key_points["Ra"]
+    Rb: float = key_points["Rb"]
+    Va: float = key_points["Va"]
+    Vb: float = key_points["Vb"]
+
+    b_sweep: bool = _is_a_sweep(Sb, len(Vf_array))
+    b_too_few_districts: bool = True if len(Vf_array) < 5 else False
+    b_Va_at_50: bool = True if roughly_equal(Va - 0.5, 0.0, EPSILON) else False
+    b_Vb_at_50: bool = True if roughly_equal(0.5 - Vb, 0.0, EPSILON) else False
+
+    decl: Optional[float] = None
+
+    if b_sweep or b_too_few_districts or b_Va_at_50 or b_Vb_at_50:
+        decl = None  # Undefined
+    else:
+        l_tan: float = (Sb - Rb) / (0.5 - Vb)
+        r_tan: float = (Ra - Sb) / (Va - 0.5)
+
+        l_angle: float = _radians_to_degrees(atan(l_tan))
+        r_angle: float = _radians_to_degrees(atan(r_tan))
+        decl = r_angle - l_angle
+
+    return decl
+
+
+# LOPSIDED OUTCOMES
+
+
+def calc_lopsided_outcomes(Vf_array: list[float]) -> Optional[float]:
+    """LO - Lopsided outcomes
+
+    This is a measure of packing bias is:
+
+    LO = (1⁄2 - vB) - (vA – 1⁄2)     Eq. 5.4.1 on P. 26
+
+    "The ideal for this measure is that the excess vote share for districts
+    won by party A averaged over those districts equals the excess vote share
+    for districts won by party B averaged over those districts.
+    A positive value of LO indicates greater packing of party B voters and,
+    therefore, indicates a bias in favor of party A."
+    """
+
+    key_points: dict[str, float] = key_RV_points(Vf_array)
+    Sb: float = key_points["Sb"]
+    Va: float = key_points["Va"]
+    Vb: float = key_points["Vb"]
+
+    b_sweep: bool = _is_a_sweep(Sb, len(Vf_array))
+
+    if b_sweep:  # Undefined
+        return None
+    else:
+        LO: float = (0.5 - Vb) - (Va - 0.5)
+
+
+# GLOBAL SYMMETRY - Fig. 17 in Section 5.1
+
+
+def calc_global_symmetry(
+    d_sv_pts: list[tuple[float, float]],
+    r_sv_pts: list[tuple[float, float]],
+    S50V: float,
+) -> float:
+    """GS - Global symmetry
+
+    * gSym is the area of asymmetry between the two curves.
+    * The choice of what base to normalize it by is somewhat arbitrary.
+    * We actually only infer the S–V curve over the range [0.25–0.75] <<< 101 points (not 100!)
+    * But dividing by 100 normalizes the area of asymmetry to the area of the SxV unit square.
+    """
+
+    g_Sym: float = 0.0
+
+    for i in range(len(d_sv_pts)):
+        g_Sym += abs(d_sv_pts[i][0] - r_sv_pts[i][0]) / 2
+
+    sign: int = -1 if S50V < 0 else 1
+    g_Sym *= sign
+
+    return g_Sym / 100
+
+
+# PR - RAW DISPROPORTIONALITY - Eq.C.1.1 on P. 42
+
+
+def calc_disproportionality(Vf: float, Sf: float) -> float:
+    """PR - raw disproportionality"""
+
+    return Vf - Sf
+
+
+# BIG 'R': Defined in Footnote 22 on P. 10
+
+
+def calc_big_R(Vf: float, Sf: float) -> Optional[float]:
+    """BIG 'R'"""
+
+    if roughly_equal(Vf, 0.5, EPSILON):
+        return None  # Undefined
+    else:
+        return (Sf - 0.5) / (Vf - 0.5)
+
+
+# MINIMAL INVERSE RESPONSIVENESS
+
+
+def _is_balanced(Vf: float) -> bool:
+    """Is the statewide vote share balanced?"""
+
+    lower, upper = [0.00, 0.75]
+    b_balanced: bool = True if (Vf > upper) or (Vf < lower) else False
+
+    return b_balanced
+
+
+def calc_minimal_inverse_responsiveness(Vf: float, r: float) -> Optional[float]:
+    """MIR - Minimal inverse responsiveness
+
+    zeta = (1 / r) - (1 / r_sub_max)     : Eq. 5.2.1
+
+    where r_sub_max = 10 or 20 for balanced and unbalanced states, respectively.
+    """
+
+    if roughly_equal(r, 0, EPSILON):
+        return None  # Undefined
+    else:
+        b_balanced: bool = _is_balanced(Vf)
+        ideal: float = 0.1 if b_balanced else 0.2
+
+        MIR = (1 / r) - ideal
+
+        MIR = max(MIR, 0.0)
+
+        return MIR
+
+
+# GAMMA
+
+
+def calc_gamma(Vf: float, Sf: float, r: float) -> float:
+    """GAMMA
+
+    g = 50 + r<V>(<V>-50) – S(<V>)
+    """
+
+    return 0.5 + (r * (Vf - 0.5)) - Sf
+
+
+# TURNOUT BIAS
+
+
+def calc_turnout_bias(statewide: float, Vf_array: list[float]) -> float:
+    """TO - Turnout bias
+
+    The difference between the statewide turnout and the average district turnout
+    """
+
+    district_avg = statistics.mean(Vf_array)
+    turnout_bias = statewide - district_avg
+
+    return turnout_bias
 
 
 # __all__ = ["TODO"]

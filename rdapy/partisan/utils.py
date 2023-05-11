@@ -7,6 +7,15 @@ UTILITIES for John Nagle's method
 import numpy as np
 
 
+def roughly_equal(x, y, tolerance):
+    """Compare two numbers for approximate equality"""
+
+    delta = abs(x - y)
+    result = True if delta < tolerance else False
+
+    return result
+
+
 def shift_range(statewide_vote_share):
     """Define vote shifts over the middle of the S/V curve, including V = 50%"""
 
