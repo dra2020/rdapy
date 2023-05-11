@@ -5,28 +5,22 @@ Metrics:
 
 * ^S# = the Democratic seats closest to proportional
 * ^S% = the corresponding Democratic seat share
-* S! = the estimated number of Democratic seats using first past the post
-* S# = the estimated Democratic seats, using seat probabilities
-* S% = the estimated Democratic seat share fraction, calculated as S# / N
+* B% [bias] = the bias calculated as S% – ^S%
+
+* PR = Disproportionality
+* EG = Efficiency gap as a fraction
+* gamma = Gamma 
 
 * BS_50 = Seat bias as a fraction of N
 * BV_50 = Votes bias as a fraction
-* decl = Declination
-* GS = Global symmetry
-* gamma = Gamma 
-
-* EG = Efficiency gap as a fraction
 * BS_V = Seats bias @ <V> (geometric)
-* PR = Disproportionality
+* GS = Global symmetry
+
+* decl = Declination
 * MM = Mean – median difference using statewide Vf
-* TO = Turnout bias
 * MM' = Mean – median difference using average district v 
+* TO = Turnout bias
 * LO = Lopsided outcomes
-
-* B% [bias] = the bias calculated as S% – ^S%
-
-* R = Big 'R'
-* MIR = Minimal inverse responsiveness
 
 By convention, '+' = R bias; '-' = D bias
 """
@@ -37,7 +31,7 @@ import statistics
 
 from typing import Optional
 
-from .method import est_seats, est_seat_probability
+from .method import est_seats, est_seat_share, est_seat_probability
 from .utils import *
 from .constants import *
 
@@ -59,12 +53,6 @@ def best_seat_share(seats: int, N: int) -> float:
     return seats / N
 
 
-def est_seat_share(seats: float, N: int) -> float:
-    """S% - The estimated Democratic seat share fraction"""
-
-    return seats / N
-
-
 def calc_disproportionality_from_best(est_Sf: float, best_Sf: float) -> float:
     """B% - The deviation from proportionality calculated as ^S% — S%"""
 
@@ -72,6 +60,44 @@ def calc_disproportionality_from_best(est_Sf: float, best_Sf: float) -> float:
 
 
 ### ADVANCED BIAS ###
+
+# PR - Eq.C.1.1 on P. 42
+
+
+def calc_disproportionality(Vf: float, Sf: float) -> float:
+    """PR - raw disproportionality"""
+
+    return Vf - Sf
+
+
+# EFFICIENCY GAP
+
+
+def calc_efficiency_gap(vote_share: float, seat_share: float) -> float:
+    """EG - Calculate the efficiency gap
+
+    NOTE - This alternate formulation is consistent with the rest of our metrics,
+    where '+' = R bias; '-' = D bias. It's *not* the same as the other common version:
+
+    EG = (Seat Share – 50%)  – (2 × (Vote Share – 50%))
+    """
+
+    EG: float = (2 * (vote_share - 0.5)) - (seat_share - 0.5)
+
+    return EG
+
+
+# GAMMA
+
+
+def calc_gamma(Vf: float, Sf: float, r: float) -> float:
+    """GAMMA
+
+    g = 50 + r<V>(<V>-50) – S(<V>)
+    """
+
+    return 0.5 + (r * (Vf - 0.5)) - Sf
+
 
 # SEATS BIAS -- John Nagle's simple seat bias @ 50% (alpha), a fractional # of seats.
 
@@ -122,40 +148,31 @@ def est_geometric_seats_bias(
     return fn(statewide_vote_share)
 
 
-# EFFICIENCY GAP
+# GLOBAL SYMMETRY - Fig. 17 in Section 5.1
 
 
-def calc_efficiency_gap(vote_share: float, seat_share: float) -> float:
-    """EG - Calculate the efficiency gap
-
-    NOTE - This alternate formulation is consistent with the rest of our metrics,
-    where '+' = R bias; '-' = D bias. It's *not* the same as the other common version:
-
-    EG = (Seat Share – 50%)  – (2 × (Vote Share – 50%))
-    """
-
-    EG: float = (2 * (vote_share - 0.5)) - (seat_share - 0.5)
-
-    return EG
-
-
-# MEAN–MEDIAN DIFFERENCE
-
-
-def calc_mean_median_difference(
-    Vf_array: list[float], Vf: Optional[float] = None
+def calc_global_symmetry(
+    d_sv_pts: list[tuple[float, float]],
+    r_sv_pts: list[tuple[float, float]],
+    S50V: float,
 ) -> float:
-    """Both:
-    * MM  - Mean – median difference using statewide Vf -and-
-    * MM' - Mean – median difference using average district Vf
+    """GS - Global symmetry
+
+    * gSym is the area of asymmetry between the two curves.
+    * The choice of what base to normalize it by is somewhat arbitrary.
+    * We actually only infer the S–V curve over the range [0.25–0.75] <<< 101 points (not 100!)
+    * But dividing by 100 normalizes the area of asymmetry to the area of the SxV unit square.
     """
 
-    benchmark: float = Vf if Vf else statistics.mean(Vf_array)
-    median_Vf: float = statistics.median(Vf_array)
+    g_Sym: float = 0.0
 
-    difference: float = benchmark - median_Vf
+    for i in range(len(d_sv_pts)):
+        g_Sym += abs(d_sv_pts[i][0] - r_sv_pts[i][0]) / 2
 
-    return difference
+    sign: int = -1 if S50V < 0 else 1
+    g_Sym *= sign
+
+    return g_Sym / 100
 
 
 # DECLINATION and helpers
@@ -226,7 +243,7 @@ def calc_declination(Vf_array: list[float]) -> Optional[float]:
     Va: float = key_points["Va"]
     Vb: float = key_points["Vb"]
 
-    b_sweep: bool = _is_a_sweep(Sb, len(Vf_array))
+    b_sweep: bool = is_sweep(Sb, len(Vf_array))
     b_too_few_districts: bool = True if len(Vf_array) < 5 else False
     b_Va_at_50: bool = True if roughly_equal(Va - 0.5, 0.0, EPSILON) else False
     b_Vb_at_50: bool = True if roughly_equal(0.5 - Vb, 0.0, EPSILON) else False
@@ -244,6 +261,40 @@ def calc_declination(Vf_array: list[float]) -> Optional[float]:
         decl = r_angle - l_angle
 
     return decl
+
+
+# MEAN–MEDIAN DIFFERENCE
+
+
+def calc_mean_median_difference(
+    Vf_array: list[float], Vf: Optional[float] = None
+) -> float:
+    """Both:
+    * MM  - Mean – median difference using statewide Vf -and-
+    * MM' - Mean – median difference using average district Vf
+    """
+
+    benchmark: float = Vf if Vf else statistics.mean(Vf_array)
+    median_Vf: float = statistics.median(Vf_array)
+
+    difference: float = benchmark - median_Vf
+
+    return difference
+
+
+# TURNOUT BIAS
+
+
+def calc_turnout_bias(statewide: float, Vf_array: list[float]) -> float:
+    """TO - Turnout bias
+
+    The difference between the statewide turnout and the average district turnout
+    """
+
+    district_avg = statistics.mean(Vf_array)
+    turnout_bias = statewide - district_avg
+
+    return turnout_bias
 
 
 # LOPSIDED OUTCOMES
@@ -268,123 +319,12 @@ def calc_lopsided_outcomes(Vf_array: list[float]) -> Optional[float]:
     Va: float = key_points["Va"]
     Vb: float = key_points["Vb"]
 
-    b_sweep: bool = _is_a_sweep(Sb, len(Vf_array))
+    b_sweep: bool = is_sweep(Sb, len(Vf_array))
 
     if b_sweep:  # Undefined
         return None
     else:
         LO: float = (0.5 - Vb) - (Va - 0.5)
 
-
-# GLOBAL SYMMETRY - Fig. 17 in Section 5.1
-
-
-def calc_global_symmetry(
-    d_sv_pts: list[tuple[float, float]],
-    r_sv_pts: list[tuple[float, float]],
-    S50V: float,
-) -> float:
-    """GS - Global symmetry
-
-    * gSym is the area of asymmetry between the two curves.
-    * The choice of what base to normalize it by is somewhat arbitrary.
-    * We actually only infer the S–V curve over the range [0.25–0.75] <<< 101 points (not 100!)
-    * But dividing by 100 normalizes the area of asymmetry to the area of the SxV unit square.
-    """
-
-    g_Sym: float = 0.0
-
-    for i in range(len(d_sv_pts)):
-        g_Sym += abs(d_sv_pts[i][0] - r_sv_pts[i][0]) / 2
-
-    sign: int = -1 if S50V < 0 else 1
-    g_Sym *= sign
-
-    return g_Sym / 100
-
-
-# PR - RAW DISPROPORTIONALITY - Eq.C.1.1 on P. 42
-
-
-def calc_disproportionality(Vf: float, Sf: float) -> float:
-    """PR - raw disproportionality"""
-
-    return Vf - Sf
-
-
-# BIG 'R': Defined in Footnote 22 on P. 10
-
-
-def calc_big_R(Vf: float, Sf: float) -> Optional[float]:
-    """BIG 'R'"""
-
-    if roughly_equal(Vf, 0.5, EPSILON):
-        return None  # Undefined
-    else:
-        return (Sf - 0.5) / (Vf - 0.5)
-
-
-# MINIMAL INVERSE RESPONSIVENESS
-
-
-def _is_balanced(Vf: float) -> bool:
-    """Is the statewide vote share balanced?"""
-
-    lower: float = 0.45
-    upper: float = 0.55
-    b_balanced: bool = False if (Vf > upper) or (Vf < lower) else True
-
-    return b_balanced
-
-
-def calc_minimal_inverse_responsiveness(Vf: float, r: float) -> Optional[float]:
-    """MIR - Minimal inverse responsiveness
-
-    zeta = (1 / r) - (1 / r_sub_max)     : Eq. 5.2.1
-
-    where r_sub_max = 10 or 20 for balanced and unbalanced states, respectively.
-    """
-
-    if roughly_equal(r, 0, EPSILON):
-        return None  # Undefined
-    else:
-        b_balanced: bool = _is_balanced(Vf)
-        ideal: float = 0.1 if b_balanced else 0.2
-
-        MIR = (1 / r) - ideal
-
-        MIR = max(MIR, 0.0)
-
-        return MIR
-
-
-# GAMMA
-
-
-def calc_gamma(Vf: float, Sf: float, r: float) -> float:
-    """GAMMA
-
-    g = 50 + r<V>(<V>-50) – S(<V>)
-    """
-
-    return 0.5 + (r * (Vf - 0.5)) - Sf
-
-
-# TURNOUT BIAS
-
-
-def calc_turnout_bias(statewide: float, Vf_array: list[float]) -> float:
-    """TO - Turnout bias
-
-    The difference between the statewide turnout and the average district turnout
-    """
-
-    district_avg = statistics.mean(Vf_array)
-    turnout_bias = statewide - district_avg
-
-    return turnout_bias
-
-
-# __all__ = ["TODO"]
 
 ### END ###

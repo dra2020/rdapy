@@ -1,13 +1,26 @@
 #!/usr/bin/env python3
 
-from math import erf, sqrt, isclose
-from scipy.interpolate import interp1d
+"""
+Metrics:
 
-# import numpy as np
+* S! = the estimated number of Democratic seats using first past the post
+* S# = the estimated Democratic seats, using seat probabilities
+* S% = the estimated Democratic seat share fraction, calculated as S# / N
+
+TODO
+"""
+
+from math import erf, sqrt, isclose
 
 from typing import Optional
 
 from .utils import *
+
+
+def est_seat_share(seats: float, N: int) -> float:
+    """S% - The estimated Democratic seat share fraction"""
+
+    return seats / N
 
 
 # INFER AN S/V CURVE
@@ -95,9 +108,6 @@ def est_statewide_seats_prob(vpi_by_district):
     return sum([est_seat_probability(vpi) for vpi in vpi_by_district])
 
 
-###
-
-
 def est_seat_probability(vpi: float, range: Optional[list[float]] = None) -> float:
     """TODO"""
 
@@ -124,78 +134,6 @@ def est_seats(Vf_array: list[float], range: Optional[list[float]] = None) -> flo
     """The estimated # of Democratic seats, using seat probabilities"""
 
     return sum([est_seat_probability(vpi, range) for vpi in Vf_array])
-
-
-"""
-"""
-
-
-###
-
-# Estimate the S/V seats measure of bias (@ V = 50%)
-
-
-def est_seats_bias(sv_curve_pts, total_seats):
-    d_seats = d_seats_at_half_share(sv_curve_pts)
-    r_seats = total_seats - d_seats
-
-    return (r_seats - d_seats) / 2.0
-
-
-def d_seats_at_half_share(sv_curve_pts):
-    close_pts = [pt for pt in sv_curve_pts if isclose(pt[0], 0.5)]
-    _, d_seats = next(iter(close_pts))
-
-    return d_seats
-
-
-# Instead expressed as a percentage of the # of districts
-
-
-def est_seats_bias_pct(seats_bias, total_seats):
-    return seats_bias / float(total_seats)
-
-
-# Interpolate the S/V votes measure of bias (for half the seats)
-
-
-def est_votes_bias(sv_curve_pts, total_seats):
-    half_seats = float(total_seats) / 2.0
-
-    x = [x for x, y in sv_curve_pts]
-    y = [y for x, y in sv_curve_pts]
-    fn = interp1d(y, x, kind="cubic")
-
-    return fn(half_seats) - 0.50
-
-
-# Estimate responsiveness (R) at the statewide vote share
-
-
-def est_responsiveness(statewide_vote_share, sv_curve_pts, total_seats):
-    VOTE_SHARE = 0
-
-    V1, S1 = lower_bracket(sv_curve_pts, statewide_vote_share, VOTE_SHARE)
-    V2, S2 = upper_bracket(sv_curve_pts, statewide_vote_share, VOTE_SHARE)
-
-    # NOTE - To get a proper slope, normalize the seat delta into a fraction!
-    R = ((S2 - S1) / total_seats) / (V2 - V1)
-
-    return R
-
-
-# Estimate the number of responsive districts [R(d)], given a set of VPI's
-
-
-def est_responsive_districts(vpi_by_district):
-    return sum([est_district_responsiveness(vpi) for vpi in vpi_by_district])
-
-
-# Estimate the responsiveness of a district, given a VPI
-
-
-def est_district_responsiveness(vpi):
-    return 1 - 4 * (est_seat_probability(vpi) - 0.5) ** 2
 
 
 # Infer inverse S/V curve
@@ -231,65 +169,5 @@ def infer_geometric_seats_bias_points(n_pts, d_sv_pts, r_sv_pts):
 
     return b_gs_pts
 
-
-# Estimate geometric seats bias (@ V = statewide vote share)
-
-
-def est_geometric_seats_bias(statewide_vote_share, b_gs_pts):
-    x = [x for x, y in b_gs_pts]
-    y = [y for x, y in b_gs_pts]
-    fn = interp1d(x, y, kind="cubic")
-
-    return fn(statewide_vote_share)
-
-
-# Instead expressed as a percentage of the # of districts
-
-
-def est_geometric_seats_bias_pct(b_gs, total_seats):
-    return b_gs / float(total_seats)
-
-
-# Estimate geometric votes bias (for the statewide seat share)
-
-
-def est_geometric_votes_bias(d_sv_pts, r_sv_pts, statewide_seats):
-    x = [x for x, y in r_sv_pts]
-    y = [y for x, y in r_sv_pts]
-    fn = interp1d(y, x, kind="cubic")
-
-    v_r = fn(statewide_seats)
-
-    x = [x for x, y in d_sv_pts]
-    y = [y for x, y in d_sv_pts]
-    fn = interp1d(y, x, kind="cubic")
-
-    v_d = fn(statewide_seats)
-
-    # NOTE - By convention: '+' = R bias; '-' = D bias
-    return 0.5 * (v_d - v_r)
-
-
-# Calculate the efficiency gap
-# NOTE - This version is consistent with the rest of our metrics.
-#   It's not the same as the version I've seen elsewhere, namely:
-#   EG = (Seat Share – 50%)  – (2 × (Vote Share – 50%))
-
-
-def efficiency_gap(vote_share, seat_share):
-    return (-1 * (seat_share - 0.5)) + (2 * (vote_share - 0.5))
-
-
-# Calculate new gamma measure
-# g = 50 + r<V>(<V>-50) – S(<V>)
-def calc_gamma(plan):
-    return (
-        0.5
-        + plan.responsiveness * (plan.statewide_vote_share - 0.5)
-        - (plan.predicted_D_seats / plan.districts)
-    ) * 100
-
-
-# __all__ = ["TODO"]
 
 ### END ###
