@@ -9,8 +9,6 @@ Metrics:
 * S# = the estimated Democratic seats, using seat probabilities
 * S% = the estimated Democratic seat share fraction, calculated as S# / N
 
-* B% [bias] = the bias calculated as S% – ^S%
-
 * BS_50 = Seat bias as a fraction of N
 * BV_50 = Votes bias as a fraction
 * decl = Declination
@@ -24,6 +22,8 @@ Metrics:
 * TO = Turnout bias
 * MM' = Mean – median difference using average district v 
 * LO = Lopsided outcomes
+
+* B% [bias] = the bias calculated as S% – ^S%
 
 * R = Big 'R'
 * MIR = Minimal inverse responsiveness
@@ -40,6 +40,7 @@ from typing import Optional
 from .method import est_seats, est_seat_probability
 from .utils import *
 from .constants import *
+
 
 ### BASIC BIAS ###
 
@@ -195,7 +196,7 @@ def key_RV_points(Vf_array: list[float]) -> dict[str, float]:
     return key_points
 
 
-def _is_a_sweep(Sf: float, n_districts: int) -> bool:
+def is_sweep(Sf: float, n_districts: int) -> bool:
     """Did one party win all the seats?"""
 
     one_district: float = 1 / n_districts
@@ -204,7 +205,7 @@ def _is_a_sweep(Sf: float, n_districts: int) -> bool:
     return b_sweep
 
 
-def _radians_to_degrees(radians: float) -> float:
+def radians_to_degrees(radians: float) -> float:
     """Convert radians to degrees"""
 
     degrees: float = radians * (180 / pi)
@@ -238,8 +239,8 @@ def calc_declination(Vf_array: list[float]) -> Optional[float]:
         l_tan: float = (Sb - Rb) / (0.5 - Vb)
         r_tan: float = (Ra - Sb) / (Va - 0.5)
 
-        l_angle: float = _radians_to_degrees(atan(l_tan))
-        r_angle: float = _radians_to_degrees(atan(r_tan))
+        l_angle: float = radians_to_degrees(atan(l_tan))
+        r_angle: float = radians_to_degrees(atan(r_tan))
         decl = r_angle - l_angle
 
     return decl
@@ -329,8 +330,9 @@ def calc_big_R(Vf: float, Sf: float) -> Optional[float]:
 def _is_balanced(Vf: float) -> bool:
     """Is the statewide vote share balanced?"""
 
-    lower, upper = [0.00, 0.75]
-    b_balanced: bool = True if (Vf > upper) or (Vf < lower) else False
+    lower: float = 0.45
+    upper: float = 0.55
+    b_balanced: bool = False if (Vf > upper) or (Vf < lower) else True
 
     return b_balanced
 
