@@ -17,45 +17,34 @@ from typing import Optional
 from .utils import *
 
 
-# FORMULAS
+# FORMULAS - John Nagle's two formulas for estimating seats & responsiveness
 
 
 def est_seat_probability(vpi: float) -> float:
-    """Estimate the probability of a seat win for district, given a VPI.
-
-    Snap to 0 or 1 if outside the range [0.25, 0.75] over which the seats-votes
-    curve is inferred.
-    """
-
-    range: list[float] = [0.25, 0.75]
-
-    if vpi < range[0]:
-        return 0.0
-    elif vpi > range[1]:
-        return 1.0
-    else:
-        return seat_probability_fn(vpi)
-
-
-def seat_probability_fn(vpi: float):
-    """Estimate the probability of a seat win for district, given a VPI"""
+    """Estimate the fractional probability of a seat win for district, given a VPI"""
 
     return 0.5 * (1 + erf((vpi - 0.50) / (0.02 * sqrt(8))))
 
 
-def est_district_responsiveness(vpi):
+def est_district_responsiveness(vpi: float) -> float:
     """Estimate the responsiveness of a district, given a VPI"""
 
     return 1 - 4 * (est_seat_probability(vpi) - 0.5) ** 2
 
 
-###
+# ESTIMATE THE STATEWIDE SEATS, GIVEN VPI'S BY DISTRICT
 
 
-def est_seat_share(seats: float, N: int) -> float:
-    """S% - The estimated Democratic seat share fraction"""
+def est_seats(Vf_array: list[float]) -> float:
+    """The estimated # of Democratic seats, using seat probabilities"""
 
-    return seats / N
+    return sum([est_seat_probability(vpi) for vpi in Vf_array])
+
+
+def est_statewide_seats_fptp(Vf_array: list[float]) -> float:
+    """The estimated # of Democratic seats, using first past the post"""
+
+    return sum([1.0 for vpi in Vf_array if (vpi > 0.5)])
 
 
 # INFER AN S/V CURVE
@@ -122,31 +111,6 @@ def shift_districts_proportionally(
         shifted_vpis = vpi_by_district
 
     return shifted_vpis
-
-
-# ESTIMATE THE STATEWIDE SEATS, GIVEN VPI'S BY DISTRICT,
-# EITHER PROBABILISTICALLY OR BY FIRST PAST THE POST
-
-
-def est_statewide_seats(vpi_by_district, fptp=False):
-    if fptp:
-        return est_statewide_seats_fptp(vpi_by_district)
-    else:
-        return est_statewide_seats_prob(vpi_by_district)
-
-
-def est_statewide_seats_fptp(vpi_by_district):
-    return sum([1.0 for vpi in vpi_by_district if (vpi > 0.5)])
-
-
-def est_statewide_seats_prob(vpi_by_district):
-    return sum([est_seat_probability(vpi) for vpi in vpi_by_district])
-
-
-def est_seats(Vf_array: list[float]) -> float:
-    """The estimated # of Democratic seats, using seat probabilities"""
-
-    return sum([est_seat_probability(vpi) for vpi in Vf_array])
 
 
 # Infer inverse S/V curve

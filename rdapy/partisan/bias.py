@@ -32,7 +32,7 @@ import statistics
 
 from typing import Optional
 
-from .method import est_seat_probability, est_seats, est_seat_share
+from .method import est_seat_probability, est_seats
 from .utils import *
 from .constants import *
 
@@ -188,7 +188,7 @@ def key_RV_points(Vf_array: list[float]) -> dict[str, float]:
     n_districts: int = len(Vf_array)
     est_S: float = est_seats(Vf_array)
 
-    Sb: float = est_seat_share(est_S, n_districts)  # Sb = Sf
+    Sb: float = est_S / n_districts  # Sb = Sf
     Ra: float = (1 + Sb) / 2
     Rb: float = Sb / 2
 
