@@ -411,5 +411,39 @@ class TestPartisanMethod:
 
         assert approx_equal(est_seat_probability(0.650000), 0.999912, places=5)
 
+    def test_seat_probabilities_2(self) -> None:
+        # CO districts
+        rV: list[float] = [
+            0.678999,
+            0.575848,
+            0.480675,
+            0.389881,
+            0.361222,
+            0.491961,
+            0.540539,
+        ]
+
+        # Benchmarks from original Python code
+        Sf: list[float] = [
+            0.9999961789873051,
+            0.9710331984032442,
+            0.3145034920338179,
+            0.0029528202902014966,
+            0.0002607625652328305,
+            0.4203590611657488,
+            0.8445833342516753,
+        ]
+
+        approx_equal(est_seat_probability(rV[0]), Sf[0], places=5)
+        approx_equal(est_seat_probability(rV[1]), Sf[1], places=5)
+        approx_equal(est_seat_probability(rV[2]), Sf[2], places=5)
+        approx_equal(est_seat_probability(rV[3]), Sf[3], places=5)
+        approx_equal(est_seat_probability(rV[4]), Sf[4], places=5)
+        approx_equal(est_seat_probability(rV[5]), Sf[5], places=5)
+        approx_equal(est_seat_probability(rV[6]), Sf[6], places=5)
+
+        # CO probable seats
+        approx_equal(est_seats(rV), 3.5536888476972255, places=5)
+
 
 ### END ###
