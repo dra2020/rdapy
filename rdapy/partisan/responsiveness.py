@@ -3,19 +3,20 @@
 """
 Competitiveness & responsiveness metrics:
 
-* Cn = Count the # of competitive districts, defined as [45–55%]
-* cD = The estimated # of competitive districts
+* Cn  = Count the # of competitive districts, defined as [45–55%]
+* cD  = The estimated # of competitive districts
 * cDf = The estimated % of competitive districts (cD / N)
-* r = Responsiveness (little 'r') at the statewide vote share (Vf)
-* R = Big 'R'
+* r   = Responsiveness (little 'r') at the statewide vote share (Vf);
+        depends on the points of an inferred seats-votes curve
+* R   = Big 'R'
 * MIR = Minimal inverse responsiveness
-* rD = The estimated fractional # of responsive districts
+* rD  = The estimated fractional # of responsive districts
 * rDf = The estimated fractional % of responsive districts (rD / N)
 """
 
 from typing import Optional
 
-from .method import est_seat_probability
+from .method import est_district_responsiveness
 from .utils import *
 from .constants import *
 
@@ -43,7 +44,7 @@ def est_competitive_districts(Vf_array: list[float]) -> float:
 def est_district_competitiveness(Vf: float) -> float:
     """Estimate the district competitiveness, a synonym for responsiveness."""
 
-    return _est_district_responsiveness(Vf)
+    return est_district_responsiveness(Vf)
 
 
 # RESPONSIVENESS
@@ -117,13 +118,7 @@ def _is_balanced(Vf: float) -> bool:
 def est_responsive_districts(vpi_by_district):
     """Estimate the # of responsive districts [R(d)], given a set of VPI's"""
 
-    return sum([_est_district_responsiveness(vpi) for vpi in vpi_by_district])
-
-
-def _est_district_responsiveness(vpi):
-    """Estimate the responsiveness of a district, given a VPI"""
-
-    return 1 - 4 * (est_seat_probability(vpi) - 0.5) ** 2
+    return sum([est_district_responsiveness(vpi) for vpi in vpi_by_district])
 
 
 ### END ###

@@ -17,6 +17,41 @@ from typing import Optional
 from .utils import *
 
 
+# FORMULAS
+
+
+def est_seat_probability(vpi: float) -> float:
+    """Estimate the probability of a seat win for district, given a VPI.
+
+    Snap to 0 or 1 if outside the range [0.25, 0.75] over which the seats-votes
+    curve is inferred.
+    """
+
+    range: list[float] = [0.25, 0.75]
+
+    if vpi < range[0]:
+        return 0.0
+    elif vpi > range[1]:
+        return 1.0
+    else:
+        return seat_probability_fn(vpi)
+
+
+def seat_probability_fn(vpi: float):
+    """Estimate the probability of a seat win for district, given a VPI"""
+
+    return 0.5 * (1 + erf((vpi - 0.50) / (0.02 * sqrt(8))))
+
+
+def est_district_responsiveness(vpi):
+    """Estimate the responsiveness of a district, given a VPI"""
+
+    return 1 - 4 * (est_seat_probability(vpi) - 0.5) ** 2
+
+
+###
+
+
 def est_seat_share(seats: float, N: int) -> float:
     """S% - The estimated Democratic seat share fraction"""
 
@@ -106,29 +141,6 @@ def est_statewide_seats_fptp(vpi_by_district):
 
 def est_statewide_seats_prob(vpi_by_district):
     return sum([est_seat_probability(vpi) for vpi in vpi_by_district])
-
-
-def est_seat_probability(vpi: float) -> float:
-    """Estimate the probability of a seat win for district, given a VPI.
-
-    Snap to 0 or 1 if outside the range [0.25, 0.75] over which the seats-votes
-    curve is inferred.
-    """
-
-    range: list[float] = [0.25, 0.75]
-
-    if vpi < range[0]:
-        return 0.0
-    elif vpi > range[1]:
-        return 1.0
-    else:
-        return seat_probability_fn(vpi)
-
-
-def seat_probability_fn(vpi: float):
-    """Estimate the probability of a seat win for district, given a VPI"""
-
-    return 0.5 * (1 + erf((vpi - 0.50) / (0.02 * sqrt(8))))
 
 
 def est_seats(Vf_array: list[float]) -> float:

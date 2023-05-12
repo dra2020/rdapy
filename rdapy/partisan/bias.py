@@ -31,7 +31,7 @@ import statistics
 
 from typing import Optional
 
-from .method import est_seats, est_seat_share, est_seat_probability
+from .method import est_seat_probability, est_seats, est_seat_share
 from .utils import *
 from .constants import *
 
