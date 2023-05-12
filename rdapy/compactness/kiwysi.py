@@ -30,12 +30,6 @@ def rank_shape(raw_rank: float) -> float:
     return min(max(raw_rank, 1.0), 100.0)
 
 
-def rate_shape(rank: int) -> int:
-    """Inverted a [1–100] rank to [0–100] rating where bigger is better."""
-
-    return 100 - rank + 1
-
-
 def featureize_shape(shp: Polygon | MultiPolygon, geodesic: bool = True) -> list[float]:
     features: list[float] = []
 
@@ -110,7 +104,6 @@ __all__ = [
     "featureize_shape",
     "score_features",
     "rank_shape",
-    "rate_shape",
 ]
 
 ### END ###

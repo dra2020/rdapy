@@ -59,9 +59,5 @@ class TestKIWYSI:
         assert rank_shape(77.2586455094345) == 77.2586455094345
         assert rank_shape(-32.4080845) == 1.0
 
-    def test_rate_shape(self) -> None:
-        assert rate_shape(1) == 100
-        assert rate_shape(100) == 1
-
 
 ### END ###

@@ -10,7 +10,6 @@ from .compactness import (
     calc_hull,
     calc_schwartzberg,
     score_shape,
-    rate_shape,
     rank_shape,
 )
 from .graph import is_connected, is_embedded, OUT_OF_STATE

@@ -13,7 +13,6 @@ from .kiwysi import (
     score_shape,
     featureize_shape,
     score_features,
-    rate_shape,
     rank_shape,
 )
 from .compactness import calc_compactness

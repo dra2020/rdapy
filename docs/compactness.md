@@ -167,8 +167,3 @@ def rank_shape(raw_rank: float) -> float:
     Smaller is better.
     """
 ```
-
-```python
-def rate_shape(rank: int) -> int:
-    """Inverted a [1–100] rank to [0–100] rating where bigger is better."""
-```
