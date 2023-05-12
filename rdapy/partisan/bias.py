@@ -3,24 +3,25 @@
 """
 Metrics:
 
-* ^S# = the Democratic seats closest to proportional
-* ^S% = the corresponding Democratic seat share
-* B% [bias] = the bias calculated as S% – ^S%
+* ^S#   = the Democratic seats closest to proportional
+* ^S%   = the corresponding Democratic seat share
+* B%    = the bias calculated as S% – ^S%
 
-* PR = Disproportionality
-* EG = Efficiency gap as a fraction
+* PR    = Disproportionality
+* EG    = Efficiency gap as a fraction
 * gamma = Gamma 
 
+These 4 depend on the points of an inferred seats-votes curve:
 * BS_50 = Seat bias as a fraction of N
 * BV_50 = Votes bias as a fraction
-* BS_V = Seats bias @ <V> (geometric)
-* GS = Global symmetry
+* BS_V  = Seats bias @ <V> (geometric)
+* GS    = Global symmetry
 
-* decl = Declination
-* MM = Mean – median difference using statewide Vf
-* MM' = Mean – median difference using average district v 
-* TO = Turnout bias
-* LO = Lopsided outcomes
+* decl  = Declination
+* MM    = Mean – median difference using statewide Vf
+* MM'   = Mean – median difference using average district v 
+* TO    = Turnout bias
+* LO    = Lopsided outcomes
 
 By convention, '+' = R bias; '-' = D bias
 """
