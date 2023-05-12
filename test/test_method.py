@@ -6,6 +6,7 @@ TEST PARTISAN METHOD
 
 
 from rdapy.partisan.method import *
+from rdapy.partisan.constants import *
 from testutils import *
 
 
@@ -847,11 +848,32 @@ class TestPartisanMethod:
         assert approx_equal(est_district_responsiveness(0.650000), 0.000354, places=4)
 
     def test_FPTP_seats(self) -> None:
-        assert True
+        rV: list[float]
 
+        # Shutout 0–3
 
-"""
-"""
+        rV = [0.40, 0.40, 0.40]
+        assert est_seats_fptp(rV) == 0
+
+        # Sweep 3–0
+
+        rV = [0.60, 0.60, 0.60]
+        assert est_seats_fptp(rV) == 3
+
+        # Split 1–2
+
+        rV = [(0.50 - EPSILON), (0.50 - EPSILON), (0.50 + EPSILON)]
+        assert est_seats_fptp(rV) == 1
+
+        # Split 2–1
+
+        rV = [(0.50 + EPSILON), (0.50 + EPSILON), (0.50 - EPSILON)]
+        assert est_seats_fptp(rV) == 2
+
+        # Perfectly balanced 0–3
+
+        rV = [0.50, 0.50, 0.50]
+        assert est_seats_fptp(rV) == 0
 
 
 ### END ###

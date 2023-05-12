@@ -51,10 +51,10 @@ def est_seats(Vf_array: list[float]) -> float:
     return sum([est_seat_probability(vpi) for vpi in Vf_array])
 
 
-def est_seats_fptp(Vf_array: list[float]) -> float:
+def est_seats_fptp(Vf_array: list[float]) -> int:
     """S! - The estimated # of Democratic seats, using first past the post"""
 
-    return sum([1.0 for vpi in Vf_array if (vpi > 0.5)])
+    return sum([1 for vpi in Vf_array if (vpi > 0.5)])
 
 
 # INFER AN S/V CURVE
