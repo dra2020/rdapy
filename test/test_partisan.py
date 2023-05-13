@@ -431,5 +431,45 @@ class TestPartisanScorecard:
         assert approx_equal(s["responsiveness"]["rD"], 1.383189, places=4)
         assert approx_equal(s["responsiveness"]["rDf"], 0.1537, places=4)
 
+    def test_MD_2012(self) -> None:
+        """MD 2012 from research project #2 w/ John Nagle"""
+
+        profile_path: str = "testdata/partisan/nagle/partisan-MD-2012.json"
+        profile: dict = read_json(profile_path)
+
+        points: dict = key_RV_points(profile["byDistrict"])
+        Sb: float = points["Sb"]
+        Ra: float = points["Ra"]
+        Rb: float = points["Rb"]
+        Va: float = points["Va"]
+        Vb: float = points["Vb"]
+
+        assert Va >= 0.50
+        assert Vb <= 0.50
+        assert Rb < 0.50
+        assert Ra > 0.50
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 5
+        assert approx_equal(s["bias"]["bestSf"], 0.6250, places=4)
+        assert approx_equal(s["bias"]["estS"], 6.796640, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.8496, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.2246, places=4)
+        assert approx_equal(s["bias"]["tOf"], -0.004063, places=4)
+        assert approx_equal(s["bias"]["bS50"], -0.05453999, places=4)
+        assert approx_equal(s["bias"]["bV50"], -0.01007575, places=4)
+        # assert approx_equal(s["bias"]["bSV"], 0.0137802, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["gamma"], -24.9 / 100, places=4)
+        assert approx_equal(s["bias"]["eG"], -0.16284202, places=4)
+
+        assert approx_equal(s["bias"]["mMs"], -0.0109, places=4)
+        assert approx_equal(s["bias"]["mMd"], -0.006817, places=4)
+        assert approx_equal(s["bias"]["lO"], 4.05629795619783 / 100, places=4)
+
+        assert approx_equal(s["responsiveness"]["littleR"], 1.076736, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 0.702811, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.0879, places=4)
+
 
 ### END ###
