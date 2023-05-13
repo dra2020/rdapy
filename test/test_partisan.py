@@ -424,7 +424,7 @@ class TestPartisanScorecard:
         assert approx_equal(s["bias"]["eG"], -0.25746580, places=4)
 
         assert approx_equal(s["bias"]["mMs"], 0.0230850624999998, places=4)
-        # assert approx_equal(s["bias"]["mMd"], 0.027185, places=4) # TODO: Check this
+        assert approx_equal(s["bias"]["mMd"], 0.027185, places=2)
         # Lopsided outcomes are undefined
 
         assert approx_equal(s["responsiveness"]["littleR"], 1.972364, places=4)
