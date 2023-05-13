@@ -18,9 +18,6 @@ s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
 x = s["bias"]["bSV"]
 # assert approx_equal(s["bias"]["bSV"], 0.0330327, places=4)
 
-y = s["bias"]["lO"]
-# assert approx_equal(s["bias"]["lO"], 9.23242870162867 / 100, places=4)
-
 pass
 
 ### END ###

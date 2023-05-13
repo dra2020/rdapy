@@ -307,7 +307,7 @@ class TestPartisanScorecard:
         assert approx_equal(s["bias"]["tOf"], -0.006566, places=4)
         assert approx_equal(s["bias"]["bS50"], -0.01792670, places=4)
         assert approx_equal(s["bias"]["bV50"], -0.00609430, places=4)
-        # assert approx_equal(s["bias"]["bSV"], 0.0330327, places=4) # TODO: Check this
+        assert approx_equal(s["bias"]["bSV"], 0.0330327, places=4)  # TODO: Check this
         assert approx_equal(s["bias"]["gamma"], -5.07 / 100, places=4)
         assert approx_equal(s["bias"]["eG"], -0.04511401, places=4)
 
