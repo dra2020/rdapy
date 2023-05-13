@@ -4,16 +4,23 @@
 DEBUG
 """
 
-from rdapy.splitting import *
+from rdapy.partisan import *
 from testutils import *
 
-communities = [
-    {"name": "one", "splits": [0.33, 0.33, 0.34]},
-    {"name": "two", "splits": [0.92, 0.05, 0.03]},
-]
+"""CA 2012 from research project #2 w/ John Nagle"""
 
-analysis = calc_coi_splitting(communities)
-print(analysis)
+profile_path: str = "testdata/partisan/nagle/partisan-CA-2012.json"
+profile: dict = read_json(profile_path)
+
+
+s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+x = s["bias"]["bSV"]
+# assert approx_equal(s["bias"]["bSV"], 0.0330327, places=4)
+
+y = s["bias"]["lO"]
+# assert approx_equal(s["bias"]["lO"], 9.23242870162867 / 100, places=4)
+
 pass
 
 ### END ###

@@ -331,7 +331,7 @@ def calc_lopsided_outcomes(Vf_array: list[float]) -> Optional[float]:
     if b_sweep:  # Undefined
         return None
     else:
-        LO: float = (0.5 - Vb) - (Va - 0.5)
+        return (0.5 - Vb) - (Va - 0.5)
 
 
 ### END ###
