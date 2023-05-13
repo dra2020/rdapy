@@ -92,5 +92,192 @@ class TestPartisanScorecard:
 
         assert approx_equal(s["responsiveness"]["rDf"], 0.0906, places=4)
 
+    def test_hypothetical_B(self) -> None:
+        """Hypothetical B (2-proportionality)"""
+
+        profile_path: str = "testdata/partisan/warrington/partisan-Hypothetical-B.json"
+        profile: dict = read_json(profile_path)
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 15
+        assert approx_equal(s["bias"]["bestSf"], 0.6000, places=4)
+        assert approx_equal(s["bias"]["estS"], 17.3000, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.6920, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.0920, places=4)
+        assert approx_equal(s["responsiveness"]["littleR"], 1.6134, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 4.3329, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.1733, places=4)
+
+    def test_hypothetical_C(self) -> None:
+        """Hypothetical C (3-proportionality)"""
+
+        profile_path: str = "testdata/partisan/warrington/partisan-Hypothetical-C.json"
+        profile: dict = read_json(profile_path)
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 15
+        assert approx_equal(s["bias"]["bestSf"], 0.6000, places=4)
+        assert approx_equal(s["bias"]["estS"], 19.9419, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.7977, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.1977, places=4)
+        assert approx_equal(s["responsiveness"]["littleR"], 2.4315, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 6.5433, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.2617, places=4)
+
+    def test_hypothetical_D(self) -> None:
+        """Hypothetical D (Sweep)"""
+
+        profile_path: str = "testdata/partisan/warrington/partisan-Hypothetical-D.json"
+        profile: dict = read_json(profile_path)
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 6
+        assert approx_equal(s["bias"]["bestSf"], 0.6000, places=4)
+        assert approx_equal(s["bias"]["estS"], 9.8384, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.9838, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.3838, places=4)
+        assert approx_equal(s["responsiveness"]["littleR"], 0.7471, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 0.5947, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.0595, places=4)
+
+    def test_hypothetical_E(self) -> None:
+        """Hypothetical E (Competitive)"""
+
+        profile_path: str = "testdata/partisan/warrington/partisan-Hypothetical-E.json"
+        profile: dict = read_json(profile_path)
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 6
+        assert approx_equal(s["bias"]["bestSf"], 0.5000, places=4)
+        assert approx_equal(s["bias"]["estS"], 7.9977, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.6665, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.1665, places=4)
+        assert approx_equal(s["responsiveness"]["littleR"], 8.0289, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 9.1389, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.7616, places=4)
+
+    def test_hypothetical_F(self) -> None:
+        """Hypothetical F (Competitive even)"""
+
+        profile_path: str = "testdata/partisan/warrington/partisan-Hypothetical-F.json"
+        profile: dict = read_json(profile_path)
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 5
+        assert approx_equal(s["bias"]["bestSf"], 0.5000, places=4)
+        assert approx_equal(s["bias"]["estS"], 5.6574, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.5657, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.0657, places=4)
+        assert approx_equal(s["responsiveness"]["littleR"], 4.9970, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 4.5606, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.4561, places=4)
+
+    def test_hypothetical_G(self) -> None:
+        """Hypothetical G (Uncompetitive)"""
+
+        profile_path: str = "testdata/partisan/warrington/partisan-Hypothetical-G.json"
+        profile: dict = read_json(profile_path)
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 5
+        assert approx_equal(s["bias"]["bestSf"], 0.5000, places=4)
+        assert approx_equal(s["bias"]["estS"], 5.9932, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.5993, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.0993, places=4)
+        assert approx_equal(s["responsiveness"]["littleR"], 0.0541, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 0.0273, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.0027, places=4)
+
+    def test_hypothetical_H(self) -> None:
+        """Hypothetical H (Very uncompetitive)"""
+
+        profile_path: str = "testdata/partisan/warrington/partisan-Hypothetical-H.json"
+        profile: dict = read_json(profile_path)
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 5
+        assert approx_equal(s["bias"]["bestSf"], 0.5000, places=4)
+        assert approx_equal(s["bias"]["estS"], 6.0000, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.6000, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.1000, places=4)
+        assert approx_equal(s["responsiveness"]["littleR"], 0.0000, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 0.0000, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.0000, places=4)
+
+    def test_hypothetical_I(self) -> None:
+        """Hypothetical I (Cubic)"""
+
+        profile_path: str = "testdata/partisan/warrington/partisan-Hypothetical-I.json"
+        profile: dict = read_json(profile_path)
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 6
+        assert approx_equal(s["bias"]["bestSf"], 0.6000, places=4)
+        assert approx_equal(s["bias"]["estS"], 7.3984, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.7398, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.1398, places=4)
+        assert approx_equal(s["responsiveness"]["littleR"], 1.9415, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 1.7073, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.1707, places=4)
+
+    def test_hypothetical_J(self) -> None:
+        """Hypothetical J (Anti-majoritarian)"""
+
+        profile_path: str = "testdata/partisan/warrington/partisan-Hypothetical-J.json"
+        profile: dict = read_json(profile_path)
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 4
+        assert approx_equal(s["bias"]["bestSf"], 0.4000, places=4)
+        assert approx_equal(s["bias"]["estS"], 5.5598, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.5560, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.1560, places=4)
+        assert approx_equal(s["responsiveness"]["littleR"], 1.6239, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 1.3331, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.1333, places=4)
+
+    def test_hypothetical_K(self) -> None:
+        """Hypothetical K (Classic)"""
+
+        profile_path: str = "testdata/partisan/warrington/partisan-Hypothetical-K.json"
+        profile: dict = read_json(profile_path)
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 5
+        assert approx_equal(s["bias"]["bestSf"], 0.5000, places=4)
+        assert approx_equal(s["bias"]["estS"], 3.3882, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.3388, places=4)
+        assert approx_equal(s["bias"]["deviation"], 0.1612, places=4)
+        assert approx_equal(s["responsiveness"]["littleR"], 1.3046, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 1.2957, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.1296, places=4)
+
+    def test_hypothetical_L(self) -> None:
+        """Hypothetical L (Inverted)"""
+
+        profile_path: str = "testdata/partisan/warrington/partisan-Hypothetical-L.json"
+        profile: dict = read_json(profile_path)
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 3
+        assert approx_equal(s["bias"]["bestSf"], 0.3000, places=4)
+        assert approx_equal(s["bias"]["estS"], 1.7961, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.1796, places=4)
+        assert approx_equal(s["bias"]["deviation"], 0.1204, places=4)
+        assert approx_equal(s["responsiveness"]["littleR"], 5.025, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 2.8831, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.2883, places=4)
+
 
 ### END ###
