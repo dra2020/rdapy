@@ -52,5 +52,45 @@ class TestPartisanScorecard:
         estSf: float = estS / N
         assert approx_equal(calc_efficiency_gap(Vf, estSf), 0.033, places=3)
 
+    def test_hypothetical_A(self) -> None:
+        """Hypothetical A (1-proportionality)"""
+
+        profile_path: str = "testdata/partisan/warrington/partisan-Hypothetical-A.json"
+        profile: dict = read_json(profile_path)
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        # Estimate ^S#
+
+        assert s["bias"]["bestS"] == 14
+
+        # Estimate ^S%
+
+        assert approx_equal(s["bias"]["bestSf"], 0.6087, places=4)
+
+        # Estimate S#
+
+        assert approx_equal(s["bias"]["estS"], 13.8076, places=4)
+
+        # S%
+
+        assert approx_equal(s["bias"]["estSf"], 0.6003, places=4)
+
+        # Estimate B%
+
+        assert approx_equal(s["bias"]["deviation"], 0.0084, places=4)
+
+        # Estimate R#
+
+        assert approx_equal(s["responsiveness"]["littleR"], 0.8431, places=4)
+
+        # Estimate Rd
+
+        assert approx_equal(s["responsiveness"]["rD"], 2.0833, places=4)
+
+        # Estimate Rd%
+
+        assert approx_equal(s["responsiveness"]["rDf"], 0.0906, places=4)
+
 
 ### END ###
