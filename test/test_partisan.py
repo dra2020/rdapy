@@ -401,5 +401,35 @@ class TestPartisanScorecard:
         assert approx_equal(s["responsiveness"]["rD"], 3.846940, places=4)
         assert approx_equal(s["responsiveness"]["rDf"], 0.2137, places=4)
 
+    def test_MA_2012(self) -> None:
+        """MA 2012 from research project #2 w/ John Nagle."""
+
+        profile_path: str = "testdata/partisan/nagle/partisan-MA-2012.json"
+        profile: dict = read_json(profile_path)
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        # NOTE - Declination is undefined
+
+        assert s["bias"]["bestS"] == 5
+        assert approx_equal(s["bias"]["bestSf"], 0.5556, places=4)
+        assert approx_equal(s["bias"]["estS"], 8.622034, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.9580, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.4024, places=4)
+        assert approx_equal(s["bias"]["tOf"], -0.007300, places=4)
+        assert approx_equal(s["bias"]["bS50"], 0.06718376, places=4)
+        assert approx_equal(s["bias"]["bV50"], 0.01002969, places=4)
+        # assert approx_equal(s["bias"]["bSV"], -0.0303917, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["gamma"], -26.02 / 100, places=4)
+        assert approx_equal(s["bias"]["eG"], -0.25746580, places=4)
+
+        assert approx_equal(s["bias"]["mMs"], 0.0230850624999998, places=4)
+        # assert approx_equal(s["bias"]["mMd"], 0.027185, places=4) # TODO: Check this
+        # Lopsided outcomes are undefined
+
+        assert approx_equal(s["responsiveness"]["littleR"], 1.972364, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 1.383189, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.1537, places=4)
+
 
 ### END ###
