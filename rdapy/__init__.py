@@ -1,5 +1,7 @@
 # rdapy/__init__.py
 
+# TODO: Scope?
+
 from .compactness import (
     calc_compactness,
     calc_sym_x,
@@ -21,6 +23,6 @@ from .splitting import (
     uncertainty_of_membership,
     effective_splits,
 )
-from .partisan import *  # TODO: constrain
+from .partisan import calc_partisan_metrics
 
 name = "rdapy"

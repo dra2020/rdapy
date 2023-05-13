@@ -51,7 +51,7 @@ def est_seats(Vf_array: list[float]) -> float:
     return sum([est_seat_probability(vpi) for vpi in Vf_array])
 
 
-def est_seats_fptp(Vf_array: list[float]) -> int:
+def est_fptp_seats(Vf_array: list[float]) -> int:
     """S! - The estimated # of Democratic seats, using first past the post"""
 
     return sum([1 for vpi in Vf_array if (vpi > 0.5)])
@@ -66,7 +66,7 @@ def infer_sv_points(Vf: float, Vf_array: list[float], proportional=True) -> list
 
     sv_curve_pts = []
 
-    for shifted_Vf in shift_range(Vf):
+    for shifted_Vf in shift_range():
         shifted_Vf_array = _shift_districts(Vf, Vf_array, shifted_Vf, proportional)
         shifted_Sf = est_seats(shifted_Vf_array)
         sv_curve_pts.append((shifted_Vf, shifted_Sf))
@@ -119,9 +119,7 @@ def _shift_districts_proportionally(
     return shifted_Vf_array
 
 
-def infer_inverse_sv_points(
-    N: int, Vf: float, sv_pts: list[tuple]
-) -> list[tuple[float, float]]:
+def infer_inverse_sv_points(sv_pts: list[tuple], N: int) -> list[tuple[float, float]]:
     """Infer the points of an inverse S/V curve from a set of S/V curve points."""
 
     inverse_sv_curve_pts: list[tuple[float, float]] = []

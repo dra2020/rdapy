@@ -32,7 +32,7 @@ import statistics
 
 from typing import Optional
 
-from .method import est_seat_probability, est_seats
+from .method import est_seat_probability, est_seats, infer_geometric_seats_bias_points
 from .utils import *
 from .constants import *
 
@@ -138,9 +138,15 @@ def est_votes_bias(sv_curve_pts: list[tuple[float, float]], total_seats: int) ->
 
 
 def est_geometric_seats_bias(
-    statewide_vote_share: float, b_gs_pts: list[tuple[float, float]]
+    statewide_vote_share: float,
+    d_sv_pts: list[tuple[float, float]],
+    r_sv_pts: list[tuple[float, float]],
 ) -> float:
     """BS_V - Estimate geometric seats bias (@ V = statewide vote share)"""
+
+    b_gs_pts: list[tuple[float, float]] = infer_geometric_seats_bias_points(
+        d_sv_pts, r_sv_pts
+    )
 
     x: list[float] = [x for x, y in b_gs_pts]
     y: list[float] = [y for x, y in b_gs_pts]

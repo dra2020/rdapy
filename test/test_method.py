@@ -853,27 +853,27 @@ class TestPartisanMethod:
         # Shutout 0–3
 
         rV = [0.40, 0.40, 0.40]
-        assert est_seats_fptp(rV) == 0
+        assert est_fptp_seats(rV) == 0
 
         # Sweep 3–0
 
         rV = [0.60, 0.60, 0.60]
-        assert est_seats_fptp(rV) == 3
+        assert est_fptp_seats(rV) == 3
 
         # Split 1–2
 
         rV = [(0.50 - EPSILON), (0.50 - EPSILON), (0.50 + EPSILON)]
-        assert est_seats_fptp(rV) == 1
+        assert est_fptp_seats(rV) == 1
 
         # Split 2–1
 
         rV = [(0.50 + EPSILON), (0.50 + EPSILON), (0.50 - EPSILON)]
-        assert est_seats_fptp(rV) == 2
+        assert est_fptp_seats(rV) == 2
 
         # Perfectly balanced 0–3
 
         rV = [0.50, 0.50, 0.50]
-        assert est_seats_fptp(rV) == 0
+        assert est_fptp_seats(rV) == 0
 
     def test_infer_sv_points(self) -> None:
         expected_sv_points: list[tuple[float, float]] = [
