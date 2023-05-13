@@ -53,10 +53,4 @@ def effective_splits(splits: list[float]) -> float:
     return result
 
 
-__all__ = [
-    "calc_coi_splitting",
-    "uncertainty_of_membership",
-    "effective_splits",
-]
-
 ### END ###

@@ -5,7 +5,7 @@ TEST COI SPLITTING
 """
 
 
-from rdapy.splitting import *
+from rdapy.splitting.coi import *
 from testutils import *
 
 

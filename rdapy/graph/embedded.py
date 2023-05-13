@@ -53,6 +53,4 @@ def is_embedded(
     return True
 
 
-__all__ = ["is_embedded"]
-
 ### END ###

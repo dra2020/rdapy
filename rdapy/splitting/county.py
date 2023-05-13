@@ -300,25 +300,4 @@ def calc_district_splitting(
     return SqEnt_CD
 
 
-__all__ = [
-    "calc_county_district_splitting",
-    "split_score",
-    "county_totals",
-    "district_totals",
-    "reduce_county_splits",
-    "reduce_district_splits",
-    "calc_county_weights",
-    "calc_district_weights",
-    "calc_county_fractions",
-    "calc_district_fractions",
-    "county_split_score",
-    "district_split_score",
-    "county_splitting",
-    "district_splitting",
-    "calc_county_splitting_reduced",
-    "calc_district_splitting_reduced",
-    "calc_county_splitting",
-    "calc_district_splitting",
-]
-
 ### END ###

@@ -5,7 +5,7 @@ TEST COUNTY-DISTRICT SPLITTING
 """
 
 
-from rdapy.splitting import *
+from rdapy.splitting.county import *
 from testutils import *
 
 

@@ -99,11 +99,4 @@ def _apply_PCA_model_ORIGINAL(features: list[float]) -> float:
     return normalized_score
 
 
-__all__ = [
-    "score_shape",
-    "featureize_shape",
-    "score_features",
-    "rank_shape",
-]
-
 ### END ###

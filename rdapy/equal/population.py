@@ -13,6 +13,4 @@ def calc_population_deviation(max_pop: int, min_pop: int, target_pop: int) -> fl
     return deviation
 
 
-__all__ = ["calc_population_deviation"]
-
 ### END ###
