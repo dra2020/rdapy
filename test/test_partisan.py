@@ -294,8 +294,8 @@ class TestPartisanScorecard:
 
         assert Va >= 0.50
         assert Vb <= 0.50
-        assert Rb <= 0.50
-        assert Ra >= 0.50
+        assert Rb < 0.50
+        assert Ra > 0.50
 
         s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
 
@@ -336,8 +336,8 @@ class TestPartisanScorecard:
 
         assert Va >= 0.50
         assert Vb <= 0.50
-        assert Rb <= 0.50
-        assert Ra >= 0.50
+        assert Rb < 0.50
+        assert Ra > 0.50
 
         s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
 
@@ -360,6 +360,46 @@ class TestPartisanScorecard:
         assert approx_equal(s["responsiveness"]["littleR"], 3.801580, places=4)
         assert approx_equal(s["responsiveness"]["rD"], 2.487388, places=4)
         assert approx_equal(s["responsiveness"]["rDf"], 0.3553, places=4)
+
+    def test_IL_2012(self) -> None:
+        """IL 2012 from research project #2 w/ John Nagle."""
+
+        profile_path: str = "testdata/partisan/nagle/partisan-IL-2012.json"
+        profile: dict = read_json(profile_path)
+
+        points: dict = key_RV_points(profile["byDistrict"])
+        Sb: float = points["Sb"]
+        Ra: float = points["Ra"]
+        Rb: float = points["Rb"]
+        Va: float = points["Va"]
+        Vb: float = points["Vb"]
+
+        assert Va >= 0.50
+        assert Vb <= 0.50
+        assert Rb < 0.50
+        assert Ra > 0.50
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 11
+        assert approx_equal(s["bias"]["bestSf"], 0.6111, places=4)
+        assert approx_equal(s["bias"]["estS"], 13.436476, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.7465, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.1354, places=4)
+        assert approx_equal(s["bias"]["tOf"], -0.005924, places=4)
+        assert approx_equal(s["bias"]["bS50"], 0.06529380, places=4)
+        assert approx_equal(s["bias"]["bV50"], 0.01767461, places=4)
+        # assert approx_equal(s["bias"]["bSV"], 0.0250521, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["gamma"], 6.87 / 100, places=4)
+        assert approx_equal(s["bias"]["eG"], -0.04633487, places=4)
+
+        assert approx_equal(s["bias"]["mMs"], 0.0216675, places=3)
+        assert approx_equal(s["bias"]["mMd"], 0.027568, places=3)
+        assert approx_equal(s["bias"]["lO"], 11.6630707932444 / 100, places=4)
+
+        assert approx_equal(s["responsiveness"]["littleR"], 3.149669, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 3.846940, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.2137, places=4)
 
 
 ### END ###
