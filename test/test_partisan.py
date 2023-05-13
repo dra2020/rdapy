@@ -552,5 +552,210 @@ class TestPartisanScorecard:
         assert approx_equal(s["responsiveness"]["rD"], 6.073901, places=4)
         assert approx_equal(s["responsiveness"]["rDf"], 0.3796, places=4)
 
+    # TODO
+    def test_PA_2012(self) -> None:
+        """CA 2012 from research project #2 w/ John Nagle"""
+
+        profile_path: str = "testdata/partisan/nagle/partisan-CA-2012.json"
+        profile: dict = read_json(profile_path)
+
+        points: dict = key_RV_points(profile["byDistrict"])
+        Sb: float = points["Sb"]
+        Ra: float = points["Ra"]
+        Rb: float = points["Rb"]
+        Va: float = points["Va"]
+        Vb: float = points["Vb"]
+
+        assert Va >= 0.50
+        assert Vb <= 0.50
+        assert Rb < 0.50
+        assert Ra > 0.50
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 31
+        assert approx_equal(s["bias"]["bestSf"], 0.5849, places=4)
+        assert approx_equal(s["bias"]["estS"], 38.652689, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.7293, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.1444, places=4)
+        assert approx_equal(s["bias"]["tOf"], -0.006566, places=4)
+        assert approx_equal(s["bias"]["bS50"], -0.01792670, places=4)
+        assert approx_equal(s["bias"]["bV50"], -0.00609430, places=4)
+        # assert approx_equal(s["bias"]["bSV"], 0.0330327, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["gamma"], -5.07 / 100, places=4)
+        assert approx_equal(s["bias"]["eG"], -0.04511401, places=4)
+
+        assert approx_equal(s["bias"]["mMs"], -0.00972344444444451, places=4)
+        assert approx_equal(s["bias"]["mMd"], -0.003123, places=4)
+        assert approx_equal(s["bias"]["lO"], 9.23242870162867 / 100, places=4)
+
+        assert approx_equal(s["responsiveness"]["littleR"], 1.939018, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 8.534675, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.1610, places=4)
+
+    # TODO
+    def test_SC_2012(self) -> None:
+        """CA 2012 from research project #2 w/ John Nagle"""
+
+        profile_path: str = "testdata/partisan/nagle/partisan-CA-2012.json"
+        profile: dict = read_json(profile_path)
+
+        points: dict = key_RV_points(profile["byDistrict"])
+        Sb: float = points["Sb"]
+        Ra: float = points["Ra"]
+        Rb: float = points["Rb"]
+        Va: float = points["Va"]
+        Vb: float = points["Vb"]
+
+        assert Va >= 0.50
+        assert Vb <= 0.50
+        assert Rb < 0.50
+        assert Ra > 0.50
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 31
+        assert approx_equal(s["bias"]["bestSf"], 0.5849, places=4)
+        assert approx_equal(s["bias"]["estS"], 38.652689, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.7293, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.1444, places=4)
+        assert approx_equal(s["bias"]["tOf"], -0.006566, places=4)
+        assert approx_equal(s["bias"]["bS50"], -0.01792670, places=4)
+        assert approx_equal(s["bias"]["bV50"], -0.00609430, places=4)
+        # assert approx_equal(s["bias"]["bSV"], 0.0330327, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["gamma"], -5.07 / 100, places=4)
+        assert approx_equal(s["bias"]["eG"], -0.04511401, places=4)
+
+        assert approx_equal(s["bias"]["mMs"], -0.00972344444444451, places=4)
+        assert approx_equal(s["bias"]["mMd"], -0.003123, places=4)
+        assert approx_equal(s["bias"]["lO"], 9.23242870162867 / 100, places=4)
+
+        assert approx_equal(s["responsiveness"]["littleR"], 1.939018, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 8.534675, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.1610, places=4)
+
+    # TODO
+    def test_TN_2012(self) -> None:
+        """CA 2012 from research project #2 w/ John Nagle"""
+
+        profile_path: str = "testdata/partisan/nagle/partisan-CA-2012.json"
+        profile: dict = read_json(profile_path)
+
+        points: dict = key_RV_points(profile["byDistrict"])
+        Sb: float = points["Sb"]
+        Ra: float = points["Ra"]
+        Rb: float = points["Rb"]
+        Va: float = points["Va"]
+        Vb: float = points["Vb"]
+
+        assert Va >= 0.50
+        assert Vb <= 0.50
+        assert Rb < 0.50
+        assert Ra > 0.50
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 31
+        assert approx_equal(s["bias"]["bestSf"], 0.5849, places=4)
+        assert approx_equal(s["bias"]["estS"], 38.652689, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.7293, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.1444, places=4)
+        assert approx_equal(s["bias"]["tOf"], -0.006566, places=4)
+        assert approx_equal(s["bias"]["bS50"], -0.01792670, places=4)
+        assert approx_equal(s["bias"]["bV50"], -0.00609430, places=4)
+        # assert approx_equal(s["bias"]["bSV"], 0.0330327, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["gamma"], -5.07 / 100, places=4)
+        assert approx_equal(s["bias"]["eG"], -0.04511401, places=4)
+
+        assert approx_equal(s["bias"]["mMs"], -0.00972344444444451, places=4)
+        assert approx_equal(s["bias"]["mMd"], -0.003123, places=4)
+        assert approx_equal(s["bias"]["lO"], 9.23242870162867 / 100, places=4)
+
+        assert approx_equal(s["responsiveness"]["littleR"], 1.939018, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 8.534675, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.1610, places=4)
+
+    # TODO
+    def test_TX_2012(self) -> None:
+        """CA 2012 from research project #2 w/ John Nagle"""
+
+        profile_path: str = "testdata/partisan/nagle/partisan-CA-2012.json"
+        profile: dict = read_json(profile_path)
+
+        points: dict = key_RV_points(profile["byDistrict"])
+        Sb: float = points["Sb"]
+        Ra: float = points["Ra"]
+        Rb: float = points["Rb"]
+        Va: float = points["Va"]
+        Vb: float = points["Vb"]
+
+        assert Va >= 0.50
+        assert Vb <= 0.50
+        assert Rb < 0.50
+        assert Ra > 0.50
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 31
+        assert approx_equal(s["bias"]["bestSf"], 0.5849, places=4)
+        assert approx_equal(s["bias"]["estS"], 38.652689, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.7293, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.1444, places=4)
+        assert approx_equal(s["bias"]["tOf"], -0.006566, places=4)
+        assert approx_equal(s["bias"]["bS50"], -0.01792670, places=4)
+        assert approx_equal(s["bias"]["bV50"], -0.00609430, places=4)
+        # assert approx_equal(s["bias"]["bSV"], 0.0330327, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["gamma"], -5.07 / 100, places=4)
+        assert approx_equal(s["bias"]["eG"], -0.04511401, places=4)
+
+        assert approx_equal(s["bias"]["mMs"], -0.00972344444444451, places=4)
+        assert approx_equal(s["bias"]["mMd"], -0.003123, places=4)
+        assert approx_equal(s["bias"]["lO"], 9.23242870162867 / 100, places=4)
+
+        assert approx_equal(s["responsiveness"]["littleR"], 1.939018, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 8.534675, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.1610, places=4)
+
+    # TODO
+    def test_CO_most_competitive(self) -> None:
+        """CA 2012 from research project #2 w/ John Nagle"""
+
+        profile_path: str = "testdata/partisan/nagle/partisan-CA-2012.json"
+        profile: dict = read_json(profile_path)
+
+        points: dict = key_RV_points(profile["byDistrict"])
+        Sb: float = points["Sb"]
+        Ra: float = points["Ra"]
+        Rb: float = points["Rb"]
+        Va: float = points["Va"]
+        Vb: float = points["Vb"]
+
+        assert Va >= 0.50
+        assert Vb <= 0.50
+        assert Rb < 0.50
+        assert Ra > 0.50
+
+        s: dict = calc_partisan_metrics(profile["statewide"], profile["byDistrict"])
+
+        assert s["bias"]["bestS"] == 31
+        assert approx_equal(s["bias"]["bestSf"], 0.5849, places=4)
+        assert approx_equal(s["bias"]["estS"], 38.652689, places=4)
+        assert approx_equal(s["bias"]["estSf"], 0.7293, places=4)
+        assert approx_equal(s["bias"]["deviation"], -0.1444, places=4)
+        assert approx_equal(s["bias"]["tOf"], -0.006566, places=4)
+        assert approx_equal(s["bias"]["bS50"], -0.01792670, places=4)
+        assert approx_equal(s["bias"]["bV50"], -0.00609430, places=4)
+        # assert approx_equal(s["bias"]["bSV"], 0.0330327, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["gamma"], -5.07 / 100, places=4)
+        assert approx_equal(s["bias"]["eG"], -0.04511401, places=4)
+
+        assert approx_equal(s["bias"]["mMs"], -0.00972344444444451, places=4)
+        assert approx_equal(s["bias"]["mMd"], -0.003123, places=4)
+        assert approx_equal(s["bias"]["lO"], 9.23242870162867 / 100, places=4)
+
+        assert approx_equal(s["responsiveness"]["littleR"], 1.939018, places=4)
+        assert approx_equal(s["responsiveness"]["rD"], 8.534675, places=4)
+        assert approx_equal(s["responsiveness"]["rDf"], 0.1610, places=4)
+
 
 ### END ###
