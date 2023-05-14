@@ -40,7 +40,9 @@ def calc_partisan_metrics(Vf: float, Vf_array: list[float]) -> dict:
     gSym: Optional[float] = calc_global_symmetry(dSVpoints, rSVpoints, Bs50f)
 
     EG: float = calc_efficiency_gap(Vf, estSf)
-    BsGf: float = est_geometric_seats_bias(Vf, dSVpoints, rSVpoints)
+    BsGf: float = (
+        est_geometric_seats_bias(Vf, dSVpoints, rSVpoints) / N
+    )  # Convert to a fraction [0, 1]
 
     prop: float = calc_disproportionality(Vf, estSf)
     mMs: float = calc_mean_median_difference(Vf_array, Vf)

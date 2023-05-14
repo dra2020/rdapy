@@ -307,14 +307,12 @@ class TestPartisanScorecard:
         assert approx_equal(s["bias"]["tOf"], -0.006566, places=4)
         assert approx_equal(s["bias"]["bS50"], -0.01792670, places=4)
         assert approx_equal(s["bias"]["bV50"], -0.00609430, places=4)
-        # assert approx_equal(s["bias"]["bSV"], 0.0330327, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["bSV"], 0.0330327, places=4)
         assert approx_equal(s["bias"]["gamma"], -5.07 / 100, places=4)
         assert approx_equal(s["bias"]["eG"], -0.04511401, places=4)
-
         assert approx_equal(s["bias"]["mMs"], -0.00972344444444451, places=4)
         assert approx_equal(s["bias"]["mMd"], -0.003123, places=4)
         assert approx_equal(s["bias"]["lO"], 9.23242870162867 / 100, places=4)
-
         assert approx_equal(s["responsiveness"]["littleR"], 1.939018, places=4)
         assert approx_equal(s["responsiveness"]["rD"], 8.534675, places=4)
         assert approx_equal(s["responsiveness"]["rDf"], 0.1610, places=4)
@@ -349,14 +347,12 @@ class TestPartisanScorecard:
         assert approx_equal(s["bias"]["tOf"], 0.002829, places=4)
         assert approx_equal(s["bias"]["bS50"], 0.01355483, places=4)
         assert approx_equal(s["bias"]["bV50"], 0.00354176, places=4)
-        # assert approx_equal(s["bias"]["bSV"], 0.0137603, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["bSV"], 0.0137603, places=4)
         assert approx_equal(s["bias"]["gamma"], 1.35 / 100, places=4)
         assert approx_equal(s["bias"]["eG"], 0.00345216, places=4)
-
         assert approx_equal(s["bias"]["mMs"], 0.0135999999999999, places=4)
         assert approx_equal(s["bias"]["mMd"], 0.010771, places=4)
         assert approx_equal(s["bias"]["lO"], 0.313178142621696 / 100, places=4)
-
         assert approx_equal(s["responsiveness"]["littleR"], 3.801580, places=4)
         assert approx_equal(s["responsiveness"]["rD"], 2.487388, places=4)
         assert approx_equal(s["responsiveness"]["rDf"], 0.3553, places=4)
@@ -389,14 +385,12 @@ class TestPartisanScorecard:
         assert approx_equal(s["bias"]["tOf"], -0.005924, places=4)
         assert approx_equal(s["bias"]["bS50"], 0.06529380, places=4)
         assert approx_equal(s["bias"]["bV50"], 0.01767461, places=4)
-        # assert approx_equal(s["bias"]["bSV"], 0.0250521, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["bSV"], 0.0250521, places=4)
         assert approx_equal(s["bias"]["gamma"], 6.87 / 100, places=4)
         assert approx_equal(s["bias"]["eG"], -0.04633487, places=4)
-
         assert approx_equal(s["bias"]["mMs"], 0.0216675, places=3)
         assert approx_equal(s["bias"]["mMd"], 0.027568, places=3)
         assert approx_equal(s["bias"]["lO"], 11.6630707932444 / 100, places=4)
-
         assert approx_equal(s["responsiveness"]["littleR"], 3.149669, places=4)
         assert approx_equal(s["responsiveness"]["rD"], 3.846940, places=4)
         assert approx_equal(s["responsiveness"]["rDf"], 0.2137, places=4)
@@ -419,14 +413,12 @@ class TestPartisanScorecard:
         assert approx_equal(s["bias"]["tOf"], -0.007300, places=4)
         assert approx_equal(s["bias"]["bS50"], 0.06718376, places=4)
         assert approx_equal(s["bias"]["bV50"], 0.01002969, places=4)
-        # assert approx_equal(s["bias"]["bSV"], -0.0303917, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["bSV"], -0.0303917, places=4)
         assert approx_equal(s["bias"]["gamma"], -26.02 / 100, places=4)
         assert approx_equal(s["bias"]["eG"], -0.25746580, places=4)
-
         assert approx_equal(s["bias"]["mMs"], 0.0230850624999998, places=4)
         assert approx_equal(s["bias"]["mMd"], 0.027185, places=2)
         # Lopsided outcomes are undefined
-
         assert approx_equal(s["responsiveness"]["littleR"], 1.972364, places=4)
         assert approx_equal(s["responsiveness"]["rD"], 1.383189, places=4)
         assert approx_equal(s["responsiveness"]["rDf"], 0.1537, places=4)
@@ -459,14 +451,12 @@ class TestPartisanScorecard:
         assert approx_equal(s["bias"]["tOf"], -0.004063, places=4)
         assert approx_equal(s["bias"]["bS50"], -0.05453999, places=4)
         assert approx_equal(s["bias"]["bV50"], -0.01007575, places=4)
-        # assert approx_equal(s["bias"]["bSV"], 0.0137802, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["bSV"], 0.0137802, places=4)
         assert approx_equal(s["bias"]["gamma"], -24.9 / 100, places=4)
         assert approx_equal(s["bias"]["eG"], -0.16284202, places=4)
-
         assert approx_equal(s["bias"]["mMs"], -0.0109, places=4)
         assert approx_equal(s["bias"]["mMd"], -0.006817, places=4)
         assert approx_equal(s["bias"]["lO"], 4.05629795619783 / 100, places=4)
-
         assert approx_equal(s["responsiveness"]["littleR"], 1.076736, places=4)
         assert approx_equal(s["responsiveness"]["rD"], 0.702811, places=4)
         assert approx_equal(s["responsiveness"]["rDf"], 0.0879, places=4)
@@ -499,15 +489,13 @@ class TestPartisanScorecard:
         assert approx_equal(s["bias"]["tOf"], -0.002295, places=4)
         assert approx_equal(s["bias"]["bS50"], 0.21716415, places=4)
         assert approx_equal(s["bias"]["bV50"], 0.04501325, places=4)
-        # assert approx_equal(s["bias"]["bSV"], 0.209849, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["bSV"], 0.209849, places=4)
         assert approx_equal(s["bias"]["decl"], 36.51, places=1)
         assert approx_equal(s["bias"]["gamma"], 24.29 / 100, places=4)
         assert approx_equal(s["bias"]["eG"], 0.20757683, places=4)
-
         assert approx_equal(s["bias"]["mMs"], 0.0570306, places=4)
         assert approx_equal(s["bias"]["mMd"], 0.054731, places=2)
         assert approx_equal(s["bias"]["lO"], 11.0640578002419 / 100, places=4)
-
         assert approx_equal(s["responsiveness"]["littleR"], 4.350382, places=4)
         assert approx_equal(s["responsiveness"]["rD"], 4.020386, places=4)
         assert approx_equal(s["responsiveness"]["rDf"], 0.3093, places=4)
@@ -540,14 +528,12 @@ class TestPartisanScorecard:
         assert approx_equal(s["bias"]["tOf"], -0.003045, places=4)
         assert approx_equal(s["bias"]["bS50"], 0.15497649, places=4)
         assert approx_equal(s["bias"]["bV50"], 0.03334768, places=4)
-        # assert approx_equal(s["bias"]["bSV"], 0.149474, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["bSV"], 0.149474, places=4)
         assert approx_equal(s["bias"]["gamma"], 16.34 / 100, places=4)
         assert approx_equal(s["bias"]["eG"], 0.13630573, places=4)
-
         assert approx_equal(s["bias"]["mMs"], 0.0416622777777778, places=4)
         assert approx_equal(s["bias"]["mMd"], 0.043962, places=2)
         assert approx_equal(s["bias"]["lO"], 6.93912595785785 / 100, places=4)
-
         assert approx_equal(s["responsiveness"]["littleR"], 4.076508, places=4)
         assert approx_equal(s["responsiveness"]["rD"], 6.073901, places=4)
         assert approx_equal(s["responsiveness"]["rDf"], 0.3796, places=4)
@@ -580,14 +566,12 @@ class TestPartisanScorecard:
         assert approx_equal(s["bias"]["tOf"], 0.002316, places=4)
         assert approx_equal(s["bias"]["bS50"], 0.16923261, places=4)
         assert approx_equal(s["bias"]["bV50"], 0.04711839, places=4)
-        # assert approx_equal(s["bias"]["bSV"], 0.155534, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["bSV"], 0.155534, places=4)
         assert approx_equal(s["bias"]["gamma"], 18.35 / 100, places=4)
         assert approx_equal(s["bias"]["eG"], 0.14212207, places=4)
-
         assert approx_equal(s["bias"]["mMs"], 0.0574219090909092, places=4)
         assert approx_equal(s["bias"]["mMd"], 0.055106, places=4)
         assert approx_equal(s["bias"]["lO"], 8.73772850436113 / 100, places=4)
-
         assert approx_equal(s["responsiveness"]["littleR"], 3.407693, places=4)
         assert approx_equal(s["responsiveness"]["rD"], 6.077222, places=4)
         assert approx_equal(s["responsiveness"]["rDf"], 0.3376, places=4)
@@ -620,14 +604,12 @@ class TestPartisanScorecard:
         assert approx_equal(s["bias"]["tOf"], -0.001194, places=4)
         assert approx_equal(s["bias"]["bS50"], 0.15016984, places=4)
         assert approx_equal(s["bias"]["bV50"], 0.02378688, places=4)
-        # assert approx_equal(s["bias"]["bSV"], 0.00651749, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["bSV"], 0.00651749, places=4)
         assert approx_equal(s["bias"]["gamma"], 28.08 / 100, places=4)
         assert approx_equal(s["bias"]["eG"], 0.20172665, places=4)
-
         assert approx_equal(s["bias"]["mMs"], 0.0472668571428571, places=4)
         assert approx_equal(s["bias"]["mMd"], 0.048467, places=4)
         assert approx_equal(s["bias"]["lO"], 4.24207200633289 / 100, places=4)
-
         assert approx_equal(s["responsiveness"]["littleR"], 0.869641, places=4)
         assert approx_equal(s["responsiveness"]["rD"], 0.407811, places=4)
         assert approx_equal(s["responsiveness"]["rDf"], 0.0583, places=4)
@@ -660,15 +642,13 @@ class TestPartisanScorecard:
         assert approx_equal(s["bias"]["tOf"], -0.002074, places=4)
         assert approx_equal(s["bias"]["bS50"], 0.18353175, places=4)
         assert approx_equal(s["bias"]["bV50"], 0.03247332, places=4)
-        # assert approx_equal(s["bias"]["bSV"], -0.0320523, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["bSV"], -0.0320523, places=4)
         assert approx_equal(s["bias"]["decl"], 34.85449, places=1)
         assert approx_equal(s["bias"]["gamma"], 24.96 / 100, places=4)
         assert approx_equal(s["bias"]["eG"], 0.12119106, places=4)
-
         assert approx_equal(s["bias"]["mMs"], 0.0413316666666666, places=4)
         assert approx_equal(s["bias"]["mMd"], 0.043432, places=4)
         assert approx_equal(s["bias"]["lO"], 0.59256529415822 / 100, places=4)
-
         assert approx_equal(s["responsiveness"]["littleR"], 0.472979, places=4)
         assert approx_equal(s["responsiveness"]["rD"], 0.396007, places=4)
         assert approx_equal(s["responsiveness"]["rDf"], 0.0440, places=4)
@@ -701,14 +681,12 @@ class TestPartisanScorecard:
         assert approx_equal(s["bias"]["tOf"], -0.022282, places=4)
         assert approx_equal(s["bias"]["bS50"], 0.05457906, places=4)
         assert approx_equal(s["bias"]["bV50"], 0.01354120, places=4)
-        # assert approx_equal(s["bias"]["bSV"], -0.0833849, places=4)  # TODO: Check this
+        assert approx_equal(s["bias"]["bSV"], -0.0833849, places=4)
         assert approx_equal(s["bias"]["gamma"], 9.87 / 100, places=4)
         assert approx_equal(s["bias"]["eG"], 0.01927575, places=4)
-
         assert approx_equal(s["bias"]["mMs"], 0.0213738333333333, places=4)
         assert approx_equal(s["bias"]["mMd"], 0.043674, places=4)
         assert approx_equal(s["bias"]["lO"], -2.95999047419546 / 100, places=4)
-
         assert approx_equal(s["responsiveness"]["littleR"], 1.169951, places=4)
         assert approx_equal(s["responsiveness"]["rD"], 2.805144, places=4)
         assert approx_equal(s["responsiveness"]["rDf"], 0.0779, places=4)
