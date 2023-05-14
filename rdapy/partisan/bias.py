@@ -40,18 +40,12 @@ from .constants import *
 ### BASIC BIAS ###
 
 
-def best_seats(N: int, Vf: float) -> int:
+def calc_best_seats(N: int, Vf: float) -> int:
     """^S# - The # of Democratic seats closest to proportional @ statewide Vf
 
     The "expected number of seats" from http://bit.ly/2Fcuf4q
     """
     return round((N * Vf) - EPSILON)
-
-
-def best_seat_share(seats: int, N: int) -> float:
-    """^S% - The corresponding Democratic seat share @ statewide Vf"""
-
-    return seats / N
 
 
 def calc_disproportionality_from_best(est_Sf: float, best_Sf: float) -> float:

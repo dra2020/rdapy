@@ -15,8 +15,8 @@ def calc_partisan_metrics(Vf: float, Vf_array: list[float]) -> dict:
 
     N: int = len(Vf_array)
 
-    bestS: int = best_seats(N, Vf)
-    bestSf: float = best_seat_share(bestS, N)
+    bestS: int = calc_best_seats(N, Vf)
+    bestSf: float = bestS / N
 
     fptpS: int = est_fptp_seats(Vf_array)
 
