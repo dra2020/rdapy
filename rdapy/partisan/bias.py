@@ -152,7 +152,7 @@ def est_geometric_seats_bias(
     y: list[float] = [y for x, y in b_gs_pts]
     fn = interp1d(x, y, kind="cubic")
 
-    return fn(statewide_vote_share)
+    return fn(statewide_vote_share)  # NOTE - Fractional # of seats, not seat share!
 
 
 # GLOBAL SYMMETRY - Fig. 17 in Section 5.1

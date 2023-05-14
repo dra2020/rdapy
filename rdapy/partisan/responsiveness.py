@@ -52,16 +52,18 @@ def est_district_competitiveness(Vf: float) -> float:
 # LITTLE 'r'
 
 
-def est_responsiveness(statewide_vote_share, sv_curve_pts, total_seats):
+def est_responsiveness(
+    Vf: float, sv_curve_pts: list[tuple[float, float]], N: int
+) -> float:
     """Estimate responsiveness (little 'r') at the statewide vote share (Vf)"""
 
     VOTE_SHARE: int = 0  # Index of vote share in a (V, S) point tuple
 
-    V1, S1 = lower_bracket(sv_curve_pts, statewide_vote_share, VOTE_SHARE)
-    V2, S2 = upper_bracket(sv_curve_pts, statewide_vote_share, VOTE_SHARE)
+    V1, S1 = lower_bracket(sv_curve_pts, Vf, VOTE_SHARE)
+    V2, S2 = upper_bracket(sv_curve_pts, Vf, VOTE_SHARE)
 
     # NOTE - To get a proper slope, normalize the seat delta into a fraction!
-    r: float = ((S2 - S1) / total_seats) / (V2 - V1)
+    r: float = ((S2 - S1) / N) / (V2 - V1)
 
     return r
 

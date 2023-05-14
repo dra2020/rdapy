@@ -46,15 +46,14 @@ def lower_bracket(
 
 def upper_bracket(
     sv_curve_pts: list[tuple[float, float]], value: float, v_or_s: int
-) -> Optional[tuple[float, float]]:
+) -> tuple[float, float]:
     """Find the point that brackets a value on the upper end"""
 
-    upper_pt: Optional[tuple[float, float]] = None
     for pt in sv_curve_pts:
         if pt[v_or_s] >= value:
-            upper_pt = pt
-            break
-    return upper_pt
+            return pt
+
+    raise ValueError("No upper bracket found")
 
 
 ### END ###

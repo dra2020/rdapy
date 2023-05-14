@@ -68,8 +68,10 @@ def infer_sv_points(Vf: float, Vf_array: list[float], proportional=True) -> list
 
     for shifted_Vf in shift_range():
         shifted_Vf_array = _shift_districts(Vf, Vf_array, shifted_Vf, proportional)
-        shifted_Sf = est_seats(shifted_Vf_array)
-        sv_curve_pts.append((shifted_Vf, shifted_Sf))
+        shifted_Seats = est_seats(
+            shifted_Vf_array
+        )  # NOTE - Fractional # of seats, not seat share!
+        sv_curve_pts.append((shifted_Vf, shifted_Seats))
 
     return sv_curve_pts
 
@@ -126,7 +128,7 @@ def infer_inverse_sv_points(sv_pts: list[tuple], N: int) -> list[tuple[float, fl
 
     for v_d, s_d in sv_pts:
         v_r: float = 1 - v_d
-        s_r: float = N - s_d  # of seats, not seat share!
+        s_r: float = N - s_d  # NOTE - Fractional # of seats, not seat share!
         inverse_sv_curve_pts.append((v_r, s_r))
 
     inverse_sv_curve_pts = sorted(inverse_sv_curve_pts, key=lambda pt: [pt[0]])
@@ -145,7 +147,7 @@ def infer_geometric_seats_bias_points(
         v_r: float
         s_r: float
         v_d: float
-        s_d: float
+        s_d: float  # NOTE - Fractional # of seats, not seat share!
 
         v_r, s_r = r_sv_pts[i]
         v_d, s_d = d_sv_pts[i]
