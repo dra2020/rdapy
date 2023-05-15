@@ -1,20 +1,23 @@
 # Compactness
 
-There are three sets of functionality here:
-
-- Compactness for a set of districts
-- Compactness for a single district, and
-- "Know it when you see it" (KIWYSI) compactness
+You can calculate compactness for a set of districts (shapes), as well as various measures of
+compactness for a single district (shape) including "know it when you see it" (KIWYSI) compactness.
 
 ## Compactness for a Set of Districts
 
-To compute Reock, Polsby-Popper, and KIWYSI compactness for a set of districts and by district:
+To compute average Reock, Polsby-Popper, and KIWYSI compactness for a set of districts (shapes) and by district:
 
 ```python
 def calc_compactness(shapes: list[Polygon | MultiPolygon]) -> dict:
 ```
 
-It returns a dictionary of results:
+"shapes" are shapely Polygons or MultiPolygons:
+
+```python
+from shapely.geometry import Polygon, MultiPolygon
+```
+
+This returns a dictionary of results:
 
 ```python
 results: dict = {
@@ -37,10 +40,10 @@ measures: dict = {
 
 KYIWYSI compactness is described below.
 
-## Compactness for a Single District
+## Measures of Compactness for One District (Shape)
 
-In addition to compactness for a set of districts above, there are functions to calculate compactness for a single district (shape).
-These seven are the "features" for Aaron Kaufman's "know it when you see it" (KIWYSI) compactness ML model,
+These are functions to calculate compactness for a single district (shape).
+They are seven are the "features" for Aaron Kaufman's "know it when you see it" (KIWYSI) compactness ML model,
 which is described in the next section.
 
 These functions can compute their metric either assuming the Earth is curved (geodesic=True) 
