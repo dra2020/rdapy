@@ -69,10 +69,10 @@ They may be calculated individually.
 
 In the functions below:
 
-* Vf - generally statewide two-party vote share, but sometimes the two-party vote share for a district
-* Sf - statewide two-party seat share
-* N - number of districts
-* Vf_array - array of two-party vote shares by district
+* Vf - is generally the statewide two-party vote share, but sometimes it's the two-party vote share for one district
+* Sf - is the two-party seat share
+* N - the number of districts
+* Vf_array - is a list of two-party vote shares by district
 
 ```python
 def calc_best_seats(N: int, Vf: float) -> int:
@@ -141,7 +141,8 @@ def calc_lopsided_outcomes(Vf_array: list[float]) -> Optional[float]:
 
 ## Measures of Responsiveness
 
-Similarly, you can compute the responsiveness measures individually:
+Similarly, you can compute the responsiveness measures individually.
+These responsiveness measures are also described in [Advanced Measures of Bias & Responsiveness](https://medium.com/dra-2020/advanced-measures-of-bias-responsiveness-c1bf182d29a9).
 
 ```python
 def count_competitive_districts(Vf_array: list[float]) -> int:
