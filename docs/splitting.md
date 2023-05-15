@@ -1,40 +1,58 @@
 # Splitting
 
-TODO
+There are two sets of splitting metrics: county-district splitting and community of interest (COI) splitting.
 
 ## County & District Splitting
 
+To calculate the county & district splitting scores for a plan:
+
 ```python
 def calc_county_district_splitting(CxD: list[list[float]]) -> dict:
-    """Calculate the county & district splitting scores for a plan."""
 ```
+
+It returns a dictionary of results:
 
 ```python
 result: dict = {"county": county, "district": district}
 ```
 
+These measures are described in [Measuring County & District Splitting](https://medium.com/dra-2020/measuring-county-district-splitting-48a075bcce39).
+As that describes, these measures are based on Moon Duchin's raw split score:
+
 ```python
 def split_score(split: list[float]) -> float:
-    """Moon Duchin's raw split score"""
 ```
 
 ## Community of Interest (COI) Splitting
 
-```python
-def calc_coi_splitting(communities: list[dict[str, list[float]]]) -> dict:
-    """Calculate the COI metrics for a set of communities of interest."""
-```
+To calculate the COI metrics for a set of communities:
 
 ```python
-analysis: dict = {"byCOI": by_coi}
+def calc_coi_splitting(communities: list[dict[str, list[float]]]) -> dict:
 ```
+
+This returns a dictionary of results:
+
+```python
+results: dict = {"byCOI": by_coi}
+```
+
+where the entry for each COI is of the form:
+
+```python
+{"name": coi["name"], "effectiveSplits": es, "uncertainty": u}
+```
+
+These two measures are described in [COI Splitting](https://medium.com/dra-2020/coi-splitting-b7c9b541e175).
+
+The metrics are also available individually:
 
 ```python
 def uncertainty_of_membership(splits: list[float]) -> float:
-    """Calculate the uncertainty of membership for a set of splits."""
 ```
 
 ```python
 def effective_splits(splits: list[float]) -> float:
-    """Calculate the effective splits for a set of splits."""
 ```
+
+where "splits" is a list of floats in the range [0-1] representing how a COI is fractionated across districts.

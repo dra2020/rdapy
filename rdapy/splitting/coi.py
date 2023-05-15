@@ -20,9 +20,9 @@ def calc_coi_splitting(communities: list[dict[str, list[float]]]) -> dict:
 
         by_coi.append(entry)
 
-    analysis: dict = {"byCOI": by_coi}
+    results: dict = {"byCOI": by_coi}
 
-    return analysis
+    return results
 
 
 def uncertainty_of_membership(splits: list[float]) -> float:
