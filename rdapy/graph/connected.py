@@ -9,18 +9,18 @@ from typing import Any
 from .constants import *
 
 
-def is_connected(geos: list[Any], graph: dict[str, list[str]]) -> bool:
+def is_connected(ids: list[Any], graph: dict[str, list[str]]) -> bool:
     """Is a graph is fully connected?
     i.e., w/o regard to the virtual state boundary "shapes".
 
     Kenshi's iterative implementation of the recursive algorithm
 
-    geos - the list of geographies
-    graph - the connectedness of the geos
+    ids - the list of ids for the geographies
+    graph - the connectedness (adjacency) of the geos
     """
     visited: set[Any] = set()
 
-    all_geos: set[Any] = set(geos)
+    all_geos: set[Any] = set(ids)
     all_geos.discard(OUT_OF_STATE)
 
     start: str = next(iter(all_geos))
