@@ -20,3 +20,7 @@ The analytics are organized by area:
 ## Installation
 
 TODO
+
+```bash
+pip install rdapy
+```
