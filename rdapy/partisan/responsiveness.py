@@ -117,10 +117,10 @@ def _is_balanced(Vf: float) -> bool:
 # RESPONSIVE DISTRICTS
 
 
-def est_responsive_districts(vpi_by_district) -> float:
+def est_responsive_districts(Vf_array: list[float]) -> float:
     """Estimate the # of responsive districts [R(d)], given a set of VPI's"""
 
-    return sum([est_district_responsiveness(vpi) for vpi in vpi_by_district])
+    return sum([est_district_responsiveness(v) for v in Vf_array])
 
 
 ### END ###

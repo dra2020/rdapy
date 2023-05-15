@@ -30,16 +30,16 @@ from .utils import *
 # FORMULAS - John Nagle's two formulas for estimating seats & responsiveness
 
 
-def est_seat_probability(vpi: float) -> float:
+def est_seat_probability(Vf: float) -> float:
     """Estimate the fractional probability of a seat win for district, given a VPI"""
 
-    return 0.5 * (1 + erf((vpi - 0.50) / (0.02 * sqrt(8))))
+    return 0.5 * (1 + erf((Vf - 0.50) / (0.02 * sqrt(8))))
 
 
-def est_district_responsiveness(vpi: float) -> float:
+def est_district_responsiveness(Vf: float) -> float:
     """Estimate the responsiveness of a district, given a VPI"""
 
-    return 1 - 4 * (est_seat_probability(vpi) - 0.5) ** 2
+    return 1 - 4 * (est_seat_probability(Vf) - 0.5) ** 2
 
 
 # ESTIMATE THE STATEWIDE SEATS, GIVEN VPI'S BY DISTRICT
@@ -48,13 +48,13 @@ def est_district_responsiveness(vpi: float) -> float:
 def est_seats(Vf_array: list[float]) -> float:
     """S# - The estimated # of Democratic seats, using seat probabilities"""
 
-    return sum([est_seat_probability(vpi) for vpi in Vf_array])
+    return sum([est_seat_probability(v) for v in Vf_array])
 
 
 def est_fptp_seats(Vf_array: list[float]) -> int:
     """S! - The estimated # of Democratic seats, using first past the post"""
 
-    return sum([1 for vpi in Vf_array if (vpi > 0.5)])
+    return sum([1 for v in Vf_array if (v > 0.5)])
 
 
 # INFER AN S/V CURVE

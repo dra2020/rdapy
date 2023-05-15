@@ -1,11 +1,11 @@
 # Partisan
 
 You can compute a full complement of partisan analytics for a set of districts all at once,
-described next, or you can compute them individually, described in the subsequent sections.
+described next, or you can compute individual metrics, described in the subsequent sections.
 
 ## Partisan Analytics for a Set of Districts
 
-To calculate everything for a statewide vote share and vote shares by district:
+To calculate all partisan analytics for a statewide two-party vote share and two-party vote shares by district:
 
 ```python
 def calc_partisan_metrics(Vf: float, Vf_array: list[float]) -> dict:
@@ -59,12 +59,20 @@ responsiveness_measurements: dict = {
 }
 ```
 
-The key names here match those in the relevant sections of the 
+The dictionary key names here match those in the relevant sections of the 
 [Map Analytics Format](https://medium.com/dra-2020/map-analytics-export-format-d0aa75f6b041).
 
 ## Measures of Bias
 
-The bias measures may also be calculated individually:
+The bias measures above are described in [Advanced Measures of Bias & Responsiveness](https://medium.com/dra-2020/advanced-measures-of-bias-responsiveness-c1bf182d29a9).
+They may be calculated individually.
+
+In the functions below:
+
+* Vf - generally statewide two-party vote share, but sometimes the two-party vote share for a district
+* Sf - statewide two-party seat share
+* N - number of districts
+* Vf_array - array of two-party vote shares by district
 
 ```python
 def calc_best_seats(N: int, Vf: float) -> int:
@@ -79,7 +87,7 @@ def calc_disproportionality(Vf: float, Sf: float) -> float:
 ```
 
 ```python
-def calc_efficiency_gap(vote_share: float, seat_share: float) -> float:
+def calc_efficiency_gap(Vf: float, Sf: float) -> float:
 ```
 
 ```python
@@ -87,16 +95,16 @@ def calc_gamma(Vf: float, Sf: float, r: float) -> float:
 ```
 
 ```python
-def est_seats_bias(sv_curve_pts: list[tuple[float, float]], total_seats: int) -> float:
+def est_seats_bias(sv_curve_pts: list[tuple[float, float]], N: int) -> float:
 ```
 
 ```python
-def est_votes_bias(sv_curve_pts: list[tuple[float, float]], total_seats: int) -> float:
+def est_votes_bias(sv_curve_pts: list[tuple[float, float]], N: int) -> float:
 ```
 
 ```python
 def est_geometric_seats_bias(
-    statewide_vote_share: float,
+    Vf: float,
     d_sv_pts: list[tuple[float, float]],
     r_sv_pts: list[tuple[float, float]],
 ) -> float:
@@ -124,7 +132,7 @@ def calc_mean_median_difference(
 ```
 
 ```python
-def calc_turnout_bias(statewide: float, Vf_array: list[float]) -> float:
+def calc_turnout_bias(Vf: float, Vf_array: list[float]) -> float:
 ```
 
 ```python
@@ -162,7 +170,7 @@ def calc_minimal_inverse_responsiveness(Vf: float, r: float) -> Optional[float]:
 ```
 
 ```python
-def est_responsive_districts(vpi_by_district) -> float:
+def est_responsive_districts(Vf_array: list[float]) -> float:
 ```
 
 ## Method
@@ -173,13 +181,13 @@ probabilities and district responsiveness and inferring seats-votes curves.
 To estimate the fractional probability of a seat win for district, given a two-party vote share:
 
 ```python
-def est_seat_probability(vpi: float) -> float:
+def est_seat_probability(Vf: float) -> float:
 ```
 
 Similarly, to estimate the responsiveness of a district, given a two-party vote share:
 
 ```python
-def est_district_responsiveness(vpi: float) -> float:
+def est_district_responsiveness(Vf: float) -> float:
 ```
 
 To estimate the fractional # of seats for a set of two-party vote shares, using seat probabilities:

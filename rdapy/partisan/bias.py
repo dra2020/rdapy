@@ -68,7 +68,7 @@ def calc_disproportionality(Vf: float, Sf: float) -> float:
 # EFFICIENCY GAP
 
 
-def calc_efficiency_gap(vote_share: float, seat_share: float) -> float:
+def calc_efficiency_gap(Vf: float, Sf: float) -> float:
     """EG - Calculate the efficiency gap
 
     NOTE - This alternate formulation is consistent with the rest of our metrics,
@@ -77,7 +77,7 @@ def calc_efficiency_gap(vote_share: float, seat_share: float) -> float:
     EG = (Seat Share – 50%)  – (2 × (Vote Share – 50%))
     """
 
-    EG: float = (2 * (vote_share - 0.5)) - (seat_share - 0.5)
+    EG: float = (2 * (Vf - 0.5)) - (Sf - 0.5)
 
     return EG
 
@@ -97,11 +97,11 @@ def calc_gamma(Vf: float, Sf: float, r: float) -> float:
 # SEATS BIAS -- John Nagle's simple seat bias @ 50% (alpha), a fractional # of seats.
 
 
-def est_seats_bias(sv_curve_pts: list[tuple[float, float]], total_seats: int) -> float:
+def est_seats_bias(sv_curve_pts: list[tuple[float, float]], N: int) -> float:
     """BS_50 - Seats bias as a fraction of N"""
 
     d_seats: float = _d_seats_at_half_share(sv_curve_pts)
-    r_seats: float = total_seats - d_seats
+    r_seats: float = N - d_seats
 
     return (r_seats - d_seats) / 2.0
 
@@ -116,10 +116,10 @@ def _d_seats_at_half_share(sv_curve_pts: list[tuple[float, float]]) -> float:
 # VOTES BIAS -- John Nagle's simple vote bias @ 50% (alpha2), a percentage.
 
 
-def est_votes_bias(sv_curve_pts: list[tuple[float, float]], total_seats: int) -> float:
+def est_votes_bias(sv_curve_pts: list[tuple[float, float]], N: int) -> float:
     """BV_50 - Votes bias as a fraction"""
 
-    half_seats: float = float(total_seats) / 2.0
+    half_seats: float = float(N) / 2.0
 
     x: list[float] = [x for x, y in sv_curve_pts]
     y: list[float] = [y for x, y in sv_curve_pts]
@@ -132,7 +132,7 @@ def est_votes_bias(sv_curve_pts: list[tuple[float, float]], total_seats: int) ->
 
 
 def est_geometric_seats_bias(
-    statewide_vote_share: float,
+    Vf: float,
     d_sv_pts: list[tuple[float, float]],
     r_sv_pts: list[tuple[float, float]],
 ) -> float:
@@ -146,7 +146,7 @@ def est_geometric_seats_bias(
     y: list[float] = [y for x, y in b_gs_pts]
     fn = interp1d(x, y, kind="cubic")
 
-    return fn(statewide_vote_share)  # NOTE - Fractional # of seats, not seat share!
+    return fn(Vf)  # NOTE - Fractional # of seats, not seat share!
 
 
 # GLOBAL SYMMETRY - Fig. 17 in Section 5.1
@@ -286,14 +286,14 @@ def calc_mean_median_difference(
 # TURNOUT BIAS
 
 
-def calc_turnout_bias(statewide: float, Vf_array: list[float]) -> float:
+def calc_turnout_bias(Vf: float, Vf_array: list[float]) -> float:
     """TO - Turnout bias
 
     The difference between the statewide turnout and the average district turnout
     """
 
     district_avg = statistics.mean(Vf_array)
-    turnout_bias = statewide - district_avg
+    turnout_bias = Vf - district_avg
 
     return turnout_bias
 
