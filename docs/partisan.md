@@ -174,7 +174,7 @@ def calc_minimal_inverse_responsiveness(Vf: float, r: float) -> Optional[float]:
 def est_responsive_districts(Vf_array: list[float]) -> float:
 ```
 
-## Method
+## Nagle's Method
 
 Finally, several functions expose John Nagle's method for estimating fractional seat
 probabilities and district responsiveness and inferring seats-votes curves.
