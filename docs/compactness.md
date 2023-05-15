@@ -105,19 +105,17 @@ def calc_schwartzberg(shp: Polygon | MultiPolygon, geodesic: bool = True) -> flo
 KIYWSI compactness implements Kaufman, King, and Komisarchik's 
 ["know it when you see it" (KIWYSI) compactness model](https://gking.harvard.edu/compact).
 
+To feature-ize a shape and then rank it [1-100], smaller is better:
+
 ```python
-def score_shape(
+def kiwysi_rank_shape(
     shp: Polygon | MultiPolygon, *, geodesic: bool = True, revised: bool = True
 ) -> float:
-    """Feature-ize a shape and then score it [1-100], smaller is better."""
 ```
 
-The above gives raw results which may fall outside the range [1–100]. To constrain them to that range:
+The above gives raw results which may fall outside the range [1–100]. 
+To constrain them to that range:
 
 ```python
-def rank_shape(raw_rank: float) -> float:
-    """Constrain values to the range [1–100].
-
-    Smaller is better.
-    """
+def trim_kiwysi_rank(raw_rank: float) -> float:
 ```

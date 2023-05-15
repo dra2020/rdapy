@@ -28,7 +28,7 @@ class TestKIWYSI:
 
         for i, t in enumerate(predictions):
             score = t[VALUE]
-            prediction = score_shape(
+            prediction = kiwysi_rank_shape(
                 source_shapes[i][VALUE], geodesic=True, revised=False
             )
 
@@ -48,16 +48,16 @@ class TestKIWYSI:
 
         for i, t in enumerate(predictions):
             score = t[VALUE]
-            prediction = score_shape(
+            prediction = kiwysi_rank_shape(
                 source_shapes[i][VALUE], geodesic=True, revised=True
             )
 
             assert prediction == approx(score, abs=1)
 
-    def test_rank_shape(self) -> None:
-        assert rank_shape(102.3) == 100.0
-        assert rank_shape(77.2586455094345) == 77.2586455094345
-        assert rank_shape(-32.4080845) == 1.0
+    def test_trim_kiwysi_rank(self) -> None:
+        assert trim_kiwysi_rank(102.3) == 100.0
+        assert trim_kiwysi_rank(77.2586455094345) == 77.2586455094345
+        assert trim_kiwysi_rank(-32.4080845) == 1.0
 
 
 ### END ###

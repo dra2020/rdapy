@@ -10,10 +10,10 @@ from shapely.geometry import Polygon, MultiPolygon
 from .features import *
 
 
-def score_shape(
+def kiwysi_rank_shape(
     shp: Polygon | MultiPolygon, *, geodesic: bool = True, revised: bool = True
 ) -> float:
-    """Feature-ize a shape and then score it [1-100], smaller is better."""
+    """Feature-ize a shape and then rank it [1-100], smaller is better."""
 
     features: list[float] = featureize_shape(shp, geodesic)
     score = score_features(features, revised=revised)
@@ -21,7 +21,7 @@ def score_shape(
     return score
 
 
-def rank_shape(raw_rank: float) -> float:
+def trim_kiwysi_rank(raw_rank: float) -> float:
     """Constrain values to the range [1–100].
 
     Smaller is better.

@@ -9,8 +9,8 @@ from .compactness import (
     calc_polsby,
     calc_hull,
     calc_schwartzberg,
-    score_shape,
-    rank_shape,
+    kiwysi_rank_shape,
+    trim_kiwysi_rank,
 )
 from .graph import is_connected, is_embedded, OUT_OF_STATE
 from .equal import calc_population_deviation

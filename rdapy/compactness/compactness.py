@@ -25,7 +25,7 @@ def calc_compactness(shapes: list[Polygon | MultiPolygon]) -> dict:
         reock_flat: float = calc_reock(shp, geodesic=False)
         polsby_flat: float = calc_polsby(shp, geodesic=False)
 
-        kiwysi_rank: float = rank_shape(score_features(features))
+        kiwysi_rank: float = trim_kiwysi_rank(score_features(features))
 
         tot_reock += reock_flat
         tot_polsby += polsby_flat

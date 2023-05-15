@@ -12,13 +12,13 @@ INDEX: int = 0
 VALUE: int = 1
 
 
-def score_shapes(sample_shapes, predictions, geodesic=True):
+def kiwysi_rank_shapes(sample_shapes, predictions, geodesic=True):
     print()
     print("Predicted compactness scores (for shapes):")
     print("-" * 64)
     for i in range(len(sample_shapes)):
         shp = sample_shapes[i][VALUE]
-        calc = score_shape(shp, geodesic=geodesic, revised=False)
+        calc = kiwysi_rank_shape(shp, geodesic=geodesic, revised=False)
         correct = predictions[i][VALUE]
         print(
             "Sample {:2} - Prediction = {:.2f}, Answer = {:.2f}, Delta % = {:>+6.1%}".format(
@@ -125,7 +125,7 @@ def main() -> None:
     featureize_shapes(source_shapes, featureized_shapes)
 
     # Replicate predicted compactness scores from sample shapes
-    score_shapes(source_shapes, predictions)
+    kiwysi_rank_shapes(source_shapes, predictions)
 
 
 if __name__ == "__main__":
