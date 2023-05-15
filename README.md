@@ -4,7 +4,7 @@ Redistricting analytics in Python
 
 These are the main analytics used in [Dave's Redistricting](https://davesredistricting.org/maps#),
 ignoring a few DRA-specific aspects (in particular, the five [0-100] ratings).
-Unlike the analytics in [dra-analytics](https://github.com/dra2020/dra-analytics)
+Unlike the analytics in the app ([dra-analytics](https://github.com/dra2020/dra-analytics))
 which are implememented in TypeScript, these are implemented in Python. 
 
 ## Categories
