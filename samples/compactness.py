@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Sample partisan analytics
+Sample compactness analytics
 """
 
 from rdapy import *
@@ -9,22 +9,17 @@ from testutils import *
 
 # Load data
 
-xx: str = "NC"
-yyyy: str = "2012"
-
-profile_path: str = f"testdata/partisan/nagle/partisan-{xx}-{yyyy}.json"
-profile: dict = read_json(profile_path)
-
-Vf: float = profile["statewide"]
-Vf_array: list[float] = profile["byDistrict"]
+sample_path: str = f"testdata/compactness/NC-116th-Congressional"
+shapes, _ = load_shapes(sample_path, id="id")
+shapes = [item[1] for item in shapes]  # discard the id
 
 # Calculate metrics
 
-scorecard: dict = calc_partisan_metrics(Vf, Vf_array)
+results: dict = calc_compactness(shapes)
 
 # Print the results
 
-print(f"Partisan analytics for {xx} {yyyy}:")
-print(scorecard)
+print(f"Partisan compactness analytics:")
+print(results)
 
 ### END ###
