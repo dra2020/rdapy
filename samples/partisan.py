@@ -9,13 +9,11 @@ from testutils import *
 
 # Load data
 
-xx: str = "NC"
+sample_path: str = f"testdata/partisan/nagle/partisan-NC-2012.json"
+sample: dict = read_json(sample_path)
 
-profile_path: str = f"testdata/partisan/nagle/partisan-{xx}-2012.json"
-profile: dict = read_json(profile_path)
-
-Vf: float = profile["statewide"]
-Vf_array: list[float] = profile["byDistrict"]
+Vf: float = sample["statewide"]
+Vf_array: list[float] = sample["byDistrict"]
 
 # Calculate metrics
 
@@ -23,7 +21,7 @@ results: dict = calc_partisan_metrics(Vf, Vf_array)
 
 # Print the results
 
-print(f"Partisan analytics for {xx}:")
+print(f"Partisan analytics:")
 print(results)
 
 ### END ###

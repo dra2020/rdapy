@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Sample partisan analytics
+Sample population deviation
 """
 
 from rdapy import *
@@ -9,22 +9,20 @@ from testutils import *
 
 # Load data
 
-xx: str = "NC"
-yyyy: str = "2012"
+sample_path: str = f"testdata/population/population-NC-116th.json"
+sample: dict = read_json(sample_path)
 
-profile_path: str = f"testdata/partisan/nagle/partisan-{xx}-{yyyy}.json"
-profile: dict = read_json(profile_path)
-
-Vf: float = profile["statewide"]
-Vf_array: list[float] = profile["byDistrict"]
+max_pop: int = max(sample["byDistrict"])
+min_pop: int = min(sample["byDistrict"])
+target_pop: int = sample["targetSize"]
 
 # Calculate metrics
 
-scorecard: dict = calc_partisan_metrics(Vf, Vf_array)
+result: float = calc_population_deviation(max_pop, min_pop, target_pop)
 
 # Print the results
 
-print(f"Partisan analytics for {xx} {yyyy}:")
-print(scorecard)
+print(f"Population deviation:")
+print(result)
 
 ### END ###

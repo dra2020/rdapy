@@ -9,9 +9,7 @@ from testutils import *
 
 # Load data
 
-xx: str = "AZ"
-
-sample_path: str = f"testdata/splitting/samples/splitting-{xx}-benchmark.json"
+sample_path: str = f"testdata/splitting/samples/splitting-AZ-benchmark.json"
 sample: dict = read_json(sample_path)
 
 CxD: list[list[float]] = sample["countyByDistrict"]
@@ -22,7 +20,7 @@ results: dict = calc_county_district_splitting(CxD)
 
 # Print the results
 
-print(f"County-district splitting analytics for {xx}:")
+print(f"County-district splitting:")
 print(results)
 
 ### END ###
