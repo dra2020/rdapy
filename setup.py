@@ -2,6 +2,7 @@ from setuptools import setup
 
 """
 python setup.py register
+python setup.py register sdist upload
 """
 
 setup(

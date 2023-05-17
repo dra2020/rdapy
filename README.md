@@ -19,7 +19,7 @@ The analytics are organized by area:
 
 ## Installation
 
-TODO
+Use pip to install the package:
 
 ```bash
 pip install rdapy
