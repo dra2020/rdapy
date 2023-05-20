@@ -32,4 +32,4 @@ pip install rdapy
 import rdapy
 ```
 
-Email questions to [feedback](mailto:feedback@davesredistricting.org).
+Email questions to [feedback](mailto:feedback@davesredistricting.org?subject=Python-analytics).
