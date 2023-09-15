@@ -7,11 +7,17 @@ Sample population deviation starting from raw data
 from rdapy import *
 from testutils import *
 
-# Parameters
+### FILES ###
 
-data_path: str = "~/local/sample-data"
+data_dir: str = "~/local/sample-data"
 
-# Helpers
+# Exported from DRA
+plan_file: str = "NC_2022_Congress_Official.csv"
+
+# This is a proprietary DRA file, derived from the Census PL file.
+census_file: str = "2020vt_Census_block_37_data2.json"
+
+### HELPERS ###
 
 
 def read_census(rel_path: str) -> defaultdict[str, int]:
@@ -33,34 +39,44 @@ def read_census(rel_path: str) -> defaultdict[str, int]:
     return pop_by_geoid
 
 
-# Block assignments
+## 1 - READ BLOCK-ASSIGNMENT FILE ###
 
-# This is a standard block-assignment file
-plan_path: str = os.path.expanduser(f"{data_path}/NC_2022_Congress_Official.csv")
+plan_path: str = os.path.expanduser(f"{data_dir}/{plan_file}")
 plan = read_csv(plan_path, [str, int])
 
-# Invert it & index it by geoid, for later use
-inverted_plan: defaultdict[int | str, set[str]] = defaultdict(set)
-for row in plan:
-    geoid: str = row["GEOID20"]
-    district: int = row["District"]
-    inverted_plan[district].add(geoid)
 
-# TODO
-# assignments_by_block: dict[str, int | str] = {
-#     row["GEOID20"]: row["District"] for row in plan
-# }
+### 2 - READ CENSUS DATA ###
 
-# Census data
+census_path: str = os.path.expanduser(f"{data_dir}/{census_file}")
 
-# NOTE - This is a proprietary DRA file, derived from the Census PL file
-census_path: str = os.path.expanduser(f"{data_path}/2020vt_Census_block_37_data2.json")
-# But the starting point for analyzing population deviations is simply
+# The starting point for analyzing population deviations is simply
 # the total census population by geoid.
 population: dict[str, int] = read_census(census_path)
 
-# TODO: More
 
-pass
+### 3 - SUM POPULATION BY DISTRICT ###
+
+total_pop: int = 0
+pop_by_district: defaultdict[int | str, int] = defaultdict(int)
+for row in plan:
+    geoid: str = row["GEOID20"]  # Your field names may vary
+    district: int = row["District"]  # Your field names may vary
+    pop: int = population[geoid]
+
+    pop_by_district[district] += pop
+    total_pop += pop
+
+### 4 - CALCULATE POPULATION DEVIATION ###
+
+max_pop: int = max(pop_by_district.values())
+min_pop: int = min(pop_by_district.values())
+target_pop: int = int(total_pop / len(pop_by_district))
+
+deviation: float = calc_population_deviation(max_pop, min_pop, target_pop)
+
+### 5 - PRINT THE RESULTS ###
+
+print(f"Population deviation:")
+print(f"{deviation:.4%}")
 
 ### END ###

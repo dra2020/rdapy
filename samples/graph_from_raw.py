@@ -7,21 +7,23 @@ Sample adjacencies analysis starting from raw data
 from rdapy import *
 from testutils import *
 
-# Files
+### FILES ###
 
 data_dir: str = "~/local/sample-data"
+
 # Exported from DRA
 plan_file: str = "NC_2022_Congress_Official.csv"
+
 # This is block-adjacency adjacencies dervied from the block shapes.
 # It contains a virtual OUT_OF_STATE border node that surrounds the state.
 contiguity_file: str = "block_contiguity.json"
 
-# 1 - Read block-assignment file
+## 1 - READ BLOCK-ASSIGNMENT FILE ###
 
 plan_path: str = os.path.expanduser(f"{data_dir}/{plan_file}")
 plan = read_csv(plan_path, [str, int])
 
-# 2 - Invert the plan & index it by geoid
+### 2 - INVERT THE PLAN & INDEX IT BY GEOID ###
 
 inverted_plan: defaultdict[int | str, set[str]] = defaultdict(set)
 for row in plan:
@@ -33,7 +35,7 @@ assignments_by_block: dict[str, int | str] = {
     row["GEOID20"]: row["District"] for row in plan
 }
 
-# 3 - Analyze contiguity & embeddedness
+### 3 - CHECK CONTIGUITY & EMBEDDEDNESS ###
 
 contiguity_path: str = os.path.expanduser(f"{data_dir}/{contiguity_file}")
 adjacencies: dict[str, list[str]] = read_json(contiguity_path)
@@ -51,7 +53,7 @@ for id, geos in inverted_plan.items():
     )
     not_embedded_by_district[id] = not_embedded
 
-# 4 - Print the results
+### 4 - PRINT THE RESULTS ###
 
 print(f"Contiguous:")
 for id, connected in sorted(contiguity_by_district.items()):
