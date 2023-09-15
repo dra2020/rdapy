@@ -12,7 +12,7 @@ from testutils import *
 xx: str = "NC"
 data_path: str = "~/local/sample-data"
 
-do_assignments: bool = False
+do_assignments: bool = True
 do_census: bool = False
 do_elections: bool = True
 do_shapes: bool = False
@@ -45,6 +45,12 @@ def read_census(rel_path: str) -> defaultdict[str, int]:
 if do_assignments:
     plan_path: str = os.path.expanduser(f"{data_path}/NC_2022_Congress_Official.csv")
     assignments = read_csv(plan_path, [str, int])
+
+    inverted_plan: defaultdict[int, set[str]] = defaultdict(set)
+    for row in assignments:
+        geoid: str = row["GEOID20"]
+        district: int = row["District"]
+        inverted_plan[district].add(geoid)
 
     # TODO: More
 
