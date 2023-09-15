@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Sample starting from raw data
+All-up sample starting from raw data
 """
 
 from rdapy import *
@@ -13,7 +13,7 @@ xx: str = "NC"
 data_path: str = "~/local/sample-data"
 
 do_census: bool = False
-do_elections: bool = True
+do_elections: bool = False
 do_shapes: bool = False
 do_contiguity: bool = False
 
@@ -47,7 +47,7 @@ def read_elections(rel_path: str) -> dict[str, dict[str, int]]:
         data: Any = json.load(f)
 
     dataset_key: str = "C16GCO"
-    by_geoid: defaultdict[str, dict] = dict()
+    by_geoid: defaultdict[str, dict[str, int]] = defaultdict(dict)
     for feature in data["features"]:
         geoid: str = feature["properties"]["GEOID"]
         tot: int = feature["properties"]["datasets"][dataset_key]["Tot"]
