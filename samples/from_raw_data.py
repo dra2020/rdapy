@@ -15,7 +15,7 @@ data_path: str = "~/local/sample-data"
 do_census: bool = False
 do_elections: bool = True
 do_shapes: bool = False
-do_contiguity: bool = True
+do_contiguity: bool = False
 
 # Helpers
 
@@ -37,6 +37,26 @@ def read_census(rel_path: str) -> defaultdict[str, int]:
         pop_by_geoid[geoid] = pop
 
     return pop_by_geoid
+
+
+def read_elections(rel_path: str) -> dict[str, dict[str, int]]:
+    """Read the DRA composite elections JSON for a state."""
+
+    abs_path: str = FileSpec(rel_path).abs_path
+    with open(abs_path, "r", encoding="utf-8-sig") as f:
+        data: Any = json.load(f)
+
+    dataset_key: str = "C16GCO"
+    by_geoid: defaultdict[str, dict] = dict()
+    for feature in data["features"]:
+        geoid: str = feature["properties"]["GEOID"]
+        tot: int = feature["properties"]["datasets"][dataset_key]["Tot"]
+        d: int = feature["properties"]["datasets"][dataset_key]["D"]
+        r: int = feature["properties"]["datasets"][dataset_key]["R"]
+
+        by_geoid[geoid] = {"Tot": tot, "D": d, "R": r}
+
+    return by_geoid
 
 
 # Assignments
@@ -73,7 +93,12 @@ if do_census:
 # Elections
 
 if do_elections:
-    # TODO: get this data
+    elections_path: str = os.path.expanduser(
+        f"{data_path}/2020vt_2016Composite_block_37_data2.json"
+    )
+    elections: dict[str, dict[str, int]] = read_elections(elections_path)
+
+    # TODO: More
 
     pass
 
