@@ -1,8 +1,24 @@
 from setuptools import setup, find_packages
 
 """
+https://python-packaging.readthedocs.io/en/latest/minimal.html
+https://packaging.python.org/en/latest/specifications/declaring-project-metadata/
+
 python setup.py register
 python setup.py register sdist upload
+
+https://packaging.python.org/en/latest/tutorials/packaging-projects/
+
+Once:
+
+$ python3 -m pip install --upgrade build
+$ python3 -m pip install --upgrade twine
+
+Each iteration:
+
+$ python3 -m build
+$ python3 -m twine upload --repository pypi dist/*
+
 """
 
 setup(
