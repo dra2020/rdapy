@@ -16,6 +16,7 @@ do_assignments: bool = False
 do_census: bool = False
 do_elections: bool = True
 do_shapes: bool = False
+do_contiguity: bool = True
 
 # Helpers
 
@@ -76,6 +77,16 @@ if do_shapes:
     # shapes = [item[1] for item in shapes]  # discard the id
 
     # TODO: More
+
+    pass
+
+# Contiguity
+
+if do_contiguity:
+    contiguity_path: str = os.path.expanduser(f"{data_path}/block_contiguity.json")
+    graph: dict[str, list[str]] = read_json(contiguity_path)
+
+    # TODO: more
 
     pass
 
