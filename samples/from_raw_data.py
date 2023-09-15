@@ -12,7 +12,6 @@ from testutils import *
 xx: str = "NC"
 data_path: str = "~/local/sample-data"
 
-do_assignments: bool = True
 do_census: bool = False
 do_elections: bool = True
 do_shapes: bool = False
@@ -42,19 +41,22 @@ def read_census(rel_path: str) -> defaultdict[str, int]:
 
 # Assignments
 
-if do_assignments:
-    plan_path: str = os.path.expanduser(f"{data_path}/NC_2022_Congress_Official.csv")
-    assignments = read_csv(plan_path, [str, int])
+plan_path: str = os.path.expanduser(f"{data_path}/NC_2022_Congress_Official.csv")
+plan = read_csv(plan_path, [str, int])
 
-    inverted_plan: defaultdict[int, set[str]] = defaultdict(set)
-    for row in assignments:
-        geoid: str = row["GEOID20"]
-        district: int = row["District"]
-        inverted_plan[district].add(geoid)
+inverted_plan: defaultdict[int | str, set[str]] = defaultdict(set)
+for row in plan:
+    geoid: str = row["GEOID20"]
+    district: int = row["District"]
+    inverted_plan[district].add(geoid)
 
-    # TODO: More
+assignments_by_block: dict[str, int | str] = {
+    row["GEOID20"]: row["District"] for row in plan
+}
 
-    pass
+# TODO: More
+
+pass
 
 # Census data
 
@@ -92,7 +94,27 @@ if do_contiguity:
     contiguity_path: str = os.path.expanduser(f"{data_path}/block_contiguity.json")
     graph: dict[str, list[str]] = read_json(contiguity_path)
 
-    # TODO: more
+    contiguity_by_district: dict[int | str, bool] = {}
+    for id, geos in inverted_plan.items():
+        connected: bool = is_connected(list(geos), graph)
+        contiguity_by_district[id] = connected
+
+    not_embedded_by_district: dict[int | str, bool] = {}
+    for id, geos in inverted_plan.items():
+        not_embedded: bool = not is_embedded(
+            id, assignments_by_block, inverted_plan, graph
+        )
+        not_embedded_by_district[id] = not_embedded
+
+    print(f"Contiguous:")
+    for id, connected in sorted(contiguity_by_district.items()):
+        print(f"- District {id}: {connected}")
+
+    print()
+
+    print(f"Not embedded:")
+    for id, not_embedded in sorted(not_embedded_by_district.items()):
+        print(f"- District {id}: {not_embedded}")
 
     pass
 
