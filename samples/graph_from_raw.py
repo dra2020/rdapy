@@ -1,51 +1,57 @@
 #!/usr/bin/env python3
 
 """
-Sample graph analysis starting from raw data
+Sample adjacencies analysis starting from raw data
 """
 
 from rdapy import *
 from testutils import *
 
-# Parameters
+# Files
 
-data_path: str = "~/local/sample-data"
+data_dir: str = "~/local/sample-data"
+# Exported from DRA
+plan_file: str = "NC_2022_Congress_Official.csv"
+# This is block-adjacency adjacencies dervied from the block shapes.
+# It contains a virtual OUT_OF_STATE border node that surrounds the state.
+contiguity_file: str = "block_contiguity.json"
 
-# Helpers
+# 1 - Read block-assignment file
 
-# Block assignments
-
-# This is a standard block-assignment file
-plan_path: str = os.path.expanduser(f"{data_path}/NC_2022_Congress_Official.csv")
+plan_path: str = os.path.expanduser(f"{data_dir}/{plan_file}")
 plan = read_csv(plan_path, [str, int])
 
-# Invert it & index it by geoid, for later use
+# 2 - Invert the plan & index it by geoid
+
 inverted_plan: defaultdict[int | str, set[str]] = defaultdict(set)
 for row in plan:
-    geoid: str = row["GEOID20"]
-    district: int = row["District"]
+    geoid: str = row["GEOID20"]  # Your field names may vary
+    district: int = row["District"]  # Your field names may vary
     inverted_plan[district].add(geoid)
 
 assignments_by_block: dict[str, int | str] = {
     row["GEOID20"]: row["District"] for row in plan
 }
 
-# Contiguity
+# 3 - Analyze contiguity & embeddedness
 
-# NOTE - This is block-adjacency graph dervied from the shapes above.
-# It contains a virtual OUT_OF_STATE border node that surrounds the state.
-contiguity_path: str = os.path.expanduser(f"{data_path}/block_contiguity.json")
-graph: dict[str, list[str]] = read_json(contiguity_path)
+contiguity_path: str = os.path.expanduser(f"{data_dir}/{contiguity_file}")
+adjacencies: dict[str, list[str]] = read_json(contiguity_path)
 
 contiguity_by_district: dict[int | str, bool] = {}
 for id, geos in inverted_plan.items():
-    connected: bool = is_connected(list(geos), graph)
+    connected: bool = is_connected(list(geos), adjacencies)
+
     contiguity_by_district[id] = connected
 
 not_embedded_by_district: dict[int | str, bool] = {}
 for id, geos in inverted_plan.items():
-    not_embedded: bool = not is_embedded(id, assignments_by_block, inverted_plan, graph)
+    not_embedded: bool = not is_embedded(
+        id, assignments_by_block, inverted_plan, adjacencies
+    )
     not_embedded_by_district[id] = not_embedded
+
+# 4 - Print the results
 
 print(f"Contiguous:")
 for id, connected in sorted(contiguity_by_district.items()):
@@ -56,7 +62,5 @@ print()
 print(f"Not embedded:")
 for id, not_embedded in sorted(not_embedded_by_district.items()):
     print(f"- District {id}: {not_embedded}")
-
-pass
 
 ### END ###

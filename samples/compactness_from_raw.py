@@ -7,17 +7,12 @@ Sample compactness analytics starting from raw data
 from rdapy import *
 from testutils import *
 
-# Parameters
+# 1 - Read block-assignment file
 
-data_path: str = "~/local/sample-data"
+data_dir: str = "~/local/sample-data"
 
-# Helpers
-
-
-# Block assignments
-
-# This is a standard block-assignment file
-plan_path: str = os.path.expanduser(f"{data_path}/NC_2022_Congress_Official.csv")
+plan_file: str = "NC_2022_Congress_Official.csv"
+plan_path: str = os.path.expanduser(f"{data_dir}/{plan_file}")
 plan = read_csv(plan_path, [str, int])
 
 # TODO
