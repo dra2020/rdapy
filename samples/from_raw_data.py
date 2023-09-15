@@ -59,11 +59,13 @@ def read_elections(rel_path: str) -> dict[str, dict[str, int]]:
     return by_geoid
 
 
-# Assignments
+### PLAN / MAP ###
 
+# This is a standard block-assignment file
 plan_path: str = os.path.expanduser(f"{data_path}/NC_2022_Congress_Official.csv")
 plan = read_csv(plan_path, [str, int])
 
+# Invert it & index it by geoid, for later use
 inverted_plan: defaultdict[int | str, set[str]] = defaultdict(set)
 for row in plan:
     geoid: str = row["GEOID20"]
@@ -74,16 +76,15 @@ assignments_by_block: dict[str, int | str] = {
     row["GEOID20"]: row["District"] for row in plan
 }
 
-# TODO: More
-
-pass
-
 # Census data
 
 if do_census:
+    # NOTE - This is a proprietary DRA file, derived from the Census PL file
     census_path: str = os.path.expanduser(
         f"{data_path}/2020vt_Census_block_37_data2.json"
     )
+    # But the starting point for analyzing population deviations is simply
+    # the total census population by geoid.
     population: dict[str, int] = read_census(census_path)
 
     # TODO: More
@@ -93,9 +94,12 @@ if do_census:
 # Elections
 
 if do_elections:
+    # NOTE - This is a proprietary DRA file, derived elections data from partners
     elections_path: str = os.path.expanduser(
         f"{data_path}/2020vt_2016Composite_block_37_data2.json"
     )
+    # But the starting point for partisan analytics is simply
+    # the total votes and D(emocratic) and R(epublican) votes by geoid.
     elections: dict[str, dict[str, int]] = read_elections(elections_path)
 
     # TODO: More
@@ -105,9 +109,9 @@ if do_elections:
 # Shapes
 
 if do_shapes:
+    # This are the Census TIGER/Line block shape for the state
     shapes_path: str = os.path.expanduser(f"{data_path}/tl_2020_37_tabblock20")
     shapes, _ = load_shapes(shapes_path, id="GEOID20")
-    # shapes = [item[1] for item in shapes]  # discard the id
 
     # TODO: More
 
@@ -116,6 +120,8 @@ if do_shapes:
 # Contiguity
 
 if do_contiguity:
+    # NOTE - This is block-adjacency graph dervied from the shapes above.
+    # It contains a virtual OUT_OF_STATE border node that surrounds the state.
     contiguity_path: str = os.path.expanduser(f"{data_path}/block_contiguity.json")
     graph: dict[str, list[str]] = read_json(contiguity_path)
 
