@@ -7,11 +7,17 @@ Sample partisan analytics starting from raw data
 from rdapy import *
 from testutils import *
 
-# Parameters
+### FILES ###
 
-data_path: str = "~/local/sample-data"
+data_dir: str = "~/local/sample-data"
 
-# Helpers
+# Exported from DRA
+plan_file: str = "NC_2022_Congress_Official.csv"
+
+# This is a proprietary DRA file, derived elections data from partners.
+election_file: str = "2020vt_2016Composite_block_37_data2.json"
+
+### HELPERS ###
 
 
 def read_election(rel_path: str) -> dict[str, dict[str, int]]:
@@ -34,35 +40,52 @@ def read_election(rel_path: str) -> dict[str, dict[str, int]]:
     return by_geoid
 
 
-# Block assignments
+## 1 - READ A BLOCK-ASSIGNMENT FILE ###
 
-# This is a standard block-assignment file
-plan_path: str = os.path.expanduser(f"{data_path}/NC_2022_Congress_Official.csv")
+plan_path: str = os.path.expanduser(f"{data_dir}/{plan_file}")
 plan = read_csv(plan_path, [str, int])
 
-# Invert it & index it by geoid, for later use
-inverted_plan: defaultdict[int | str, set[str]] = defaultdict(set)
+### 2 - READ AN ELECTION CSV ###
+
+election_path: str = os.path.expanduser(f"{data_dir}/{election_file}")
+
+# The starting point for partisan analytics is simply the total votes and
+# the D(emocratic) and R(epublican) votes by block.
+election: dict[str, dict[str, int]] = read_election(election_path)
+
+### 3 - AGGREGATE TWO-PARTY D VOTE BY DISTRICT & STATEWIDE ###
+
+d_by_district: defaultdict[int | str, int] = defaultdict(int)
+tot_by_district: defaultdict[int | str, int] = defaultdict(int)
+d_statewide: int = 0
+tot_statewide: int = 0
+
 for row in plan:
     geoid: str = row["GEOID20"]
     district: int = row["District"]
-    inverted_plan[district].add(geoid)
 
-# TODO
-# assignments_by_block: dict[str, int | str] = {
-#     row["GEOID20"]: row["District"] for row in plan
-# }
+    d: int = election[geoid]["D"]
+    tot: int = election[geoid]["Tot"]
 
-# Election
+    d_by_district[district] += d
+    d_statewide += d
 
-# NOTE - This is a proprietary DRA file, derived elections data from partners
-election_path: str = os.path.expanduser(
-    f"{data_path}/2020vt_2016Composite_block_37_data2.json"
-)
-# But the starting point for partisan analytics is simply
-# the total votes and D(emocratic) and R(epublican) votes by geoid.
-election: dict[str, dict[str, int]] = read_election(election_path)
+    tot_by_district[district] += tot
+    tot_statewide += tot
 
-# TODO: More
+Vf: float = d_statewide / tot_statewide
+Vf_array: list[float] = [
+    d / tot for d, tot in zip(d_by_district.values(), tot_by_district.values())
+]
+
+### 4 - CALCULATE PARTISAN ANALYTICS ###
+
+results: dict = calc_partisan_metrics(Vf, Vf_array)
+
+### 5 - PRINT THE RESULTS ###
+
+print(f"Partisan analytics:")
+print(results)
 
 pass
 

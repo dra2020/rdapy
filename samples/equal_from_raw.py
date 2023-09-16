@@ -39,7 +39,7 @@ def read_census(rel_path: str) -> defaultdict[str, int]:
     return pop_by_geoid
 
 
-## 1 - READ BLOCK-ASSIGNMENT FILE ###
+## 1 - READ A BLOCK-ASSIGNMENT FILE ###
 
 plan_path: str = os.path.expanduser(f"{data_dir}/{plan_file}")
 plan = read_csv(plan_path, [str, int])

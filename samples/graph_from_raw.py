@@ -18,7 +18,7 @@ plan_file: str = "NC_2022_Congress_Official.csv"
 # It contains a virtual OUT_OF_STATE border node that surrounds the state.
 contiguity_file: str = "block_contiguity.json"
 
-## 1 - READ BLOCK-ASSIGNMENT FILE ###
+## 1 - READ A BLOCK-ASSIGNMENT FILE ###
 
 plan_path: str = os.path.expanduser(f"{data_dir}/{plan_file}")
 plan = read_csv(plan_path, [str, int])
@@ -35,10 +35,14 @@ assignments_by_block: dict[str, int | str] = {
     row["GEOID20"]: row["District"] for row in plan
 }
 
-### 3 - CHECK CONTIGUITY & EMBEDDEDNESS ###
+### 3 - READ AN ADJACENCY GRAPH ###
+
+# TODO - Construct this from the raw shapes
 
 contiguity_path: str = os.path.expanduser(f"{data_dir}/{contiguity_file}")
 adjacencies: dict[str, list[str]] = read_json(contiguity_path)
+
+### 4 - CHECK CONTIGUITY & EMBEDDEDNESS ###
 
 contiguity_by_district: dict[int | str, bool] = {}
 for id, geos in inverted_plan.items():
@@ -53,7 +57,7 @@ for id, geos in inverted_plan.items():
     )
     not_embedded_by_district[id] = not_embedded
 
-### 4 - PRINT THE RESULTS ###
+### 5 - PRINT THE RESULTS ###
 
 print(f"Contiguous:")
 for id, connected in sorted(contiguity_by_district.items()):
