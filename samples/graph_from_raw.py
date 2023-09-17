@@ -178,9 +178,9 @@ contiguity_path: str = os.path.expanduser(f"{data_dir}/{contiguity_file}")
 adjacencies: dict[str, list[str]] = read_json(contiguity_path)
 
 # Or construct one from a shapefile:
-# shapes_path: str = os.path.expanduser(f"{data_dir}/{shapes_file}")
-# g: Graph = Graph(shapes_path, id_field="GEOID20")
-# adjacencies: dict[str, list[str]] = g.data()
+shapes_path: str = os.path.expanduser(f"{data_dir}/{shapes_file}")
+g: Graph = Graph(shapes_path, id_field="GEOID20")
+adjacencies: dict[str, list[str]] = g.data()
 
 ### 4 - CHECK CONTIGUITY & EMBEDDEDNESS ###
 
