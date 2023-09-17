@@ -22,30 +22,41 @@ district_shapes_path: str = f"testdata/compactness/NC-116th-Congressional"
 # This are the Census TIGER/Line block shapes for the state.
 shapes_file: str = "tl_2020_37_tabblock20"
 
-## 1 - READ A BLOCK-ASSIGNMENT FILE ###
-
-plan_path: str = os.path.expanduser(f"{data_dir}/{plan_file}")
-plan = read_csv(plan_path, [str, int])
-
-### 2 - READ THE DISTRICT SHAPES OR CONSTRUCT THEM FROM BLOCK SHAPES ###
+### 1 - READ THE DISTRICT SHAPES OR CONSTRUCT THEM FROM BLOCK SHAPES ###
 
 # Load the district shapes from a shapefile:
 shapes_path: str = os.path.expanduser(f"{district_shapes_path}")
 shapes, _ = load_shapes(shapes_path, id="id")
 shapes = [item[1] for item in shapes]  # discard the id
 
-# Or construct them from block shapes:
+# Or construct them from block shapes and a block-assigment file:
 shapes_path: str = os.path.expanduser(f"{data_dir}/{shapes_file}")
 blocks_gdf: GeoDataFrame = geopandas.read_file(shapes_path)
-blocks_df: pd.Series[Any] | pd.DataFrame | Any = blocks_gdf[["geometry", "GEOID20"]]
+blocks_df: pd.Series | pd.DataFrame | Any = blocks_gdf[["geometry", "GEOID20"]]
+del blocks_gdf
 assert isinstance(blocks_df, pd.DataFrame)
 
-# TODO - HERE
-regions_gdf: GeoDataFrame = geopandas.read_file(regions_baf_path)
-regions_df: pd.Series[Any] | pd.DataFrame | Any = regions_gdf[["GEOID", "REGION"]]
-assert isinstance(regions_df, pd.DataFrame)
+plan_path: str = os.path.expanduser(f"{data_dir}/{plan_file}")
+plan_gdf: GeoDataFrame = geopandas.read_file(plan_path)
+plan_df: pd.Series | pd.DataFrame | Any = plan_gdf[["GEOID20", "District"]]
+del plan_gdf
+assert isinstance(plan_df, pd.DataFrame)
 
-### 3 - COLLAPSE BLOCKS INTO DISTRICT SHAPES ###
+blocks_df = blocks_df.merge(
+    plan_df,
+    how="left",
+    left_on="GEOID20",
+    right_on="GEOID20",
+)
+blocks_df = blocks_df[["geometry", "GEOID20", "District"]]
+assert isinstance(blocks_df, GeoDataFrame)
+del plan_df
+
+districts_df = blocks_df.dissolve(by="District", as_index=False)
+
+unsorted_shapes: list[dict] = districts_df.to_dict("records")
+sorted_shapes: list[dict] = sorted(unsorted_shapes, key=lambda k: k["District"])
+shapes = [s["geometry"] for s in sorted_shapes]  # discard the id
 
 ### 4 - COMPUTE COMPACTNESS METRICS ###
 
