@@ -18,7 +18,8 @@ The analytics are organized by area:
 - [Partisan](./docs/partisan.md): Various measures of partisan bias & responsiveness, as well as support for rank-vote graphs and seats-votes curves
 - [Splitting](./docs/splitting.md): County- & district-splitting and COI splitting
 
-The `samples` directory contains some simple examples of how to use these functions.
+The `samples` directory contains some simple examples of how to exercies these functions
+and how to preprocess raw block-level data into the formats required by the analytics.
 
 ## Installation
 
