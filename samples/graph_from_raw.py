@@ -31,10 +31,10 @@ data_dir: str = "~/local/sample-data"
 # Exported from DRA
 plan_file: str = "NC_2022_Congress_Official.csv"
 
-# This are the Census TIGER/Line block shape for the state.
+# These are the Census TIGER/Line block shapes for the state.
 shapes_file: str = "tl_2020_37_tabblock20/tl_2020_37_tabblock20.shp"
 
-# This is block-adjacency adjacencies dervied from the block shapes.
+# These block-adjacencies dervied from the block shapes.
 # It contains a virtual OUT_OF_STATE border node that surrounds the state.
 contiguity_file: str = "block_contiguity.json"
 
