@@ -12,8 +12,12 @@ from .compactness import (
     kiwysi_rank_shape,
     trim_kiwysi_rank,
 )
-from .graph import is_connected, is_embedded, OUT_OF_STATE
 from .equal import calc_population_deviation
+from .graph import is_connected, is_embedded, OUT_OF_STATE
+from .minority import (
+    calc_proportional_districts,
+    est_minority_opportunity,
+)  # TODO: More
 from .splitting import (
     calc_county_district_splitting,
     split_score,

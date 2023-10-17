@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-TEST PARTIAN SCORECARD
+TEST PARTISAN SCORECARD
 """
 
 
