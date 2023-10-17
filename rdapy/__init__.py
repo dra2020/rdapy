@@ -17,7 +17,8 @@ from .graph import is_connected, is_embedded, OUT_OF_STATE
 from .minority import (
     calc_proportional_districts,
     est_minority_opportunity,
-)  # TODO: More
+    make_minority_scorecard,
+)
 from .splitting import (
     calc_county_district_splitting,
     split_score,

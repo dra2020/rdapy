@@ -4,6 +4,7 @@
 MINORITY OPPORTUNITY
 """
 
+from collections import defaultdict
 from typing import Optional
 
 from ..partisan import est_seat_probability
@@ -56,6 +57,50 @@ def est_minority_opportunity(mf: float, demo: Optional[str] = None) -> float:
     return oppty
 
 
-# makeMinorityScorecard
+def make_minority_scorecard(
+    statewide_demos: dict[str, float], demos_by_district: list[dict[str, float]]
+) -> dict[str, float]:
+    """Make minority opportunity scorecard (except the table which is used in DRA)."""
+
+    n_districts: int = len(demos_by_district)
+
+    # Determine statewide proportional minority districts by single demographics (ignoring'White')
+    districts_by_demo: dict[str, int] = {
+        x: calc_proportional_districts(statewide_demos[x], n_districts)
+        for x in DEMOGRAPHICS[1:]
+    }
+
+    # Sum the statewide proportional districts for each single demographic
+    total_proportional: int = sum(
+        [v for k, v in districts_by_demo.items() if k not in ["white", "minority"]]
+    )
+
+    # Sum the opportunities for minority represention in each district
+    oppty_by_demo: dict[str, float] = defaultdict(float)
+    for district in demos_by_district:
+        for d in DEMOGRAPHICS[1:]:  # Ignore 'white'
+            oppty_by_demo[d] += est_minority_opportunity(district[d], d)
+
+    # The # of opportunity districts for each separate demographic and all minorities
+    od: float = sum(
+        [v for k, v in oppty_by_demo.items() if k not in ["white", "minority"]]
+    )
+    cd: float = oppty_by_demo["minority"]
+
+    # The # of proportional districts for each separate demographic and all minorities
+    pod: float = total_proportional
+    pcd: float = districts_by_demo["minority"]  # TODO - Fix this
+
+    scorecard: dict[str, float] = {
+        # "pivot_by_demographic": table, # For this, use dra-analytics instead
+        "opportunity_districts": od,
+        "proportional_opportunities": pod,
+        "coalition_districts": cd,
+        "proportional_coalitions": pcd,
+        # "details": {} # None
+    }
+
+    return scorecard
+
 
 ### END ###
