@@ -211,5 +211,17 @@ class TestRatings:
         assert rate_proportionality(0.1111, 0.3802, 2 / 9) == 100  # TN 116th
         assert rate_proportionality(0.1216, 0.4370, 11.6218 / 36) == 71  # TX 116th
 
+    def test_rate_competitiveness(self) -> None:
+        # Completely uncompetitive
+        assert rate_competitiveness(0.00) == 0
+        # 25% / 50% competitive
+        assert rate_competitiveness(0.25) == 33
+        # 50% / 50% competitive
+        assert rate_competitiveness(0.50) == 67
+        # Perfectly competitive
+        assert rate_competitiveness(0.75) == 100
+        # Over competitive
+        assert rate_competitiveness(0.80) == 100
+
 
 ### END ###

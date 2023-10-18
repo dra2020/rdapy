@@ -35,29 +35,31 @@ def rate_proportionality(raw_disproportionality: float, Vf: float, Sf: float) ->
         return rating
 
 
+### RATE COMPETITIVENESS ###
+
+
+def rate_competitiveness(raw_cdf: float) -> int:
+    """
+    Normalize overall competitiveness - Raw values are in the range [0.0–1.0].
+    But the practical max is more like 3/4's, so unitize that range to [0.0–1.0].
+    Then scale the values to [0–100].
+    """
+
+    _normalizer: Normalizer = Normalizer(raw_cdf)
+
+    worst: float = 0.0
+    best: float = 0.75
+
+    _normalizer.clip(worst, best)
+    _normalizer.unitize(worst, best)
+    _normalizer.rescale()
+
+    rating: int = _normalizer.normalized_num
+
+    return rating
+
+
 """
-
-# RATE COMPETITIVENESS
-
-# Normalize overall competitiveness - Raw values are in the range [0.0–1.0]. 
-# But the practical max is more like 3/4's, so unitize that range to [0.0–1.0].
-# Then scale the values to [0–100].
-export function rateCompetitiveness(rawCdf: float): float
-
-  _normalizer = Normalizer(rawCdf)
-
-  let worst = C.overallCompetitivenessRange()[C.BEG]
-  let best = C.overallCompetitivenessRange()[C.END]
-
-  _normalizer.clip(worst, best)
-  _normalizer.unitize(worst, best)
-  _normalizer.rescale()
-
-  rating = _normalizer.normalizedNum as number
-
-  return rating
-
-
 
 # RATE MINORITY REPRESENTATION
 
@@ -161,7 +163,7 @@ export function rateCountySplitting(rawCountySplitting: float, nCounties: float,
   _normalizer.rescale()
 
   # 09-07-21 - Preserve max value (100) for only when no counties are split
-  let rating = _normalizer.normalizedNum as number
+  rating = _normalizer.normalizedNum as number
   if ((rating == 100) and (rawCountySplitting > 1.0)) rating = 100 - 1
 
   return rating
@@ -181,7 +183,7 @@ export function rateDistrictSplitting(rawDistrictSplitting: float, nCounties: fl
   _normalizer.rescale()
 
   # 09-07-21 - Preserve max value (100) for only when no districts are split
-  let rating = _normalizer.normalizedNum as number
+  rating = _normalizer.normalizedNum as number
   if ((rating == 100) and (rawDistrictSplitting > 1.0)) rating = 100 - 1
 
   return rating
@@ -192,7 +194,7 @@ export function rateSplitting(csS: float, dsS: float): float
   csW = C.countySplittingWeight()
   dsW = C.districtSplittingWeight()
 
-  let rating = round(((csS * csW) + (dsS * dsW)) / (csW + dsW))
+  rating = round(((csS * csW) + (dsS * dsW)) / (csW + dsW))
 
   # Preserve max value (100) for only when no districts are split.
   # The max county- or district-splitting rating is 99 when there are splits.
@@ -217,7 +219,7 @@ export function rateCountySplittingLegacy(rawCountySplitting: float, nCounties: 
   _normalizer.rescale()
 
   # 09-07-21 - Preserve max value (100) for only when no counties are split
-  let rating = _normalizer.normalizedNum as number
+  rating = _normalizer.normalizedNum as number
   if ((rating == 100) and (rawCountySplitting > 1.0)) rating = 100 - 1
 
   return rating
@@ -261,7 +263,7 @@ export function rateDistrictSplittingLegacy(rawDistrictSplitting: float, bLD: bo
   _normalizer.rescale()
 
   # 09-07-21 - Preserve max value (100) for only when no districts are split
-  let rating = _normalizer.normalizedNum as number
+  rating = _normalizer.normalizedNum as number
   if ((rating == 100) and (rawDistrictSplitting > 1.0)) rating = 100 - 1
 
   return rating
