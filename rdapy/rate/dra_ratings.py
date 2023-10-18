@@ -6,45 +6,6 @@ DRA-SPECIFIC RATINGS ("SCORES")
 
 from .normalize import Normalizer
 
-### CONSTANTS ###
-
-AVG_SV_ERROR: float = 0.02
-WINNER_BONUS: float = 2.0
-
-### HELPERS ###
-
-
-def is_antimajoritarian(Vf: float, Sf: float) -> bool:
-    bDem = True if ((Vf < (0.5 - AVG_SV_ERROR)) and (Sf > 0.5)) else False
-    bRep = True if (((1 - Vf) < (0.5 - AVG_SV_ERROR)) and ((1 - Sf) > 0.5)) else False
-
-    return bDem or bRep
-
-
-def extra_bonus(Vf: float) -> float:
-    over_50_pct: float = (Vf - 0.5) if (Vf > 0.5) else (0.5 - Vf)
-    ok_extra: float = over_50_pct * (WINNER_BONUS - 1.0)
-
-    return ok_extra
-
-
-def adjust_deviation(Vf: float, disproportionality: float, extra: float) -> float:
-    """
-    Adjust deviation from proportionality to account for a winner's bonus
-    * If the bias is in the *same* direction as the statewide vote %, then
-      discount the bias by the winner's bonus (extra).
-    * But if the bias and statewide vote % go in opposite directions, leave the
-      bias unadjusted.
-    """
-    adjusted: float = disproportionality
-
-    if (Vf > 0.5) and (disproportionality < 0):
-        adjusted = min(disproportionality + extra, 0)
-    elif (Vf < 0.5) and (disproportionality > 0):
-        adjusted = max(disproportionality - extra, 0)
-
-    return adjusted
-
 
 ### RATE PROPORTIONALITY ###
 
@@ -324,6 +285,45 @@ export function adjustSplittingRating(rating: float, rawCountySplitting: float, 
   return rating
 
 """
+
+### CONSTANTS ###
+
+AVG_SV_ERROR: float = 0.02
+WINNER_BONUS: float = 2.0
+
+### HELPERS ###
+
+
+def is_antimajoritarian(Vf: float, Sf: float) -> bool:
+    bDem = True if ((Vf < (0.5 - AVG_SV_ERROR)) and (Sf > 0.5)) else False
+    bRep = True if (((1 - Vf) < (0.5 - AVG_SV_ERROR)) and ((1 - Sf) > 0.5)) else False
+
+    return bDem or bRep
+
+
+def extra_bonus(Vf: float) -> float:
+    over_50_pct: float = (Vf - 0.5) if (Vf > 0.5) else (0.5 - Vf)
+    ok_extra: float = over_50_pct * (WINNER_BONUS - 1.0)
+
+    return ok_extra
+
+
+def adjust_deviation(Vf: float, disproportionality: float, extra: float) -> float:
+    """
+    Adjust deviation from proportionality to account for a winner's bonus
+    * If the bias is in the *same* direction as the statewide vote %, then
+      discount the bias by the winner's bonus (extra).
+    * But if the bias and statewide vote % go in opposite directions, leave the
+      bias unadjusted.
+    """
+    adjusted: float = disproportionality
+
+    if (Vf > 0.5) and (disproportionality < 0):
+        adjusted = min(disproportionality + extra, 0)
+    elif (Vf < 0.5) and (disproportionality > 0):
+        adjusted = max(disproportionality - extra, 0)
+
+    return adjusted
 
 
 ### END ###
