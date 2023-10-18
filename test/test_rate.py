@@ -9,6 +9,8 @@ import random
 from rdapy.rate import *
 from testutils import *
 
+EPSILON: float = 1 / 10**6
+
 
 class TestNormalizer:
     """Test Normalizer class"""
@@ -119,8 +121,64 @@ class TestNormalizer:
 
 
 class TestRatings:
-    def test_foo(self) -> None:
-        assert True
+    def test_is_antimajoritarian(self) -> None:
+        # Dem antimajoritarian
+        assert is_antimajoritarian(0.5 - AVG_SV_ERROR - EPSILON, 0.50 + EPSILON)
+
+        # Rep antimajoritarian
+        assert is_antimajoritarian(0.5 + AVG_SV_ERROR + EPSILON, 0.5 - EPSILON)
+
+        # Majority but not antimajoritarian
+        assert not is_antimajoritarian(0.51, 0.53)
+
+        # Minority but not antimajoritarian
+        assert not is_antimajoritarian(0.49, 0.47)
+
+        # Not big enough to be called antimajoritarian
+        assert not is_antimajoritarian(0.5 - EPSILON, 0.5 - EPSILON)
+
+    def test_extra_bonus(self) -> None:
+        assert approx_equal(extra_bonus(0.50), 0.0)
+        assert approx_equal(extra_bonus(0.55), 0.10 / 2)
+        assert approx_equal(extra_bonus(0.60), 0.20 / 2)
+        assert approx_equal(extra_bonus(0.45), 0.10 / 2)
+        assert approx_equal(extra_bonus(0.40), 0.20 / 2)
+
+    def test_adjust_deviation(self) -> None:
+        # CA
+        Vf: float = 0.64037
+        bias: float = -0.1714
+        extra: float = extra_bonus(Vf)
+        assert approx_equal(extra, 0.1404, 4)
+        assert approx_equal(adjust_deviation(Vf, bias, extra), -0.0310, 4)
+
+        # NC
+        Vf: float = 0.488799
+        bias: float = 0.2268
+        extra = extra_bonus(Vf)
+        assert approx_equal(extra, 0.0112, 4)
+        assert approx_equal(adjust_deviation(Vf, bias, extra), 0.2156, 4)
+
+        # OH
+        Vf: float = 0.486929
+        bias: float = 0.2367
+        extra = extra_bonus(Vf)
+        assert approx_equal(extra, 0.0131, 4)
+        assert approx_equal(adjust_deviation(Vf, bias, extra), 0.2236, 4)
+
+        # PA
+        Vf: float = 0.51148
+        bias: float = 0.0397
+        extra = extra_bonus(Vf)
+        assert approx_equal(extra, 0.0115, 4)
+        assert approx_equal(adjust_deviation(Vf, bias, extra), bias, 4)
+
+        # TX
+        Vf: float = 0.436994
+        bias: float = 0.1216
+        extra = extra_bonus(Vf)
+        assert approx_equal(extra, 0.0630, 4)
+        assert approx_equal(adjust_deviation(Vf, bias, extra), 0.0586, 4)
 
 
 ### END ###
