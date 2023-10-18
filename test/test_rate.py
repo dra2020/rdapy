@@ -180,5 +180,36 @@ class TestRatings:
         assert approx_equal(extra, 0.0630, 4)
         assert approx_equal(adjust_deviation(Vf, bias, extra), 0.0586, 4)
 
+    def test_rate_proportionality(self) -> None:
+        # Score proportionality, no winner bonus
+
+        Vf = 0.5
+        Sf = 0.5
+
+        assert rate_proportionality(0.00, Vf, Sf) == 100  # Completely unbiased
+        assert rate_proportionality(0.05, Vf, Sf) == 75  # 5% biased
+        assert rate_proportionality(0.10, Vf, Sf) == 50  # 10% biased
+        assert rate_proportionality(0.20, Vf, Sf) == 0  # 20% biased
+        assert rate_proportionality(0.25, Vf, Sf) == 0  # 25% biased
+        assert (
+            rate_proportionality(0.01, 0.48 - EPSILON, 0.5 + EPSILON) == 0
+        )  # Dem antimajoritarian
+        assert (
+            rate_proportionality(0.01, 1 - 0.48 + EPSILON, 1 - 0.5 - EPSILON) == 0
+        )  # Rep antimajoritarian
+
+        # Score proportionality, with winner bonus
+
+        assert rate_proportionality(-0.1714, 0.6404, 43.0850 / 53) == 84  # CA 116th
+        assert rate_proportionality(0.0006, 0.5286, 3.9959 / 7) == 100  # CO 116th
+        assert rate_proportionality(-0.0585, 0.5838, 12.0531 / 18) == 100  # IL 116th
+        assert rate_proportionality(-0.3331, 0.6321, 8.9985 / 9) == 0  # MA 116th
+        assert rate_proportionality(-0.2500, 0.6336, 7.0000 / 8) == 42  # MD 116th
+        assert rate_proportionality(0.2268, 0.4888, 3.0512 / 13) == 0  # NC 116th
+        assert rate_proportionality(0.2367, 0.4869, 4.2120 / 16) == 0  # OH 116th
+        assert rate_proportionality(0.2857, 0.4072, 1 / 7) == 4  # SC 116th
+        assert rate_proportionality(0.1111, 0.3802, 2 / 9) == 100  # TN 116th
+        assert rate_proportionality(0.1216, 0.4370, 11.6218 / 36) == 71  # TX 116th
+
 
 ### END ###

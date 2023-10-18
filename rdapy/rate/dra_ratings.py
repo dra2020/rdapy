@@ -4,6 +4,8 @@
 DRA-SPECIFIC RATINGS ("SCORES")
 """
 
+from .normalize import Normalizer
+
 ### CONSTANTS ###
 
 AVG_SV_ERROR: float = 0.02
@@ -46,29 +48,30 @@ def adjust_deviation(Vf: float, disproportionality: float, extra: float) -> floa
 
 ### RATE PROPORTIONALITY ###
 
-# def rate_proportionality(raw_disproportionality: float, Vf: float, Sf: float) -> int:
-#     if (is_antimajoritarian(Vf, Sf)):
-#         return 0
-#     else:
-#         # Adjust bias to incorporate an acceptable winner's bonus based on Vf
-#         extra = extraBonus(Vf)
-#         adjusted = adjustDeviation(Vf, rawDisproportionality, extra)
 
-#         # Then normalize
-#         _normalizer = new Normalizer(adjusted)
+def rate_proportionality(raw_disproportionality: float, Vf: float, Sf: float) -> int:
+    if is_antimajoritarian(Vf, Sf):
+        return 0
+    else:
+        # Adjust bias to incorporate an acceptable winner's bonus based on Vf
+        extra: float = extra_bonus(Vf)
+        adjusted: float = adjust_deviation(Vf, raw_disproportionality, extra)
 
-#         worst = C.biasRange()[C.BEG]
-#         best = C.biasRange()[C.END]
+        # Then normalize
+        _normalizer: Normalizer = Normalizer(adjusted)
 
-#         _normalizer.positive()
-#         _normalizer.clip(worst, best)
-#         _normalizer.unitize(worst, best)
-#         _normalizer.invert()
-#         _normalizer.rescale()
+        best = 0.0
+        worst = 0.20
 
-#         rating = _normalizer.normalizedNum as number
+        _normalizer.positive()
+        _normalizer.clip(worst, best)
+        _normalizer.unitize(worst, best)
+        _normalizer.invert()
+        _normalizer.rescale()
 
-#         return rating
+        rating: int = _normalizer.normalized_num
+
+        return rating
 
 
 """
@@ -80,7 +83,7 @@ def adjust_deviation(Vf: float, disproportionality: float, extra: float) -> floa
 # Then scale the values to [0–100].
 export function rateCompetitiveness(rawCdf: float): float
 
-  _normalizer = new Normalizer(rawCdf)
+  _normalizer = Normalizer(rawCdf)
 
   let worst = C.overallCompetitivenessRange()[C.BEG]
   let best = C.overallCompetitivenessRange()[C.END]
@@ -123,7 +126,7 @@ export function rateMinorityRepresentation(rawOd: float, pOd: float, rawCd: floa
 
 export function rateReock(rawValue: float): float
 
-  _normalizer = new Normalizer(rawValue)
+  _normalizer = Normalizer(rawValue)
 
   worst = C.reockRange()[C.BEG]
   best = C.reockRange()[C.END]
@@ -137,7 +140,7 @@ export function rateReock(rawValue: float): float
 
 export function ratePolsby(rawValue: float): float
 
-  _normalizer = new Normalizer(rawValue)
+  _normalizer = Normalizer(rawValue)
 
   worst = C.polsbyRange()[C.BEG]
   best = C.polsbyRange()[C.END]
@@ -185,7 +188,7 @@ export function bestTarget(n: float, m: float): float
 
 export function rateCountySplitting(rawCountySplitting: float, nCounties: float, nDistricts: float): float
 
-  _normalizer = new Normalizer(rawCountySplitting)
+  _normalizer = Normalizer(rawCountySplitting)
 
   # The practical ideal raw measurement depends on the # of counties & districts
   best = (nCounties > nDistricts) ? bestTarget(nCounties, nDistricts) : maxSplitting
@@ -205,7 +208,7 @@ export function rateCountySplitting(rawCountySplitting: float, nCounties: float,
 
 export function rateDistrictSplitting(rawDistrictSplitting: float, nCounties: float, nDistricts: float): float
 
-  _normalizer = new Normalizer(rawDistrictSplitting)
+  _normalizer = Normalizer(rawDistrictSplitting)
 
   # The practical ideal raw measurement depends on the # of counties & districts
   best = (nCounties > nDistricts) ? maxSplitting : bestTarget(nCounties, nDistricts)
@@ -241,7 +244,7 @@ export function rateSplitting(csS: float, dsS: float): float
 
 export function rateCountySplittingLegacy(rawCountySplitting: float, nCounties: float, nDistricts: float, bLD: boolean = false): float
 
-  _normalizer = new Normalizer(rawCountySplitting)
+  _normalizer = Normalizer(rawCountySplitting)
 
   # The practical ideal rating depends on the # of counties & districts
   avgBest = countySplitBest(nCounties, nDistricts, bLD)
@@ -286,7 +289,7 @@ export function rateDistrictSplittingLegacy(rawDistrictSplitting: float, bLD: bo
 
   districtType = (bLD) ? T.DistrictType.StateLegislative : T.DistrictType.Congressional
 
-  _normalizer = new Normalizer(rawDistrictSplitting)
+  _normalizer = Normalizer(rawDistrictSplitting)
 
   best = C.districtSplittingRange(districtType)[C.BEG]
   worst = C.districtSplittingRange(districtType)[C.END]
