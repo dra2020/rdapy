@@ -18,6 +18,7 @@ from .minority import (
     calc_proportional_districts,
     est_minority_opportunity,
     make_minority_scorecard,
+    DEMOGRAPHICS,
 )
 from .splitting import (
     calc_county_district_splitting,
