@@ -223,5 +223,31 @@ class TestRatings:
         # Over competitive
         assert rate_competitiveness(0.80) == 100
 
+    def test_rate_minority_representation(self) -> None:
+        bonus: int = 100
+
+        # No possibilities
+        assert rate_minority_representation(1, 0, 0, 0) == 0
+
+        # No opportunities
+        assert rate_minority_representation(0, 10, 0, 0) == 0
+
+        # Half
+        assert rate_minority_representation(5, 10, 0, 0) == round(bonus / 2)
+
+        # All
+        assert rate_minority_representation(10, 10, 0, 0) == bonus
+
+        # Extra
+        assert rate_minority_representation(11, 10, 0, 0) == bonus
+
+        # Combined score
+
+        # * Opportunity districts = (12.56 / 18) * 100 <<< 70
+        # * Coalition districts = (22.92 / 18) * 100 <<< capped
+        # * Combined = 70 + [0.5 * (100 - 70)]
+        correct: int = 85
+        assert rate_minority_representation(12.56, 18, 22.92, 18) == correct
+
 
 ### END ###

@@ -59,31 +59,39 @@ def rate_competitiveness(raw_cdf: float) -> int:
     return rating
 
 
+### RATE MINORITY REPRESENTATION ###
+
+
+def rate_minority_representation(od: float, pod: float, cd: float, pcd: float) -> int:
+    """
+    NOTE - The probable # of opportunity & coalition districts can be *larger* than
+      what would be a proportional # based on the statewide percentage, because of
+      how minority opportunities are estimated (so that 37% minority shares score
+      like 52% share).
+    """
+
+    # Score minority opportunity [0–100]
+    cd_weight: float = 0.5
+
+    # Cap opportunity & coalition districts
+    od_capped: float = min(od, pod)
+    cd_capped = min(cd, pcd)
+
+    opportunity_score = round((od_capped / pod) * 100) if (pod > 0) else 0
+    coalition_score = round((cd_capped / pcd) * 100) if (pcd > 0) else 0
+
+    rating: int = round(
+        min(
+            opportunity_score
+            + (cd_weight * max(coalition_score - opportunity_score, 0)),
+            100,
+        )
+    )
+
+    return rating
+
+
 """
-
-# RATE MINORITY REPRESENTATION
-
-# NOTE - The probable # of opportunity & coalition districts can be *larger* than
-#   what would be a proportional # based on the statewide percentage, because of
-#   how minority opportunities are estimated (so that 37% minority shares score
-#   like 52% share).
-export function rateMinorityRepresentation(rawOd: float, pOd: float, rawCd: float, pCd: float): float
-
-  # Score minority opportunity [0–100]
-  cDWeight = C.coalitionDistrictWeight()
-
-  # Cap opportunity & coalition districts
-  oDCapped = min(rawOd, pOd)
-  cdCapped = min(rawCd, pCd)
-
-  opportunityScore = (pOd > 0) ? round((oDCapped / pOd) * 100) : 0
-  coalitionScore = (pCd > 0) ? round((cdCapped / pCd) * 100) : 0
-
-  rating = round(min(opportunityScore + cDWeight * max(coalitionScore - opportunityScore, 0), 100))
-
-  return rating
-
-
 
 # RATE COMPACTNESS
 
