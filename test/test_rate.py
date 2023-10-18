@@ -249,5 +249,47 @@ class TestRatings:
         correct: int = 85
         assert rate_minority_representation(12.56, 18, 22.92, 18) == correct
 
+    def test_rate_compactness(self) -> None:
+        assert rate_compactness(30, 60) == 45
+
+        # Reock compactness scorer
+        # Reock: in range (AL)
+        assert rate_reock(0.3848) == 54
+
+        # Reock: in range (NC)
+        assert rate_reock(0.3373) == 35
+
+        # Reock: min
+        assert rate_reock(REOCK_MIN) == 0
+
+        # Reock: max
+        assert rate_reock(REOCK_MAX) == 100
+
+        # Reock: too low
+        assert rate_reock(REOCK_MIN - EPSILON) == 0
+
+        # Reock: too high
+        assert rate_reock(REOCK_MAX + EPSILON) == 100
+
+        # Polsby-Popper compactness scorer
+
+        # Polsby-Popper: in range (AL)
+        assert rate_polsby(0.1860) == 21
+
+        # Polsby-Popper: in range (NC)
+        assert rate_polsby(0.2418) == 35
+
+        # Polsby-Popper: min
+        assert rate_polsby(POLSBY_MIN) == 0
+
+        # Polsby-Popper: max
+        assert rate_polsby(POLSBY_MAX) == 100
+
+        # Polsby-Popper: too low
+        assert rate_polsby(POLSBY_MIN - EPSILON) == 0
+
+        # Polsby-Popper: too high
+        assert rate_polsby(POLSBY_MAX + EPSILON) == 100
+
 
 ### END ###

@@ -4,7 +4,7 @@
 DRA-SPECIFIC RATINGS ("SCORES")
 """
 
-from .normalize import Normalizer
+from .normalize import Normalizer, NORMALIZED_RANGE
 
 
 ### RATE PROPORTIONALITY ###
@@ -21,8 +21,8 @@ def rate_proportionality(raw_disproportionality: float, Vf: float, Sf: float) ->
         # Then normalize
         _normalizer: Normalizer = Normalizer(adjusted)
 
-        best = 0.0
-        worst = 0.20
+        best: float = 0.0
+        worst: float = 0.20
 
         _normalizer.positive()
         _normalizer.clip(worst, best)
@@ -91,47 +91,48 @@ def rate_minority_representation(od: float, pod: float, cd: float, pcd: float) -
     return rating
 
 
+### RATE COMPACTNESS ###
+
+
+def rate_reock(rawValue: float) -> int:
+    _normalizer: Normalizer = Normalizer(rawValue)
+
+    worst: float = REOCK_MIN
+    best: float = REOCK_MAX
+
+    _normalizer.clip(worst, best)
+    _normalizer.unitize(worst, best)
+    _normalizer.rescale()
+
+    return _normalizer.normalized_num
+
+
+def rate_polsby(rawValue: float) -> int:
+    _normalizer: Normalizer = Normalizer(rawValue)
+
+    worst: float = POLSBY_MIN
+    best: float = POLSBY_MAX
+
+    _normalizer.clip(worst, best)
+    _normalizer.unitize(worst, best)
+    _normalizer.rescale()
+
+    return _normalizer.normalized_num
+
+
+def rate_compactness(reock_rating: int, polsby_rating: int) -> int:
+    reock_weight: int = 50
+    polsby_weight: int = NORMALIZED_RANGE - reock_weight
+
+    rating: int = round(
+        ((reock_rating * reock_weight) + (polsby_rating * polsby_weight))
+        / NORMALIZED_RANGE
+    )
+
+    return rating
+
+
 """
-
-# RATE COMPACTNESS
-
-export function rateReock(rawValue: float): float
-
-  _normalizer = Normalizer(rawValue)
-
-  worst = C.reockRange()[C.BEG]
-  best = C.reockRange()[C.END]
-
-  _normalizer.clip(worst, best)
-  _normalizer.unitize(worst, best)
-  _normalizer.rescale()
-
-  return _normalizer.normalizedNum as number
-
-
-export function ratePolsby(rawValue: float): float
-
-  _normalizer = Normalizer(rawValue)
-
-  worst = C.polsbyRange()[C.BEG]
-  best = C.polsbyRange()[C.END]
-
-  _normalizer.clip(worst, best)
-  _normalizer.unitize(worst, best)
-  _normalizer.rescale()
-
-  return _normalizer.normalizedNum as number
-
-
-export function rateCompactness(rS: float, ppS: float): float
-
-  rW = C.reockWeight()
-  ppW = C.polsbyWeight()
-
-  rating = round(((rS * rW) + (ppS * ppW)) / (rW + ppW))
-
-  return rating
-
 
 
 # RATE SPLITTING
@@ -141,7 +142,7 @@ export minSplitting: float = 1.00     # No splits still vs. 97–03 splits
 export worstMultiplier: float = 1.33  # 1/3 bigger
 
 # =LAMBDA(n, m, most, least, (((MIN(n, m) - 1) / MAX(n, m)) * most) + ((1 - ((MIN(n, m) - 1) / MAX(n, m))) * least))
-export function bestTarget(n: float, m: float): float 
+def bestTarget(n: float, m: float) -> int: 
 
   more: float = max(n, m)
   less: float = min(n, m)
@@ -157,13 +158,13 @@ export function bestTarget(n: float, m: float): float
 # Rating county- & district-splitting are inverses of each other.
 # Sometimes counties >> districts sometimes counties << districts.
 
-export function rateCountySplitting(rawCountySplitting: float, nCounties: float, nDistricts: float): float
+def rateCountySplitting(rawCountySplitting: float, nCounties: float, nDistricts: float) -> int:
 
-  _normalizer = Normalizer(rawCountySplitting)
+  _normalizer: Normalizer = Normalizer(rawCountySplitting)
 
   # The practical ideal raw measurement depends on the # of counties & districts
-  best = (nCounties > nDistricts) ? bestTarget(nCounties, nDistricts) : maxSplitting
-  worst = best * worstMultiplier
+  best: float = (nCounties > nDistricts) ? bestTarget(nCounties, nDistricts) : maxSplitting
+  worst: float = best * worstMultiplier
 
   _normalizer.clip(best, worst)
   _normalizer.unitize(best, worst)
@@ -171,19 +172,19 @@ export function rateCountySplitting(rawCountySplitting: float, nCounties: float,
   _normalizer.rescale()
 
   # 09-07-21 - Preserve max value (100) for only when no counties are split
-  rating = _normalizer.normalizedNum as number
+  rating = _normalizer.normalized_num 
   if ((rating == 100) and (rawCountySplitting > 1.0)) rating = 100 - 1
 
   return rating
 
 
-export function rateDistrictSplitting(rawDistrictSplitting: float, nCounties: float, nDistricts: float): float
+def rateDistrictSplitting(rawDistrictSplitting: float, nCounties: float, nDistricts: float) -> int:
 
-  _normalizer = Normalizer(rawDistrictSplitting)
+  _normalizer: Normalizer = Normalizer(rawDistrictSplitting)
 
   # The practical ideal raw measurement depends on the # of counties & districts
-  best = (nCounties > nDistricts) ? maxSplitting : bestTarget(nCounties, nDistricts)
-  worst = best * worstMultiplier
+  best: float = (nCounties > nDistricts) ? maxSplitting : bestTarget(nCounties, nDistricts)
+  worst: float = best * worstMultiplier
 
   _normalizer.clip(best, worst)
   _normalizer.unitize(best, worst)
@@ -191,13 +192,13 @@ export function rateDistrictSplitting(rawDistrictSplitting: float, nCounties: fl
   _normalizer.rescale()
 
   # 09-07-21 - Preserve max value (100) for only when no districts are split
-  rating = _normalizer.normalizedNum as number
+  rating = _normalizer.normalized_num 
   if ((rating == 100) and (rawDistrictSplitting > 1.0)) rating = 100 - 1
 
   return rating
 
 
-export function rateSplitting(csS: float, dsS: float): float
+def rateSplitting(csS: float, dsS: float) -> int:
 
   csW = C.countySplittingWeight()
   dsW = C.districtSplittingWeight()
@@ -213,13 +214,13 @@ export function rateSplitting(csS: float, dsS: float): float
 
 # RATE SPLITTING - Legacy routines for original splitting ratings that didn't handle state legislative maps properly
 
-export function rateCountySplittingLegacy(rawCountySplitting: float, nCounties: float, nDistricts: float, bLD: boolean = false): float
+def rateCountySplittingLegacy(rawCountySplitting: float, nCounties: float, nDistricts: float, bLD: boolean = false) -> int:
 
-  _normalizer = Normalizer(rawCountySplitting)
+  _normalizer: Normalizer = Normalizer(rawCountySplitting)
 
   # The practical ideal rating depends on the # of counties & districts
-  avgBest = countySplitBest(nCounties, nDistricts, bLD)
-  avgWorst = countySplitWorst(avgBest, bLD)
+  avgbest: float = countySplitBest(nCounties, nDistricts, bLD)
+  avgworst: float = countySplitWorst(avgBest, bLD)
 
   _normalizer.clip(avgBest, avgWorst)
   _normalizer.unitize(avgBest, avgWorst)
@@ -227,43 +228,43 @@ export function rateCountySplittingLegacy(rawCountySplitting: float, nCounties: 
   _normalizer.rescale()
 
   # 09-07-21 - Preserve max value (100) for only when no counties are split
-  rating = _normalizer.normalizedNum as number
+  rating = _normalizer.normalized_num 
   if ((rating == 100) and (rawCountySplitting > 1.0)) rating = 100 - 1
 
   return rating
 
 
-export function countySplitBest(nCounties: float, nDistricts: float, bLD: boolean = false): float
+def countySplitBest(nCounties: float, nDistricts: float, bLD: boolean = false) -> int:
 
   districtType = (bLD) ? T.DistrictType.StateLegislative : T.DistrictType.Congressional
 
-  practicalBest = C.countySplittingRange(districtType)[C.BEG]
+  practicalbest: float = C.countySplittingRange(districtType)[C.BEG]
   nAllowableSplits = min(nDistricts - 1, nCounties)
   threshold = ((nAllowableSplits * practicalBest) + ((nCounties - nAllowableSplits) * 1.0)) / nCounties
 
   return threshold
 
-export function countySplitWorst(avgBest: float, bLD: boolean = false): float
+def countySplitWorst(avgBest: float, bLD: boolean = false) -> int:
 
   districtType = (bLD) ? T.DistrictType.StateLegislative : T.DistrictType.Congressional
 
-  singleBest = C.countySplittingRange(districtType)[C.BEG]
-  singleWorst = C.countySplittingRange(districtType)[C.END]
+  singlebest: float = C.countySplittingRange(districtType)[C.BEG]
+  singleworst: float = C.countySplittingRange(districtType)[C.END]
 
   # The practical ideal score depends on the # of counties & districts
-  avgWorst = avgBest * (singleWorst / singleBest)
+  avgworst: float = avgBest * (singleWorst / singleBest)
 
   return avgWorst
 
 
-export function rateDistrictSplittingLegacy(rawDistrictSplitting: float, bLD: boolean = false): float
+def rateDistrictSplittingLegacy(rawDistrictSplitting: float, bLD: boolean = false) -> int:
 
   districtType = (bLD) ? T.DistrictType.StateLegislative : T.DistrictType.Congressional
 
-  _normalizer = Normalizer(rawDistrictSplitting)
+  _normalizer: Normalizer = Normalizer(rawDistrictSplitting)
 
-  best = C.districtSplittingRange(districtType)[C.BEG]
-  worst = C.districtSplittingRange(districtType)[C.END]
+  best: float = C.districtSplittingRange(districtType)[C.BEG]
+  worst: float = C.districtSplittingRange(districtType)[C.END]
 
   _normalizer.clip(best, worst)
   _normalizer.unitize(best, worst)
@@ -271,13 +272,13 @@ export function rateDistrictSplittingLegacy(rawDistrictSplitting: float, bLD: bo
   _normalizer.rescale()
 
   # 09-07-21 - Preserve max value (100) for only when no districts are split
-  rating = _normalizer.normalizedNum as number
+  rating = _normalizer.normalized_num 
   if ((rating == 100) and (rawDistrictSplitting > 1.0)) rating = 100 - 1
 
   return rating
 
 
-export function rateSplittingLegacy(csS: float, dsS: float): float
+def rateSplittingLegacy(csS: float, dsS: float) -> int:
 
   csW = C.countySplittingWeight()
   dsW = C.districtSplittingWeight()
@@ -287,7 +288,7 @@ export function rateSplittingLegacy(csS: float, dsS: float): float
   return rating
 
 
-export function adjustSplittingRating(rating: float, rawCountySplitting: float, rawDistrictSplitting: float): float
+def adjustSplittingRating(rating: float, rawCountySplitting: float, rawDistrictSplitting: float) -> int:
 
   # 09-07-21 - Preserve max value (100) for only when no districts are split
   if ((rating == 100) and ((rawCountySplitting > 1.0) || (rawDistrictSplitting > 1.0))) rating = 100 - 1
@@ -300,6 +301,11 @@ export function adjustSplittingRating(rating: float, rawCountySplitting: float, 
 
 AVG_SV_ERROR: float = 0.02
 WINNER_BONUS: float = 2.0
+
+REOCK_MIN: float = 0.25
+REOCK_MAX: float = 0.50
+POLSBY_MIN: float = 0.10
+POLSBY_MAX: float = 0.50
 
 ### HELPERS ###
 
