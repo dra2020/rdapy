@@ -56,5 +56,6 @@ from .partisan import (
     infer_sv_points,
     infer_inverse_sv_points,
 )
+from .rate import *  # TODO - Constrain this
 
 name = "rdapy"
