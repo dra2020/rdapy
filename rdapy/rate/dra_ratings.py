@@ -132,170 +132,98 @@ def rate_compactness(reock_rating: int, polsby_rating: int) -> int:
     return rating
 
 
-"""
-
-
-# RATE SPLITTING
-
-export maxSplitting: float = 1.20     # 90–10 => 95–5 splits
-export minSplitting: float = 1.00     # No splits still vs. 97–03 splits
-export worstMultiplier: float = 1.33  # 1/3 bigger
-
-# =LAMBDA(n, m, most, least, (((MIN(n, m) - 1) / MAX(n, m)) * most) + ((1 - ((MIN(n, m) - 1) / MAX(n, m))) * least))
-def bestTarget(n: float, m: float) -> int: 
-
-  more: float = max(n, m)
-  less: float = min(n, m)
-
-  w1: float = ((less - 1) / more)
-  w2: float = 1 - w1
-
-  target: float = (w1 * maxSplitting) + (w2 * minSplitting)
-
-  return target
-
+### RATE SPLITTING ###
 
 # Rating county- & district-splitting are inverses of each other.
 # Sometimes counties >> districts sometimes counties << districts.
 
-def rateCountySplitting(rawCountySplitting: float, nCounties: float, nDistricts: float) -> int:
-
-  _normalizer: Normalizer = Normalizer(rawCountySplitting)
-
-  # The practical ideal raw measurement depends on the # of counties & districts
-  best: float = (nCounties > nDistricts) ? bestTarget(nCounties, nDistricts) : maxSplitting
-  worst: float = best * worstMultiplier
-
-  _normalizer.clip(best, worst)
-  _normalizer.unitize(best, worst)
-  _normalizer.invert()
-  _normalizer.rescale()
-
-  # 09-07-21 - Preserve max value (100) for only when no counties are split
-  rating = _normalizer.normalized_num 
-  if ((rating == 100) and (rawCountySplitting > 1.0)) rating = 100 - 1
-
-  return rating
+MAX_SPLITTING: float = 1.20  # 90–10 => 95–5 splits
+MIN_SPLITTING: float = 1.00  # No splits still vs. 97–03 splits
+WORST_MULTIPLIER: float = 1.33  # 1/3 bigger
 
 
-def rateDistrictSplitting(rawDistrictSplitting: float, nCounties: float, nDistricts: float) -> int:
+def best_target(n: float, m: float) -> float:
+    """=LAMBDA(n, m, most, least, (((MIN(n, m) - 1) / MAX(n, m)) * most) + ((1 - ((MIN(n, m) - 1) / MAX(n, m))) * least))"""
 
-  _normalizer: Normalizer = Normalizer(rawDistrictSplitting)
+    more: float = max(n, m)
+    less: float = min(n, m)
 
-  # The practical ideal raw measurement depends on the # of counties & districts
-  best: float = (nCounties > nDistricts) ? maxSplitting : bestTarget(nCounties, nDistricts)
-  worst: float = best * worstMultiplier
+    w1: float = (less - 1) / more
+    w2: float = 1 - w1
 
-  _normalizer.clip(best, worst)
-  _normalizer.unitize(best, worst)
-  _normalizer.invert()
-  _normalizer.rescale()
+    target: float = (w1 * MAX_SPLITTING) + (w2 * MIN_SPLITTING)
 
-  # 09-07-21 - Preserve max value (100) for only when no districts are split
-  rating = _normalizer.normalized_num 
-  if ((rating == 100) and (rawDistrictSplitting > 1.0)) rating = 100 - 1
-
-  return rating
+    return target
 
 
-def rateSplitting(csS: float, dsS: float) -> int:
+def rate_county_splitting(
+    raw_county_splitting: float, n_counties: int, n_districts: int
+) -> int:
+    _normalizer: Normalizer = Normalizer(raw_county_splitting)
 
-  csW = C.countySplittingWeight()
-  dsW = C.districtSplittingWeight()
+    # The practical ideal raw measurement depends on the # of counties & districts
+    best: float = (
+        best_target(n_counties, n_districts)
+        if (n_counties > n_districts)
+        else MAX_SPLITTING
+    )
+    worst: float = best * WORST_MULTIPLIER
 
-  rating = round(((csS * csW) + (dsS * dsW)) / (csW + dsW))
+    _normalizer.clip(best, worst)
+    _normalizer.unitize(best, worst)
+    _normalizer.invert()
+    _normalizer.rescale()
 
-  # Preserve max value (100) for only when no districts are split.
-  # The max county- or district-splitting rating is 99 when there are splits.
-  if ((rating == 100) and ((csS < 100) || (dsS < 100))) rating = 100 - 1
+    # 09-07-21 - Preserve max value (100) for only when no counties are split
+    rating: int = _normalizer.normalized_num
+    if (rating == 100) and (raw_county_splitting > 1.0):
+        rating = 100 - 1
 
-  return rating
-
-
-# RATE SPLITTING - Legacy routines for original splitting ratings that didn't handle state legislative maps properly
-
-def rateCountySplittingLegacy(rawCountySplitting: float, nCounties: float, nDistricts: float, bLD: boolean = false) -> int:
-
-  _normalizer: Normalizer = Normalizer(rawCountySplitting)
-
-  # The practical ideal rating depends on the # of counties & districts
-  avgbest: float = countySplitBest(nCounties, nDistricts, bLD)
-  avgworst: float = countySplitWorst(avgBest, bLD)
-
-  _normalizer.clip(avgBest, avgWorst)
-  _normalizer.unitize(avgBest, avgWorst)
-  _normalizer.invert()
-  _normalizer.rescale()
-
-  # 09-07-21 - Preserve max value (100) for only when no counties are split
-  rating = _normalizer.normalized_num 
-  if ((rating == 100) and (rawCountySplitting > 1.0)) rating = 100 - 1
-
-  return rating
+    return rating
 
 
-def countySplitBest(nCounties: float, nDistricts: float, bLD: boolean = false) -> int:
+def rate_district_splitting(
+    raw_district_splitting: float, n_counties: int, n_districts: int
+) -> int:
+    _normalizer: Normalizer = Normalizer(raw_district_splitting)
 
-  districtType = (bLD) ? T.DistrictType.StateLegislative : T.DistrictType.Congressional
+    # The practical ideal raw measurement depends on the # of counties & districts
+    best: float = (
+        MAX_SPLITTING
+        if (n_counties > n_districts)
+        else best_target(n_counties, n_districts)
+    )
+    worst: float = best * WORST_MULTIPLIER
 
-  practicalbest: float = C.countySplittingRange(districtType)[C.BEG]
-  nAllowableSplits = min(nDistricts - 1, nCounties)
-  threshold = ((nAllowableSplits * practicalBest) + ((nCounties - nAllowableSplits) * 1.0)) / nCounties
+    _normalizer.clip(best, worst)
+    _normalizer.unitize(best, worst)
+    _normalizer.invert()
+    _normalizer.rescale()
 
-  return threshold
+    # 09-07-21 - Preserve max value (100) for only when no districts are split
+    rating = _normalizer.normalized_num
+    if (rating == 100) and (raw_district_splitting > 1.0):
+        rating = 100 - 1
 
-def countySplitWorst(avgBest: float, bLD: boolean = false) -> int:
-
-  districtType = (bLD) ? T.DistrictType.StateLegislative : T.DistrictType.Congressional
-
-  singlebest: float = C.countySplittingRange(districtType)[C.BEG]
-  singleworst: float = C.countySplittingRange(districtType)[C.END]
-
-  # The practical ideal score depends on the # of counties & districts
-  avgworst: float = avgBest * (singleWorst / singleBest)
-
-  return avgWorst
-
-
-def rateDistrictSplittingLegacy(rawDistrictSplitting: float, bLD: boolean = false) -> int:
-
-  districtType = (bLD) ? T.DistrictType.StateLegislative : T.DistrictType.Congressional
-
-  _normalizer: Normalizer = Normalizer(rawDistrictSplitting)
-
-  best: float = C.districtSplittingRange(districtType)[C.BEG]
-  worst: float = C.districtSplittingRange(districtType)[C.END]
-
-  _normalizer.clip(best, worst)
-  _normalizer.unitize(best, worst)
-  _normalizer.invert()
-  _normalizer.rescale()
-
-  # 09-07-21 - Preserve max value (100) for only when no districts are split
-  rating = _normalizer.normalized_num 
-  if ((rating == 100) and (rawDistrictSplitting > 1.0)) rating = 100 - 1
-
-  return rating
+    return rating
 
 
-def rateSplittingLegacy(csS: float, dsS: float) -> int:
+def rate_splitting(county_rating: int, district_rating: int) -> int:
+    county_weight: int = 50
+    district_weight: int = NORMALIZED_RANGE - county_weight
 
-  csW = C.countySplittingWeight()
-  dsW = C.districtSplittingWeight()
+    rating = round(
+        ((county_rating * county_weight) + (district_rating * district_weight))
+        / NORMALIZED_RANGE
+    )
 
-  rating = round(((csS * csW) + (dsS * dsW)) / (csW + dsW))
+    # Preserve max value (100) for only when no districts are split.
+    # The max county- or district-splitting rating is 99 when there are splits.
+    if (rating == 100) and ((county_rating < 100) or (district_rating < 100)):
+        rating = 100 - 1
 
-  return rating
+    return rating
 
-
-def adjustSplittingRating(rating: float, rawCountySplitting: float, rawDistrictSplitting: float) -> int:
-
-  # 09-07-21 - Preserve max value (100) for only when no districts are split
-  if ((rating == 100) and ((rawCountySplitting > 1.0) || (rawDistrictSplitting > 1.0))) rating = 100 - 1
-
-  return rating
-
-"""
 
 ### CONSTANTS ###
 

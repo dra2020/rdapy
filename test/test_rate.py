@@ -291,5 +291,314 @@ class TestRatings:
         # Polsby-Popper: too high
         assert rate_polsby(POLSBY_MAX + EPSILON) == 100
 
+    def test_rate_splitting(self) -> None:
+        # Combine splitting ratings
+
+        # Some county- & district splitting
+        assert abs(rate_splitting(30, 60) - 45) <= 1
+
+        # Little county- & district- splitting
+        assert rate_splitting(99, 100) == 99
+
+        # No county- & district- splitting
+        assert rate_splitting(100, 100) == 100
+
+        # Rate state splitting
+
+        # XX	C	CD	C_DC'	C_CD'	UD	U_DC'	U_CD'	LD	L_DC'	L_CD'	C_CT	C_DT	C_RC	C_RD	C_R'	U_CT	U_DT	U_RC	U_RD	U_R'	L_CT	L_DT	L_RC	L_RD	L_R'
+        # AL	67	7	1.1100	1.4470	35	1.4200	1.4500	105	1.6400	1.2600	1.02	1.20	73	38	56	1.10	1.20	13	38	26	1.20	1.13	0	64	32
+        # AZ	15	9	1.3520	1.4240	30	1.7100	1.2000				1.11	1.20	33	44	39	1.20	1.09	0	71	36
+        # CA	58	53	1.7890	1.2530	40	1.7400	1.3400	80	1.7000	1.1900	1.18	1.20	0	87	44	1.13	1.20	0	65	33	1.20	1.14	0	88	44
+        # CO	64	7	1.1960	1.5010	35	1.2100	1.0800	65	1.2500	1.0700	1.02	1.20	48	25	37	1.11	1.20	72	100	86	1.20	1.19	88	100	94
+        # CT	8	5	1.4800	1.5310	36	2.0800	1.1700	151	1.6800	1.0500	1.10	1.20	0	17	9	1.20	1.04	0	62	31	1.20	1.01	0	88	44
+        # GA	159	14	1.2960	1.6400	56	1.5800	1.3900	180	1.7800	1.2700	1.02	1.20	17	0	9	1.07	1.20	0	53	27	1.20	1.18	0	76	38
+        # IA	99	4	1.0000	1.0000	50	1.3300	1.2900	100	1.2600	1.2000	1.01	1.20	100	100	100	1.10	1.20	37	78	58	1.20	1.20	85	99	92
+        # KY	120	6	1.0360	1.2230	38	1.2100	1.0800	100	1.4300	1.2000	1.01	1.20	92	94	93	1.06	1.20	58	100	79	1.17	1.20	32	100	66
+        # PA	67	18	1.1780	1.4080	50	1.5200	1.3000	203	1.6500	1.1300	1.05	1.20	64	48	56	1.15	1.20	2	75	39	1.20	1.07	0	82	41
+        # TN	95	9	1.0710	1.2670	33	1.1400	1.1000	99	1.1000	1.1400	1.02	1.20	84	83	84	1.07	1.20	80	100	90	1.20	1.19	100	100	100
+        # TX	254	36	1.5790	1.4280	31	1.4600	1.3300	150	1.0800	1.0400	1.03	1.20	0	43	22	1.02	1.20	0	68	34	1.12	1.20	100	100	100
+        # VA	133	11	1.2140	1.6900	40	1.6400	1.7000	100	1.8400	1.4200	1.02	1.20	41	0	21	1.06	1.20	0	0	0	1.15	1.20	0	45	23
+
+        # With 2 minor exceptions, the test cases below are the subset above from the Excel spreadsheet I used to develop the ratings:
+        # - There are some minor rounding differences between Excel & Typescript and
+        # - The full Typescript implementation limits the max rating to 99 if there's any splitting. Only no splitting can get 100.
+
+        # AL splitting
+
+        nC: int = 67
+        nCD: int = 7
+        nUD: int = 35
+        nLD: int = 105
+
+        assert approx_equal(best_target(nC, nCD), 1.02, 2)
+        assert approx_equal(best_target(nC, nUD), 1.10, 2)
+        assert approx_equal(best_target(nC, nLD), 1.13, 2)
+
+        assert rate_county_splitting(1.1100, nC, nCD) == 73
+        assert rate_district_splitting(1.4470, nC, nCD) == 38
+        assert abs(rate_splitting(73, 38) - 56) <= 1
+
+        assert rate_county_splitting(1.4200, nC, nUD) == 12
+        assert rate_district_splitting(1.4500, nC, nUD) == 37
+        assert abs(rate_splitting(12, 37) - 25) <= 1
+
+        assert rate_county_splitting(1.6400, nC, nLD) == 0
+        assert rate_district_splitting(1.2600, nC, nLD) == 64
+        assert abs(rate_splitting(0, 64) - 32) <= 1
+
+        # AZ splitting
+
+        nC: int = 15
+        nCD: int = 9
+        nUD: int = 30
+
+        assert approx_equal(best_target(nC, nCD), 1.11, 2)
+        assert approx_equal(best_target(nC, nUD), 1.09, 2)
+
+        assert rate_county_splitting(1.3520, nC, nCD) == 33
+        assert rate_district_splitting(1.4240, nC, nCD) == 43
+        assert abs(rate_splitting(33, 43) - 38) <= 1
+
+        assert rate_county_splitting(1.7100, nC, nUD) == 0
+        assert rate_district_splitting(1.2000, nC, nUD) == 70
+        assert abs(rate_splitting(0, 70) - 35) <= 1
+
+        # CA splitting
+
+        nC: int = 58
+        nCD: int = 53
+        nUD: int = 40
+        nLD: int = 80
+
+        assert approx_equal(best_target(nC, nCD), 1.18, 2)
+        assert approx_equal(best_target(nC, nUD), 1.13, 2)
+        assert approx_equal(best_target(nC, nLD), 1.14, 2)
+
+        assert rate_county_splitting(1.7890, nC, nCD) == 0
+        assert rate_district_splitting(1.2530, nC, nCD) == 87
+        assert abs(rate_splitting(0, 65) - 33) <= 1
+
+        assert rate_county_splitting(1.7400, nC, nUD) == 0
+        assert rate_district_splitting(1.3400, nC, nUD) == 65
+        assert abs(rate_splitting(0, 81) - 41) <= 1
+
+        assert rate_county_splitting(1.7000, nC, nLD) == 0
+        assert rate_district_splitting(1.1900, nC, nLD) == 87
+        assert abs(rate_splitting(0, 87) - 44) <= 1
+
+        # CO splitting
+
+        nC: int = 64
+        nCD: int = 7
+        nUD: int = 35
+        nLD: int = 65
+
+        assert approx_equal(best_target(nC, nCD), 1.02, 2)
+        assert approx_equal(best_target(nC, nUD), 1.11, 2)
+        assert approx_equal(best_target(nC, nLD), 1.19, 2)
+
+        assert rate_county_splitting(1.1960, nC, nCD) == 47
+        assert rate_district_splitting(1.5010, nC, nCD) == 24
+        assert abs(rate_splitting(47, 24) - 36) <= 1
+
+        assert rate_county_splitting(1.2100, nC, nUD) == 72
+        assert rate_district_splitting(1.0800, nC, nUD) == 99
+        assert abs(rate_splitting(72, 99) - 86) <= 1
+
+        assert rate_county_splitting(1.2500, nC, nLD) == 87
+        assert rate_district_splitting(1.0700, nC, nLD) == 99
+        assert abs(rate_splitting(87, 99) - 93) <= 1
+
+        # CT splitting
+
+        nC: int = 8
+        nCD: int = 5
+        nUD: int = 36
+        nLD: int = 151
+
+        assert approx_equal(best_target(nC, nCD), 1.10, 2)
+        assert approx_equal(best_target(nC, nUD), 1.04, 2)
+        assert approx_equal(best_target(nC, nLD), 1.01, 2)
+
+        assert rate_county_splitting(1.4800, nC, nCD) == 0
+        assert rate_district_splitting(1.5310, nC, nCD) == 16
+        assert abs(rate_splitting(0, 16) - 8) <= 1
+
+        assert rate_county_splitting(2.0800, nC, nUD) == 0
+        assert rate_district_splitting(1.1700, nC, nUD) == 62
+        assert abs(rate_splitting(0, 62) - 31) <= 1
+
+        assert rate_county_splitting(1.6800, nC, nLD) == 0
+        assert rate_district_splitting(1.0500, nC, nLD) == 88
+        assert abs(rate_splitting(0, 88) - 44) <= 1
+
+        # GA splitting
+
+        nC: int = 159
+        nCD: int = 14
+        nUD: int = 56
+        nLD: int = 180
+
+        assert approx_equal(best_target(nC, nCD), 1.02, 2)
+        assert approx_equal(best_target(nC, nUD), 1.07, 2)
+        assert approx_equal(best_target(nC, nLD), 1.18, 2)
+
+        assert rate_county_splitting(1.2960, nC, nCD) == 17
+        assert rate_district_splitting(1.6400, nC, nCD) == 0
+        assert abs(rate_splitting(0, 17) - 9) <= 1
+
+        assert rate_county_splitting(1.5800, nC, nUD) == 0
+        assert rate_district_splitting(1.3900, nC, nUD) == 52
+        assert abs(rate_splitting(0, 52) - 26) <= 1
+
+        assert rate_county_splitting(1.7800, nC, nLD) == 0
+        assert rate_district_splitting(1.2700, nC, nLD) == 76
+        assert abs(rate_splitting(0, 76) - 38) <= 1
+
+        # IA splitting
+
+        nC: int = 99
+        nCD: int = 4
+        nUD: int = 50
+        nLD: int = 100
+
+        assert approx_equal(best_target(nC, nCD), 1.01, 2)
+        assert approx_equal(best_target(nC, nUD), 1.10, 2)
+        assert approx_equal(best_target(nC, nLD), 1.20, 2)
+
+        assert rate_county_splitting(1.0000, nC, nCD) == 100
+        assert rate_district_splitting(1.0000, nC, nCD) == 100
+        assert abs(rate_splitting(100, 100) - 100) <= 1
+
+        assert rate_county_splitting(1.3300, nC, nUD) == 36
+        assert rate_district_splitting(1.2900, nC, nUD) == 77
+        assert abs(rate_splitting(36, 77) - 57) <= 1
+
+        assert rate_county_splitting(1.2600, nC, nLD) == 85
+        assert rate_district_splitting(1.2000, nC, nLD) == 99
+        assert abs(rate_splitting(85, 99) - 92) <= 1
+
+        # KY splitting
+
+        nC: int = 120
+        nCD: int = 6
+        nUD: int = 38
+        nLD: int = 100
+
+        assert approx_equal(best_target(nC, nCD), 1.01, 2)
+        assert approx_equal(best_target(nC, nUD), 1.06, 2)
+        assert approx_equal(best_target(nC, nLD), 1.17, 2)
+
+        assert rate_county_splitting(1.0360, nC, nCD) == 92
+        assert rate_district_splitting(1.2230, nC, nCD) == 94
+        assert abs(rate_splitting(92, 94) - 93) <= 1
+
+        assert rate_county_splitting(1.2100, nC, nUD) == 58
+        assert rate_district_splitting(1.0800, nC, nUD) == 99
+        assert abs(rate_splitting(58, 99) - 79) <= 1
+
+        assert rate_county_splitting(1.4300, nC, nLD) == 31
+        assert rate_district_splitting(1.2000, nC, nLD) == 99
+        assert abs(rate_splitting(31, 99) - 65) <= 1
+
+        # PA splitting
+
+        nC: int = 67
+        nCD: int = 18
+        nUD: int = 50
+        nLD: int = 203
+
+        assert approx_equal(best_target(nC, nCD), 1.05, 2)
+        assert approx_equal(best_target(nC, nUD), 1.15, 2)
+        assert approx_equal(best_target(nC, nLD), 1.07, 2)
+
+        assert rate_county_splitting(1.1780, nC, nCD) == 63
+        assert rate_district_splitting(1.4080, nC, nCD) == 47
+        assert abs(rate_splitting(63, 47) - 55) <= 1
+
+        assert rate_county_splitting(1.5200, nC, nUD) == 1
+        assert rate_district_splitting(1.3000, nC, nUD) == 75
+        assert abs(rate_splitting(1, 75) - 38) <= 1
+
+        assert rate_county_splitting(1.6500, nC, nLD) == 0
+        assert rate_district_splitting(1.1300, nC, nLD) == 82
+        assert abs(rate_splitting(0, 82) - 41) <= 1
+
+        # The is the user Ruth's PA Lower State House map.
+        # The initial intended ratings "tanked" (85 => 53).
+        # With these revised ratings, the drop is only half that much (85 => 70).
+        assert rate_county_splitting(1.3100, nC, nLD) == 72
+        assert rate_district_splitting(1.1800, nC, nLD) == 67
+        assert abs(rate_splitting(72, 67) - 70) <= 1
+
+        # TN splitting
+
+        nC: int = 95
+        nCD: int = 9
+        nUD: int = 33
+        nLD: int = 99
+
+        assert approx_equal(best_target(nC, nCD), 1.02, 2)
+        assert approx_equal(best_target(nC, nUD), 1.07, 2)
+        assert approx_equal(best_target(nC, nLD), 1.19, 2)
+
+        assert rate_county_splitting(1.0710, nC, nCD) == 84
+        assert rate_district_splitting(1.2670, nC, nCD) == 83
+        assert abs(rate_splitting(84, 83) - 84) <= 1
+
+        assert rate_county_splitting(1.1400, nC, nUD) == 79
+        assert rate_district_splitting(1.1000, nC, nUD) == 99
+        assert abs(rate_splitting(79, 99) - 89) <= 1
+
+        assert rate_county_splitting(1.1000, nC, nLD) == 99
+        assert rate_district_splitting(1.1400, nC, nLD) == 99
+        assert abs(rate_splitting(99, 99) - 99) <= 1
+
+        # TX splitting
+
+        nC: int = 254
+        nCD: int = 36
+        nUD: int = 31
+        nLD: int = 150
+
+        assert approx_equal(best_target(nC, nCD), 1.03, 2)
+        assert approx_equal(best_target(nC, nUD), 1.02, 2)
+        assert approx_equal(best_target(nC, nLD), 1.12, 2)
+
+        assert rate_county_splitting(1.5790, nC, nCD) == 0
+        assert rate_district_splitting(1.4280, nC, nCD) == 42
+        assert abs(rate_splitting(0, 42) - 21) <= 1
+
+        assert rate_county_splitting(1.4600, nC, nUD) == 0
+        assert rate_district_splitting(1.3300, nC, nUD) == 67
+        assert abs(rate_splitting(0, 67) - 34) <= 1
+
+        assert rate_county_splitting(1.0800, nC, nLD) == 99
+        assert rate_district_splitting(1.0400, nC, nLD) == 99
+        assert abs(rate_splitting(99, 99) - 99) <= 1
+
+        # VA splitting
+
+        nC: int = 133
+        nCD: int = 11
+        nUD: int = 40
+        nLD: int = 100
+
+        assert approx_equal(best_target(nC, nCD), 1.02, 2)
+        assert approx_equal(best_target(nC, nUD), 1.06, 2)
+        assert approx_equal(best_target(nC, nLD), 1.15, 2)
+
+        assert rate_county_splitting(1.2140, nC, nCD) == 41
+        assert rate_district_splitting(1.6900, nC, nCD) == 0
+        assert abs(rate_splitting(41, 0) - 21) <= 1
+
+        assert rate_county_splitting(1.6400, nC, nUD) == 0
+        assert rate_district_splitting(1.7000, nC, nUD) == 0
+        assert abs(rate_splitting(0, 0) - 0) <= 1
+
+        assert rate_county_splitting(1.8400, nC, nLD) == 0
+        assert rate_district_splitting(1.4200, nC, nLD) == 44
+        assert abs(rate_splitting(0, 44) - 22) <= 1
+
 
 ### END ###
