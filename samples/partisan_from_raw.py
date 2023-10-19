@@ -65,7 +65,9 @@ for row in plan:
     district: int = row["District"]
 
     d: int = election[geoid]["D"]
-    tot: int = election[geoid]["Tot"]
+    r: int = election[geoid]["R"]
+    tot: int = d + r
+    # tot: int = election[geoid]["Tot"]  # NOTE - Includes "other"
 
     d_by_district[district] += d
     d_statewide += d

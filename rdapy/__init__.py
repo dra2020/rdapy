@@ -12,8 +12,14 @@ from .compactness import (
     kiwysi_rank_shape,
     trim_kiwysi_rank,
 )
-from .graph import is_connected, is_embedded, OUT_OF_STATE
 from .equal import calc_population_deviation
+from .graph import is_connected, is_embedded, OUT_OF_STATE
+from .minority import (
+    calc_proportional_districts,
+    est_minority_opportunity,
+    make_minority_scorecard,
+    DEMOGRAPHICS,
+)
 from .splitting import (
     calc_county_district_splitting,
     split_score,
@@ -49,6 +55,13 @@ from .partisan import (
     est_fptp_seats,
     infer_sv_points,
     infer_inverse_sv_points,
+)
+from .rate import (
+    rate_proportionality,
+    rate_competitiveness,
+    rate_minority_representation,
+    rate_compactness,
+    rate_splitting,
 )
 
 name = "rdapy"
