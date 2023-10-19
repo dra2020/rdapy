@@ -34,8 +34,10 @@ setup(
         "rdapy.compactness",
         "rdapy.equal",
         "rdapy.graph",
+        "rdapy.minority",
         "rdapy.partisan",
         "rdapy.splitting",
+        "rdapy.rate",
     ],
     install_requires=[
         "attrs",
