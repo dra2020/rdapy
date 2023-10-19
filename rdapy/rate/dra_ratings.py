@@ -62,7 +62,7 @@ def rate_competitiveness(raw_cdf: float) -> int:
 ### RATE MINORITY REPRESENTATION ###
 
 
-def rate_minority_representation(od: float, pod: float, cd: float, pcd: float) -> int:
+def rate_minority_opportunity(od: float, pod: float, cd: float, pcd: float) -> int:
     """
     NOTE - The probable # of opportunity & coalition districts can be *larger* than
       what would be a proportional # based on the statewide percentage, because of
@@ -94,8 +94,8 @@ def rate_minority_representation(od: float, pod: float, cd: float, pcd: float) -
 ### RATE COMPACTNESS ###
 
 
-def rate_reock(rawValue: float) -> int:
-    _normalizer: Normalizer = Normalizer(rawValue)
+def rate_reock(raw_value: float) -> int:
+    _normalizer: Normalizer = Normalizer(raw_value)
 
     worst: float = REOCK_MIN
     best: float = REOCK_MAX
@@ -107,8 +107,8 @@ def rate_reock(rawValue: float) -> int:
     return _normalizer.normalized_num
 
 
-def rate_polsby(rawValue: float) -> int:
-    _normalizer: Normalizer = Normalizer(rawValue)
+def rate_polsby(raw_value: float) -> int:
+    _normalizer: Normalizer = Normalizer(raw_value)
 
     worst: float = POLSBY_MIN
     best: float = POLSBY_MAX

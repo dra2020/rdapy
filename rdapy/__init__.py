@@ -59,7 +59,7 @@ from .partisan import (
 from .rate import (
     rate_proportionality,
     rate_competitiveness,
-    rate_minority_representation,
+    rate_minority_opportunity,
     rate_compactness,
     rate_splitting,
 )
