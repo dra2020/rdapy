@@ -104,7 +104,7 @@ def calc_partisan_metrics(Vf: float, Vf_array: list[float]) -> dict:
         "rDf": rDf,
     }
 
-    scorecard: dict = {
+    results: dict = {
         "bias": bias_measurements,
         "responsiveness": responsiveness_measurements,
         "dSVpoints": dSVpoints,
@@ -113,7 +113,7 @@ def calc_partisan_metrics(Vf: float, Vf_array: list[float]) -> dict:
         "averageRVf": averageRVf,
     }
 
-    return scorecard
+    return results
 
 
 ### END ###

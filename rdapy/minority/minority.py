@@ -60,7 +60,7 @@ def est_minority_opportunity(mf: float, demo: Optional[str] = None) -> float:
 def calc_minority_opportunity(
     statewide_demos: dict[str, float], demos_by_district: list[dict[str, float]]
 ) -> dict[str, float]:
-    """Make minority opportunity scorecard (except the table which is used in DRA)."""
+    """Estimate minority opportunity (everything except the table which is used in DRA)."""
 
     n_districts: int = len(demos_by_district)
 
@@ -91,7 +91,7 @@ def calc_minority_opportunity(
     pod: float = total_proportional
     pcd: float = districts_by_demo["minority"]  # TODO - Fix this
 
-    scorecard: dict[str, float] = {
+    results: dict[str, float] = {
         # "pivot_by_demographic": table, # For this, use dra-analytics instead
         "opportunity_districts": od,
         "proportional_opportunities": pod,
@@ -100,7 +100,7 @@ def calc_minority_opportunity(
         # "details": {} # None
     }
 
-    return scorecard
+    return results
 
 
 ### END ###

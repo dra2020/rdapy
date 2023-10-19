@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-TEST PARTISAN SCORECARD
+TEST PARTISAN METRICS
 """
 
 
@@ -9,7 +9,7 @@ from rdapy.partisan.partisan import *
 from testutils import *
 
 
-class TestPartisanScorecard:
+class TestPartisanMetrics:
     def test_PA_SCOPA_7S(self) -> None:
         """PA SCOPA-7S plan"""
 

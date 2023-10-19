@@ -20,20 +20,10 @@ from shapely.geometry import Polygon, MultiPolygon
 This returns a dictionary of results:
 
 ```python
-results: dict = {
-    "avgReock": avg_reock,
-    "avgPolsby": avg_polsby,
-    "avgKIWYSI": avg_kiwysi,
-    "byDistrict": by_district,
-}
-```
-
-For each district, the results are of the form:
-
-```python
-measures: dict = {
-    "reock": reock_flat,
-    "polsby": polsby_flat,
-    "kiwysiRank": kiwysi_rank, # 1-100, smaller is better
+results: dict[str, float] = {
+    "opportunity_districts": od,
+    "proportional_opportunities": pod,
+    "coalition_districts": cd,
+    "proportional_coalitions": pcd
 }
 ```
