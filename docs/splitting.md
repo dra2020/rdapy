@@ -1,6 +1,6 @@
 # Splitting
 
-There are two sets of splitting metrics: county-district splitting and community of interest (COI) splitting.
+You can calculate county-district splitting metrics, as well as community of interest (COI) splitting metrics.
 
 ## County & District Splitting
 
@@ -13,6 +13,8 @@ def calc_county_district_splitting(CxD: list[list[float]]) -> dict:
 where "CxD" is are county totals (columns) by district (rows), i.e.,
 each row represents a district, and each value in the row represents 
 the number of people in that county in that district.
+
+Examples can be found in the "counties" section of the profiles in the testdata/CD116 directory.
 
 This returns a simple dictionary of results:
 

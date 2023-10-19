@@ -11,6 +11,10 @@ To calculate all partisan analytics for a statewide two-party vote share and two
 def calc_partisan_metrics(Vf: float, Vf_array: list[float]) -> dict:
 ```
 
+where "Vf" is the statewide two-party vote share, and "Vf_array" is a list of two-party vote shares by district.
+
+Examples can be found in the "partisanship" section of the profiles in the testdata/CD116 directory.
+
 This returns a dictionary of results:
 
 ```python

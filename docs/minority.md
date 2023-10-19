@@ -1,21 +1,17 @@
 # Minority
 
-You can calculate compactness for a set of districts (shapes), as well as various measures of
-compactness for a single district (shape) including "know it when you see it" (KIWYSI) compactness.
-
-## Compactness for a Set of Districts
-
-To compute average Reock, Polsby-Popper, and KIWYSI compactness for a set of districts (shapes) and by district:
+You can estimate the opportunity for minority representation.
 
 ```python
-def calc_compactness(shapes: list[Polygon | MultiPolygon]) -> dict:
+def calc_minority_opportunity(
+    statewide_demos: dict[str, float], demos_by_district: list[dict[str, float]]
+) -> dict[str, float]:
 ```
 
-"shapes" are shapely Polygons or MultiPolygons:
+where "statewide_demos" is a dictionary of statewide demographic totals, and
+"demos_by_district" is a list of dictionaries of demographic totals by district.
 
-```python
-from shapely.geometry import Polygon, MultiPolygon
-```
+Examples can be found in the "demographics" section of the profiles in the testdata/CD116 directory.
 
 This returns a dictionary of results:
 
