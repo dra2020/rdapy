@@ -60,7 +60,11 @@ from .rate import (
     rate_proportionality,
     rate_competitiveness,
     rate_minority_opportunity,
+    rate_reock,
+    rate_polsby,
     rate_compactness,
+    rate_county_splitting,
+    rate_district_splitting,
     rate_splitting,
 )
 
