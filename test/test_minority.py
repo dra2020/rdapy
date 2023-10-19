@@ -54,7 +54,7 @@ class TestMinority:
         # 90%
         assert approx_equal(est_minority_opportunity(0.9000), 1.0)
 
-    def test_make_minority_scorecard(self) -> None:
+    def test_calc_minority_opportunity(self) -> None:
         """Evaluate TX minority opportunity"""
 
         p: dict = read_json("testdata/CD116/profile-TX-CD116.json")
@@ -73,7 +73,7 @@ class TestMinority:
 
         # Estimate opportunity & coalition districts', () =>
         demos_by_district: list[dict[str, float]] = p["demographics"]["byDistrict"]
-        ms: dict = make_minority_scorecard(statewide_demos, demos_by_district)
+        ms: dict = calc_minority_opportunity(statewide_demos, demos_by_district)
         assert approx_equal(ms["opportunity_districts"], 12.56, 2)
         assert approx_equal(ms["proportional_opportunities"], 18)
         assert approx_equal(ms["coalition_districts"], 22.92, 2)

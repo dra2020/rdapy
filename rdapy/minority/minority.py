@@ -57,7 +57,7 @@ def est_minority_opportunity(mf: float, demo: Optional[str] = None) -> float:
     return oppty
 
 
-def make_minority_scorecard(
+def calc_minority_opportunity(
     statewide_demos: dict[str, float], demos_by_district: list[dict[str, float]]
 ) -> dict[str, float]:
     """Make minority opportunity scorecard (except the table which is used in DRA)."""

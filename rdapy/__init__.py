@@ -17,7 +17,7 @@ from .graph import is_connected, is_embedded, OUT_OF_STATE
 from .minority import (
     calc_proportional_districts,
     est_minority_opportunity,
-    make_minority_scorecard,
+    calc_minority_opportunity,
     DEMOGRAPHICS,
 )
 from .splitting import (

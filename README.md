@@ -15,6 +15,7 @@ The analytics are organized by area:
 - [Compactness](./docs/compactness.md): Various measures of compactness
 - [Equal](./docs/equal.md): Population deviation
 - [Graph](./docs/graph.md): Checks for contiguity & embeddedness
+- [Minority](./docs/minority.md): Minority opportunity metrics
 - [Partisan](./docs/partisan.md): Various measures of partisan bias & responsiveness, as well as support for rank-vote graphs and seats-votes curves
 - [Splitting](./docs/splitting.md): County- & district-splitting and COI splitting
 
