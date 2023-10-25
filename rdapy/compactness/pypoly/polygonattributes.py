@@ -28,9 +28,12 @@ def get_polygon_attributes(shp, geodesic=True):
 
 
 def _get_projected_attributes(shp):
-    """
-    Units are whatever the units of the project are!
-    """
+    """Units are whatever the units of the project are!"""
+
+    # 10/25/23 - Added this guard
+    if shp.geom_type not in ["Polygon", "MultiPolygon"]:
+        return 0, 0, 0
+
     area = shp.area
     perimeter = shp.length
 
@@ -59,6 +62,10 @@ def _get_geodesic_attributes_poly(shp):
     If a Polygon has no interiors (holes), just compute the area of it.
     If it has interiors though, subtract the area of each hole.
     """
+
+    # 10/25/23 - Added this guard
+    if shp.geom_type not in ["Polygon", "MultiPolygon"]:
+        return 0, 0, 0
 
     # NOTE - Shapely points are in (lon, lat) order ...
     list_pts = get_polygon_coordinates(shp)
