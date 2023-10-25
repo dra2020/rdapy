@@ -38,6 +38,9 @@ def _get_projected_attributes(shp):
     perimeter = shp.length
 
     ch = shp.convex_hull
+    # 10/25/23 - Added this guard
+    if ch.geom_type not in ["Polygon", "MultiPolygon"]:
+        return 0, 0, 0
     pts = ch.exterior.coords
     _, _, r = make_circle(pts)
     diameter = 2 * r
@@ -90,6 +93,9 @@ def _get_geodesic_attributes_poly(shp):
 
     # Calculate the geodesic diameter
     ch = shp.convex_hull
+    # 10/25/23 - Added this guard
+    if ch.geom_type not in ["Polygon", "MultiPolygon"]:
+        return 0, 0, 0
     pts = ch.exterior.coords
     lon, lat, r = make_circle(pts)
 
