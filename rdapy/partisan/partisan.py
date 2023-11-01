@@ -37,7 +37,7 @@ def calc_partisan_metrics(Vf: float, Vf_array: list[float]) -> dict:
     Bv50f: float = est_votes_bias(dSVpoints, N)
     rvPoints: dict[str, float] = key_RV_points(Vf_array)
     decl: Optional[float] = calc_declination(Vf_array)
-    gSym: Optional[float] = calc_global_symmetry(dSVpoints, rSVpoints, Bs50f)
+    gSym: Optional[float] = calc_global_symmetry(dSVpoints, rSVpoints, Bs50f, N)
 
     EG: float = calc_efficiency_gap(Vf, estSf)
     BsGf: float = (

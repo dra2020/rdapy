@@ -7,6 +7,7 @@ TEST PARTISAN METHOD
 
 from rdapy.partisan.method import *
 from rdapy.partisan.constants import *
+from rdapy.partisan.partisan import calc_partisan_metrics
 from testutils import *
 
 
@@ -1019,6 +1020,31 @@ class TestPartisanMethod:
         assert approx_equal(actual_sv_points[0][s] / N, expected_sv_points[0][s])
         assert approx_equal(actual_sv_points[50][s] / N, expected_sv_points[50][s])
         assert approx_equal(actual_sv_points[100][s] / N, expected_sv_points[100][s])
+
+    def test_gsym_and_decl(self) -> None:
+        states: list[str] = ["NC", "NJ"]
+
+        for xx in states:
+            profile_path: str = f"testdata/partisan/other/{xx}-root-profile.json"
+            profile: dict = read_json(profile_path)
+
+            # Exported from DRA
+            scorecard_path: str = f"testdata/partisan/other/{xx}-root-analytics.json"
+            expected: dict = read_json(scorecard_path)
+
+            #
+
+            Vf: float = profile["partisanship"]["statewide"]
+            Vf_array: list[float] = profile["partisanship"]["byDistrict"]
+
+            actual: dict = calc_partisan_metrics(Vf, Vf_array)
+
+            assert approx_equal(
+                actual["bias"]["gSym"], expected["bias"]["gSym"], places=4
+            )
+            assert approx_equal(
+                actual["bias"]["decl"], expected["bias"]["decl"], places=4
+            )
 
 
 ### END ###

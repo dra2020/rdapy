@@ -156,6 +156,7 @@ def calc_global_symmetry(
     d_sv_pts: list[tuple[float, float]],
     r_sv_pts: list[tuple[float, float]],
     S50V: float,
+    N: int,
 ) -> float:
     """GS - Global symmetry
 
@@ -168,7 +169,11 @@ def calc_global_symmetry(
     g_Sym: float = 0.0
 
     for i in range(len(d_sv_pts)):
-        g_Sym += abs(d_sv_pts[i][0] - r_sv_pts[i][0]) / 2
+        # 11/01/23 - Convert fractional seats to seat shares
+        d_sf: float = d_sv_pts[i][1] / N
+        r_sf: float = r_sv_pts[i][1] / N
+        g_Sym += abs(d_sf - r_sf) / 2
+        # g_Sym += abs(d_sv_pts[i][0] - r_sv_pts[i][0]) / 2
 
     sign: int = -1 if S50V < 0 else 1
     g_Sym *= sign
