@@ -1,0 +1,219 @@
+{
+  "bias": {
+    "bestS": 7,
+    "bestSf": 0.5,
+    "estS": 6.3776,
+    "estSf": 0.4555,
+    "deviation": 0.0445,
+    "tOf": 0,
+    "fptpS": 7,
+    "bS50": 0.0188,
+    "bV50": 0.0041,
+    "decl": 2.3457,
+    "gSym": 0.0054,
+    "gamma": 0.0191,
+    "eG": 0.0331,
+    "bSV": 0.0185,
+    "prop": 0.0388,
+    "mMs": -0.007,
+    "mMd": -0.007,
+    "lO": -0.0003,
+    "score": 81
+  },
+  "responsiveness": {
+    "cSimple": 6,
+    "cD": 5.8562,
+    "cDf": 0.4183,
+    "bigR": 7.8451,
+    "littleR": 4.4698,
+    "mIR": 0.1237,
+    "rD": 5.8562,
+    "rDf": 0.4183,
+    "score": 56
+  },
+  "minority": {
+    "pivotByDemographic": {
+      "minority": {
+        "pct35_40": 3,
+        "pct40_45": 2,
+        "pct45_50": 3,
+        "pct50_55": 1,
+        "pct55_60": 0,
+        "pct60Plus": 0,
+        "vapPct": 0.363633,
+        "propSeats": 5
+      },
+      "black": {
+        "pct35_40": 0,
+        "pct40_45": 0,
+        "pct45_50": 0,
+        "pct50_55": 0,
+        "pct55_60": 0,
+        "pct60Plus": 0,
+        "vapPct": 0.213738,
+        "propSeats": 3
+      },
+      "hispanic": {
+        "pct35_40": 0,
+        "pct40_45": 0,
+        "pct45_50": 0,
+        "pct50_55": 0,
+        "pct55_60": 0,
+        "pct60Plus": 0,
+        "vapPct": 0.088817,
+        "propSeats": 1
+      },
+      "pacific": {
+        "pct35_40": 0,
+        "pct40_45": 0,
+        "pct45_50": 0,
+        "pct50_55": 0,
+        "pct55_60": 0,
+        "pct60Plus": 0,
+        "vapPct": 0.001718,
+        "propSeats": 0
+      },
+      "asian": {
+        "pct35_40": 0,
+        "pct40_45": 0,
+        "pct45_50": 0,
+        "pct50_55": 0,
+        "pct55_60": 0,
+        "pct60Plus": 0,
+        "vapPct": 0.037082,
+        "propSeats": 1
+      },
+      "native": {
+        "pct35_40": 0,
+        "pct40_45": 0,
+        "pct45_50": 0,
+        "pct50_55": 0,
+        "pct55_60": 0,
+        "pct60Plus": 0,
+        "vapPct": 0.02837,
+        "propSeats": 0
+      }
+    },
+    "opportunityDistricts": 0,
+    "proportionalOpportunities": 5,
+    "coalitionDistricts": 7.3259,
+    "proportionalCoalitions": 5,
+    "score": 50
+  },
+  "compactness": {
+    "score": 79,
+    "reock": {
+      "raw": 0.4948,
+      "normalized": 98
+    },
+    "polsby": {
+      "raw": 0.3343,
+      "normalized": 59
+    }
+  },
+  "splitting": {
+    "score": 14,
+    "county": {
+      "raw": 1.2739,
+      "normalized": 27
+    },
+    "district": {
+      "raw": 2.07,
+      "normalized": 0
+    },
+    "details": {
+      "unexpectedAffected": 0.5574,
+      "nSplits": 49,
+      "countiesSplitUnexpectedly": [
+        "Alleghany",
+        "Anson",
+        "Bladen",
+        "Cabarrus",
+        "Catawba",
+        "Chatham",
+        "Cleveland",
+        "Columbus",
+        "Cumberland",
+        "Davidson",
+        "Duplin",
+        "Durham",
+        "Edgecombe",
+        "Franklin",
+        "Gaston",
+        "Greene",
+        "Guilford",
+        "Halifax",
+        "Harnett",
+        "Iredell",
+        "Johnston",
+        "Jones",
+        "Lee",
+        "Lenoir",
+        "Lincoln",
+        "McDowell",
+        "Montgomery",
+        "Moore",
+        "Northampton",
+        "Onslow",
+        "Randolph",
+        "Rockingham",
+        "Rowan",
+        "Rutherford",
+        "Sampson",
+        "Stanly",
+        "Vance",
+        "Wilkes"
+      ],
+      "nTooBigCounties": 2,
+      "tooBigName": [
+        "Mecklenburg",
+        "Wake"
+      ],
+      "nCountiesSplit": 40,
+      "nSingleCountyDistricts": 0,
+      "singleCountyDistrictMax": 2,
+      "countiesWithSplits": [
+        "Alleghany (1)",
+        "Anson (1)",
+        "Bladen (1)",
+        "Cabarrus (1)",
+        "Catawba (1)",
+        "Chatham (1)",
+        "Cleveland (1)",
+        "Columbus (1)",
+        "Cumberland (1)",
+        "Davidson (1)",
+        "Duplin (1)",
+        "Durham (1)",
+        "Edgecombe (1)",
+        "Franklin (1)",
+        "Gaston (1)",
+        "Greene (1)",
+        "Guilford (1)",
+        "Halifax (1)",
+        "Harnett (1)",
+        "Iredell (2)",
+        "Johnston (1)",
+        "Jones (1)",
+        "Lee (2)",
+        "Lenoir (2)",
+        "Lincoln (2)",
+        "McDowell (1)",
+        "Mecklenburg (2)",
+        "Montgomery (2)",
+        "Moore (1)",
+        "Northampton (1)",
+        "Onslow (1)",
+        "Randolph (1)",
+        "Rockingham (1)",
+        "Rowan (1)",
+        "Rutherford (1)",
+        "Sampson (3)",
+        "Stanly (1)",
+        "Vance (1)",
+        "Wake (2)",
+        "Wilkes (1)"
+      ]
+    }
+  }
+}
