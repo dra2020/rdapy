@@ -38,8 +38,8 @@ def time_function(func) -> Callable[..., Any]:
 
 
 @time_function
-def timed_compactness(shapes: list) -> dict:
-    return calc_compactness(shapes)
+def timed_compactness(shapes: list, kiwysi: bool = True) -> dict:
+    return calc_compactness(shapes, kiwysi)
 
 
 @time_function
@@ -99,25 +99,30 @@ shapes = [item[1] for item in shapes]  # discard the id
 
 # Overall compactness time
 
-timed_compactness(shapes)
+results: dict = timed_compactness(shapes, kiwysi=False)
+# timed_compactness(shapes)
 
-# Compactness by district time & function time
-for i, shp in enumerate(shapes):
-    print(f"District {i+1}:")
+# # Compactness by district time & function time
+# for i, shp in enumerate(shapes):
+#     print(f"District {i+1}:")
 
-    features: list[float] = time_featureize_shape(shp)
-    # time_calc_sym_x(shp)
-    # time_calc_sym_y(shp)
-    # time_calc_reock(shp)
-    # time_calc_bbox(shp)
-    # time_calc_polsby(shp)
-    # time_calc_hull(shp)
-    # time_calc_schwartzberg(shp)
+#     features: list[float] = time_featureize_shape(shp)
+#     # time_calc_sym_x(shp)
+#     # time_calc_sym_y(shp)
+#     # time_calc_reock(shp)
+#     # time_calc_bbox(shp)
+#     # time_calc_polsby(shp)
+#     # time_calc_hull(shp)
+#     # time_calc_schwartzberg(shp)
 
-    # reock_flat: float = time_calc_reock(shp, geodesic=False)
-    # polsby_flat: float = time_calc_polsby(shp, geodesic=False)
+#     # reock_flat: float = time_calc_reock(shp, geodesic=False)
+#     # polsby_flat: float = time_calc_polsby(shp, geodesic=False)
 
-    # kiwysi_rank: float = trim_kiwysi_rank(time_score_features(features))
+#     # kiwysi_rank: float = trim_kiwysi_rank(time_score_features(features))
 
+# Print the results
+
+print(f"Partisan compactness analytics:")
+print(results)
 
 ### END ###
