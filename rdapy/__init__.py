@@ -9,6 +9,8 @@ from .compactness import (
     calc_polsby,
     calc_hull,
     calc_schwartzberg,
+    featureize_shape,
+    score_features,
     kiwysi_rank_shape,
     trim_kiwysi_rank,
 )
