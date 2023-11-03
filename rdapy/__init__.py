@@ -13,6 +13,9 @@ from .compactness import (
     score_features,
     kiwysi_rank_shape,
     trim_kiwysi_rank,
+    make_circle,
+    reock_formula,
+    polsby_formula,
 )
 from .equal import calc_population_deviation
 from .graph import is_connected, is_embedded, OUT_OF_STATE

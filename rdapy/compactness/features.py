@@ -124,6 +124,10 @@ def _mean_centroid(shp: Polygon | MultiPolygon) -> tuple[float, float]:
     return (x_tot / n, y_tot / n)
 
 
+def reock_formula(area: float, radius: float) -> float:
+    return area / (math.pi * (radius**2))
+
+
 def calc_reock(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
     """FEATURE 3: REOCK
 
@@ -149,7 +153,8 @@ def calc_reock(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
     area, _, diameter = get_polygon_attributes(shp, geodesic)
     radius = diameter / 2
 
-    return area / (math.pi * (radius**2))
+    return reock_formula(area, radius)
+    # return area / (math.pi * (radius**2))
 
 
 def calc_bbox(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
@@ -178,6 +183,10 @@ def calc_bbox(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
     return district_area / bbox_area
 
 
+def polsby_formula(area: float, perimeter: float) -> float:
+    return (4 * math.pi) * (area / perimeter**2)
+
+
 def calc_polsby(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
     """FEATURE 5: POLSBYPOPPER
 
@@ -204,7 +213,8 @@ def calc_polsby(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
 
     area, perimeter, _ = get_polygon_attributes(shp, geodesic)
 
-    return (4 * math.pi) * (area / perimeter**2)
+    return polsby_formula(area, perimeter)
+    # return (4 * math.pi) * (area / perimeter**2)
 
 
 def calc_hull(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
