@@ -23,7 +23,7 @@ $ python3 -m twine upload --repository pypi dist/*
 
 setup(
     name="rdapy",
-    version="1.0.4",
+    version="1.4.0",
     description="Redistricting analytics in Python",
     url="https://github.com/dra2020/rdapy",
     author="alecramsay",
