@@ -19,7 +19,7 @@ results: dict = calc_compactness(shapes)
 
 # Print the results
 
-print(f"Partisan compactness analytics:")
+print(f"Compactness analytics:")
 print(results)
 
 ### END ###
