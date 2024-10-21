@@ -34,4 +34,12 @@ pip install rdapy
 import rdapy
 ```
 
+# Automated Tests
+
+```bash
+python -m pytest
+```
+
+# Questions
+
 Email questions to [feedback](mailto:feedback@davesredistricting.org?subject=Python-analytics).
