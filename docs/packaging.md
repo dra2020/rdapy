@@ -16,4 +16,6 @@ For a specific version, w/o deleting the others locally:
 
 $ python3 -m twine upload --repository pypi dist/rdapy-x.y.z*.*
 
-where x.y.z is the version number.
+where x.y.z is the version number. For example:
+
+$ python3 -m twine upload --repository pypi dist/rdascore-1.5.0*.*
