@@ -95,9 +95,18 @@ class Graph:
                     meta = source.meta
                     for item in source:
                         obj_id: str = item["properties"][id]
-                        shp: Point | MultiPoint | LineString | MultiLineString | Polygon | MultiPolygon | LinearRing | GeometryCollection = shape(
+                        shp: (
+                            Point
+                            | MultiPoint
+                            | LineString
+                            | MultiLineString
+                            | Polygon
+                            | MultiPolygon
+                            | LinearRing
+                            | GeometryCollection
+                        ) = shape(
                             item["geometry"]
-                        )
+                        )  # type: ignore
 
                         shapes_by_id[obj_id] = shp
 

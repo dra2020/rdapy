@@ -4,10 +4,11 @@
 TEST PARTISAN METHOD
 """
 
+from rdapy.partisan import *
 
-from rdapy.partisan.method import *
-from rdapy.partisan.constants import *
-from rdapy.partisan.partisan import calc_partisan_metrics
+# from rdapy.partisan.method import *
+# from rdapy.partisan.constants import *
+# from rdapy.partisan.partisan import calc_partisan_metrics
 from testutils import *
 
 

@@ -20,7 +20,8 @@ from shapely.ops import transform
 from shapely.ops import unary_union  # Supersedes cascaded_union
 
 from typing import Any, Callable
-from nptyping import NDArray
+
+# from nptyping import NDArray
 
 from .pypoly import *
 
@@ -38,7 +39,7 @@ def calc_sym_x(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
     cx, _ = _mean_centroid(shp)
     reflected_x_shp: Polygon | MultiPolygon = transform(_reflect_x(cx), shp)
 
-    comp_x_shp: Polygon | MultiPolygon = shp.union(reflected_x_shp)
+    comp_x_shp: Polygon | MultiPolygon = shp.union(reflected_x_shp)  # type: ignore
 
     shp_area: float
     comp_area: float
@@ -68,7 +69,7 @@ def calc_sym_y(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
     _, cy = _mean_centroid(shp)
     reflected_y_shp: Polygon | MultiPolygon = transform(_reflect_y(cy), shp)
 
-    comp_y_shp: Polygon | MultiPolygon = shp.union(reflected_y_shp)
+    comp_y_shp: Polygon | MultiPolygon = shp.union(reflected_y_shp)  # type: ignore
 
     shp_area: float
     comp_area: float
@@ -230,7 +231,7 @@ def calc_hull(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
     basically the shortest unstretched rubber band that fits around the shape.
     """
 
-    ch_shp: Polygon | MultiPolygon = shp.convex_hull
+    ch_shp: Polygon | MultiPolygon = shp.convex_hull  # type: ignore
 
     _: Any
     shp_area: float

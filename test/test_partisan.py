@@ -5,7 +5,7 @@ TEST PARTISAN METRICS
 """
 
 
-from rdapy.partisan.partisan import *
+from rdapy.partisan import *
 from testutils import *
 
 

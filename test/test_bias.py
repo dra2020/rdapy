@@ -5,7 +5,7 @@ TEST BIAS METRICS
 """
 
 
-from rdapy.partisan.bias import *
+from rdapy.partisan import *
 from testutils import *
 
 
