@@ -37,7 +37,7 @@ import rdapy
 # Automated Tests
 
 ```bash
-python -m pytest
+pytest
 ```
 
 # Questions
