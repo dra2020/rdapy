@@ -23,7 +23,7 @@ $ python3 -m twine upload --repository pypi dist/*
 
 setup(
     name="rdapy",
-    version="1.5.0",
+    version="1.5.1",
     description="Redistricting analytics in Python",
     url="https://github.com/dra2020/rdapy",
     author="alecramsay",
@@ -32,6 +32,7 @@ setup(
     packages=[
         "rdapy",
         "rdapy.compactness",
+        "rdapy.compactness.pypoly",
         "rdapy.equal",
         "rdapy.graph",
         "rdapy.minority",

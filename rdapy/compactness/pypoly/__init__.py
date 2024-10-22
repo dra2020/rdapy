@@ -1,4 +1,4 @@
-# rdapy/kiwysi/pypoly/__init__.py
+# rdapy/compactness/pypoly/__init__.py
 
 from .miniumareaboundingrectangle import minimum_bounding_rectangle
 from .polygonattributes import get_polygon_attributes
