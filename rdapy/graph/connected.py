@@ -10,7 +10,7 @@ from .constants import *
 
 
 def is_connected(ids: list[Any], graph: dict[str, list[str]]) -> bool:
-    """Is a graph is fully connected?
+    """Is a district fully connected?
     i.e., w/o regard to the virtual state boundary "shapes".
 
     Kenshi's iterative implementation of the recursive algorithm
