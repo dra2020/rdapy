@@ -1,18 +1,20 @@
 # rdapy/score/__init__.py
 
+# TODO - Clean up imports
 from .constants import (
-    STATES,
-    STATE_NAMES,
-    STATE_FIPS,
+    # STATES,
+    # STATE_NAMES,
+    # STATE_FIPS,
     DISTRICTS_BY_STATE,
     COUNTIES_BY_STATE,
     OUT_OF_STATE,
-    OTHER_POTENTIAL_BORDERS,
+    # OTHER_POTENTIAL_BORDERS,
     is_water_only,
     EPSILON,
-    STUDY_STATES,
-    ENSEMBLE_STATES,
+    # STUDY_STATES,
+    # ENSEMBLE_STATES,
 )
+
 from .readwrite import (
     file_name,
     path_to_file,
@@ -24,6 +26,7 @@ from .readwrite import (
     read_shapes,
     read_scores,
 )
+
 from .types import (
     Precinct,
     District,

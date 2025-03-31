@@ -4,7 +4,8 @@ INPUT DATA
 
 from typing import Any, Dict, Generator, List, Tuple, TextIO, Set
 
-from .base import ParseGeoID, COUNTIES_BY_STATE, DISTRICTS_BY_STATE, OUT_OF_STATE
+from .constants import COUNTIES_BY_STATE, DISTRICTS_BY_STATE, OUT_OF_STATE
+from .types import ParseGeoID
 from .ensemble_io import smart_read, read_record
 
 
