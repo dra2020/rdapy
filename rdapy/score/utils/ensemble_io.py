@@ -7,7 +7,7 @@ from typing import Any, Optional, List, Dict, Tuple, Generator, TextIO, TypedDic
 import os, sys, contextlib, json, warnings
 from datetime import datetime
 
-from rdatools.base.types import Precinct, District
+from .types import Precinct, District
 
 
 class PlanRecord(TypedDict):

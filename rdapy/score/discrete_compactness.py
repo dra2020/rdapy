@@ -9,10 +9,9 @@ import numpy as np
 from scipy.linalg import det
 from collections import defaultdict
 
-from .base import (
+from .utils import (
     OUT_OF_STATE,
     is_water_only,
-    # OTHER_POTENTIAL_BORDERS,
     Precinct,
     District,
     Graph,
