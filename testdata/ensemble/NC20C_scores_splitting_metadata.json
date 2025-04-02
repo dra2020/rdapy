@@ -1,0 +1,100 @@
+{
+    "accept": "<function always_accept at 0x1341cd3f0>",
+    "allow_pair_reselection": true,
+    "countyweight": 0.75,
+    "cycle": "2020",
+    "data": "../vtd_data/2020_VTD/NC/NC_2020_data.csv",
+    "date_created": "11/03/24",
+    "debug": false,
+    "default_sampling": true,
+    "elasticity": 2.0,
+    "graph": "../vtd_data/2020_VTD/NC/NC_2020_graph.json",
+    "keep": 100,
+    "log": "testdata/NC20C_log_SAMPLE_100.txt",
+    "max_attempts": 100,
+    "method": "ReCom",
+    "ndistricts": 14,
+    "node_repeats": 1,
+    "official": "../vtd_data/2020_VTD/NC/NC_2022_Congress_Official_Proxy.csv",
+    "offset": 0,
+    "plan_type": "Congress",
+    "plans": null,
+    "plantype": "congress",
+    "random_start": false,
+    "repository": "rdatools/rdaensemble",
+    "roughly_equal": 0.01,
+    "seed": 518,
+    "size": 100,
+    "start": "random_maps/NC20C_random_plan.csv",
+    "state": "NC",
+    "time_created": "04:59:43",
+    "units": "VTD",
+    "username": "alecramsay",
+    "verbose": false,
+    "version": 3,
+    "source": "../../local/geojson_data/",
+    "path": "_NC_2020_VD_tabblock.vtd.datasets.geojson",
+    "geoid": "id",
+    "census": {
+        "fields": {
+            "total_pop": "Tot"
+        },
+        "datasets": [
+            "D20F"
+        ]
+    },
+    "vap": {
+        "fields": {
+            "total_vap": "Tot",
+            "white_vap": "Wh",
+            "hispanic_vap": "His",
+            "black_vap": "BlC",
+            "native_vap": "NatC",
+            "asian_vap": "AsnC",
+            "pacific_vap": "PacC",
+            "minority_vap": "Min_derived"
+        },
+        "datasets": [
+            "D20T"
+        ]
+    },
+    "cvap": {
+        "fields": {
+            "total_cvap": "Tot",
+            "white_cvap": "Wh",
+            "hispanic_cvap": "His",
+            "black_cvap": "BlC",
+            "native_cvap": "NatC",
+            "asian_cvap": "AsnC",
+            "pacific_cvap": "PacC",
+            "minority_cvap": "Min_derived"
+        },
+        "datasets": [
+            "D20TACS"
+        ]
+    },
+    "election": {
+        "fields": {
+            "tot_votes": "Tot",
+            "dem_votes": "D",
+            "rep_votes": "R"
+        },
+        "datasets": [
+            "C16GCO",
+            "E20GPR",
+            "E20GGO",
+            "E20GSE",
+            "E16GPR",
+            "E20GAG",
+            "E16GSE"
+        ]
+    },
+    "shapes": {
+        "fields": {
+            "geometry": "geometry"
+        },
+        "datasets": [
+            "DRA_simplified_shapes"
+        ]
+    }
+}
