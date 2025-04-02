@@ -7,7 +7,9 @@ from typing import Any, List, Dict, Tuple, OrderedDict, TextIO
 import time, warnings
 from collections import OrderedDict
 
-from rdatools import ensemble_plans, analyze_plan, Aggregates
+from .utils import ensemble_plans
+from .aggregate import Aggregates
+from .analyze import analyze_plan
 
 
 def score_ensemble(

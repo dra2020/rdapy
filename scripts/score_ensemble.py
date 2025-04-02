@@ -5,8 +5,6 @@ SCORE AN ENSEMBLE OF MAPS
 
 For example:
 
-v3 data:
-
 $ scripts/score_ensemble.py \
 --state NC \
 --plan-type congress \
@@ -14,33 +12,7 @@ $ scripts/score_ensemble.py \
 --data ../vtd_data/2020_VTD/NC/NC_input_data.v3.jsonl \
 --scores temp/TEST_scores.csv \
 --by-district temp/TEST_by-district.jsonl \
---log temp/TEST_scores_log.txt \
---no-debug
-
-v2 data:
-
-$ scripts/score_ensemble.py \
---state NC \
---plan-type congress \
---plans testdata/ensemble/NC20C_plans_SAMPLE_100.jsonl \
---data ../vtd_data/2020_VTD/NC/NC_input_data.v2.jsonl \
---scores temp/NC20C_scores_all.csv \
---by-district temp/NC20C_by-district_all.jsonl \
---log temp/NC20C_scores_all_log.txt \
---no-debug
-
-v1 data:
-
-$ scripts/score_ensemble.py \
---state NC \
---plan-type congress \
---plans testdata/ensemble/NC20C_plans_SAMPLE_100.jsonl \
---data ../vtd_data/2020_VTD/NC/NC_input_data.v1.jsonl \
---scores temp/NC20C_scores_all.csv \
---by-district temp/NC20C_by-district_all.jsonl \
---log temp/NC20C_scores_all_log.txt \
---no-debug
-
+--log temp/TEST_scores_log.txt 
 
 For documentation, type:
 
