@@ -1,5 +1,7 @@
 """
 TEST DISCRETE COMPACTNESS
+
+NOTE - Despite PyLance warnings, this code is valid and works with pytest.
 """
 
 from typing import Dict
