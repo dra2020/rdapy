@@ -15,7 +15,7 @@ from typing import Any, List, Dict, Tuple, Optional
 
 import rdapy as rda
 
-from .base import Precinct, District
+from .utils import Precinct, District
 from .aggregate import (
     get_dataset,
     get_fields,
@@ -24,7 +24,7 @@ from .aggregate import (
     Aggregates,
     NamedAggregates,
 )
-from .minority.mmd import calculate_mmd_simple
+from .majority_minority import calculate_mmd_simple
 from .discrete_compactness import (
     calc_cut_score,
     calc_spanning_tree_score,

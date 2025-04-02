@@ -4,7 +4,7 @@ AGGREGATE DATA BY DISTRICT
 
 from typing import Any, List, Dict, TypeAlias, Literal
 
-from .base import (
+from .utils import (
     District,
     GeoIDIndex,
     ParseGeoID,
@@ -12,7 +12,6 @@ from .base import (
     Graph,
     OUT_OF_STATE,
     is_water_only,
-    # OTHER_POTENTIAL_BORDERS,
     approx_equal,
 )
 from .smallestenclosingcircle import wl_make_circle

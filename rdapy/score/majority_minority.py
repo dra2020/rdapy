@@ -6,8 +6,7 @@ from typing import List, Dict, Optional
 
 from collections import defaultdict
 
-# TODO - Resolve import
-from ..aggregate import NamedAggregates
+from .aggregate import NamedAggregates
 
 
 def calculate_mmd_with_comparisons(
