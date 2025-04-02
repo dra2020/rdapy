@@ -6,7 +6,7 @@ from typing import List
 
 from rdapy.score.utils import approx_equal
 from rdapy.score.majority_minority import is_single_demo_mmd, is_coalition_mmd
-from rdapy.score.analyze import calc_efficiency_gap_wasted_votes
+from rdapy.score.partisan import calc_efficiency_gap_wasted_votes
 
 
 class TestMoreScores:
