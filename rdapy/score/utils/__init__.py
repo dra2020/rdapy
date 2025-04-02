@@ -1,19 +1,11 @@
 # rdapy/score/utils/__init__.py
 
-# TODO - Clean up imports
-
 from .constants import (
-    # STATES,
-    # STATE_NAMES,
-    # STATE_FIPS,
     DISTRICTS_BY_STATE,
     COUNTIES_BY_STATE,
     OUT_OF_STATE,
-    # OTHER_POTENTIAL_BORDERS,
     is_water_only,
     EPSILON,
-    # STUDY_STATES,
-    # ENSEMBLE_STATES,
 )
 
 from .types import (

@@ -89,7 +89,7 @@ def calc_minority_opportunity(
 
     # The # of proportional districts for each separate demographic and all minorities
     pod: float = total_proportional
-    pcd: float = districts_by_demo["minority"]  # TODO - Fix this. Fix what?
+    pcd: float = districts_by_demo["minority"]
 
     results: dict[str, float] = {
         # "pivot_by_demographic": table, # For this, use dra-analytics instead
