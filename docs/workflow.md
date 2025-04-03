@@ -19,7 +19,7 @@
 
 ## Scripts
 
-* extract_graph.py
+* extract_graph.py -- These were already extracted and came from DRA.
 * extract_data.py
 * aggregate.jl -- reads metadata & plans from STDIN; writes metadata & district aggregates to STDOUT
 * score.jl -- reads metadata & district aggregates from STDIN; writes metadata, scores, & by-district measures to STDOUT

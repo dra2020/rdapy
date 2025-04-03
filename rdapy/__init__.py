@@ -99,6 +99,9 @@ from .rate import (
 from .score import (
     # aggregate_plans,
     aggregate_districts,
+    load_data_map,
+    load_data,
+    load_graph,
     unpack_input_data,
     geoids_from_precinct_data,
     collect_metadata,

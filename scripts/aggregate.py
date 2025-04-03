@@ -40,7 +40,14 @@ import argparse
 import json
 import sys
 
-from rdapy import collect_metadata, aggregate_districts
+from rdapy import (
+    load_data_map,
+    load_data,
+    load_graph,
+    collect_metadata,
+    geoids_from_precinct_data,
+    aggregate_districts,
+)
 
 
 def main():
@@ -48,17 +55,12 @@ def main():
 
     args = parse_arguments()
 
-    with open(args.data_map, "r") as f:
-        data_map: Dict[str, Any] = json.load(f)
-    with open(args.data, "r") as f:
-        data: List[Dict[str, Any]] = [
-            json.loads(line) for line in open(args.data, "r", encoding="utf-8")
-        ]
-    with open(args.graph, "r") as f:
-        graph: Dict[str, List[str]] = json.load(f)
+    data_map = load_data_map(args.data_map)
+    input_data = load_data(args.data)
+    adjacency_graph = load_graph(args.graph)
 
-    geoids = [precinct["geoid"] for precinct in data]
-    metadata = collect_metadata(args.state, args.plan_type, geoids)
+    geoids: List[str] = geoids_from_precinct_data(input_data)
+    metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
 
     # Process each line from stdin
     j: int = 0
@@ -85,8 +87,8 @@ def main():
                 assignments = {str(k): int(v) for k, v in parsed_line.items()}
                 plan_with_aggs = aggregate_districts(
                     assignments,
-                    data,
-                    graph,
+                    input_data,
+                    adjacency_graph,
                     metadata,
                     which=args.mode,
                     data_metadata=data_map,
@@ -100,8 +102,8 @@ def main():
                 assignments = {str(k): int(v) for k, v in parsed_line["plan"].items()}
                 plan_with_aggs = aggregate_districts(
                     assignments,
-                    data,
-                    graph,
+                    input_data,
+                    adjacency_graph,
                     metadata,
                     which=args.mode,
                     data_metadata=data_map,
