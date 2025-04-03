@@ -55,8 +55,9 @@ def main():
 
     args = parse_arguments()
 
-    data_map = load_data_map(args.data_map)
-    input_data = load_data(args.data)
+    data_map: Dict[str, Any]
+    input_data: List[Dict[str, Any]]
+    data_map, input_data = load_data(args.data)
     adjacency_graph = load_graph(args.graph)
 
     geoids: List[str] = geoids_from_precinct_data(input_data)
@@ -66,16 +67,6 @@ def main():
     j: int = 0
     for i, line in enumerate(sys.stdin):
         try:
-            # # Parse the input line as JSON
-            # record = json.loads(line)
-
-            # # Simply print the record to stdout
-            # # This is the basic functionality you requested
-            # print(json.dumps(record))
-
-            # # For more advanced processing, you could modify the record here
-            # # using the auxiliary data and arguments before printing
-
             # Parse the JSON string into a dictionary
             parsed_line = json.loads(line)
 
@@ -170,13 +161,13 @@ def parse_arguments():
         default="testdata/NC/extracted/NC_input_data.jsonl",
         help="Path to input data file",
     )
-    parser.add_argument(
-        "--data-map",
-        type=str,
-        dest="data_map",
-        default="testdata/NC/data/NC_data_map.json",
-        help="Path to data mapping file",
-    )
+    # parser.add_argument(
+    #     "--data-map",
+    #     type=str,
+    #     dest="data_map",
+    #     default="testdata/NC/data/NC_data_map.json",
+    #     help="Path to data mapping file",
+    # )
     parser.add_argument(
         "--graph",
         type=str,

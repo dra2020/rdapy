@@ -11,6 +11,7 @@ from .types import ParseGeoID
 from .ensemble_io import smart_read, read_record
 
 
+# TODO - DELETE
 def load_data_map(data_map_path) -> Dict[str, Any]:
     """
     Load and parse a JSON data map from a file.
@@ -25,7 +26,7 @@ def load_data_map(data_map_path) -> Dict[str, Any]:
         return json.load(f)
 
 
-def load_data(data_path) -> List[Dict[str, Any]]:
+def load_data(data_path) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
     """
     Load precinct data from a file with JSON lines.
 
@@ -37,7 +38,33 @@ def load_data(data_path) -> List[Dict[str, Any]]:
     """
     with open(data_path, "r") as f:
         records = [json.loads(line) for line in f]
-    return [record["data"] for record in records if record["_tag_"] == "precinct"]
+
+    data_map: Dict[str, Any] = dict()
+    input_data: List[Dict[str, Any]] = list()
+    for record in records:
+        if "_tag_" not in record:
+            continue
+        if record["_tag_"] == "metadata":
+            data_map = record["properties"]
+        elif record["_tag_"] == "precinct":
+            input_data.append(record["data"])
+
+    return data_map, input_data
+
+
+# def load_data(data_path) -> List[Dict[str, Any]]:
+#     """
+#     Load precinct data from a file with JSON lines.
+
+#     Args:
+#         data_path: Path to the data file with JSON lines
+
+#     Returns:
+#         list: List of precinct data dictionaries
+#     """
+#     with open(data_path, "r") as f:
+#         records = [json.loads(line) for line in f]
+#     return [record["data"] for record in records if record["_tag_"] == "precinct"]
 
 
 def load_graph(graph_path) -> Dict[str, List[str]]:
