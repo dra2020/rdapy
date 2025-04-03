@@ -4,7 +4,7 @@
 EXTRACT AN ADJACENCY GRAPH FROM A GEOJSON FILE
 
 $ scripts/extract_graph.py \
---geojson testdata/NC/data/NC_vtd_datasets.geojson \
+--geojson testdata/data/NC_vtd_datasets.geojson \
 --graph temp/DEBUG_graph.json
 
 """
@@ -248,7 +248,7 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--geojson",
         help="The GeoJSON file",
-        default="testdata/NC/data/NC_vtd_datasets.geojson",
+        default="testdata/data/NC_vtd_datasets.geojson",
         type=str,
     )
     parser.add_argument(

@@ -4,9 +4,9 @@
 EXTRACT DATA & SHAPES FROM A GEOJSON FILE
 
 $ scripts/extract_data.py \
---geojson testdata/NC/data/NC_vtd_datasets.geojson \
---data-map testdata/NC/data/NC_data_map.json \
---graph testdata/NC/extracted/NC_graph.json \
+--geojson testdata/data/NC_vtd_datasets.geojson \
+--data-map testdata/data/NC_data_map.json \
+--graph testdata/extracted/NC_graph.json \
 --data temp/DEBUG_input_data.jsonl
 
 """
@@ -270,20 +270,20 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--geojson",
         help="The GeoJSON file",
-        default="testdata/NC/data/NC_vtd_datasets.geojson",
+        default="testdata/data/NC_vtd_datasets.geojson",
         type=str,
     )
     parser.add_argument(
         "--data-map",
         dest="data_map",
-        default="testdata/NC/data/data_map.json",
+        default="testdata/data/data_map.json",
         help="The file containing the data mapping for the input and output files",
         type=str,
     )
     parser.add_argument(
         "--graph",
         help="The adjacency graph JSON file",
-        default="testdata/NC/extracted/NC_graph.json",
+        default="testdata/extracted/NC_graph.json",
         type=str,
     )
     parser.add_argument(
