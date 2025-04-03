@@ -99,6 +99,7 @@ from .rate import (
 from .score import (
     # aggregate_plans,
     aggregate_districts,
+    Aggregates,
     load_data,
     load_graph,
     unpack_input_data,

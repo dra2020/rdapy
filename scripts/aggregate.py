@@ -45,6 +45,7 @@ from rdapy import (
     smart_read,
     smart_write,
     aggregate_districts,
+    Aggregates,
 )
 
 
@@ -75,7 +76,7 @@ def main():
 
                         j += 1
                         assignments = {str(k): int(v) for k, v in parsed_line.items()}
-                        plan_with_aggs = aggregate_districts(
+                        aggs: Aggregates = aggregate_districts(
                             assignments,
                             input_data,
                             adjacency_graph,
@@ -83,6 +84,10 @@ def main():
                             which=args.mode,
                             data_metadata=data_map,
                         )
+                        plan_with_aggs: Dict[str, Any] = {
+                            "assignments": assignments,
+                            "aggregates": aggs,
+                        }
                         print(json.dumps(plan_with_aggs), file=output_stream)
 
                     elif "_tag_" in parsed_line and parsed_line["_tag_"] == "plan":
@@ -92,7 +97,7 @@ def main():
                         assignments = {
                             str(k): int(v) for k, v in parsed_line["plan"].items()
                         }
-                        plan_with_aggs = aggregate_districts(
+                        aggs: Aggregates = aggregate_districts(
                             assignments,
                             input_data,
                             adjacency_graph,
@@ -100,6 +105,10 @@ def main():
                             which=args.mode,
                             data_metadata=data_map,
                         )
+                        plan_with_aggs: Dict[str, Any] = {
+                            "assignments": assignments,
+                            "aggregates": aggs,
+                        }
                         print(json.dumps(plan_with_aggs), file=output_stream)
 
                     elif "_tag_" in parsed_line and parsed_line["_tag_"] == "metadata":
