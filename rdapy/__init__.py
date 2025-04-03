@@ -97,7 +97,7 @@ from .rate import (
 
 # TODO - Rationalize imports
 from .score import (
-    # aggregate_plans,
+    aggregate_plans,
     aggregate_districts,
     Aggregates,
     load_data,

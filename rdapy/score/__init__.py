@@ -4,7 +4,7 @@ from .utils import *
 
 # TODO - Rationalize imports
 from .aggregate import (
-    # aggregate_plans,
+    aggregate_plans,
     aggregate_districts,
     Aggregates,
     Datasets,

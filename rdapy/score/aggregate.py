@@ -4,8 +4,9 @@ AGGREGATE DATA BY DISTRICT
 
 from typing import Any, List, Dict, TypeAlias, Literal, Tuple, OrderedDict, TextIO
 
-import json
+import sys, json
 
+# TODO - Rationalize imports
 from .utils import (
     District,
     GeoIDIndex,
@@ -28,98 +29,94 @@ DatasetKey: TypeAlias = str
 Aggregates: TypeAlias = Dict[DatasetType, Dict[DatasetKey, NamedAggregates]]
 
 
-# TODO - DELETE
-# def aggregate_plans(
-#     input_stream: TextIO,
-#     state: str,
-#     plan_type: str,
-#     data_map: Dict[str, Any],
-#     data: List[Dict[str, Any]],
-#     graph: Dict[str, List[str]],
-#     output_stream: TextIO,
-#     mode="all",
-#     *,
-#     debug=False,
-#     verbose: bool = False,
-# ):
-#     """
-#     For each plan in the input stream, aggregate the districts and write the plan with aggregates to the output stream.
-#     Plans can either be in _tag_'d format or simple dictionaries of geoid:district assignment pairs.
-#     Pass through a metadata record.
-#     """
+# TODO - Tighted this up
+def aggregate_plans(
+    input_stream: TextIO,
+    output_stream: TextIO,
+    input_data: List[Dict[str, Any]],
+    data_map: Dict[str, Any],
+    adjacency_graph: Dict[str, List[str]],
+    metadata: Dict[str, Any],
+    mode: str,
+) -> None:
+    """
+    Aggregate data & shapes by district for each plan in an input stream.
+    Write the plans with aggregates to the output stream.
+    Pass through metadata records.
+    """
 
-#     geoids = [precinct["geoid"] for precinct in data]
-#     metadata = collect_metadata(state, plan_type, geoids)
+    j: int = 0
+    for line in input_stream:
+        try:
+            # Parse the JSON string into a dictionary
+            parsed_line = json.loads(line)
 
-#     j = 0
-#     for i, line in enumerate(input_stream):
-#         # Parse the JSON string into a Python dictionary
-#         parsed_line = json.loads(line)
+            # Process each input line (some of which may not be plans)
+            if "_tag_" not in parsed_line and is_flat_dict(parsed_line):
+                # Case 1: No "_tag_" key and simple dict - process the line as geoid:district pairs
 
-#         # Process each input line (some of which may not be plans)
-#         if "_tag_" not in parsed_line and is_flat_dict(parsed_line):
-#             # Case 1: No "_tag_" key and simple dict - process the line as geoid:district pairs
+                j += 1
+                assignments = {str(k): int(v) for k, v in parsed_line.items()}
+                aggs: Aggregates = aggregate_districts(
+                    assignments,
+                    input_data,
+                    adjacency_graph,
+                    metadata,
+                    which=mode,
+                    data_metadata=data_map,
+                )
+                plan_with_aggs: Dict[str, Any] = {
+                    "assignments": assignments,
+                    "aggregates": aggs,
+                }
+                print(json.dumps(plan_with_aggs), file=output_stream)
 
-#             j += 1
-#             assignments = {str(k): int(v) for k, v in parsed_line.items()}
-#             plan_with_aggs = aggregate_districts(
-#                 assignments,
-#                 data,
-#                 graph,
-#                 metadata,
-#                 which=mode,
-#                 data_metadata=data_map,
-#             )
-#             print(json.dumps(plan_with_aggs), file=output_stream)
+            elif "_tag_" in parsed_line and parsed_line["_tag_"] == "plan":
+                # Case 2: Has "_tag_" key with value "plan" - reset the plan to value of the "plan" key and process
 
-#         elif "_tag_" in parsed_line and parsed_line["_tag_"] == "plan":
-#             # Case 2: Has "_tag_" key with value "plan" - reset the plan to value of the "plan" key and process
+                j += 1
+                assignments = {str(k): int(v) for k, v in parsed_line["plan"].items()}
+                aggs: Aggregates = aggregate_districts(
+                    assignments,
+                    input_data,
+                    adjacency_graph,
+                    metadata,
+                    which=mode,
+                    data_metadata=data_map,
+                )
+                plan_with_aggs: Dict[str, Any] = {
+                    "assignments": assignments,
+                    "aggregates": aggs,
+                }
+                print(json.dumps(plan_with_aggs), file=output_stream)
 
-#             j += 1
-#             assignments = {str(k): int(v) for k, v in parsed_line["plan"].items()}
-#             plan_with_aggs = aggregate_districts(
-#                 assignments,
-#                 data,
-#                 graph,
-#                 metadata,
-#                 which=mode,
-#                 data_metadata=data_map,
-#             )
-#             print(json.dumps(plan_with_aggs), file=output_stream)
+            elif "_tag_" in parsed_line and parsed_line["_tag_"] == "metadata":
+                # Case 3: Has "_tag_" key with value "metadata" - pass it along
 
-#         elif "_tag_" in parsed_line and parsed_line["_tag_"] == "metadata":
-#             # Case 3: Has "_tag_" key with value "metadata" - pass it along
+                print(json.dumps(parsed_line), file=output_stream)
+                continue
 
-#             print(json.dumps(parsed_line), file=output_stream)
-#             continue
+            else:
+                # Case 4: Something else - skip the line, e.g., adjacency graph, etc.
 
-#         else:
-#             # Case 4: Something else - skip the line, e.g., adjacency graph, etc.
+                continue
 
-#             continue
+            pass
 
-#         if j == 1:
-#             break
-
-#         pass
+        except json.JSONDecodeError as e:
+            print(f"Error: Invalid JSON: {e}", file=sys.stderr)
+        except Exception as e:
+            print(f"Error processing record: {e}", file=sys.stderr)
 
 
-# def is_flat_dict(d: Dict[str, Any]) -> bool:
-#     """
-#     Determines whether a dictionary simply contains key:value pairs where values
-#     are integers or strings, or whether it has a more complex hierarchical structure.
+def is_flat_dict(d: Dict[str, Any]) -> bool:
+    """Is a dictionary just key:value pairs that are strings or integers?"""
 
-#     Args:
-#         d: A dictionary object (parsed from JSON)
+    for v in d.values():
+        if not (isinstance(v, int) or isinstance(v, str)):
+            return False
 
-#     Returns:
-#         bool: True if all values are integers or strings, False otherwise
-#     """
-#     for v in d.values():
-#         if not (isinstance(v, int) or isinstance(v, str)):
-#             return False
-
-#     return True
+    return True
 
 
 ### AGGREGATE DATA & SHAPES BY DISTRICT FOR ONE PLAN ###

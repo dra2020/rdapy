@@ -8,7 +8,7 @@ For example:
 $ scripts/score_ensemble.py \
 --state NC \
 --plan-type congress \
---plans testdata/ensemble/NC20C_plans_SAMPLE_100.jsonl \
+--plans testdata/ensemble/NC_congress_plans.100.jsonl \
 --data ../vtd_data/2020_VTD/NC/NC_input_data.v3.jsonl \
 --scores temp/TEST_scores.csv \
 --by-district temp/TEST_by-district.jsonl \
@@ -142,7 +142,7 @@ def parse_args():
         "--plans",
         type=str,
         help="Ensemble of plans to score in a JSON file",
-        default="testdata/ensemble/NC20C_plans_SAMPLE_100.jsonl",
+        default="testdata/ensemble/NC_congress_plans.100.jsonl",
     )
     parser.add_argument(
         "--data",
