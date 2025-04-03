@@ -43,6 +43,7 @@ from rdapy import (
     collect_metadata,
     geoids_from_precinct_data,
     smart_read,
+    smart_write,
     aggregate_districts,
 )
 
@@ -61,66 +62,63 @@ def main():
     metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
 
     j: int = 0
-    with smart_read(args.plans) as plan_stream:
-        for line in plan_stream:
-            try:
-                # Parse the JSON string into a dictionary
-                parsed_line = json.loads(line)
+    with smart_read(args.input) as input_stream:
+        with smart_write(args.output) as output_stream:
+            for line in input_stream:
+                try:
+                    # Parse the JSON string into a dictionary
+                    parsed_line = json.loads(line)
 
-                # Process each input line (some of which may not be plans)
-                if "_tag_" not in parsed_line and is_flat_dict(parsed_line):
-                    # Case 1: No "_tag_" key and simple dict - process the line as geoid:district pairs
+                    # Process each input line (some of which may not be plans)
+                    if "_tag_" not in parsed_line and is_flat_dict(parsed_line):
+                        # Case 1: No "_tag_" key and simple dict - process the line as geoid:district pairs
 
-                    j += 1
-                    assignments = {str(k): int(v) for k, v in parsed_line.items()}
-                    plan_with_aggs = aggregate_districts(
-                        assignments,
-                        input_data,
-                        adjacency_graph,
-                        metadata,
-                        which=args.mode,
-                        data_metadata=data_map,
-                    )
-                    print(json.dumps(plan_with_aggs), file=sys.stdout)
+                        j += 1
+                        assignments = {str(k): int(v) for k, v in parsed_line.items()}
+                        plan_with_aggs = aggregate_districts(
+                            assignments,
+                            input_data,
+                            adjacency_graph,
+                            metadata,
+                            which=args.mode,
+                            data_metadata=data_map,
+                        )
+                        print(json.dumps(plan_with_aggs), file=output_stream)
 
-                elif "_tag_" in parsed_line and parsed_line["_tag_"] == "plan":
-                    # Case 2: Has "_tag_" key with value "plan" - reset the plan to value of the "plan" key and process
+                    elif "_tag_" in parsed_line and parsed_line["_tag_"] == "plan":
+                        # Case 2: Has "_tag_" key with value "plan" - reset the plan to value of the "plan" key and process
 
-                    j += 1
-                    assignments = {
-                        str(k): int(v) for k, v in parsed_line["plan"].items()
-                    }
-                    plan_with_aggs = aggregate_districts(
-                        assignments,
-                        input_data,
-                        adjacency_graph,
-                        metadata,
-                        which=args.mode,
-                        data_metadata=data_map,
-                    )
-                    print(json.dumps(plan_with_aggs), file=sys.stdout)
+                        j += 1
+                        assignments = {
+                            str(k): int(v) for k, v in parsed_line["plan"].items()
+                        }
+                        plan_with_aggs = aggregate_districts(
+                            assignments,
+                            input_data,
+                            adjacency_graph,
+                            metadata,
+                            which=args.mode,
+                            data_metadata=data_map,
+                        )
+                        print(json.dumps(plan_with_aggs), file=output_stream)
 
-                elif "_tag_" in parsed_line and parsed_line["_tag_"] == "metadata":
-                    # Case 3: Has "_tag_" key with value "metadata" - pass it along
+                    elif "_tag_" in parsed_line and parsed_line["_tag_"] == "metadata":
+                        # Case 3: Has "_tag_" key with value "metadata" - pass it along
 
-                    print(json.dumps(parsed_line), file=sys.stdout)
-                    continue
+                        print(json.dumps(parsed_line), file=output_stream)
+                        continue
 
-                else:
-                    # Case 4: Something else - skip the line, e.g., adjacency graph, etc.
+                    else:
+                        # Case 4: Something else - skip the line, e.g., adjacency graph, etc.
 
-                    continue
+                        continue
 
-                # TODO - DELETE
-                if j == 1:
-                    break
+                    pass
 
-                pass
-
-            except json.JSONDecodeError as e:
-                print(f"Error: Invalid JSON: {e}", file=sys.stderr)
-            except Exception as e:
-                print(f"Error processing record: {e}", file=sys.stderr)
+                except json.JSONDecodeError as e:
+                    print(f"Error: Invalid JSON: {e}", file=sys.stderr)
+                except Exception as e:
+                    print(f"Error processing record: {e}", file=sys.stderr)
 
 
 def is_flat_dict(d: Dict[str, Any]) -> bool:
@@ -146,12 +144,7 @@ def parse_arguments():
         default="congress",
         help="Plan type (e.g., congress)",
     )
-    parser.add_argument(
-        "--plans",
-        type=str,
-        help="Ensemble of plans to score in a JSONL file",
-        default="testdata/NC/ensemble/NC_congress_plans.1K.jsonl",
-    )
+
     parser.add_argument(
         "--data",
         type=str,
@@ -169,6 +162,19 @@ def parse_arguments():
         choices=["all", "general", "partisan", "minority", "compactness", "splitting"],
         default="all",
         help="Processing mode to use (default: normal)",
+    )
+
+    parser.add_argument(
+        "--input",
+        type=str,
+        help="The input stream of plans -- metadata or plan",
+        # default="testdata/NC/ensemble/NC_congress_plans.1K.jsonl",
+    )
+    parser.add_argument(
+        "--output",
+        type=str,
+        help="The output stream -- metadata or plan + aggregates",
+        # default="temp/TEST_aggregates.jsonl",
     )
 
     return parser.parse_args()
