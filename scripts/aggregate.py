@@ -8,7 +8,6 @@ scripts/aggregate.py \
 --state NC \
 --plan-type congress \
 --data testdata/NC/extracted/NC_input_data.jsonl \
---data-map testdata/NC/data/NC_data_map.json \
 --graph testdata/NC/extracted/NC_graph.json < testdata/NC/ensemble/NC_congress_plans.1K.jsonl
 
 -or-
@@ -18,7 +17,6 @@ cat testdata/NC/ensemble/NC_congress_plans.1K.jsonl \
 --state NC \
 --plan-type congress \
 --data testdata/NC/extracted/NC_input_data.jsonl \
---data-map testdata/NC/data/NC_data_map.json \
 --graph testdata/NC/extracted/NC_graph.json > temp/DEBUG_OUTPUT.jsonl
 
 -or-
@@ -28,7 +26,6 @@ time cat testdata/NC/ensemble/NC_congress_plans.1K.jsonl \
 --state NC \
 --plan-type congress \
 --data testdata/NC/extracted/NC_input_data.jsonl \
---data-map testdata/NC/data/NC_data_map.json \
 --graph testdata/NC/extracted/NC_graph.json > /dev/null
 
 
@@ -41,7 +38,6 @@ import json
 import sys
 
 from rdapy import (
-    load_data_map,
     load_data,
     load_graph,
     collect_metadata,
@@ -125,16 +121,8 @@ def main():
 
 
 def is_flat_dict(d: Dict[str, Any]) -> bool:
-    """
-    Determines whether a dictionary simply contains key:value pairs where values
-    are integers or strings, or whether it has a more complex hierarchical structure.
+    """Is a dictionary just key:value pairs that are strings or integers?"""
 
-    Args:
-        d: A dictionary object (parsed from JSON)
-
-    Returns:
-        bool: True if all values are integers or strings, False otherwise
-    """
     for v in d.values():
         if not (isinstance(v, int) or isinstance(v, str)):
             return False
@@ -161,13 +149,6 @@ def parse_arguments():
         default="testdata/NC/extracted/NC_input_data.jsonl",
         help="Path to input data file",
     )
-    # parser.add_argument(
-    #     "--data-map",
-    #     type=str,
-    #     dest="data_map",
-    #     default="testdata/NC/data/NC_data_map.json",
-    #     help="Path to data mapping file",
-    # )
     parser.add_argument(
         "--graph",
         type=str,

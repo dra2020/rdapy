@@ -37,7 +37,6 @@ from .readwrite import (
 
 # TODO - Rationalize imports
 from .data import (
-    load_data_map,
     load_data,
     load_graph,
     unpack_input_data,
