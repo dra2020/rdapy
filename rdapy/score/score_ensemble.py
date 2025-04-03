@@ -12,6 +12,7 @@ from .aggregate import Aggregates
 from .analyze import analyze_plan
 
 
+# TODO - DELETE
 def score_ensemble(
     ensemble_stream: TextIO,
     data: List[Dict[str, Any]],

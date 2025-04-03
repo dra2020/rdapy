@@ -10,8 +10,10 @@ ANALYZE ("SCORE") A PLAN
 - For district-level metrics, each set of scores is wrapped in a dictionary with the dataset key.
 """
 
+from typing import Any, List, Dict, Tuple, Optional, TextIO
+
+import sys, json
 from collections import defaultdict
-from typing import Any, List, Dict, Tuple, Optional
 
 # NOTE -- This is a relative reference w/in the project, not a use of a `pip install`ed package.
 import rdapy as rda
@@ -35,6 +37,57 @@ from .discrete_compactness import (
 from .energy import calc_energy
 
 
+def score_plans(
+    input_stream: TextIO,
+    output_stream: TextIO,
+    input_data: List[Dict[str, Any]],
+    data_map: Dict[str, Any],
+    adjacency_graph: Dict[str, List[str]],
+    metadata: Dict[str, Any],
+    mode: str,
+) -> None:
+    """
+    Read plans & district aggregates as JSONL from the input stream.
+    Score each plan.
+    Write the scores along with the aggregates to the output stream.
+    Pass through metadata records.
+    Skip any other records.
+    """
+
+    for line in input_stream:
+        try:
+            parsed_line = json.loads(line)
+
+            # Case 1: Has "_tag_" key with value "metadata" - pass it along
+
+            if "_tag_" in parsed_line and parsed_line["_tag_"] == "metadata":
+                print(json.dumps(parsed_line), file=output_stream)
+                continue
+
+            # Case 2: Has "_tag_" key with value "plan"
+
+            if "_tag_" in parsed_line and parsed_line["_tag_"] == "plan":
+                assignments = {str(k): int(v) for k, v in parsed_line["plan"].items()}
+                aggs: Aggregates = parsed_line["aggregates"]
+
+                # TODO - Score the plan
+
+                print(json.dumps(parsed_line), file=output_stream)
+                continue
+
+            # Case 3: Something else - skip the line, e.g., adjacency graph, etc.
+
+            continue
+
+        except json.JSONDecodeError as e:
+            print(f"Error: Invalid JSON: {e}", file=sys.stderr)
+        except Exception as e:
+            print(f"Error processing record: {e}", file=sys.stderr)
+
+
+### SCORE ONE PLAN ###
+
+
 def default_datasets(input_metadata: Dict[str, Any]) -> Dict[str, str]:
     """Get the default/first datasets"""
 
@@ -49,6 +102,7 @@ def default_datasets(input_metadata: Dict[str, Any]) -> Dict[str, str]:
     return datasets
 
 
+# TODO - Ream out dead code
 def analyze_plan(
     plan: Dict[Precinct, District],
     data: List[Dict[str, Any]],
