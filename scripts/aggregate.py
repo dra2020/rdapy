@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
+
 """
 Aggregate data & shapes by district
 
-Usage: # TODO - Update these examples
+Usage:
 
 scripts/aggregate.py \
 --state NC \
@@ -31,7 +32,7 @@ time cat testdata/ensemble/NC_congress_plans.1K.jsonl \
 
 """
 
-from typing import Any, Dict, List, TextIO
+from typing import Any, Dict, List
 
 import argparse
 
