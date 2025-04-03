@@ -8,16 +8,16 @@ scripts/aggregate.py \
 --state NC \
 --plan-type congress \
 --data testdata/NC/extracted/NC_input_data.jsonl \
---graph testdata/NC/extracted/NC_graph.json < testdata/NC/ensemble/NC_congress_plans.1K.jsonl
+--graph testdata/NC/extracted/NC_graph.json < testdata/NC/ensemble/NC_congress_plans.100.jsonl > temp/DEBUG_output.jsonl
 
 -or-
 
-cat testdata/NC/ensemble/NC_congress_plans.1K.jsonl \
+cat testdata/NC/ensemble/NC_congress_plans.100.jsonl \
 | scripts/aggregate.py \
 --state NC \
 --plan-type congress \
 --data testdata/NC/extracted/NC_input_data.jsonl \
---graph testdata/NC/extracted/NC_graph.json > temp/DEBUG_OUTPUT.jsonl
+--graph testdata/NC/extracted/NC_graph.json > temp/DEBUG_output.jsonl
 
 -or-
 
@@ -109,13 +109,11 @@ def parse_arguments():
         "--input",
         type=str,
         help="The input stream of plans -- metadata or plan",
-        # default="testdata/NC/ensemble/NC_congress_plans.1K.jsonl",
     )
     parser.add_argument(
         "--output",
         type=str,
         help="The output stream -- metadata or plan + aggregates",
-        # default="temp/TEST_aggregates.jsonl",
     )
 
     return parser.parse_args()
