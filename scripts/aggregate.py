@@ -31,7 +31,7 @@ time cat testdata/NC/ensemble/NC_congress_plans.1K.jsonl \
 
 """
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, TextIO
 
 import argparse
 import json
@@ -57,77 +57,165 @@ def main():
     data_map: Dict[str, Any]
     input_data: List[Dict[str, Any]]
     data_map, input_data = load_data(args.data)
-    adjacency_graph = load_graph(args.graph)
+    adjacency_graph: Dict[str, List[str]] = load_graph(args.graph)
 
     geoids: List[str] = geoids_from_precinct_data(input_data)
     metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
 
-    j: int = 0
+    # j: int = 0
     with smart_read(args.input) as input_stream:
         with smart_write(args.output) as output_stream:
-            for line in input_stream:
-                try:
-                    # Parse the JSON string into a dictionary
-                    parsed_line = json.loads(line)
+            aggregate_plans(
+                input_stream,
+                output_stream,
+                input_data,
+                data_map,
+                adjacency_graph,
+                metadata,
+                args.mode,
+            )
+            # for line in input_stream:
+            #     try:
+            #         # Parse the JSON string into a dictionary
+            #         parsed_line = json.loads(line)
 
-                    # Process each input line (some of which may not be plans)
-                    if "_tag_" not in parsed_line and is_flat_dict(parsed_line):
-                        # Case 1: No "_tag_" key and simple dict - process the line as geoid:district pairs
+            #         # Process each input line (some of which may not be plans)
+            #         if "_tag_" not in parsed_line and is_flat_dict(parsed_line):
+            #             # Case 1: No "_tag_" key and simple dict - process the line as geoid:district pairs
 
-                        j += 1
-                        assignments = {str(k): int(v) for k, v in parsed_line.items()}
-                        aggs: Aggregates = aggregate_districts(
-                            assignments,
-                            input_data,
-                            adjacency_graph,
-                            metadata,
-                            which=args.mode,
-                            data_metadata=data_map,
-                        )
-                        plan_with_aggs: Dict[str, Any] = {
-                            "assignments": assignments,
-                            "aggregates": aggs,
-                        }
-                        print(json.dumps(plan_with_aggs), file=output_stream)
+            #             j += 1
+            #             assignments = {str(k): int(v) for k, v in parsed_line.items()}
+            #             aggs: Aggregates = aggregate_districts(
+            #                 assignments,
+            #                 input_data,
+            #                 adjacency_graph,
+            #                 metadata,
+            #                 which=args.mode,
+            #                 data_metadata=data_map,
+            #             )
+            #             plan_with_aggs: Dict[str, Any] = {
+            #                 "assignments": assignments,
+            #                 "aggregates": aggs,
+            #             }
+            #             print(json.dumps(plan_with_aggs), file=output_stream)
 
-                    elif "_tag_" in parsed_line and parsed_line["_tag_"] == "plan":
-                        # Case 2: Has "_tag_" key with value "plan" - reset the plan to value of the "plan" key and process
+            #         elif "_tag_" in parsed_line and parsed_line["_tag_"] == "plan":
+            #             # Case 2: Has "_tag_" key with value "plan" - reset the plan to value of the "plan" key and process
 
-                        j += 1
-                        assignments = {
-                            str(k): int(v) for k, v in parsed_line["plan"].items()
-                        }
-                        aggs: Aggregates = aggregate_districts(
-                            assignments,
-                            input_data,
-                            adjacency_graph,
-                            metadata,
-                            which=args.mode,
-                            data_metadata=data_map,
-                        )
-                        plan_with_aggs: Dict[str, Any] = {
-                            "assignments": assignments,
-                            "aggregates": aggs,
-                        }
-                        print(json.dumps(plan_with_aggs), file=output_stream)
+            #             j += 1
+            #             assignments = {
+            #                 str(k): int(v) for k, v in parsed_line["plan"].items()
+            #             }
+            #             aggs: Aggregates = aggregate_districts(
+            #                 assignments,
+            #                 input_data,
+            #                 adjacency_graph,
+            #                 metadata,
+            #                 which=args.mode,
+            #                 data_metadata=data_map,
+            #             )
+            #             plan_with_aggs: Dict[str, Any] = {
+            #                 "assignments": assignments,
+            #                 "aggregates": aggs,
+            #             }
+            #             print(json.dumps(plan_with_aggs), file=output_stream)
 
-                    elif "_tag_" in parsed_line and parsed_line["_tag_"] == "metadata":
-                        # Case 3: Has "_tag_" key with value "metadata" - pass it along
+            #         elif "_tag_" in parsed_line and parsed_line["_tag_"] == "metadata":
+            #             # Case 3: Has "_tag_" key with value "metadata" - pass it along
 
-                        print(json.dumps(parsed_line), file=output_stream)
-                        continue
+            #             print(json.dumps(parsed_line), file=output_stream)
+            #             continue
 
-                    else:
-                        # Case 4: Something else - skip the line, e.g., adjacency graph, etc.
+            #         else:
+            #             # Case 4: Something else - skip the line, e.g., adjacency graph, etc.
 
-                        continue
+            #             continue
 
-                    pass
+            #         pass
 
-                except json.JSONDecodeError as e:
-                    print(f"Error: Invalid JSON: {e}", file=sys.stderr)
-                except Exception as e:
-                    print(f"Error processing record: {e}", file=sys.stderr)
+            #     except json.JSONDecodeError as e:
+            #         print(f"Error: Invalid JSON: {e}", file=sys.stderr)
+            #     except Exception as e:
+            #         print(f"Error processing record: {e}", file=sys.stderr)
+
+
+def aggregate_plans(
+    input_stream: TextIO,
+    output_stream: TextIO,
+    input_data: List[Dict[str, Any]],
+    data_map: Dict[str, Any],
+    adjacency_graph: Dict[str, List[str]],
+    metadata: Dict[str, Any],
+    mode: str,
+) -> None:
+    """
+    Aggregate data & shapes by district for each plan in an input stream.
+    Write the plans with aggregates to the output stream.
+    Pass through metadata records.
+    """
+
+    j: int = 0
+    for line in input_stream:
+        try:
+            # Parse the JSON string into a dictionary
+            parsed_line = json.loads(line)
+
+            # Process each input line (some of which may not be plans)
+            if "_tag_" not in parsed_line and is_flat_dict(parsed_line):
+                # Case 1: No "_tag_" key and simple dict - process the line as geoid:district pairs
+
+                j += 1
+                assignments = {str(k): int(v) for k, v in parsed_line.items()}
+                aggs: Aggregates = aggregate_districts(
+                    assignments,
+                    input_data,
+                    adjacency_graph,
+                    metadata,
+                    which=mode,
+                    data_metadata=data_map,
+                )
+                plan_with_aggs: Dict[str, Any] = {
+                    "assignments": assignments,
+                    "aggregates": aggs,
+                }
+                print(json.dumps(plan_with_aggs), file=output_stream)
+
+            elif "_tag_" in parsed_line and parsed_line["_tag_"] == "plan":
+                # Case 2: Has "_tag_" key with value "plan" - reset the plan to value of the "plan" key and process
+
+                j += 1
+                assignments = {str(k): int(v) for k, v in parsed_line["plan"].items()}
+                aggs: Aggregates = aggregate_districts(
+                    assignments,
+                    input_data,
+                    adjacency_graph,
+                    metadata,
+                    which=mode,
+                    data_metadata=data_map,
+                )
+                plan_with_aggs: Dict[str, Any] = {
+                    "assignments": assignments,
+                    "aggregates": aggs,
+                }
+                print(json.dumps(plan_with_aggs), file=output_stream)
+
+            elif "_tag_" in parsed_line and parsed_line["_tag_"] == "metadata":
+                # Case 3: Has "_tag_" key with value "metadata" - pass it along
+
+                print(json.dumps(parsed_line), file=output_stream)
+                continue
+
+            else:
+                # Case 4: Something else - skip the line, e.g., adjacency graph, etc.
+
+                continue
+
+            pass
+
+        except json.JSONDecodeError as e:
+            print(f"Error: Invalid JSON: {e}", file=sys.stderr)
+        except Exception as e:
+            print(f"Error processing record: {e}", file=sys.stderr)
 
 
 def is_flat_dict(d: Dict[str, Any]) -> bool:
