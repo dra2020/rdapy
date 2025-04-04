@@ -73,7 +73,7 @@ def main() -> None:
                     aggs: Aggregates = record["aggregates"]
 
                     if i == 0:
-                        cols: List[str] = list(record.keys())
+                        cols: List[str] = list(scores.keys())
                         writer: csv.DictWriter = csv.DictWriter(
                             scores_stream, fieldnames=cols
                         )
