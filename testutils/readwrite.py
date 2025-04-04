@@ -43,12 +43,13 @@ class FileSpec:
         self.extension: str = file_extension
 
 
-def file_name(parts: list[str], delim: str = "_", ext: Optional[str] = None) -> str:
-    """Construct a file name with parts separated by the delimeter and ending with the extension."""
+# TODO - DELETE
+# def file_name(parts: list[str], delim: str = "_", ext: Optional[str] = None) -> str:
+#     """Construct a file name with parts separated by the delimeter and ending with the extension."""
 
-    name: str = delim.join(parts) + "." + ext if ext else delim.join(parts)
+#     name: str = delim.join(parts) + "." + ext if ext else delim.join(parts)
 
-    return name
+#     return name
 
 
 def path_to_file(parts: list[str], naked: bool = False) -> str:
@@ -171,9 +172,16 @@ def read_shapes(shp_file: str, id: str) -> tuple[dict, Optional[dict[str, Any]]]
                 meta = source.meta
                 for item in source:
                     obj_id: str = item["properties"][id]
-                    shp: Point | MultiPoint | LineString | MultiLineString | Polygon | MultiPolygon | LinearRing | GeometryCollection = shape(
-                        item["geometry"]
-                    )
+                    shp: (
+                        Point
+                        | MultiPoint
+                        | LineString
+                        | MultiLineString
+                        | Polygon
+                        | MultiPolygon
+                        | LinearRing
+                        | GeometryCollection
+                    ) = shape(item["geometry"])
 
                     shapes_by_id[obj_id] = shp
 
