@@ -19,8 +19,6 @@ from .types import (
     # Legacy for test cases
     read_plan,
     index_plan,
-    # TODO - DELETE
-    # write_plan,
 )
 
 from .approxequal import approx_equal

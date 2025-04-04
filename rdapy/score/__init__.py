@@ -14,6 +14,4 @@ from .aggregate import (
 )
 from .analyze import score_plans, score_plan, default_datasets
 
-# from .score_ensemble import score_ensemble
-
 name: str = "score"
