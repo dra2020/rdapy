@@ -4,8 +4,10 @@
 Sample adjacencies analysis starting from raw data
 """
 
-import os
 from typing import Any, Optional, Iterable
+
+import os
+from collections import defaultdict
 
 from libpysal.weights import Rook, WSP
 from shapely.geometry import (
