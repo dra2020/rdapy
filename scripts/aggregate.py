@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
 """
-Aggregate data & shapes by district
+AGGREGATE DATA & SHAPES BY DISTRICT FOR PLANS
+- Take in a stream of plans (JSONL)
+- Aggregate data by district
+- Write out a stream of plans with by-district aggregates (JSONL)
 
 Usage:
 
@@ -19,15 +22,6 @@ cat testdata/ensemble/NC_congress_plans.100.jsonl \
 --plan-type congress \
 --data testdata/extracted/NC_input_data.jsonl \
 --graph testdata/extracted/NC_graph.json > temp/DEBUG_output.jsonl
-
--or-
-
-time cat testdata/ensemble/NC_congress_plans.1K.jsonl \
-| scripts/aggregate.py \
---state NC \
---plan-type congress \
---data testdata/extracted/NC_input_data.jsonl \
---graph testdata/extracted/NC_graph.json > /dev/null
 
 
 """

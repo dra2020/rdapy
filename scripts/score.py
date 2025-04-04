@@ -2,35 +2,27 @@
 
 """
 SCORE PLANS
+- Take in a stream of plans & by-district aggregates (JSONL)
+- Score each plan
+- Write out a stream of scores along with by-district aggregates
 
-TODO
 
 Usage:
 
-scripts/aggregate.py \
+scripts/score.py \
 --state NC \
 --plan-type congress \
 --data testdata/extracted/NC_input_data.jsonl \
---graph testdata/extracted/NC_graph.json < testdata/ensemble/NC_congress_plans.100.jsonl > temp/DEBUG_output.jsonl
+--graph testdata/extracted/NC_graph.json < testdata/ensemble/NC_congress_aggs.100.jsonl > temp/DEBUG_output.jsonl
 
 -or-
 
-cat testdata/ensemble/NC_congress_plans.100.jsonl \
-| scripts/aggregate.py \
+cat testdata/ensemble/NC_congress_aggs.100.jsonl \
+| scripts/score.py \
 --state NC \
 --plan-type congress \
 --data testdata/extracted/NC_input_data.jsonl \
 --graph testdata/extracted/NC_graph.json > temp/DEBUG_output.jsonl
-
--or-
-
-time cat testdata/ensemble/NC_congress_plans.1K.jsonl \
-| scripts/aggregate.py \
---state NC \
---plan-type congress \
---data testdata/extracted/NC_input_data.jsonl \
---graph testdata/extracted/NC_graph.json > /dev/null
-
 
 """
 
@@ -45,7 +37,7 @@ from rdapy import (
     geoids_from_precinct_data,
     smart_read,
     smart_write,
-    aggregate_plans,
+    score_plans,
 )
 
 
@@ -64,7 +56,7 @@ def main():
 
     with smart_read(args.input) as input_stream:
         with smart_write(args.output) as output_stream:
-            aggregate_plans(
+            score_plans(
                 input_stream,
                 output_stream,
                 input_data,
