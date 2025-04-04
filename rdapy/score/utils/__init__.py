@@ -35,15 +35,15 @@ from .readwrite import (
     read_scores,
 )
 
-# TODO - Rationalize imports
 from .data import (
     load_data,
     load_graph,
-    unpack_input_data,
-    geoids_from_precinct_data,
     collect_metadata,
+    geoids_from_precinct_data,
+    unpack_input_data,  # NOTE - Legacy for test cases
 )
 
+# TODO - Rationalize imports
 from .ensemble_io import (
     PlanRecord,
     MetadataRecord,

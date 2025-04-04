@@ -12,7 +12,7 @@ from .aggregate import (
     DatasetKey,
     get_fields,
 )
-from .analyze import score_plans, score_plan, analyze_plan, default_datasets
+from .analyze import score_plans, score_plan, default_datasets
 
 # from .score_ensemble import score_ensemble
 
