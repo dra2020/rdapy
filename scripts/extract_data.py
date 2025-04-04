@@ -263,8 +263,10 @@ def write_record(record: Any, outstream: TextIO) -> None:
 
 
 def parse_args() -> Namespace:
+    """Parse command line arguments."""
+
     parser: ArgumentParser = argparse.ArgumentParser(
-        description="Extract census data from a dra2020/vtd_data CSV file. Defaults are for debugging only."
+        description="Parse command line arguments."
     )
 
     parser.add_argument(

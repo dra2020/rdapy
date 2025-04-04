@@ -241,8 +241,10 @@ def is_connected(geos: List[Any], adjacency: Dict[Any, List[Any]]) -> bool:
 
 
 def parse_args() -> Namespace:
+    """Parse command line arguments."""
+
     parser: ArgumentParser = argparse.ArgumentParser(
-        description="Extract an adjacency graph from a geojson file. Defaults are for debugging only."
+        description="Parse command line arguments."
     )
 
     parser.add_argument(

@@ -1,22 +1,15 @@
 #!/usr/bin/env python3
 
 """
-SCORE AN ENSEMBLE OF MAPS
+WRITE SCORES
+- Take in a stream of scores & by-district aggregates (JSONL)
+- Write the scores to a CSV file
+- Write the by-district aggregates to a JSONL file
+- Write the metadata to a JSONL file
 
-For example:
+Usage:
 
-$ scripts/score_ensemble.py \
---state NC \
---plan-type congress \
---plans testdata/ensemble/NC_congress_plans.100.jsonl \
---data ../vtd_data/2020_VTD/NC/NC_input_data.v3.jsonl \
---scores temp/TEST_scores.csv \
---by-district temp/TEST_by-district.jsonl \
---log temp/TEST_scores_log.txt 
-
-For documentation, type:
-
-$ scripts/score_ensemble.py -h
+TODO
 
 """
 

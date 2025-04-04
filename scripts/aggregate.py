@@ -29,6 +29,7 @@ cat testdata/ensemble/NC_congress_plans.100.jsonl \
 from typing import Any, Dict, List
 
 import argparse
+from argparse import ArgumentParser, Namespace
 
 from rdapy import (
     load_data,
@@ -70,7 +71,9 @@ def main():
 def parse_arguments():
     """Parse command line arguments."""
 
-    parser = argparse.ArgumentParser(description="Process and aggregate election data.")
+    parser: ArgumentParser = argparse.ArgumentParser(
+        description="Parse command line arguments."
+    )
 
     parser.add_argument("--state", type=str, default="NC", help="State abbreviation")
     parser.add_argument(
@@ -111,7 +114,9 @@ def parse_arguments():
         help="The output stream -- metadata or plan + aggregates",
     )
 
-    return parser.parse_args()
+    args: Namespace = parser.parse_args()
+
+    return args
 
 
 if __name__ == "__main__":
