@@ -5,8 +5,4 @@ from .compactness import (
     load_shapes,
 )
 
-# TODO - DELETE
-# from .readwrite import *
-# from .equal import *
-
 name = "testutils"
