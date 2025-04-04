@@ -13,14 +13,11 @@ from rdapy.score.analyze import (
     Aggregates,
     aggregate_districts,
     score_plan,
-    analyze_plan,  # TODO - DELETE
     calc_compactness_metrics,
 )
 
 cycle: str = "2020"
 testdata_dir: str = "testdata/score"
-
-# TODO - Switch to score_plan
 
 
 class TestScorecard:
@@ -69,22 +66,6 @@ class TestScorecard:
                 mode="all",
                 mmd_scoring=False,
             )
-
-            #     geoid_index,
-            #     precinct_data,
-            #     adjacency_graph,
-            #     metadata,
-            #     data_metadata=input_metadata,
-            #     mmd_scoring=False,
-            # )
-            # scorecard: Dict[str, Any] = analyze_plan(
-            #     geoid_index,
-            #     precinct_data,
-            #     adjacency_graph,
-            #     metadata,
-            #     data_metadata=input_metadata,
-            #     mmd_scoring=False,
-            # )
 
             #
 
@@ -224,16 +205,6 @@ class TestScorecard:
             mode="all",
             mmd_scoring=False,
         )
-
-        # scorecard: Dict[str, Any] = analyze_plan(
-        #     plan,
-        #     precinct_data,
-        #     adjacency_graph,
-        #     metadata,
-        #     data_metadata=input_metadata,
-        #     mmd_scoring=False,
-        # )
-        # by_district: List[Dict[str, float]] = scorecard.pop("by_district")
 
         # The actual scores
 
