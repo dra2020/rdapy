@@ -10,6 +10,7 @@ WRITE SCORES
 Usage:
 
 scripts/write.py \
+--data testdata/intermediate/NC_input_data.jsonl \
 --scores temp/DEBUG_scores.csv \
 --by-district temp/DEBUG_by-district.jsonl < testdata/intermediate/NC_congress_scores.100.jsonl
 
@@ -17,6 +18,7 @@ scripts/write.py \
 
 cat testdata/intermediate/NC_congress_scores.100.jsonl \
 | scripts/write.py \
+--data testdata/intermediate/NC_input_data.jsonl \
 --scores temp/DEBUG_scores.csv \
 --by-district temp/DEBUG_by-district.jsonl
 
@@ -25,32 +27,29 @@ cat testdata/intermediate/NC_congress_scores.100.jsonl \
 import argparse
 from argparse import ArgumentParser, Namespace
 
-from typing import Any, List, Dict, OrderedDict
+from typing import Any, List, Dict
 
-import os, csv
-
-# from collections import OrderedDict
+import csv
 
 from rdapy import (
-    #     unpack_input_data,
-    #     geoids_from_precinct_data,
-    #     collect_metadata,
+    load_data,
     write_json,
     smart_read,
     read_record,
     Aggregates,
     smart_write,
     format_scores,
-    #     capture_warnings,
-    # MetadataRecord,
     write_record,
-    #     score_ensemble,
 )
 
 
 def main() -> None:
     args: argparse.Namespace = parse_args()
 
+    data_map: Dict[str, Any]
+    data_map, _ = load_data(args.data)
+
+    metadata_path: str = args.scores.replace(".csv", "_metadata.json")
     scores_metadata: Dict[str, Any] = dict()
 
     i: int = 0
@@ -63,8 +62,8 @@ def main() -> None:
 
                     if record["_tag_"] == "metadata":
                         scores_metadata = record["properties"]
-                        # TODO - Add this to the metadata
-                        # scores_metadata.update(input_metadata)
+                        scores_metadata.update(data_map)
+                        write_json(metadata_path, scores_metadata)
                         continue
 
                     assert record["_tag_"] == "scores"
@@ -84,15 +83,6 @@ def main() -> None:
 
                     i += 1
 
-    # TODO - Write the metadata to a JSON file
-    metadata_path: str = args.scores.replace(".csv", "_metadata.json")
-    write_json(metadata_path, scores_metadata)
-
-    # input_metadata: Dict[str, Any]
-    # precinct_data: List[Dict[str, Any]]
-    # adjacency_graph: Dict[str, List[str]]
-    # input_metadata, precinct_data, adjacency_graph = unpack_input_data(args.data)
-
     pass  # for debugging
 
 
@@ -107,6 +97,12 @@ def parse_args():
         "--input",
         type=str,
         help="The input stream of plans -- metadata or plan",
+    )
+    parser.add_argument(
+        "--data",
+        type=str,
+        default="testdata/intermediate/NC_input_data.jsonl",
+        help="Path to input data file",
     )
     parser.add_argument(
         "--scores",
