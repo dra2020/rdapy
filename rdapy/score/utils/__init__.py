@@ -16,6 +16,8 @@ from .types import (
     Graph,
     County,
     ParseGeoID,
+    # Rationalize
+    write_json,
     # Legacy for test cases
     read_plan,
     index_plan,
@@ -36,7 +38,6 @@ from .ensemble_io import (
     smart_read,
     smart_write,
     format_scores,
-    # Legacy for test cases
     write_record,
     read_record,
 )

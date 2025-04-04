@@ -97,13 +97,18 @@ from .rate import (
 
 from .score import (
     aggregate_plans,
+    Aggregates,
     score_plans,
     smart_read,
     smart_write,
+    read_record,
+    write_record,
     geoids_from_precinct_data,
     collect_metadata,
     load_data,
     load_graph,
+    write_json,
+    format_scores,
 )
 
 

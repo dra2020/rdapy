@@ -9,164 +9,115 @@ WRITE SCORES
 
 Usage:
 
-TODO
+scripts/write.py \
+--scores temp/DEBUG_scores.csv \
+--by-district temp/DEBUG_by-district.jsonl < testdata/intermediate/NC_congress_scores.100.jsonl
+
+-or-
+
+cat testdata/intermediate/NC_congress_scores.100.jsonl \
+| scripts/write.py \
+--scores temp/DEBUG_scores.csv \
+--by-district temp/DEBUG_by-district.jsonl
 
 """
 
 import argparse
 from argparse import ArgumentParser, Namespace
+
 from typing import Any, List, Dict, OrderedDict
 
 import os, csv
-from collections import OrderedDict
+
+# from collections import OrderedDict
 
 from rdapy import (
-    unpack_input_data,
-    geoids_from_precinct_data,
-    collect_metadata,
+    #     unpack_input_data,
+    #     geoids_from_precinct_data,
+    #     collect_metadata,
     write_json,
     smart_read,
     read_record,
+    Aggregates,
     smart_write,
     format_scores,
-    capture_warnings,
-    MetadataRecord,
+    #     capture_warnings,
+    # MetadataRecord,
     write_record,
-    score_ensemble,
+    #     score_ensemble,
 )
 
 
 def main() -> None:
     args: argparse.Namespace = parse_args()
 
-    if args.verbose:
-        print("args:", args)
+    scores_metadata: Dict[str, Any] = dict()
 
-    input_metadata: Dict[str, Any]
-    precinct_data: List[Dict[str, Any]]
-    adjacency_graph: Dict[str, List[str]]
-    input_metadata, precinct_data, adjacency_graph = unpack_input_data(args.data)
-    geoids: List[str] = geoids_from_precinct_data(precinct_data)
-    metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
+    i: int = 0
+    with smart_read(args.input) as input_stream:
+        with smart_write(args.scores) as scores_stream:
+            with smart_write(args.by_district) as by_district_stream:
+                for line in input_stream:
+                    record: Dict[str, Any] = read_record(line)
+                    assert "_tag_" in record
 
-    # Read the ensemble metadata & write the scores metadata
-    with smart_read(args.plans) as ensemble_stream:
-        line = ensemble_stream.readline()
-        record: Dict[str, Any] = read_record(line)
-        assert record["_tag_"] == "metadata"
-        scores_metadata: Dict[str, Any] = record["properties"]
-        scores_metadata.update(input_metadata)
+                    if record["_tag_"] == "metadata":
+                        scores_metadata = record["properties"]
+                        # TODO - Add this to the metadata
+                        # scores_metadata.update(input_metadata)
+                        continue
 
+                    assert record["_tag_"] == "scores"
+
+                    scores: Dict[str, Any] = record["scores"]
+                    aggs: Aggregates = record["aggregates"]
+
+                    if i == 0:
+                        cols: List[str] = list(record.keys())
+                        writer: csv.DictWriter = csv.DictWriter(
+                            scores_stream, fieldnames=cols
+                        )
+                        writer.writeheader()
+                    writer.writerow(format_scores(scores))
+
+                    write_record(aggs, by_district_stream)
+
+                    i += 1
+
+    # TODO - Write the metadata to a JSON file
     metadata_path: str = args.scores.replace(".csv", "_metadata.json")
     write_json(metadata_path, scores_metadata)
 
-    # Score the plans in the ensemble
-    with smart_read(args.plans) as ensemble_stream:
-        with open(os.path.expanduser(args.log), "w") as log_stream:
-            with capture_warnings(log_stream) as handler:
-                scores_records: List[OrderedDict[str, Any]]
-                by_district_records: List[Dict[str, Any]]
-                scores_records, by_district_records = score_ensemble(
-                    ensemble_stream,
-                    precinct_data,
-                    adjacency_graph,
-                    metadata,
-                    which=args.mode,
-                    data_metadata=input_metadata,
-                    verbose=args.verbose,
-                )
+    # input_metadata: Dict[str, Any]
+    # precinct_data: List[Dict[str, Any]]
+    # adjacency_graph: Dict[str, List[str]]
+    # input_metadata, precinct_data, adjacency_graph = unpack_input_data(args.data)
 
-    # Write the per-plan scores to a CSV file
-    with smart_write(args.scores) as scores_stream:
-        for i, record in enumerate(scores_records):
-            try:
-                if i == 0:
-                    cols: List[str] = list(record.keys())
-                    writer: csv.DictWriter = csv.DictWriter(
-                        scores_stream, fieldnames=cols
-                    )
-                    writer.writeheader()
-
-                writer.writerow(format_scores(record))
-            except Exception as e:
-                print(f"Exception writing scores: {e}")
-                print(f"Mode: {args.mode}, columns: {cols}")
-                print(f"Record {i}: {record}")
-
-    # Write by_district_records to a JSON file
-    with smart_write(args.by_district) as by_district_stream:
-        # Write the scores metadata record to the by-district file
-        metadata_record: MetadataRecord = {
-            "_tag_": "metadata",
-            "properties": scores_metadata,
-        }
-        write_record(metadata_record, by_district_stream)
-
-        for plan in by_district_records:
-            record: Dict[str, Any] = {
-                "_tag_": "by-district",
-                "name": plan["map"],
-                "by-district": plan["by-district"],
-            }
-            write_record(record, by_district_stream)
-
-    pass
+    pass  # for debugging
 
 
 def parse_args():
+    """Parse command line arguments."""
+
     parser: ArgumentParser = argparse.ArgumentParser(
-        description="Score an ensemble of plans. Defaults are for debugging only."
+        description="Parse command line arguments."
     )
 
     parser.add_argument(
-        "--state",
-        help="The two-character state code (e.g., NC)",
+        "--input",
         type=str,
-        default="NC",
-    )
-    parser.add_argument(
-        "--plan-type",
-        type=str,
-        dest="plan_type",
-        help="The type of districts (congress, upper, lower)",
-        default="congress",
-    )
-    parser.add_argument(
-        "--plans",
-        type=str,
-        help="Ensemble of plans to score in a JSON file",
-        default="testdata/ensemble/NC_congress_plans.100.jsonl",
-    )
-    parser.add_argument(
-        "--data",
-        type=str,
-        help="The input data JSON file",
-        default="../vtd_data/2020_VTD/NC/NC_input_data.v3.jsonl",
+        help="The input stream of plans -- metadata or plan",
     )
     parser.add_argument(
         "--scores",
+        help="The path the scores CSV to write",
         type=str,
-        help="The output scores CSV file",
-        default="temp/TEST_scores.csv",
     )
     parser.add_argument(
         "--by-district",
         type=str,
         dest="by_district",
-        help="The by-district aggregates JSON file",
-        default="temp/TEST_by-district.jsonl",
-    )
-    parser.add_argument(
-        "--log",
-        type=str,
-        help="Log TXT file",
-        default="temp/TEST_scores_log.txt",
-    )
-    parser.add_argument(
-        "--mode",
-        choices=["all", "general", "partisan", "minority", "compactness", "splitting"],
-        default="all",
-        help="Processing mode to use (default: normal)",
+        help="The path to the by-district aggregates JSON file to write",
     )
 
     parser.add_argument(

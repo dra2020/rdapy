@@ -11,8 +11,8 @@ Usage:
 scripts/aggregate.py \
 --state NC \
 --plan-type congress \
---data testdata/extracted/NC_input_data.jsonl \
---graph testdata/extracted/NC_graph.json < testdata/ensemble/NC_congress_plans.100.jsonl > temp/DEBUG_output.jsonl
+--data testdata/intermediate/NC_input_data.jsonl \
+--graph testdata/intermediate/NC_graph.json < testdata/ensemble/NC_congress_plans.100.jsonl > temp/DEBUG_output.jsonl
 
 -or-
 
@@ -20,8 +20,8 @@ cat testdata/ensemble/NC_congress_plans.100.jsonl \
 | scripts/aggregate.py \
 --state NC \
 --plan-type congress \
---data testdata/extracted/NC_input_data.jsonl \
---graph testdata/extracted/NC_graph.json > temp/DEBUG_output.jsonl
+--data testdata/intermediate/NC_input_data.jsonl \
+--graph testdata/intermediate/NC_graph.json > temp/DEBUG_output.jsonl
 
 
 """
@@ -87,13 +87,13 @@ def parse_arguments():
     parser.add_argument(
         "--data",
         type=str,
-        default="testdata/extracted/NC_input_data.jsonl",
+        default="testdata/intermediate/NC_input_data.jsonl",
         help="Path to input data file",
     )
     parser.add_argument(
         "--graph",
         type=str,
-        default="testdata/extracted/NC_graph.json",
+        default="testdata/intermediate/NC_graph.json",
         help="Path to graph file",
     )
     parser.add_argument(

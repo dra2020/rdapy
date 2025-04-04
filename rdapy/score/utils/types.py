@@ -4,7 +4,7 @@ UTILITIES FOR READING & WRITING AND WORKING WITH PLANS
 
 from typing import TypeAlias, List, Dict, Any, Optional
 
-import os
+import os, json
 from csv import DictReader
 
 # from .readwrite import read_csv, FileSpec
@@ -102,6 +102,18 @@ def read_csv(rel_path: str, types: Optional[list] = None) -> list[dict]:
 
     except:
         raise Exception("Exception reading CSV with explicit types.")
+
+
+def write_json(rel_path, data) -> None:
+    """Write a JSON file from a dictionary."""
+
+    try:
+        abs_path: str = FileSpec(rel_path).abs_path
+
+        with open(abs_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+    except:
+        raise Exception("Exception writing JSON.")
 
 
 ### END ###
