@@ -18,6 +18,8 @@ from .utils import (
 )
 from .smallestenclosingcircle import wl_make_circle
 
+### TYPES ###
+
 Metric: TypeAlias = str
 Aggregate: TypeAlias = List[int | float]
 NamedAggregates: TypeAlias = Dict[Metric, Any]
@@ -25,6 +27,55 @@ Datasets: TypeAlias = Dict[str, List[str]]
 DatasetType = Literal["census", "vap", "cvap", "election", "shapes"]
 DatasetKey: TypeAlias = str
 Aggregates: TypeAlias = Dict[DatasetType, Dict[DatasetKey, NamedAggregates]]
+
+
+### DATASET HELPERS ###
+
+
+def get_dataset(metadata: Dict[str, Any], dataset_type: str, i: int = 0) -> DatasetKey:
+    dataset: DatasetKey = "default" if dataset_type != "cvap" else "N/A"
+    if dataset_type in metadata and metadata[dataset_type]["datasets"][i] != "":
+        dataset = metadata[dataset_type]["datasets"][i]
+
+    # dataset: DatasetKey = (
+    #     metadata[dataset_type]["datasets"][i]
+    #     if metadata[dataset_type]["datasets"][i] != ""
+    #     else "default"
+    # )
+
+    return dataset
+
+
+def get_fields(
+    metadata: Dict[str, Any], dataset_type: str, dataset: str = "default"
+) -> Dict[str, str]:
+    """Return the field mapping for a dataset type."""
+
+    fields: Dict[str, str]
+
+    if "version" not in metadata or metadata["version"] < 2:
+        # Legacy/v1 field names are fully specified
+        fields = metadata[dataset_type]["fields"]
+    else:
+        # v2+ field names are prefixed with the dataset name
+        fields = {
+            k: f"{dataset}_{v}" for k, v in metadata[dataset_type]["fields"].items()
+        }
+
+    return fields
+
+
+def dataset_key(datasets: Dict[str, str], dataset_type: str) -> str:
+    """Return the key for a dataset type."""
+
+    assert dataset_type in datasets
+
+    dataset_key: str = datasets[dataset_type] if datasets[dataset_type] else "default"
+
+    return dataset_key
+
+
+### AGGREGATE PLANS ###
 
 
 def aggregate_plans(
@@ -108,40 +159,7 @@ def is_flat_dict(d: Dict[str, Any]) -> bool:
     return True
 
 
-### AGGREGATE DATA & SHAPES BY DISTRICT FOR ONE PLAN ###
-
-
-def get_dataset(metadata: Dict[str, Any], dataset_type: str, i: int = 0) -> DatasetKey:
-    dataset: DatasetKey = "default" if dataset_type != "cvap" else "N/A"
-    if dataset_type in metadata and metadata[dataset_type]["datasets"][i] != "":
-        dataset = metadata[dataset_type]["datasets"][i]
-
-    # dataset: DatasetKey = (
-    #     metadata[dataset_type]["datasets"][i]
-    #     if metadata[dataset_type]["datasets"][i] != ""
-    #     else "default"
-    # )
-
-    return dataset
-
-
-def get_fields(
-    metadata: Dict[str, Any], dataset_type: str, dataset: str = "default"
-) -> Dict[str, str]:
-    """Return the field mapping for a dataset type."""
-
-    fields: Dict[str, str]
-
-    if "version" not in metadata or metadata["version"] < 2:
-        # Legacy/v1 field names are fully specified
-        fields = metadata[dataset_type]["fields"]
-    else:
-        # v2+ field names are prefixed with the dataset name
-        fields = {
-            k: f"{dataset}_{v}" for k, v in metadata[dataset_type]["fields"].items()
-        }
-
-    return fields
+### AGGREGATE THE DATA & SHAPES BY DISTRICT FOR ONE PLAN ###
 
 
 def aggregate_districts(
@@ -423,6 +441,9 @@ def aggregate_shapes_by_district(
     return aggs
 
 
+### SHAPE AGGREGATION HELPERS ###
+
+
 def border_length(
     geoid: str,
     district: int,
@@ -496,16 +517,6 @@ def arcs_are_symmetric(data_by_geoid: Dict[str, Any]) -> bool:
         print(f"Total arcs: {narcs}, non-symmetric arcs: {nasymmetric}")
 
     return symmetric
-
-
-def dataset_key(datasets: Dict[str, str], dataset_type: str) -> str:
-    """Return the key for a dataset type."""
-
-    assert dataset_type in datasets
-
-    dataset_key: str = datasets[dataset_type] if datasets[dataset_type] else "default"
-
-    return dataset_key
 
 
 ### END ###
