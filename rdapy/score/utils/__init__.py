@@ -16,14 +16,15 @@ from .types import (
     Graph,
     County,
     ParseGeoID,
-    # Rationalize
-    write_json,
+    # TODO - DELETE
+    # write_json,
     # Legacy for test cases
     read_plan,
     index_plan,
 )
 
-from .approxequal import approx_equal
+# TODO - DELETE
+# from .approxequal import approx_equal
 
 from .data import (
     load_data,

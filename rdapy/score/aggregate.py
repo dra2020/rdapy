@@ -6,6 +6,7 @@ from typing import Any, List, Dict, TypeAlias, Literal, TextIO
 
 import sys, json
 
+from rdapy.utils import approx_equal
 from .utils import (
     District,
     GeoIDIndex,
@@ -14,7 +15,6 @@ from .utils import (
     Graph,
     OUT_OF_STATE,
     is_water_only,
-    approx_equal,
 )
 from .smallestenclosingcircle import wl_make_circle
 

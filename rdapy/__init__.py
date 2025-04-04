@@ -1,5 +1,7 @@
 # rdapy/__init__.py
 
+from .utils import *
+
 from .compactness import (
     calc_compactness,
     calc_sym_x,
@@ -107,7 +109,8 @@ from .score import (
     collect_metadata,
     load_data,
     load_graph,
-    write_json,
+    # TODO - DELETE
+    # write_json,
     format_scores,
 )
 

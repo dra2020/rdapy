@@ -1,5 +1,7 @@
 """
 ROUGH EQUALITY UTILITIES
+
+TODO - DELETE
 """
 
 from pytest import approx
