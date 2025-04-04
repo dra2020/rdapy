@@ -71,6 +71,7 @@ def score_plans(
                 aggs: Aggregates = parsed_line["aggregates"]
 
                 scores: Dict[str, Any]
+                updated_aggs: Aggregates
                 scores, updated_aggs = score_plan(
                     assignments,
                     aggs,

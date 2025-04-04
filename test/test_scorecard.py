@@ -9,7 +9,13 @@ import pandas as pd
 
 from rdapy.score.utils import *
 from rdapy.score.aggregate import arcs_are_symmetric
-from rdapy.score.analyze import analyze_plan, calc_compactness_metrics
+from rdapy.score.analyze import (
+    Aggregates,
+    aggregate_districts,
+    score_plan,
+    analyze_plan,  # TODO - DELETE
+    calc_compactness_metrics,
+)
 
 cycle: str = "2020"
 testdata_dir: str = "testdata/score"
@@ -42,14 +48,43 @@ class TestScorecard:
             }
             assert arcs_are_symmetric(data_by_geoid)
 
-            scorecard: Dict[str, Any] = analyze_plan(
+            aggs: Aggregates = aggregate_districts(
                 geoid_index,
                 precinct_data,
                 adjacency_graph,
                 metadata,
                 data_metadata=input_metadata,
+                which="all",
+            )
+
+            scorecard: Dict[str, Any]
+            updated_aggs: Aggregates
+            scorecard, updated_aggs = score_plan(
+                geoid_index,
+                aggs,
+                data=precinct_data,
+                graph=adjacency_graph,
+                metadata=metadata,
+                data_map=input_metadata,
+                mode="all",
                 mmd_scoring=False,
             )
+
+            #     geoid_index,
+            #     precinct_data,
+            #     adjacency_graph,
+            #     metadata,
+            #     data_metadata=input_metadata,
+            #     mmd_scoring=False,
+            # )
+            # scorecard: Dict[str, Any] = analyze_plan(
+            #     geoid_index,
+            #     precinct_data,
+            #     adjacency_graph,
+            #     metadata,
+            #     data_metadata=input_metadata,
+            #     mmd_scoring=False,
+            # )
 
             #
 
@@ -168,15 +203,37 @@ class TestScorecard:
 
         # assert arcs_are_symmetric(shapes)
 
-        scorecard: Dict[str, Any] = analyze_plan(
+        aggs: Aggregates = aggregate_districts(
             plan,
             precinct_data,
             adjacency_graph,
             metadata,
             data_metadata=input_metadata,
+            which="all",
+        )
+
+        scorecard: Dict[str, Any]
+        updated_aggs: Aggregates
+        scorecard, updated_aggs = score_plan(
+            plan,
+            aggs,
+            data=precinct_data,
+            graph=adjacency_graph,
+            metadata=metadata,
+            data_map=input_metadata,
+            mode="all",
             mmd_scoring=False,
         )
-        by_district: List[Dict[str, float]] = scorecard.pop("by_district")
+
+        # scorecard: Dict[str, Any] = analyze_plan(
+        #     plan,
+        #     precinct_data,
+        #     adjacency_graph,
+        #     metadata,
+        #     data_metadata=input_metadata,
+        #     mmd_scoring=False,
+        # )
+        # by_district: List[Dict[str, float]] = scorecard.pop("by_district")
 
         # The actual scores
 

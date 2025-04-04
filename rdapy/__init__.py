@@ -114,7 +114,7 @@ from .score import (
     capture_warnings,
     MetadataRecord,
     write_record,
-    score_ensemble,
+    # score_ensemble,
 )
 
 

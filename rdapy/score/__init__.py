@@ -13,6 +13,7 @@ from .aggregate import (
     get_fields,
 )
 from .analyze import score_plans, score_plan, analyze_plan, default_datasets
-from .score_ensemble import score_ensemble
+
+# from .score_ensemble import score_ensemble
 
 name: str = "score"
