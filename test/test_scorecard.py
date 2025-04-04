@@ -14,6 +14,8 @@ from rdapy.score.analyze import analyze_plan, calc_compactness_metrics
 cycle: str = "2020"
 testdata_dir: str = "testdata/score"
 
+# TODO - Switch to score_plan
+
 
 class TestScorecard:
     def test_scorecard(self) -> None:

@@ -4,7 +4,7 @@
 SCORE PLANS
 - Take in a stream of plans & by-district aggregates (JSONL)
 - Score each plan
-- Write out a stream of scores along with by-district aggregates
+- Write out a stream of scores along with by-district aggregates (JSONL)
 
 
 Usage:
