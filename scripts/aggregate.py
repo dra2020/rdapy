@@ -68,7 +68,7 @@ def main():
 
 
 def parse_arguments():
-    """Parse command line arguments. Defaults for debugging only."""
+    """Parse command line arguments."""
 
     parser = argparse.ArgumentParser(description="Process and aggregate election data.")
 

@@ -95,11 +95,8 @@ from .rate import (
     rate_splitting,
 )
 
-# TODO - Rationalize imports
 from .score import (
     aggregate_plans,
-    # aggregate_districts,
-    # Aggregates,
     score_plans,
     smart_read,
     smart_write,

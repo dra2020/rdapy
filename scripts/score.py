@@ -13,11 +13,11 @@ scripts/score.py \
 --state NC \
 --plan-type congress \
 --data testdata/extracted/NC_input_data.jsonl \
---graph testdata/extracted/NC_graph.json < testdata/ensemble/NC_congress_aggs.100.jsonl > temp/DEBUG_output.jsonl
+--graph testdata/extracted/NC_graph.json < testdata/intermediate/NC_congress_aggs.100.jsonl > temp/DEBUG_output.jsonl
 
 -or-
 
-cat testdata/ensemble/NC_congress_aggs.100.jsonl \
+cat testdata/intermediate/NC_congress_aggs.100.jsonl \
 | scripts/score.py \
 --state NC \
 --plan-type congress \
@@ -68,7 +68,7 @@ def main():
 
 
 def parse_arguments():
-    """Parse command line arguments. Defaults for debugging only."""
+    """Parse command line arguments."""
 
     parser = argparse.ArgumentParser(description="Process and aggregate election data.")
 
