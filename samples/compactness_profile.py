@@ -4,7 +4,7 @@
 PROFILING COMPACTNESS METRICS
 
 Virtually all of the time is spent in the featureize_shape() function,
-which is required for KIWYSI compactness. 
+which is required for KIWYSI compactness.
 
 To run:
 
@@ -15,6 +15,11 @@ $ samples/compactness_profile.py
 import time
 from functools import wraps
 from typing import Any, Callable
+
+from shapely.geometry import (
+    Polygon,
+    MultiPolygon,
+)
 
 from rdapy import *
 from testutils import *
