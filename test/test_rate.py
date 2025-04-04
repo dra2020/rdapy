@@ -7,6 +7,7 @@ TEST NORMALIZATION & RATINGS
 import random
 
 from rdapy.rate import *
+from rdapy.utils import *
 from testutils import *
 
 EPSILON: float = 1 / 10**6

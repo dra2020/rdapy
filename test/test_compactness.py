@@ -5,6 +5,7 @@ TEST COMPACTNESS
 """
 
 from rdapy.compactness import *
+from rdapy.utils import *
 from testutils import *
 
 

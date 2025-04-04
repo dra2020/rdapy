@@ -15,6 +15,7 @@ from rdapy.score.analyze import (
     score_plan,
     calc_compactness_metrics,
 )
+from rdapy.utils import *
 from testutils import *
 
 cycle: str = "2020"

@@ -6,6 +6,7 @@ Run this code to replicate the KIWYSI compactness model against the sample shape
 
 
 from rdapy.compactness import *
+from rdapy.utils import *
 from testutils import *
 
 INDEX: int = 0
