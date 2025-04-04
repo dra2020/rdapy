@@ -5,7 +5,6 @@ ENSEMBLE I/O
 from typing import Any, Optional, Dict, Generator, TextIO
 
 import os, sys, contextlib, json
-from datetime import datetime
 
 
 @contextlib.contextmanager

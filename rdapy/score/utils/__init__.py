@@ -15,10 +15,12 @@ from .types import (
     GeoIDIndex,
     Graph,
     County,
+    ParseGeoID,
+    # Legacy for test cases
     read_plan,
     index_plan,
-    write_plan,
-    ParseGeoID,
+    # TODO - DELETE
+    # write_plan,
 )
 
 from .approxequal import approx_equal

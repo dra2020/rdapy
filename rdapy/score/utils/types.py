@@ -35,20 +35,21 @@ def index_plan(plan_csv: PlanCSV) -> GeoIDIndex:
     return {str(row[geoid_field]): int(row[district_field]) for row in plan_csv}
 
 
-def write_plan(
-    plan_path: str,
-    geoid_index: GeoIDIndex,
-    *,
-    geoid_field: str = "GEOID20",
-    district_field: str = "District",
-) -> None:
-    """Write a precinct-assignment file."""
+# TODO - DELETE
+# def write_plan(
+#     plan_path: str,
+#     geoid_index: GeoIDIndex,
+#     *,
+#     geoid_field: str = "GEOID20",
+#     district_field: str = "District",
+# ) -> None:
+#     """Write a precinct-assignment file."""
 
-    abs_path: str = FileSpec(plan_path).abs_path
-    with open(abs_path, "w") as f:
-        print(f"{geoid_field},{district_field}", file=f)
-        for geoid, district in geoid_index.items():
-            print(f"{geoid},{district}", file=f)
+#     abs_path: str = FileSpec(plan_path).abs_path
+#     with open(abs_path, "w") as f:
+#         print(f"{geoid_field},{district_field}", file=f)
+#         for geoid, district in geoid_index.items():
+#             print(f"{geoid},{district}", file=f)
 
 
 class ParseGeoID:
