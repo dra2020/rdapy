@@ -4,6 +4,8 @@
 Sample graph analysis
 """
 
+from collections import defaultdict
+
 from rdapy import *
 from testutils import *
 
