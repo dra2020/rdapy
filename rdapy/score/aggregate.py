@@ -97,9 +97,11 @@ def aggregate_plans(
     Skip any other records.
     """
 
+    i: int = 0
     for line in input_stream:
         try:
             is_a_plan: bool = False
+            name: str
             assignments: Dict[str, int]
 
             parsed_line = json.loads(line)
@@ -114,12 +116,14 @@ def aggregate_plans(
 
             if "_tag_" not in parsed_line and is_flat_dict(parsed_line):
                 is_a_plan = True
+                name = f"{i:06d}"
                 assignments = {str(k): int(v) for k, v in parsed_line.items()}
 
             # Case 3: Has "_tag_" key with value "plan" - reset the plan to value of the "plan" key and process
 
             if "_tag_" in parsed_line and parsed_line["_tag_"] == "plan":
                 is_a_plan = True
+                name = parsed_line["name"]
                 assignments = {str(k): int(v) for k, v in parsed_line["plan"].items()}
 
             if is_a_plan:
@@ -133,10 +137,13 @@ def aggregate_plans(
                 )
                 plan_with_aggs: Dict[str, Any] = {
                     "_tag_": "plan",
+                    "name": name,
                     "plan": assignments,
                     "aggregates": aggs,
                 }
                 print(json.dumps(plan_with_aggs), file=output_stream)
+
+                i += 1
                 continue
 
             # Case 4: Something else - skip the line, e.g., adjacency graph, etc.
