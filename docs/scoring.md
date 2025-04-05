@@ -41,7 +41,7 @@ a set of by-district measures to a JSONL file, and
 metadata for the scores in a JSON file.
 Examples of these files can be found in `testdata/scoring/`.
 
-The plan-level scores are described in [Scores (Metrics)](./docs/scores.md).
+The plan-level scores are described in [Scores (Metrics)](./scores.md).
 
 NOTE: This scripts does not extract an adjacency graph from the GeoJSON.
 It uses a pre-computed adjacency graph from DRA.
