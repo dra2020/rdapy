@@ -45,9 +45,9 @@ Until these high-volume scoring changes are merged into `main`, checkout the `bu
 git checkout bulkscoring
 ```
 
-Then create a virtual environment that uses Python 3.12, e.g., using `pyenv`.
-Then reset Python to the normal setting.
-For example:
+Then create a virtual environment that uses Python 3.12.
+Then reset Python outside the virtual environment to the normal setting.
+For example, using `pyenv`:
 
 ```bash
 pyenv shell 3.12
