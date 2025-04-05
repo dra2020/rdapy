@@ -54,6 +54,7 @@ def score_plans(
     Skip any other records.
     """
 
+    i: int = 0
     for line in input_stream:
         try:
             parsed_line: Dict[str, Any] = json.loads(line)
@@ -67,6 +68,7 @@ def score_plans(
             # Case 2: Has "_tag_" key with value "plan"
 
             if "_tag_" in parsed_line and parsed_line["_tag_"] == "plan":
+                name = parsed_line["name"]
                 assignments = {str(k): int(v) for k, v in parsed_line["plan"].items()}
                 aggs: Aggregates = parsed_line["aggregates"]
 
@@ -84,6 +86,7 @@ def score_plans(
 
                 scores_with_aggs: Dict[str, Any] = {
                     "_tag_": "scores",
+                    "name": name,
                     "scores": scores,
                     "aggregates": updated_aggs,
                 }
