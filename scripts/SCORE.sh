@@ -67,19 +67,23 @@ scripts/extract_data.py \
 --data "$temp_data"
 
 cat "$PLANS" \
-| scripts/aggregate.py \
+| 
+scripts/aggregate.py \
 --state "$STATE" \
 --plan-type "$PLAN_TYPE" \
 --data "$temp_data" \
---graph "$GRAPH" 
-
-echo
-echo "Scoring plans ..."
-echo
-
-echo
-echo "Writing scores to ${SCORES} and aggregates to ${BY_DISTRICT} ..."
-echo
+--graph "$GRAPH" \
+| 
+scripts/score.py \
+--state "$STATE" \
+--plan-type "$PLAN_TYPE" \
+--data "$temp_data" \
+--graph "$GRAPH" \
+|
+scripts/write.py \
+--data "$temp_data" \
+--scores "$SCORES" \
+--by-district "$BY_DISTRICT"
 
 echo
 echo "Done!"
