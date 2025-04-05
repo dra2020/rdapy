@@ -36,7 +36,6 @@ from rdapy import (
     write_json,
     smart_read,
     read_record,
-    Aggregates,
     smart_write,
     format_scores,
     write_record,
@@ -68,8 +67,8 @@ def main() -> None:
 
                     assert record["_tag_"] == "scores"
 
-                    scores: Dict[str, Any] = record["scores"]
-                    aggs: Aggregates = record["aggregates"]
+                    scores: Dict[str, Any] = {"name": record["name"]}
+                    scores.update(record["scores"])
 
                     if i == 0:
                         cols: List[str] = list(scores.keys())
@@ -79,6 +78,11 @@ def main() -> None:
                         writer.writeheader()
                     writer.writerow(format_scores(scores))
 
+                    aggs: Dict[str, Any] = {
+                        "_tag_": "by-district",
+                        "name": record["name"],
+                    }
+                    aggs["by-district"] = record["aggregates"]
                     write_record(aggs, by_district_stream)
 
                     i += 1
