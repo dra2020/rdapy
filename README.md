@@ -51,8 +51,8 @@ For example:
 
 ```bash
 pyenv shell 3.12
-python3 -m venv "./venv"
-source "./venv/bin/activate"
+python3 -m venv "./rdapy"
+source "./rdapy/bin/activate"
 deactivate
 pyenv shell --unset
 ```
@@ -60,6 +60,7 @@ pyenv shell --unset
 Then activate the virtual environment again, and install the required dependencies:
 
 ```bash
+source "./rdapy/bin/activate"
 pip install -r requirements.txt
 pip install --upgrade pip
 ```
