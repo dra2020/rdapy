@@ -22,6 +22,10 @@ The analytics are organized by area:
 The `samples` directory contains some simple examples of how to exercies these functions
 and how to preprocess raw block-level data into the formats required by the analytics.
 
+## Command-Line Interface
+
+[Scoring](./docs/scoring.md)
+
 ## Installation
 
 To install the package:
