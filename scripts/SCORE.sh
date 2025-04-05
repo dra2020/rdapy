@@ -49,24 +49,23 @@ if [[ -z "$GEOJSON" || -z "$DATA_MAP" || -z "$GRAPH" || -z "$PLANS" || -z "$SCOR
   exit 1
 fi
 
-# Echo the required messages
 echo
-echo "Extracting data from ${GEOJSON} using ${DATA_MAP}..."
-echo
-
-# scripts/extract_data.py \
-# --geojson testdata/data/NC_vtd_datasets.geojson \
-# --data-map testdata/data/NC_data_map.json \
-# --graph testdata/intermediate/NC_graph.json \
-# --data temp/DEBUG_input_data.jsonl
-
-echo
-echo "Extracted graph at ${GRAPH} ..."
+echo "Scoring plans at ${PLANS} ..."
 echo
 
 echo
-echo "Plans to be score at ${PLANS} ..."
+echo "Extracting data from ${GEOJSON} ..."
+echo "... using ${DATA_MAP} ..."
+echo "... using ${GRAPH} ..."
 echo
+
+temp_data=$(mktemp /tmp/data.XXXXXX)
+
+scripts/extract_data.py \
+--geojson "$GEOJSON" \
+--data-map "$DATA_MAP" \
+--graph "$GRAPH" \
+--data "$temp_data"
 
 echo
 echo "Aggregating data by district ..."
