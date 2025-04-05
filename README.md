@@ -3,14 +3,16 @@
 Redistricting analytics in Python
 
 This repository ([rdapy](https://github.com/dra2020/rdapy)) re-implements 
-the main analytics used in [Dave's Redistricting](https://davesredistricting.org/maps#),
+the main analytics used in [Dave's Redistricting](https://davesredistricting.org/) (DRA),
 ignoring a few DRA-specific aspects (in particular, the five [0-100] ratings).
 Unlike the analytics used in the app ([dra-analytics](https://github.com/dra2020/dra-analytics))
-which are implememented in TypeScript, these are implemented in Python. 
+which are implememented in TypeScript, these are implemented in Python to make them easier to use outside of DRA.
 
-## Categories
+There is both a PyPi package and a command-line interface.
 
-The analytics are organized by area:
+## Package
+
+The analytics in the PyPi package are organized by area (in alphabetical order):
 
 - [Compactness](./docs/compactness.md): Various measures of compactness
 - [Equal](./docs/equal.md): Population deviation
@@ -24,7 +26,7 @@ and how to preprocess raw block-level data into the formats required by the anal
 
 ## Command-Line Interface
 
-[Scoring](./docs/scoring.md)
+The command-line interface enables [high-volume offline scoring](./docs/scoring.md).
 
 ## Installation
 
@@ -32,6 +34,12 @@ To install the package:
 
 ```bash
 pip install rdapy
+```
+
+Then
+
+```
+import rdapy
 ```
 
 To setup the repository for local command-line use:
@@ -87,12 +95,6 @@ scripts/SCORE.sh \
 --plans testdata/ensemble/NC_congress_plans.100.jsonl \
 --scores temp/TEST_congress_scores.csv \
 --by-district temp/TEST_congress_by-district.jsonl
-```
-
-## Usage
-
-```
-import rdapy
 ```
 
 # Automated Tests
