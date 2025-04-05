@@ -11,6 +11,14 @@ BY_DISTRICT=""
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --state)
+      STATE="$2"
+      shift 2
+      ;;
+    --plan-type)
+      PLAN_TYPE="$2"
+      shift 2
+      ;;
     --geojson)
       GEOJSON="$2"
       shift 2
@@ -43,21 +51,12 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Check if all required arguments are provided
-if [[ -z "$GEOJSON" || -z "$DATA_MAP" || -z "$GRAPH" || -z "$PLANS" || -z "$SCORES" || -z "$BY_DISTRICT" ]]; then
+if [[ -z "$STATE" || -z "$PLAN_TYPE" || -z "$GEOJSON" || -z "$DATA_MAP" || -z "$GRAPH" || -z "$PLANS" || -z "$SCORES" || -z "$BY_DISTRICT" ]]; then
   echo "Error: Missing required arguments"
-  echo "Usage: SCORE.sh --geojson <path> --data-map <path> --graph <path> --plans <path> --scores <path> --by-district <path>"
+  echo "Usage: SCORE.sh --state <xx> --plan-type <chamber> --geojson <path> --data-map <path> --graph <path> --plans <path> --scores <path> --by-district <path>"
   exit 1
 fi
 
-echo
-echo "Scoring plans at ${PLANS} ..."
-echo
-
-echo
-echo "Extracting data from ${GEOJSON} ..."
-echo "... using ${DATA_MAP} ..."
-echo "... using ${GRAPH} ..."
-echo
 
 temp_data=$(mktemp /tmp/data.XXXXXX)
 
@@ -67,9 +66,12 @@ scripts/extract_data.py \
 --graph "$GRAPH" \
 --data "$temp_data"
 
-echo
-echo "Aggregating data by district ..."
-echo
+cat "$PLANS" \
+| scripts/aggregate.py \
+--state "$STATE" \
+--plan-type "$PLAN_TYPE" \
+--data "$temp_data" \
+--graph "$GRAPH" 
 
 echo
 echo "Scoring plans ..."
