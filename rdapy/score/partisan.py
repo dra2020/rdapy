@@ -1,8 +1,5 @@
 """
-ADDITIONAL PARTISAN METRICS
-
-Added 2025-03-21
-
+ADDITIONAL PARTISAN METRICS -- These are not calculated in DRA proper.
 """
 
 from typing import List, Tuple

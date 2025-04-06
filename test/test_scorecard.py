@@ -74,7 +74,7 @@ class TestScorecard:
             expected: Dict[str, Any] = read_json(expected_path)
 
             decimals_path: str = f"{testdata_dir}/expected_decimal_places.json"
-            # 2025-03-21: Skipping these removed redundant or legacy metrics
+            # Skipping these removed redundant or legacy metrics
             skip: List[str] = [
                 "gamma",
                 "global_symmetry",
@@ -92,7 +92,7 @@ class TestScorecard:
                 # "kiwysi", # Disabled due to large runtime cost
                 "proportionality",
                 "competitiveness",
-                # 2025-03-21: Removed "minority",
+                # "minority", # Removed 2025-03-25, because the rating is now continuous.
                 "compactness",
                 "splitting",
             ]
@@ -222,7 +222,7 @@ class TestScorecard:
 
         decimals_path: str = f"{testdata_dir}/expected_decimal_places.json"
         approx_floats: Dict[str, int] = read_json(decimals_path)
-        # 2025-03-21: Skipping these removed redundant or legacy metrics
+        # Skipping these removed redundant or legacy metrics
         skip: List[str] = [
             "gamma",
             "global_symmetry",
@@ -239,7 +239,7 @@ class TestScorecard:
             # "kiwysi", # Disabled due to large runtime cost
             "proportionality",
             "competitiveness",
-            # 2025-03-21: Removed "minority",
+            # "minority", # Removed 2025-03-25, because the rating is now continuous
             "compactness",
             "splitting",
         ]
