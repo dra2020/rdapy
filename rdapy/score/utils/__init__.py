@@ -26,8 +26,6 @@ from .data import (
     load_graph,
     collect_metadata,
     geoids_from_precinct_data,
-    # Legacy for test cases
-    unpack_input_data,
 )
 
 from .ensemble_io import (
