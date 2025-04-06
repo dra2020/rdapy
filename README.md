@@ -97,7 +97,11 @@ scripts/SCORE.sh \
 --by-district temp/TEST_congress_by-district.jsonl
 ```
 
-# Automated Tests
+## Development
+
+There is a `launch.json` for VS Code debugging in the `docs` directory.
+
+Run automated tests with:
 
 ```bash
 pytest
