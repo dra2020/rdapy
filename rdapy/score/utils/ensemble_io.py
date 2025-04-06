@@ -61,9 +61,6 @@ def format_scores(
     return scores_out
 
 
-### LEGACY HELPERS FOR TEST CASES ###
-
-
 def read_record(line) -> Dict[str, Any]:
     record = json.loads(line.strip())
 

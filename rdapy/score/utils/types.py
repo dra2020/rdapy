@@ -15,26 +15,6 @@ Graph: TypeAlias = Dict[Precinct, List[Precinct]]
 County: TypeAlias = str
 
 
-def read_plan(plan_path: str) -> PlanCSV:
-    """Read a precinct-assignment file."""
-
-    return read_csv(plan_path, [str, int])
-
-
-def index_plan(plan_csv: PlanCSV) -> GeoIDIndex:
-    """Index a plan by geoid."""
-
-    geoid_fields: List[str] = ["GEOID", "GEOID20", "GEOID30"]
-    district_fields: List[str] = ["District", "DISTRICT"]
-
-    keys: List[str] = list(plan_csv[0].keys())
-
-    geoid_field: str = list(set(geoid_fields) & set(keys))[0]
-    district_field: str = list(set(district_fields) & set(keys))[0]
-
-    return {str(row[geoid_field]): int(row[district_field]) for row in plan_csv}
-
-
 class ParseGeoID:
     """Parse a 15-character GeoIDs into its component parts."""
 

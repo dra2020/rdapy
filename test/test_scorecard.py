@@ -2,7 +2,7 @@
 TEST SAMPLE SCORECARDS
 """
 
-from typing import Any, Dict, List, Generator, List, Tuple, TextIO
+from typing import Any, Dict, List, Generator, List, Tuple, TextIO, TypeAlias
 
 from collections import OrderedDict
 import pandas as pd
@@ -307,6 +307,26 @@ def input_data_precincts(
 
         except Exception as e:
             raise Exception(f"Reading input data {i}: {e}")
+
+
+def read_plan(plan_path: str) -> PlanCSV:
+    """Read a precinct-assignment file."""
+
+    return read_csv(plan_path, [str, int])
+
+
+def index_plan(plan_csv: PlanCSV) -> GeoIDIndex:
+    """Index a plan by geoid."""
+
+    geoid_fields: List[str] = ["GEOID", "GEOID20", "GEOID30"]
+    district_fields: List[str] = ["District", "DISTRICT"]
+
+    keys: List[str] = list(plan_csv[0].keys())
+
+    geoid_field: str = list(set(geoid_fields) & set(keys))[0]
+    district_field: str = list(set(district_fields) & set(keys))[0]
+
+    return {str(row[geoid_field]): int(row[district_field]) for row in plan_csv}
 
 
 ### END ###

@@ -16,9 +16,6 @@ from .types import (
     Graph,
     County,
     ParseGeoID,
-    # Legacy for test cases
-    read_plan,
-    index_plan,
 )
 
 from .data import (
