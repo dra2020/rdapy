@@ -13,7 +13,7 @@ scripts/score.py \
 --state NC \
 --plan-type congress \
 --data testdata/intermediate/NC_input_data.jsonl \
---graph testdata/intermediate/NC_graph.json < testdata/intermediate/NC_congress_aggs.100.jsonl > temp/DEBUG_output.jsonl
+--graph testdata/intermediate/NC_graph.json < testdata/intermediate/NC_congress_aggs.100.jsonl > temp/DEBUG_scores.jsonl
 
 -or-
 
@@ -22,7 +22,7 @@ cat testdata/intermediate/NC_congress_aggs.100.jsonl \
 --state NC \
 --plan-type congress \
 --data testdata/intermediate/NC_input_data.jsonl \
---graph testdata/intermediate/NC_graph.json > temp/DEBUG_output.jsonl
+--graph testdata/intermediate/NC_graph.json > temp/DEBUG_scores.jsonl
 
 """
 
