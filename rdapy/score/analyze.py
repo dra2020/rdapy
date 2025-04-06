@@ -118,9 +118,8 @@ def score_plan(
     data_map: Dict[str, Any],
     #
     mode: str = "all",  # Or one of "general", "partisan", "minority", "compactness", "splitting"
-    alt_minority: bool = True,  # If False, don't add alternative minority opportunity metrics
-    mmd_scoring: bool = True,  # If True, add MMD scoring
-    add_spanning_tree_score: bool = False,
+    mmd_scoring: bool = True,  # If False, don't do MMD scoring for backwards compatibility w/ tests.
+    add_spanning_tree_score: bool = False,  # Too expensive for scoring plans in bulk.
 ) -> Tuple[Dict[str, Any], Aggregates]:
     """Score a plan."""
 
@@ -171,27 +170,25 @@ def score_plan(
         vap_dataset: DatasetKey = get_dataset(data_map, "vap")
         vap_keys: List[str] = list(get_fields(data_map, "vap", vap_dataset).keys())
 
-        # 2025-03-21: Added
         if mmd_scoring:
             mmd_counts: Dict[str, int] = calculate_mmd_simple(
                 aggs["cvap"][datasets["cvap"]]
             )
             scorecard.update(mmd_counts)
 
-        # Alternate minority ratings
-        if alt_minority:
-            alt_minority_metrics: Dict[str, float] = calc_alt_minority_metrics(
-                aggs["vap"][datasets["vap"]], n_districts, vap_keys
-            )
-            scorecard.update(
-                alt_minority_metrics
-            )  # 2025-03-21: scorecard.update(subset)
-            scorecard["minority"] = rate_minority_opportunity(
-                alt_minority_metrics["opportunity_districts"],
-                alt_minority_metrics["proportional_opportunities"],
-                alt_minority_metrics["coalition_districts"],
-                alt_minority_metrics["proportional_coalitions"],
-            )
+        # Revised minority ratings that don't click Black VAP % below 37%
+
+        alt_minority_metrics: Dict[str, float] = calc_alt_minority_metrics(
+            aggs["vap"][datasets["vap"]], n_districts, vap_keys
+        )
+        scorecard.update(alt_minority_metrics)
+
+        scorecard["minority"] = rate_minority_opportunity(
+            alt_minority_metrics["opportunity_districts"],
+            alt_minority_metrics["proportional_opportunities"],
+            alt_minority_metrics["coalition_districts"],
+            alt_minority_metrics["proportional_coalitions"],
+        )
 
     if mode in ["all", "compactness"]:
         compactness_by_district: Dict[str, List[float]] = calc_compactness_metrics(
