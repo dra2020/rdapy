@@ -8,6 +8,8 @@ ANALYZE ("SCORE") A PLAN
 - For plan-level metrics, multiple sets of scores are disambiguated with prefixes
   that identify the dataset.
 - For district-level metrics, each set of scores is wrapped in a dictionary with the dataset key.
+
+NOTE - This file takes its name from the Analyze tab in DRA.
 """
 
 from typing import Any, List, Dict, Tuple, Optional, TextIO
@@ -22,7 +24,6 @@ from .utils import Precinct, District
 from .aggregate import (
     get_dataset,
     get_fields,
-    aggregate_districts,
     DatasetKey,
     Aggregates,
     NamedAggregates,
@@ -121,7 +122,7 @@ def score_plan(
     mmd_scoring: bool = True,  # If True, add MMD scoring
     add_spanning_tree_score: bool = False,
 ) -> Tuple[Dict[str, Any], Aggregates]:
-    """Analyze a plan."""
+    """Score a plan."""
 
     # Pulled 'extended' scoring moved out separately
     assert mode in [
@@ -135,15 +136,6 @@ def score_plan(
 
     # TODO - Enable specific & multiple datasets per type
     datasets: Dict[str, str] = default_datasets(data_map)
-
-    # aggs: Aggregates = aggregate_districts(
-    #     assignments,
-    #     data,
-    #     graph,
-    #     metadata,
-    #     which=which,
-    #     data_metadata=data_metadata,
-    # )
 
     n_districts: int = metadata["D"]
     n_counties: int = metadata["C"]
@@ -179,19 +171,6 @@ def score_plan(
     if mode in ["all", "minority"]:
         vap_dataset: DatasetKey = get_dataset(data_map, "vap")
         vap_keys: List[str] = list(get_fields(data_map, "vap", vap_dataset).keys())
-        # 2025-03-21: Removed
-        # minority_metrics = calc_minority_metrics(
-        #     aggs["vap"][datasets["vap"]],
-        #     n_districts,
-        #     vap_keys,
-        # )
-        # scorecard.update(minority_metrics)
-        # scorecard["minority"] = rate_minority_opportunity(
-        #     scorecard["opportunity_districts"],
-        #     scorecard["proportional_opportunities"],
-        #     scorecard["coalition_districts"],
-        #     scorecard["proportional_coalitions"],
-        # )
 
         # 2025-03-21: Added
         if mmd_scoring:
@@ -205,23 +184,9 @@ def score_plan(
             alt_minority_metrics: Dict[str, float] = calc_alt_minority_metrics(
                 aggs["vap"][datasets["vap"]], n_districts, vap_keys
             )
-            # 2025-03-21: Removed
-            # subset: Dict[str, float] = {
-            #     f"alt_{k}": v
-            #     for k, v in alt_minority_metrics.items()
-            #     if k
-            #     in [
-            #         "opportunity_districts",
-            #         # 2025-03-21: Removed
-            #         # "opportunity_districts_pct",
-            #         "coalition_districts",
-            #     ]
-            # }
             scorecard.update(
                 alt_minority_metrics
             )  # 2025-03-21: scorecard.update(subset)
-            # 2025-03-21: Removed
-            # scorecard["minority_alt"] = rate_minority_opportunity(
             scorecard["minority"] = rate_minority_opportunity(
                 alt_minority_metrics["opportunity_districts"],
                 alt_minority_metrics["proportional_opportunities"],

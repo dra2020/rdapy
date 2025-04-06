@@ -8,10 +8,9 @@ from collections import OrderedDict
 import pandas as pd
 
 from rdapy.score.utils import *
-from rdapy.score.aggregate import arcs_are_symmetric
+from rdapy.score.aggregate import aggregate_districts, arcs_are_symmetric
 from rdapy.score.analyze import (
     Aggregates,
-    aggregate_districts,
     score_plan,
     calc_compactness_metrics,
 )
