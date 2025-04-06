@@ -250,7 +250,6 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--geojson",
         help="The GeoJSON file",
-        default="testdata/data/NC_vtd_datasets.geojson",
         type=str,
     )
     parser.add_argument(
@@ -261,7 +260,6 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--graph",
         help="The output JSON file containing the adjacency graph",
-        default="temp/DEBUG_graph.json",
         type=str,
     )
 
