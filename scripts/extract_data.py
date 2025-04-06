@@ -272,20 +272,17 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--geojson",
         help="The GeoJSON file",
-        default="testdata/data/NC_vtd_datasets.geojson",
         type=str,
     )
     parser.add_argument(
         "--data-map",
         dest="data_map",
-        default="testdata/data/data_map.json",
         help="The file containing the data mapping for the input and output files",
         type=str,
     )
     parser.add_argument(
         "--graph",
         help="The adjacency graph JSON file",
-        default="testdata/intermediate/NC_graph.json",
         type=str,
     )
     parser.add_argument(

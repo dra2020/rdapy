@@ -105,7 +105,6 @@ def parse_args():
     parser.add_argument(
         "--data",
         type=str,
-        default="testdata/intermediate/NC_input_data.jsonl",
         help="Path to input data file",
     )
     parser.add_argument(
