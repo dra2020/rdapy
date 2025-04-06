@@ -12,7 +12,7 @@ scripts/aggregate.py \
 --state NC \
 --plan-type congress \
 --data testdata/intermediate/NC_input_data.jsonl \
---graph testdata/intermediate/NC_graph.json < testdata/ensemble/NC_congress_plans.100.jsonl > temp/DEBUG_output.jsonl
+--graph testdata/intermediate/NC_graph.json < testdata/ensemble/NC_congress_plans.100.jsonl > temp/DEBUG_aggregates.jsonl
 
 -or-
 
@@ -21,7 +21,7 @@ cat testdata/ensemble/NC_congress_plans.100.jsonl \
 --state NC \
 --plan-type congress \
 --data testdata/intermediate/NC_input_data.jsonl \
---graph testdata/intermediate/NC_graph.json > temp/DEBUG_output.jsonl
+--graph testdata/intermediate/NC_graph.json > temp/DEBUG_aggregates.jsonl
 
 
 """
