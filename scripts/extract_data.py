@@ -27,6 +27,8 @@ from shapely.geometry import (
     Point,
 )
 
+from rdapy import smart_write
+
 EPSILON: float = 1.0e-12
 OUT_OF_STATE: str = "OUT_OF_STATE"
 
@@ -229,33 +231,14 @@ def find_center(shp) -> Tuple[float, float]:
     return x, y
 
 
-@contextlib.contextmanager
-def smart_write(
-    filename: Optional[str] = None,
-) -> Generator[TextIO | TextIO, None, None]:
-    """Write to a file or stdout.
-
-    Patterned after: https://stackoverflow.com/questions/17602878/how-to-handle-both-with-open-and-sys-stdout-nicely
-    """
-
-    if filename and filename != "-":
-        fh: TextIO = open(os.path.expanduser(filename), "w")
-    else:
-        fh = sys.stdout
-
-    try:
-        yield fh
-    finally:
-        if fh is not sys.stdout:
-            fh.close()
-
-
 def write_record(record: Any, outstream: TextIO) -> None:
     """
     Write a record as a JSONL "line" to a file
 
     The indent=None forces the JSON to be written on a single line
     NOTE - Don't sort the keys, i.e., keep them in the same order as specified.
+
+    NOTE - The version in ensemble_io.py sorts the keys which breaks SCORE.sh. Not sure why.
     """
 
     json.dump(record, outstream, indent=None)
