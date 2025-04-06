@@ -75,25 +75,22 @@ def parse_arguments():
         description="Parse command line arguments."
     )
 
-    parser.add_argument("--state", type=str, default="NC", help="State abbreviation")
+    parser.add_argument("--state", type=str, help="State abbreviation")
     parser.add_argument(
         "--plan-type",
         type=str,
         dest="plan_type",
-        default="congress",
         help="Plan type (e.g., congress)",
     )
 
     parser.add_argument(
         "--data",
         type=str,
-        default="testdata/intermediate/NC_input_data.jsonl",
         help="Path to input data file",
     )
     parser.add_argument(
         "--graph",
         type=str,
-        default="testdata/intermediate/NC_graph.json",
         help="Path to graph file",
     )
     parser.add_argument(
