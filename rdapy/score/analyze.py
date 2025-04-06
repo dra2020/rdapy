@@ -154,18 +154,17 @@ def score_plan(
             aggs["election"][datasets["election"]],
             n_districts,
         )
-        # 2025-03-21: Added
         estimated_seat_pct = partisan_metrics.pop("estimated_seat_pct")
         assert estimated_seat_pct is not None
         scorecard.update(partisan_metrics)
+
         scorecard["proportionality"] = rate_proportionality(
             scorecard["pr_deviation"],
             scorecard["estimated_vote_pct"],
-            estimated_seat_pct,  # 2025-03-21: Removed scorecard["estimated_seat_pct"],
+            estimated_seat_pct,
         )
         scorecard["competitiveness"] = rate_competitiveness(
-            scorecard["competitive_districts"]
-            / n_districts  # 2025-03-21: scorecard["competitive_district_pct"]
+            scorecard["competitive_districts"] / n_districts
         )
 
     if mode in ["all", "minority"]:
@@ -225,6 +224,7 @@ def score_plan(
         compactness_metrics["population_compactness"] = energy
 
         scorecard.update(compactness_metrics)
+
         scorecard["compactness"] = rate_compactness(
             scorecard["reock"], scorecard["polsby_popper"]
         )
@@ -250,7 +250,6 @@ def score_plan(
     if mode in ["all", "splitting"]:
         new_aggs["census"][datasets["census"]].update(splitting_by_district)
         new_aggs["census"][datasets["census"]].pop("CxD")
-    # scorecard["by_district"] = aggs
 
     # Trim the floating point numbers
     precision: int = 4
