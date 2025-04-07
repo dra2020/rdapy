@@ -7,6 +7,7 @@ GRAPH=""
 PLANS=""
 SCORES=""
 BY_DISTRICT=""
+MODE="all"
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -43,6 +44,10 @@ while [[ $# -gt 0 ]]; do
       BY_DISTRICT="$2"
       shift 2
       ;;
+    --mode)
+      MODE="$2"
+      shift 2
+      ;;
     *)
       echo "Unknown argument: $1"
       exit 1
@@ -57,6 +62,21 @@ if [[ -z "$STATE" || -z "$PLAN_TYPE" || -z "$GEOJSON" || -z "$DATA_MAP" || -z "$
   exit 1
 fi
 
+# Validate the mode argument
+valid_modes=("all" "general" "partisan" "minority" "compactness" "splitting")
+is_valid_mode=false
+
+for valid_mode in "${valid_modes[@]}"; do
+  if [[ "$MODE" == "$valid_mode" ]]; then
+    is_valid_mode=true
+    break
+  fi
+done
+
+if [[ "$is_valid_mode" == false ]]; then
+  echo "Error: Invalid mode '$MODE'. Must be one of: all, general, partisan, minority, compactness, splitting"
+  exit 1
+fi
 
 temp_data=$(mktemp /tmp/data.XXXXXX)
 
@@ -73,12 +93,14 @@ scripts/aggregate.py \
 --plan-type "$PLAN_TYPE" \
 --data "$temp_data" \
 --graph "$GRAPH" \
+--mode "$MODE" \
 | 
 scripts/score.py \
 --state "$STATE" \
 --plan-type "$PLAN_TYPE" \
 --data "$temp_data" \
 --graph "$GRAPH" \
+--mode "$MODE" \
 |
 scripts/write.py \
 --data "$temp_data" \
