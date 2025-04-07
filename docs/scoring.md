@@ -43,8 +43,12 @@ Examples of these files can be found in `testdata/scoring/`.
 
 The plan-level scores are described in [Scores (Metrics)](./scores.md).
 
-NOTE: This scripts does not extract an adjacency graph from the GeoJSON.
+NOTE: This scripts does *not* extract an adjacency graph from the GeoJSON.
 It uses a pre-computed adjacency graph from DRA.
+
+By default, this script calculates all metrics ("scores") for all plans in an input ensemble.
+If your ensembles are very large though, you can [increase scoring throughput](./throughput.md),
+by breaking the overall process down into pieces and running them in parallel.
 
 ## Component Scripts
 
