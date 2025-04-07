@@ -1,27 +1,28 @@
 #!/bin/bash
 
-# scripts/CONCAT_FILES.sh /path/to/csvs "NC20C_scores_compactness_*.csv" [--no-header]
+# scripts/CONCAT_FILES.sh /path/to/csvs "NC_congress_scores_compactness_*.csv" 
+# scripts/CONCAT_FILES.sh /path/to/csvs "NC_congress_by-district_compactness_*.jsonl" --no-header
 #
 # Vertically concatenates CSV files in the specified directory with a given pattern,
-# in sort order, e.g., "NC20C_scores_compactness_01.csv", "NC20C_scores_compactness_02.csv", etc.
+# in sort order, e.g., "NC_congress_scores_compactness_01.csv", "NC_congress_scores_compactness_02.csv", etc.
 # 
 # By default, the files are assumed to have a header or metadata row which is not repeated in the output.
 # If the --no-header option is provided, files are simply appended without removing the first line.
 #
-# For the example above, it creates /path/to/csvs/NC20C_scores_compactness.csv.
+# For the example above, it creates /path/to/csvs/NC_congress_scores_compactness.csv.
 #
 # Examples:
-# scripts/CONCAT_FILES.sh /path/to/csvs "NC20C_scores_general_*.csv"
-# scripts/CONCAT_FILES.sh /path/to/csvs "NC20C_scores_partisan_*.csv"
-# scripts/CONCAT_FILES.sh /path/to/csvs "NC20C_scores_minority_*.csv"
-# scripts/CONCAT_FILES.sh /path/to/csvs "NC20C_scores_compactness_*.csv"
-# scripts/CONCAT_FILES.sh /path/to/csvs "NC20C_scores_splitting_*.csv"
+# scripts/CONCAT_FILES.sh /path/to/csvs "NC_congress_scores_general_*.csv"
+# scripts/CONCAT_FILES.sh /path/to/csvs "NC_congress_scores_partisan_*.csv"
+# scripts/CONCAT_FILES.sh /path/to/csvs "NC_congress_scores_minority_*.csv"
+# scripts/CONCAT_FILES.sh /path/to/csvs "NC_congress_scores_compactness_*.csv"
+# scripts/CONCAT_FILES.sh /path/to/csvs "NC_congress_scores_splitting_*.csv"
 
 # Check for valid number of arguments
 if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
     echo "Usage: $0 directory pattern [--no-header]"
-    echo "Example: $0 /path/to/dir 'NC20C_scores_compactness_*.csv'"
-    echo "Example with --no-header: $0 /path/to/dir 'NC20C_scores_compactness_*.csv' --no-header"
+    echo "Example: $0 /path/to/dir 'NC_congress_scores_compactness_*.csv'"
+    echo "Example with --no-header: $0 /path/to/dir 'NC_congress_scores_compactness_*.csv' --no-header"
     exit 1
 fi
 

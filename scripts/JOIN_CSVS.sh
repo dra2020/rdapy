@@ -1,16 +1,16 @@
 #!/bin/bash
 
-# scripts/JOIN_CSVS.sh /path/to/csvs "NC20C_scores_*.csv"
+# scripts/JOIN_CSVS.sh /path/to/csvs "NC_congress_scores_*.csv"
 #
 # Horizontally joins CSV files in the specified directory with a given pattern.
 # The individual files instantiate the patter with "general", "partisan", "minority", "compactness", and "splitting",
 # the scoring 'modes'.
 #
-# For the example above, it creates: /path/to/csvs/NC20C_scores.csv.
+# For the example above, it creates: /path/to/csvs/NC_congress_scores.csv.
 
 if [ "$#" -ne 2 ]; then
     echo "Usage: $0 directory pattern"
-    echo "Example: $0 /path/to/dir 'NC20C_scores_*.csv'"
+    echo "Example: $0 /path/to/dir 'NC_congress_scores_*.csv'"
     exit 1
 fi
 
