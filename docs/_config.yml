@@ -1,0 +1,72 @@
+# file: `_config.yml`
+
+title: Redistricting Analytics in Python
+author:
+  name:  Alec Ramsay
+  email: alec@davesredistricting.org
+description: >- # this means to ignore newlines until "baseurl:"
+  A Python version of DRA's analytics & a high-volume scoring toolchain 
+baseurl: /rdapy
+url: https://dra2020.github.io
+twitter_username: alecramsay
+github_username:  alecramsay
+
+# Build settings
+theme: minima
+# remote_theme: THEME-NAME
+# plugins:
+#  - humanize
+#  - jekyll-feed
+sass:
+  sass_dir: _sass
+include: ['_pages']
+# markdown: kramdown
+kramdown:
+  input: GFM
+
+defaults:
+  - scope:
+      path: "assets/images"
+    values:
+      image: true
+
+# Exclude from processing.
+# The following items will not be processed, by default.
+# Any item listed under the `exclude:` key here will be automatically added to
+# the internal "default list".
+#
+# Excluded items can be processed by explicitly listing the directories or
+# their entries' file path in the `include:` list.
+#
+# exclude:
+#   - .sass-cache/
+#   - .jekyll-cache/
+#   - gemfiles/
+#   - Gemfile
+#   - Gemfile.lock
+#   - node_modules/
+#   - vendor/bundle/
+#   - vendor/cache/
+#   - vendor/gems/
+#   - vendor/ruby/
+
+# Help with YAML syntax:
+# - https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
+# - https://learnxinyminutes.com/docs/yaml/
+
+# Other resources:
+# - https://paulcalvano.com/docs/config/
+# - https://github.com/hydecorp/hydejack-starter-kit/blob/v9/_config.yml
+
+# Info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at 
+# [jekyllrb.com](https://jekyllrb.com/)
+
+# The source code for Minima at GitHub:
+# [jekyll][jekyll-organization] /
+# [minima](https://github.com/jekyll/minima)
+
+# The source code for Jekyll at GitHub:
+# [jekyll][jekyll-organization] /
+# [jekyll](https://github.com/jekyll/jekyll)
+
+# [jekyll-organization]: https://github.com/jekyll
