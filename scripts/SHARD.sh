@@ -119,12 +119,12 @@ for ((i=0; i<nshards; i++)); do
     end_row=$(((i + 1) * rows_per_shard))
     
     # Ensure we don't exceed the total number of rows
-    if [ $end_row -gt $total_rows ]; then
+    if [ $end_row -gt "$total_rows" ]; then
         end_row=$total_rows
     fi
     
     # If we've already processed all rows, break
-    if [ $start_row -gt $total_rows ]; then
+    if [ $start_row -gt "$total_rows" ]; then
         break
     fi
     

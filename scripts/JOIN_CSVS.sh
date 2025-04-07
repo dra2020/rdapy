@@ -65,3 +65,5 @@ sed 's/$/\r/' "$temp_dir/combined.csv" > "$output_file"
 
 rm -r "$temp_dir"
 echo "Combined CSV created as $output_file"
+
+### END ###

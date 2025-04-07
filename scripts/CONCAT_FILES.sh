@@ -4,6 +4,7 @@
 #
 # Vertically concatenates CSV files in the specified directory with a given pattern,
 # in sort order, e.g., "NC20C_scores_compactness_01.csv", "NC20C_scores_compactness_02.csv", etc.
+# The files are assumed to have a header row which is not repeated in the output.
 # 
 # For the example above, it creates /path/to/csvs/NC20C_scores_compactness.csv.
 #
@@ -56,3 +57,5 @@ mv "$temp_dir/temp.${ext}" "$output_file"
 rm -r "$temp_dir"
 
 # echo "Combined file created as $output_file"
+
+### END ###
