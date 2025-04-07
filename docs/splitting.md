@@ -1,4 +1,4 @@
-# Splitting
+# County-District Splitting
 
 You can calculate county-district splitting metrics, as well as community of interest (COI) splitting metrics.
 

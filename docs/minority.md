@@ -1,4 +1,4 @@
-# Minority
+# The Opportunity for Minority Representation
 
 You can estimate the opportunity for minority representation.
 

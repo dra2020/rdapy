@@ -1,4 +1,4 @@
-# Partisan
+# Partisan: Partisan Bias & Responsiveness
 
 You can compute a full complement of partisan analytics for a set of districts all at once,
 described next, or you can compute individual metrics, described in the subsequent sections.

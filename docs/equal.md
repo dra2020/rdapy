@@ -1,4 +1,4 @@
-# Equal
+# 'Roughly Equal' Population
 
 You can compute the population deviation for a set of districts.
 
