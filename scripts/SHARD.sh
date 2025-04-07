@@ -1,62 +1,136 @@
 #!/bin/bash
 
-# For example:
-# scripts/SHARD.sh \
-# --shard 100 \
-# --output ~/'temp/NC20C_plans_{shard:02d}.jsonl'
+# Examples:
+# scripts/SHARD.sh /path/to/plans.jsonl
+# scripts/SHARD.sh /path/to/plans.jsonl --shards 10 --output /path/to/output/dir
 
-# Function to print usage
-usage() {
-    echo "Usage: $0 --shard <number> --output <file pattern>"
+# Function to display usage information
+function show_usage {
+    echo "Usage: $0 <jsonl_file> [--shards <nshards>] [--output <output>]"
+    echo "  <jsonl_file>        : Path to JSONL file containing redistricting plans"
+    echo "  -s|--shards <nshards>: Number of shards (default: 10, min: 2, max: 100)"
+    echo "  -d|--output <output>   : Output outputectory (default: /tmp)"
     exit 1
 }
 
-HPC=false
+# Check if at least one argument is provided
+if [ $# -lt 1 ]; then
+    show_usage
+fi
 
-# Initialize variables
-shard=""
-compressed=""
+# Get the JSONL file path (first positional argument)
+jsonl_file="$1"
+shift
 
-# Parse command line arguments
+# Initialize default values
+nshards=10
+output="/tmp"
+
+# Process remaining arguments (keyword arguments)
 while [[ $# -gt 0 ]]; do
-    case $1 in
-        --shard)
-            shard="$2"
+    case "$1" in
+        --shards)
+            nshards="$2"
             shift 2
             ;;
         --output)
             output="$2"
             shift 2
             ;;
-        --hpc)
-            HPC=true
-            shift
-            ;;
         *)
-            echo "Unknown argument: $1"
-            usage
+            echo "Unknown option: $1"
+            show_usage
             ;;
     esac
 done
 
-# Check if all required arguments are provided
-if [[ -z "$shard" ]] || [[ -z "$output" ]]; then
-    echo "Error: All arguments are required"
-    usage
+# Validate the JSONL file exists
+if [ ! -f "$jsonl_file" ]; then
+    echo "Error: JSONL file '$jsonl_file' not found"
+    exit 1
 fi
 
-exe_path=bin/distill
-if $HPC; then
-    exe_path=$HOME/rdatools/bin/distill-x86_64-linux
+# Validate the number of shards
+if ! [[ "$nshards" =~ ^[0-9]+$ ]]; then
+    echo "Error: Number of shards must be an integer"
+    exit 1
 fi
 
-echo "Sharding ($compressed) to ($output)"
+if [ "$nshards" -lt 2 ]; then
+    echo "Warning: Number of shards too small. Setting to minimum value (2)"
+    nshards=2
+fi
 
-# Creating shard files from xz compressed file
-$exe_path \
-    --from compress \
-    --to assignment \
-    --shard $shard \
-    --output $output
+if [ "$nshards" -gt 100 ]; then
+    echo "Warning: Number of shards too large. Setting to maximum value (100)"
+    nshards=100
+fi
+
+# Validate the output outputectory exists or create it
+if [ ! -d "$output" ]; then
+    echo "Output outputectory '$output' does not exist. Creating it..."
+    mkoutput -p "$output"
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to create output outputectory '$output'"
+        exit 1
+    fi
+fi
+
+# Get the base filename without extension
+base_filename=$(basename "$jsonl_file" .jsonl)
+
+# Create a temporary file to store filtered rows
+temp_file=$(mktemp)
+
+# Filter the JSONL file to include only rows with _tag_=plan
+grep -E '"_tag_"[[:space:]]*:[[:space:]]*"plan"' "$jsonl_file" > "$temp_file"
+
+# Count the total number of qualifying rows
+total_rows=$(wc -l < "$temp_file")
+echo "Found $total_rows qualifying rows with _tag_=plan"
+
+if [ "$total_rows" -eq 0 ]; then
+    echo "No qualifying rows found. No shards will be created."
+    rm "$temp_file"
+    exit 0
+fi
+
+# Calculate rows per shard (rounded up for all except possibly the last shard)
+rows_per_shard=$(( (total_rows + nshards - 1) / nshards ))
+
+# Create the shards
+echo "Creating $nshards shards with approximately $rows_per_shard rows per shard..."
+
+for ((i=0; i<nshards; i++)); do
+    # Format shard number with leading zeros (00, 01, 02, etc.)
+    shard_num=$(printf "%02d" $i)
+    
+    # Calculate start and end row for this shard
+    start_row=$((i * rows_per_shard + 1))
+    end_row=$(((i + 1) * rows_per_shard))
+    
+    # Ensure we don't exceed the total number of rows
+    if [ $end_row -gt $total_rows ]; then
+        end_row=$total_rows
+    fi
+    
+    # If we've already processed all rows, break
+    if [ $start_row -gt $total_rows ]; then
+        break
+    fi
+    
+    output_file="$output/${base_filename}.${shard_num}.jsonl"
+    
+    # Extract the rows for this shard
+    sed -n "${start_row},${end_row}p" "$temp_file" > "$output_file"
+    
+    rows_in_shard=$(wc -l < "$output_file")
+    echo "Shard $shard_num: $rows_in_shard rows written to $output_file"
+done
+
+# Clean up the temporary file
+rm "$temp_file"
+
+echo "Sharding complete."
 
 ### END ###
