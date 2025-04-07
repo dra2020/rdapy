@@ -31,7 +31,9 @@ DEMOGRAPHICS: list[str] = [
 ]
 
 
-def est_minority_opportunity(mf: float, demo: Optional[str] = None) -> float:
+def est_minority_opportunity(
+    mf: float, demo: Optional[str] = None, clip: bool = True
+) -> float:
     """Estimate the opportunity for a minority representation.
 
     NOTE - Shift minority proportions up, so 37% minority scores like 52% share,
@@ -52,13 +54,50 @@ def est_minority_opportunity(mf: float, demo: Optional[str] = None) -> float:
         shift *= dilution
 
     wip_num: float = mf + shift
-    oppty: float = 0.0 if (mf < range[0]) else min(est_seat_probability(wip_num), 1.0)
+
+    if clip:
+        # Original behavior with clipping at range[0]
+        oppty: float = (
+            0.0 if (mf < range[0]) else min(est_seat_probability(wip_num), 1.0)
+        )
+    else:
+        # Alternative behavior without the low-end cutoff
+        oppty: float = max(min(est_seat_probability(wip_num), 1.0), 0.0)
 
     return oppty
 
 
+# TODO - DELETE
+# def est_minority_opportunity(mf: float, demo: Optional[str] = None) -> float:
+#     """Estimate the opportunity for a minority representation.
+
+#     NOTE - Shift minority proportions up, so 37% minority scores like 52% share,
+#       but use the uncompressed seat probability distribution. This makes a 37%
+#       district have a ~70% chance of winning, and a 50% district have a >99% chance.
+#       Below 37 % has no chance.
+#     NOTE - Sam Wang suggest 90% probability for a 37% district. That seems a little
+#       too abrupt and all or nothing, so I backed off to the ~70%.
+#     """
+
+#     assert mf >= 0.0
+
+#     range: list[float] = [0.37, 0.50]
+
+#     shift: float = 0.15  # For Black VAP % (and Minority)
+#     dilution: float = 0.50  # For other demos, dilute the Black shift by half
+#     if demo and (demo not in ["black", "minority"]):
+#         shift *= dilution
+
+#     wip_num: float = mf + shift
+#     oppty: float = 0.0 if (mf < range[0]) else min(est_seat_probability(wip_num), 1.0)
+
+#     return oppty
+
+
 def calc_minority_opportunity(
-    statewide_demos: dict[str, float], demos_by_district: list[dict[str, float]]
+    statewide_demos: dict[str, float],
+    demos_by_district: list[dict[str, float]],
+    clip: bool = True,
 ) -> dict[str, float]:
     """Estimate minority opportunity (everything except the table which is used in DRA)."""
 
@@ -79,7 +118,7 @@ def calc_minority_opportunity(
     oppty_by_demo: dict[str, float] = defaultdict(float)
     for district in demos_by_district:
         for d in DEMOGRAPHICS[1:]:  # Ignore 'white'
-            oppty_by_demo[d] += est_minority_opportunity(district[d], d)
+            oppty_by_demo[d] += est_minority_opportunity(district[d], d, clip=clip)
 
     # The # of opportunity districts for each separate demographic and all minorities
     od: float = sum(
