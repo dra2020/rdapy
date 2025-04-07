@@ -8,7 +8,10 @@ ignoring a few DRA-specific aspects (in particular, the five [0-100] ratings).
 Unlike the analytics used in the app ([dra-analytics](https://github.com/dra2020/dra-analytics))
 which are implememented in TypeScript, these are implemented in Python to make them easier to use outside of DRA.
 
-There is both a PyPi package and a command-line interface.
+There are both a PyPi package and a command-line interface.
+
+Note: The repository is in the process of being upgraded to include a GitHub Pages site
+which will, among other things, explain high-volume offline scoring.
 
 ## Package
 
