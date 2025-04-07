@@ -6,6 +6,7 @@ TEST POPULATION DEVIATION
 
 
 from rdapy.equal import *
+from rdapy.utils import *
 from testutils import *
 
 

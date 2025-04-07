@@ -6,6 +6,7 @@ TEST COI SPLITTING
 
 
 from rdapy.splitting import *
+from rdapy.utils import *
 from testutils import *
 
 

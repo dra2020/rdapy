@@ -6,6 +6,7 @@ TEST COMPETITIVENESS & RESPONSIVENESS METRICS
 
 
 from rdapy.partisan import *
+from rdapy.utils import *
 from testutils import *
 
 

@@ -4,6 +4,8 @@
 Sample population deviation starting from raw data
 """
 
+from collections import defaultdict
+
 from rdapy import *
 from testutils import *
 

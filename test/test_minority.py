@@ -6,6 +6,7 @@ TEST MINORITY OPPORTUNITY
 
 
 from rdapy.minority import *
+from rdapy.utils import *
 from testutils import *
 
 EPSILON: float = 1 / 10**6

@@ -1,5 +1,7 @@
 # rdapy/__init__.py
 
+from .utils import *
+
 from .compactness import (
     calc_compactness,
     calc_sym_x,
@@ -17,14 +19,18 @@ from .compactness import (
     reock_formula,
     polsby_formula,
 )
+
 from .equal import calc_population_deviation
+
 from .graph import is_connected, is_embedded, OUT_OF_STATE
+
 from .minority import (
     calc_proportional_districts,
     est_minority_opportunity,
     calc_minority_opportunity,
     DEMOGRAPHICS,
 )
+
 from .splitting import (
     calc_county_district_splitting,
     split_score,
@@ -48,6 +54,7 @@ from .splitting import (
     uncertainty_of_membership,
     effective_splits,
 )
+
 from .partisan import (
     calc_partisan_metrics,
     calc_best_seats,
@@ -77,6 +84,7 @@ from .partisan import (
     infer_sv_points,
     infer_inverse_sv_points,
 )
+
 from .rate import (
     rate_proportionality,
     rate_competitiveness,
@@ -88,5 +96,21 @@ from .rate import (
     rate_district_splitting,
     rate_splitting,
 )
+
+from .score import (
+    aggregate_plans,
+    Aggregates,
+    score_plans,
+    smart_read,
+    smart_write,
+    read_record,
+    write_record,
+    geoids_from_precinct_data,
+    collect_metadata,
+    load_data,
+    load_graph,
+    format_scores,
+)
+
 
 name = "rdapy"
