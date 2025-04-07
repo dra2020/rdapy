@@ -1,8 +1,17 @@
 #!/bin/bash
 
-# Examples:
 # scripts/SHARD.sh /path/to/plans.jsonl
-# scripts/SHARD.sh /path/to/plans.jsonl --shards 10 --output /path/to/output/dir
+# 
+# Shards a JSONL file of redistricting plans in tagged format into multiple smaller files
+# so scoring can be done in parallel.
+#
+# For the above example, ten shards (the default) are created in '/tmp'. They have the
+# same base name as the input file, with a series of two-digit suffixes (00, 01, 02, etc.).
+
+# Examples:
+# scripts/SHARD.sh /path/to/plans.jsonl --shards 5
+# scripts/SHARD.sh /path/to/plans.jsonl --output /path/to/output/dir
+# scripts/SHARD.sh /path/to/plans.jsonl --shards 5 --output /path/to/output/dir
 
 # Function to display usage information
 function show_usage {
@@ -119,7 +128,7 @@ for ((i=0; i<nshards; i++)); do
         break
     fi
     
-    output_file="$output/${base_filename}.${shard_num}.jsonl"
+    output_file="$output/${base_filename}_${shard_num}.jsonl"
     
     # Extract the rows for this shard
     sed -n "${start_row},${end_row}p" "$temp_file" > "$output_file"
