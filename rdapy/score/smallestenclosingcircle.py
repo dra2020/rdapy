@@ -10,37 +10,39 @@ class Point(NamedTuple):
     y: float
 
 
-class Circle(NamedTuple):
+class CirclePoint(NamedTuple):
     center: Point
     r: float
 
 
-class AlecCircle(NamedTuple):
+class CircleXY(NamedTuple):
     x: float
     y: float
     r: float
 
 
-class WelzlCircle(NamedTuple):
-    circle: Circle
+class CircleWelzl(NamedTuple):
+    circle: CirclePoint
     defining: list[Point]
 
 
-def B_MINIDISK(points: list[Point], R: list[Point]) -> WelzlCircle:
+def B_MINIDISK(points: list[Point], R: list[Point]) -> CircleWelzl:
     if len(points) == 0 or len(R) == 3:
         return b_md(points, R)
     p = points[0]
     remaining: list[Point] = points[1:]
-    D: WelzlCircle = B_MINIDISK(remaining, R)
+    D: CircleWelzl = B_MINIDISK(remaining, R)
     if not D.defining or not new_in_circle(D.circle, p):
         return B_MINIDISK(remaining, R + [p])
     return D
 
 
 # non-recursive version of B_MINIDISK
-def wl_B_MINIDISK(points: list[Point], _: list[Point]) -> WelzlCircle:
+def wl_B_MINIDISK(points: list[Point], _: list[Point]) -> CircleWelzl:
     wl: list[tuple[tuple[int, int], list[Point]]] = [((0, 0), [])]
-    retval: WelzlCircle = WelzlCircle(Circle(Point(999, 999), 999), [])  # phony value
+    retval: CircleWelzl = CircleWelzl(
+        CirclePoint(Point(999, 999), 999), []
+    )  # phony value
     while wl:
         (index, phase), R = wl.pop()
         if phase == 0:
@@ -61,32 +63,32 @@ def wl_B_MINIDISK(points: list[Point], _: list[Point]) -> WelzlCircle:
     return retval
 
 
-def b_md(points: list[Point], R: list[Point]) -> WelzlCircle:
+def b_md(points: list[Point], R: list[Point]) -> CircleWelzl:
     if len(R) == 0:
-        return WelzlCircle(Circle(Point(0, 0), 0), [])
+        return CircleWelzl(CirclePoint(Point(0, 0), 0), [])
     elif len(R) == 1:
-        return WelzlCircle(Circle(R[0], 0), R)
+        return CircleWelzl(CirclePoint(R[0], 0), R)
     elif len(R) == 2:
-        return WelzlCircle(
-            Circle(
+        return CircleWelzl(
+            CirclePoint(
                 Point((R[0].x + R[1].x) / 2, (R[0].y + R[1].y) / 2),
                 math.hypot(R[0].x - R[1].x, R[0].y - R[1].y) / 2,
             ),
             R,
         )
     elif len(R) == 3:
-        c: Circle = circleRadius(R[0], R[1], R[2])
-        return WelzlCircle(c, R)
+        c: CirclePoint = circleRadius(R[0], R[1], R[2])
+        return CircleWelzl(c, R)
     else:
         raise ValueError("R is too large")
 
 
-def new_in_circle(D: Circle, p: Point) -> bool:
+def new_in_circle(D: CirclePoint, p: Point) -> bool:
     return math.hypot(D.center.x - p.x, D.center.y - p.y) <= D.r
 
 
 # adapted from https://stackoverflow.com/questions/52990094/calculate-circle-given-3-points-code-explanation
-def circleRadius(b: Point, c: Point, d: Point) -> Circle:
+def circleRadius(b: Point, c: Point, d: Point) -> CirclePoint:
     temp: float = c[0] ** 2 + c[1] ** 2
     bc: float = (b[0] ** 2 + b[1] ** 2 - temp) / 2
     cd: float = (temp - d[0] ** 2 - d[1] ** 2) / 2
@@ -101,11 +103,11 @@ def circleRadius(b: Point, c: Point, d: Point) -> Circle:
 
     radius: float = ((cx - b[0]) ** 2 + (cy - b[1]) ** 2) ** 0.5
 
-    return Circle(Point(cx, cy), radius)
+    return CirclePoint(Point(cx, cy), radius)
 
 
 # ----------------------------------------------------------------------------
-# Todd's driver routine to marry it to Alec's code
+# Driver routine to marry it to previous underlying code
 
 
 def stride(points: list[Point]) -> Iterator[Point]:
@@ -131,8 +133,8 @@ def stride0(L: list[list[Point]]) -> Iterator[Point]:
 
 def do_make_circle(
     points: list[tuple[float, float]],
-    fn: Callable[[list[Point], list[Point]], WelzlCircle],
-) -> AlecCircle:
+    fn: Callable[[list[Point], list[Point]], CircleWelzl],
+) -> CircleXY:
     ordered = list(set(Point(x, y) for x, y in points))
     # ordered: list[Point] = [Point(x, y) for x, y in set(points)]
     for _ in range(10):
@@ -140,8 +142,8 @@ def do_make_circle(
             random.shuffle(ordered)  # shuffle to avoid worst case
             # ordered = list(stride(ordered))  # optimize for convex hull path?
             # ordered = list(reversed(ordered))
-            x: WelzlCircle = fn(ordered, [])
-            return AlecCircle(x.circle.center.x, x.circle.center.y, x.circle.r)
+            x: CircleWelzl = fn(ordered, [])
+            return CircleXY(x.circle.center.x, x.circle.center.y, x.circle.r)
         except ValueError:
             # print(f"Unable to find circle after {_} tries")
             continue
@@ -149,12 +151,12 @@ def do_make_circle(
 
 
 # DO NOT USE THIS FUNCTION because of recursion depth issues
-def new_make_circle(points: list[tuple[float, float]]) -> AlecCircle:
+def new_make_circle(points: list[tuple[float, float]]) -> CircleXY:
     return do_make_circle(points, B_MINIDISK)
 
 
 # uses non-recursive version of B_MINIDISK
-def wl_make_circle(points: list[tuple[float, float]]) -> AlecCircle:
+def wl_make_circle(points: list[tuple[float, float]]) -> CircleXY:
     return do_make_circle(points, wl_B_MINIDISK)
 
 
