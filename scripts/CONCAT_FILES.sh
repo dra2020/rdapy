@@ -1,8 +1,13 @@
 #!/bin/bash
 
 # scripts/CONCAT_FILES.sh /path/to/csvs "NC20C_scores_compactness_*.csv"
-# Creates: /path/to/csvs/NC20C_scores_compactness.csv
-
+#
+# Vertically concatenates CSV files in the specified directory with a given pattern,
+# in sort order, e.g., "NC20C_scores_compactness_01.csv", "NC20C_scores_compactness_02.csv", etc.
+# 
+# For the example above, it creates /path/to/csvs/NC20C_scores_compactness.csv.
+#
+# Examples:
 # scripts/CONCAT_FILES.sh /path/to/csvs "NC20C_scores_general_*.csv"
 # scripts/CONCAT_FILES.sh /path/to/csvs "NC20C_scores_partisan_*.csv"
 # scripts/CONCAT_FILES.sh /path/to/csvs "NC20C_scores_minority_*.csv"
