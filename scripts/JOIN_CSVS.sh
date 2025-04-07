@@ -21,7 +21,7 @@ output_file="${directory}/${base_pattern}.csv"
 cd "$directory" || exit 1
 
 # Define file order
-declare -a categories=("partisan" "minority" "compactness" "splitting" "extended")
+declare -a categories=("general" "partisan" "minority" "compactness" "splitting")
 
 # Create temp directory
 temp_dir=$(mktemp -d)
