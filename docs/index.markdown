@@ -19,19 +19,19 @@ which will, among other things, explain high-volume offline scoring.
 
 The analytics in the PyPi package are organized by area (in alphabetical order):
 
-- [Compactness](./docs/compactness.md): Various measures of compactness
-- [Equal](./docs/equal.md): Population deviation
-- [Graph](./docs/graph.md): Checks for contiguity & embeddedness
-- [Minority](./docs/minority.md): Minority opportunity metrics
-- [Partisan](./docs/partisan.md): Various measures of partisan bias & responsiveness, as well as support for rank-vote graphs and seats-votes curves
-- [Splitting](./docs/splitting.md): County- & district-splitting and COI splitting
+- [Compactness](./compactness.html): Various measures of compactness
+- [Equal](./equal.html): Population deviation
+- [Graph](./graph.html): Checks for contiguity & embeddedness
+- [Minority](./minority.html): Minority opportunity metrics
+- [Partisan](./partisan.html): Various measures of partisan bias & responsiveness, as well as support for rank-vote graphs and seats-votes curves
+- [Splitting](./splitting.html): County- & district-splitting and COI splitting
 
 The `samples` directory contains some simple examples of how to exercies these functions
 and how to preprocess raw block-level data into the formats required by the analytics.
 
 ## Command-Line Interface
 
-The command-line interface enables [high-volume offline scoring](./docs/scoring.md).
+The command-line interface enables [high-volume offline scoring](./scoring.html).
 
 ## Installation
 
