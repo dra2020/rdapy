@@ -1,6 +1,11 @@
-# Scores (Metrics)
+---
+layout: page
+title: Scores (Metrics)
+permalink: scores/
+---
 
 These are the metrics ("scores") calculated for a plan, when you run the `scripts/SCORE.sh` script.
+There is a PDF version of this page [here](./docs/scores.pdf).
 
 Metrics fall into one of several categories: 
 

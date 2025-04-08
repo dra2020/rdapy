@@ -1,4 +1,9 @@
-# Graph
+---
+layout: page
+title: Adjacency Graph
+permalink: graph/
+---
+
 
 You can check a plan to make sure districts are contiguous and not embedded within other districts.
 

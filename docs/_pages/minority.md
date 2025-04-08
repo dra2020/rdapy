@@ -1,4 +1,8 @@
-# The Opportunity for Minority Representation
+---
+layout: page
+title: Opportunity for Minority Representation
+permalink: minority/
+---
 
 You can estimate the opportunity for minority representation.
 

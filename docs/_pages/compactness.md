@@ -1,4 +1,8 @@
-# Compactness
+---
+layout: page
+title: Compactness
+permalink: compactness/
+---
 
 You can calculate compactness for a set of districts (shapes), as well as various measures of
 compactness for a single district (shape) including "know it when you see it" (KIWYSI) compactness.

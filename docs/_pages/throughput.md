@@ -1,4 +1,8 @@
-# Boosting Scoring Throughput
+---
+layout: page
+title: Boosting Scoring Throughput
+permalink: throughput/
+---
 
 By default, the `SCORE.sh` scripts calculates all metrics ("scores") for all plans in an input ensemble.
 When the ensemble is large, this can take a long time.

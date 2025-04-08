@@ -1,4 +1,8 @@
-# 'Roughly Equal' Population
+---
+layout: page
+title: 'Roughly Equal'
+permalink: equal/
+---
 
 You can compute the population deviation for a set of districts.
 

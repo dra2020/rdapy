@@ -31,87 +31,12 @@ and how to preprocess raw block-level data into the formats required by the anal
 
 ## Command-Line Interface
 
-The command-line interface enables [high-volume offline scoring](./scoring.html).
+The command-line interface uses the package and enables [high-volume offline scoring](./scoring.html).
 
 ## Installation
 
-To install the package:
+For installation instructions, see the [README](../README.md).
 
-```bash
-pip install rdapy
-```
-
-Then
-
-```
-import rdapy
-```
-
-To setup the repository for local command-line use:
-
-Clone the repository:
-
-```bash
-git clone https://github.com/dra2020/rdapy
-cd rdapy
-```
-
-Until these high-volume scoring changes are merged into `main`, checkout the `bulkscoring` branch:
-
-```bash
-git checkout bulkscoring
-```
-
-Then create a virtual environment that uses Python 3.12.
-Then reset Python outside the virtual environment to the normal setting.
-For example, using `pyenv`:
-
-```bash
-pyenv shell 3.12
-python3 -m venv "./rdapy"
-source "./rdapy/bin/activate"
-deactivate
-pyenv shell --unset
-```
-
-Then activate the virtual environment again, and install the required dependencies:
-
-```bash
-source "./rdapy/bin/activate"
-pip install -r requirements.txt
-pip install --upgrade pip
-```
-
-Finally, test that the automated tests run:
-
-```bash
-pytest
-```
-
-and that the command-line interface works:
-
-```bash
-scripts/SCORE.sh \
---state NC \
---plan-type congress \
---geojson testdata/data/NC_vtd_datasets.geojson \
---data-map testdata/data/NC_data_map.json \
---graph testdata/intermediate/NC_graph.json \
---plans testdata/ensemble/NC_congress_plans.100.jsonl \
---scores temp/TEST_congress_scores.csv \
---by-district temp/TEST_congress_by-district.jsonl
-```
-
-## Development
-
-There is a `launch.json` for VS Code debugging in the `docs` directory.
-
-Run automated tests with:
-
-```bash
-pytest
-```
-
-# Questions
+## Questions
 
 Email questions to [feedback](mailto:feedback@davesredistricting.org?subject=Python-analytics).
