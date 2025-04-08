@@ -1,0 +1,230 @@
+body {
+	margin: 0;
+	color: $font-color;
+	font-family: $font-style;
+	font-size: 1.1em;
+	line-height: 1.6;
+	-webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+	font-weight: 600;
+	color: $heading-font-color;
+	font-family: $heading-font;
+	line-height: 1.5;
+}
+
+h1 {
+	color: $heading-font-color;
+	// color: $main;
+	font-size: 2.5em;
+
+	a,
+	a:visited {
+		text-decoration: none;
+		color: $main;
+	}
+}
+
+h2 {
+	font-size: 2em;
+}
+
+a,
+a:visited {
+	color: $link-color;
+	text-decoration: underline;
+	font-weight: bold;
+}
+
+a:hover {
+	color: $link-hover-color;
+	text-decoration: underline;
+}
+
+header {
+	background: $header;
+	padding: 0px 15px;
+	text-align: center;
+	margin: 50px 0 0;
+	height: 5vh;
+	// height: 50vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+main {
+	padding: 0 15px;
+	max-width: $content-width;
+	margin: 0 auto;
+}
+
+time {
+	color: #898989;
+}
+
+.container {
+	max-width: $content-width;
+	margin: 0 auto;
+}
+
+/* Aside */
+
+aside {
+	position: fixed;
+	top: 0;
+	left: 0;
+	background: #8fbc8f;
+	// background: #fff;
+	width: 100%;
+	z-index: 2;
+	// border-bottom: 1px solid lighten($light, 30%);
+	box-shadow: 0px 1px 1px RGBA(4, 25, 54, .1);
+
+	nav {
+		float: left;
+		max-width: 800px;
+		margin: 0 auto;
+
+		ul {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+
+			li {
+				float: left;
+				position: relative;
+
+				a {
+					text-decoration: none;
+					display: block;
+					padding: 15px;
+					font-family: 'Muli', sans-serif;
+					line-height: 20px;
+					margin-bottom: -1px;
+					box-shadow: 0;
+
+					&:hover,
+					&:active {
+						background: $header;
+						text-decoration: none;
+						color: $main;
+					}
+				}
+			}
+		}
+
+		&:after {
+			content: '';
+			display: table;
+			clear: both;
+		}
+	}
+}
+
+footer {
+	text-align: left;
+	padding: 0px;
+	font-size: small;
+}
+
+// For state pages
+
+table,
+th,
+td {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+th {
+	text-align: right;
+}
+
+td {
+	text-align: right;
+}
+
+th,
+td {
+	padding: 5px;
+}
+
+img {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+/* Style the map tabs */
+/* https://www.w3schools.com/howto/howto_js_tabs.asp */
+.tab {
+	overflow: hidden;
+	border: 1px solid #ccc;
+	background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+	background-color: inherit;
+	float: left;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 14px 16px;
+	transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+	background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+	background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+	display: none;
+	padding: 6px 12px;
+	border: 1px solid #ccc;
+	border-top: none;
+}
+
+// Tooltips
+
+.tooltip {
+	position: absolute;
+	// position: relative;
+	display: inline-block;
+	cursor: default;
+}
+
+.tooltip .tooltiptext {
+	visibility: hidden;
+	padding: 0.25em 0.5em;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	border-radius: 0.25em;
+	white-space: nowrap;
+
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1;
+	margin-left: 650px;
+	margin-top: -100px;
+	transition-property: visibility;
+	transition-delay: 0s;
+}
+
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+	transition-delay: 0.3s;
+}
+
+// End
