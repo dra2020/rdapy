@@ -9,29 +9,12 @@ Unlike the analytics used in the app ([dra-analytics](https://github.com/dra2020
 which are implememented in TypeScript, these are implemented in Python to make them easier to use outside of DRA.
 
 There are both a PyPi package and a command-line interface.
+They are described in detail at [the website for this repository](https://dra2020.github.io/rdapy/).
 
 Note: The repository is in the process of being upgraded to include a GitHub Pages site
 which will, among other things, explain high-volume offline scoring.
 
-## Package
-
-The analytics in the PyPi package are organized by area (in alphabetical order):
-
-- [Compactness](./docs/compactness.md): Various measures of compactness
-- [Equal](./docs/equal.md): Population deviation
-- [Graph](./docs/graph.md): Checks for contiguity & embeddedness
-- [Minority](./docs/minority.md): Minority opportunity metrics
-- [Partisan](./docs/partisan.md): Various measures of partisan bias & responsiveness, as well as support for rank-vote graphs and seats-votes curves
-- [Splitting](./docs/splitting.md): County- & district-splitting and COI splitting
-
-The `samples` directory contains some simple examples of how to exercies these functions
-and how to preprocess raw block-level data into the formats required by the analytics.
-
-## Command-Line Interface
-
-The command-line interface enables [high-volume offline scoring](./docs/scoring.md).
-
-## Installation
+## Installing the Package
 
 To install the package:
 
@@ -44,6 +27,8 @@ Then
 ```
 import rdapy
 ```
+
+## Setting up the Command-Line Interface
 
 To setup the repository for local command-line use:
 
@@ -103,6 +88,8 @@ scripts/SCORE.sh \
 ## Development
 
 There is a `launch.json` for VS Code debugging in the `docs` directory.
+
+## Testing
 
 Run automated tests with:
 
