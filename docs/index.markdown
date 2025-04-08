@@ -19,23 +19,23 @@ which will, among other things, explain high-volume offline scoring.
 
 The analytics in the PyPi package are organized by area (in alphabetical order):
 
-- [Compactness](./compactness.html): Various measures of compactness
-- [Equal](./equal.html): Population deviation
-- [Graph](./graph.html): Checks for contiguity & embeddedness
-- [Minority](./minority.html): Minority opportunity metrics
-- [Partisan](./partisan.html): Various measures of partisan bias & responsiveness, as well as support for rank-vote graphs and seats-votes curves
-- [Splitting](./splitting.html): County- & district-splitting and COI splitting
+- [Compactness](./compactness/): Various measures of compactness
+- [Equal](./equal/): Population deviation
+- [Graph](./graph/): Checks for contiguity & embeddedness
+- [Minority](./minority/): Minority opportunity metrics
+- [Partisan](./partisan/): Various measures of partisan bias & responsiveness, as well as support for rank-vote graphs and seats-votes curves
+- [Splitting](./splitting/): County- & district-splitting and COI splitting
 
 The `samples` directory contains some simple examples of how to exercies these functions
 and how to preprocess raw block-level data into the formats required by the analytics.
 
 ## Command-Line Interface
 
-The command-line interface uses the package and enables [high-volume offline scoring](./scoring.html).
+The command-line interface uses the package and enables [high-volume offline scoring](./scoring/).
 
 ## Installation
 
-For installation instructions, see the [README](../README.md).
+For installation instructions, see the [README](https://github.com/dra2020/rdapy).
 
 ## Questions
 
