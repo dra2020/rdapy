@@ -2,7 +2,7 @@
 layout: default
 ---
 
-<h2>Redistricting analytics in Python</h2>
+<h2>Redistricting Analytics in Python (rdapy)</h2>
 
 This repository ([rdapy](https://github.com/dra2020/rdapy)) re-implements 
 the main analytics used in [Dave's Redistricting](https://davesredistricting.org/) (DRA),
