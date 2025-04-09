@@ -12,9 +12,6 @@ which are implememented in TypeScript, these are implemented in Python to make t
 
 There are both a PyPi package and a command-line interface.
 
-Note: The repository is in the process of being upgraded to include a GitHub Pages site
-which will, among other things, explain high-volume offline scoring.
-
 ### Package
 
 The analytics in the PyPi package are organized by area (in alphabetical order):

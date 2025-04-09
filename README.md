@@ -11,9 +11,6 @@ which are implememented in TypeScript, these are implemented in Python to make t
 There are both a PyPi package and a command-line interface.
 They are described in detail at [the website for this repository](https://dra2020.github.io/rdapy/).
 
-Note: The repository is in the process of being upgraded to include a GitHub Pages site
-which will, among other things, explain high-volume offline scoring.
-
 ## Installing the Package
 
 To install the package:
