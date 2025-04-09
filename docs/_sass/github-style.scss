@@ -1,0 +1,194 @@
+// GitHub-style variables
+$github-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+$github-text-color: #24292e;
+$github-link-color: #0366d6;
+$github-border-color: #e1e4e8;
+$github-background-color: #fff;
+$github-header-background: #f6f8fa;
+$github-code-background: #f6f8fa;
+
+// Base styling
+body {
+    font-family: $github-font-family;
+    color: $github-text-color;
+    line-height: 1.5;
+    font-size: 14px;
+    background-color: $github-background-color;
+}
+
+// Links
+a {
+    color: $github-link-color;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+// Headers
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 600;
+    line-height: 1.25;
+    margin-top: 24px;
+    margin-bottom: 16px;
+}
+
+h1 {
+    font-size: 2em;
+    border-bottom: 1px solid $github-border-color;
+    padding-bottom: 0.3em;
+}
+
+h2 {
+    font-size: 1.5em;
+    border-bottom: 1px solid $github-border-color;
+    padding-bottom: 0.3em;
+}
+
+// Code blocks
+pre,
+code {
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    background-color: $github-code-background;
+    border-radius: 3px;
+}
+
+code {
+    padding: 0.2em 0.4em;
+    font-size: 85%;
+}
+
+pre {
+    padding: 16px;
+    overflow: auto;
+    line-height: 1.45;
+
+    code {
+        padding: 0;
+        background-color: transparent;
+    }
+}
+
+// Tables
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    margin-top: 0;
+    margin-bottom: 16px;
+    width: 100%;
+
+    th,
+    td {
+        padding: 6px 13px;
+        border: 1px solid $github-border-color;
+    }
+
+    tr {
+        background-color: $github-background-color;
+        border-top: 1px solid $github-border-color;
+
+        &:nth-child(2n) {
+            background-color: $github-header-background;
+        }
+    }
+}
+
+// Lists
+ul,
+ol {
+    padding-left: 2em;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+// Blockquotes
+blockquote {
+    margin: 0;
+    padding: 0 1em;
+    color: #6a737d;
+    border-left: 0.25em solid $github-border-color;
+}
+
+// Horizontal rule
+hr {
+    height: 0.25em;
+    padding: 0;
+    margin: 24px 0;
+    background-color: $github-border-color;
+    border: 0;
+}
+
+// GitHub-style boxes
+.github-box {
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid $github-border-color;
+    border-radius: 3px;
+
+    &.note {
+        background-color: #f1f8ff;
+        border-color: #c8e1ff;
+    }
+
+    &.warning {
+        background-color: #fffbdd;
+        border-color: #f9e496;
+    }
+}
+
+// Repository header style
+.repo-header {
+    padding: 16px;
+    background-color: $github-header-background;
+    border-bottom: 1px solid $github-border-color;
+    margin-bottom: 16px;
+
+    h1 {
+        font-size: 20px;
+        margin: 0;
+        border-bottom: none;
+        display: inline-block;
+    }
+
+    .repo-description {
+        font-size: 14px;
+        color: #586069;
+        margin-top: 4px;
+    }
+}
+
+// Repository navigation
+.repo-nav {
+    border-bottom: 1px solid $github-border-color;
+    margin-bottom: 16px;
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+
+        li {
+            padding: 8px 16px;
+            font-weight: 500;
+
+            &.active {
+                border-bottom: 2px solid #f9826c;
+            }
+
+            a {
+                color: $github-text-color;
+
+                &:hover {
+                    color: $github-link-color;
+                }
+            }
+        }
+    }
+}
