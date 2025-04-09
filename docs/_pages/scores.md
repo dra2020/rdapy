@@ -17,13 +17,13 @@ Metrics fall into one of several categories:
 
 For each of these categories, there are plan-level scores (CSV) and by-district measurements (JSONL). *Note: The first value in each by-district list is the total for the state. The values 1-N are the values for the individual districts.*
 
-## General
+### General
 
 There is one general metric:
 
 *   **population_deviation** &ndash; The population deviation of the plan.
 
-## Partisan 
+### Partisan 
 
 The measures of partisan bias (next) and competitiveness & responsiveness (following) are described in some detail in
 [Advanced Measures of Bias &amp; Responsiveness](https://medium.com/dra-2020/advanced-measures-of-bias-responsiveness-c1bf182d29a9).
@@ -67,7 +67,7 @@ These are the competitiveness & responsiveness metrics:
 *   **overall_responsiveness** (R) &ndash; An overall measure of responsiveness which you can think of as a winner’s bonus.
 *   **competitiveness** &ndash; DRA's competitiveness rating. Integers [0-100], where bigger is better.
 
-## Minority
+### Minority
 
 These are measures of the opportunity for minority representation.
 See also the measures in the 'global' category below.
@@ -93,7 +93,7 @@ There are mostly self-explanatory by-district aggregates for each VAP category:
 * **native_vap**
 * **minority_vap** &ndash; The total VAP minus white VAP, i.e., all minorities combined.
 
-## Compactness
+### Compactness
 
 The measures of compactness:
 
@@ -116,7 +116,7 @@ and the by-district measurements of them:
 * **reock**
 * **polsby_popper**
 
-## Splitting
+### Splitting
 
 These are measures of county-district splitting:
 

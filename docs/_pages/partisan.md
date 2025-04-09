@@ -7,7 +7,7 @@ permalink: partisan/
 You can compute a full complement of partisan analytics for a set of districts all at once,
 described next, or you can compute individual metrics, described in the subsequent sections.
 
-## Partisan Analytics for a Set of Districts
+### Partisan Analytics for a Set of Districts
 
 To calculate all partisan analytics for a statewide two-party vote share and two-party vote shares by district:
 
@@ -70,7 +70,7 @@ responsiveness_measurements: dict = {
 The dictionary key names here match those in the relevant sections of the 
 [Map Analytics Format](https://medium.com/dra-2020/map-analytics-export-format-d0aa75f6b041).
 
-## Measures of Bias
+### Measures of Bias
 
 The bias measures above are described in [Advanced Measures of Bias & Responsiveness](https://medium.com/dra-2020/advanced-measures-of-bias-responsiveness-c1bf182d29a9).
 They may be calculated individually.
@@ -147,7 +147,7 @@ def calc_turnout_bias(Vf: float, Vf_array: list[float]) -> float:
 def calc_lopsided_outcomes(Vf_array: list[float]) -> Optional[float]:
 ```
 
-## Measures of Responsiveness
+### Measures of Responsiveness
 
 Similarly, you can compute the responsiveness measures individually.
 These responsiveness measures are also described in [Advanced Measures of Bias & Responsiveness](https://medium.com/dra-2020/advanced-measures-of-bias-responsiveness-c1bf182d29a9).
@@ -182,7 +182,7 @@ def calc_minimal_inverse_responsiveness(Vf: float, r: float) -> Optional[float]:
 def est_responsive_districts(Vf_array: list[float]) -> float:
 ```
 
-## Nagle's Method
+### Nagle's Method
 
 Finally, several functions expose John Nagle's method for estimating fractional seat
 probabilities and district responsiveness and inferring seats-votes curves.

@@ -6,7 +6,7 @@ permalink: splitting/
 
 You can calculate county-district splitting metrics, as well as community of interest (COI) splitting metrics.
 
-## County & District Splitting
+### County & District Splitting
 
 To calculate the county & district splitting scores for a plan:
 
@@ -35,7 +35,7 @@ As that post describes, these measures are based on Moon Duchin's raw square roo
 def split_score(split: list[float]) -> float:
 ```
 
-## Community of Interest (COI) Splitting
+### Community of Interest Splitting
 
 To calculate the COI splitting for a set of communities:
 

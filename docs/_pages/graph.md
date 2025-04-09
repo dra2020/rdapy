@@ -4,10 +4,9 @@ title: Adjacency Graph
 permalink: graph/
 ---
 
-
 You can check a plan to make sure districts are contiguous and not embedded within other districts.
 
-## Contiguity
+### Contiguity
 
 To check whether a list of features (e.g., assigned to a district) is fully connected:
 
@@ -26,7 +25,7 @@ so you can detect when a feature is on the border of the state (see below).
 If you pass all the feature ids for a state, 
 you can check whether the graph for the state is fully connected.
 
-## Embeddedness
+### Embeddedness
 
 To check whether one district is fully embedded within another district:
 

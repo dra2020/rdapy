@@ -15,7 +15,7 @@ There are both a PyPi package and a command-line interface.
 Note: The repository is in the process of being upgraded to include a GitHub Pages site
 which will, among other things, explain high-volume offline scoring.
 
-## Package
+### Package
 
 The analytics in the PyPi package are organized by area (in alphabetical order):
 
@@ -29,14 +29,14 @@ The analytics in the PyPi package are organized by area (in alphabetical order):
 The `samples` directory contains some simple examples of how to exercies these functions
 and how to preprocess raw block-level data into the formats required by the analytics.
 
-## Command-Line Interface
+### Command-Line Interface
 
 The command-line interface uses the package and enables [high-volume offline scoring](./scoring/).
 
-## Installation
+### Installation
 
 For installation instructions, see the [README](https://github.com/dra2020/rdapy).
 
-## Questions
+### Questions
 
 Email questions to [feedback](mailto:feedback@davesredistricting.org?subject=Python-analytics).

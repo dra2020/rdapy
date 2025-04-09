@@ -7,7 +7,7 @@ permalink: compactness/
 You can calculate compactness for a set of districts (shapes), as well as various measures of
 compactness for a single district (shape) including "know it when you see it" (KIWYSI) compactness.
 
-## Compactness for a Set of Districts
+### Compactness for a Set of Districts
 
 To compute average Reock, Polsby-Popper, and KIWYSI compactness for a set of districts (shapes) and by district:
 
@@ -44,7 +44,7 @@ measures: dict = {
 
 KYIWYSI compactness is described below.
 
-## Measures of Compactness for One District (Shape)
+### Compactness for One District
 
 These are functions to calculate compactness for a single district (shape).
 They are seven are the "features" for Aaron Kaufman's "know it when you see it" (KIWYSI) compactness ML model,
@@ -107,7 +107,7 @@ to the area of the district.”
 def calc_schwartzberg(shp: Polygon | MultiPolygon, geodesic: bool = True) -> float:
 ```
 
-## "Know it when you see it" (KIWYSI) Compactness
+### "Know it when you see it" Compactness
 
 KIYWSI compactness implements Kaufman, King, and Komisarchik's 
 ["know it when you see it" (KIWYSI) compactness model](https://gking.harvard.edu/compact).
