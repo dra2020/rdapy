@@ -39,12 +39,6 @@ git clone https://github.com/dra2020/rdapy
 cd rdapy
 ```
 
-Until these high-volume scoring changes are merged into `main`, checkout the `bulkscoring` branch:
-
-```bash
-git checkout bulkscoring
-```
-
 Then create a virtual environment that uses Python 3.12.
 Then reset Python outside the virtual environment to the normal setting.
 For example, using `pyenv`:

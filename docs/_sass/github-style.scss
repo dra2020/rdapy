@@ -5,7 +5,7 @@ $github-link-color: #0366d6;
 $github-border-color: #e1e4e8;
 $github-background-color: #fff;
 $github-header-background: #f6f8fa;
-$github-code-background: #f6f8fa;
+$github-code-background: #f6f8fa; // This is GitHub's code background
 
 // Base styling
 body {
@@ -57,11 +57,11 @@ code {
     font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
     background-color: $github-code-background;
     border-radius: 6px;
-    font-size: 85%;
 }
 
 code {
     padding: 0.2em 0.4em;
+    font-size: 90%;
 }
 
 pre {
@@ -69,12 +69,16 @@ pre {
     overflow: auto;
     line-height: 1.45;
     background-color: $github-code-background;
-    border: 1px solid $github-border-color;
+    border: 1px solid #ddd;
+    margin-bottom: 16px;
 
     code {
         padding: 0;
+        font-size: 14px; // Larger font size for code blocks
         background-color: transparent;
         display: block;
+        white-space: pre;
+        overflow-x: auto;
     }
 }
 
