@@ -27,9 +27,9 @@ result: dict = {"county": county, "district": district}
 ```
 
 These measures are described in [Measuring County & District Splitting](https://medium.com/dra-2020/measuring-county-district-splitting-48a075bcce39). 
-Note: The example in figure shows districts as columns and counties as rows, the opposite of how
-they are represented in the code.
-As that post describes, these measures are based on Moon Duchin's raw square root entropy split score:
+As the post describes, these measures are based on Moon Duchin's raw square root entropy split score.
+*Note: The example in the figure shows districts as columns and counties as rows, the opposite of how
+they are represented in the code.*
 
 ```python
 def split_score(split: list[float]) -> float:

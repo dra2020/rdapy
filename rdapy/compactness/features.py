@@ -100,7 +100,7 @@ def _mean_centroid(shp: Polygon | MultiPolygon) -> tuple[float, float]:
     y_tot: float = 0
 
     # These two methods yield the same result
-    # 1 - NOTE: Shapely points are in (lon, lat) order ...
+    # 1 - Note: Shapely points are in (lon, lat) order ...
     pts: list = [p for l in get_polygons_coordinates(shp) for p in l]
 
     for p in pts:

@@ -130,8 +130,8 @@ def calc_global_symmetry(
 def calc_declination(Vf_array: list[float]) -> Optional[float]:
 ```
 
-Note: This function supports both median difference using average district vote share and
-median difference using statewide vote share, if provided.
+*Note: This function supports both median difference using average district vote share and
+median difference using statewide vote share, if provided.*
 
 ```python
 def calc_mean_median_difference(

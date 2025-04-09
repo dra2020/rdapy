@@ -47,8 +47,8 @@ Examples of these files can be found in `testdata/scoring/`.
 
 The plan-level scores are described in [Scores (Metrics)]({{ '/scores' | prepend: site.baseurl }}).
 
-NOTE: This scripts does *not* extract an adjacency graph from the GeoJSON.
-It uses a pre-computed adjacency graph from DRA.
+*Note: This scripts does not extract an adjacency graph from the GeoJSON.
+It uses a pre-computed adjacency graph from DRA.*
 
 By default, this script calculates all metrics ("scores") for all plans in an input ensemble.
 If your ensembles are very large though, you can [increase scoring throughput]({{ '/throughput' | prepend: site.baseurl }}),
@@ -69,7 +69,8 @@ scripts/extract_graph.py \
 --graph path/to/adjacency_graph.json
 ```
 
-NOTE: This script can read a CSV file that contains more precinct-to-precinct adjacencies to add to the graph.
+*Note: This script can read a CSV file that contains more precinct-to-precinct adjacencies to add to the graph,
+"mods" for ["operational contiguity"](https://medium.com/dra-2020/contiguity-20f23ea15969).*
 
 #### Extracting Data from a DRA GeoJSON
 

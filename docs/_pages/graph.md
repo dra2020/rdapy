@@ -19,8 +19,8 @@ where "ids" is a list of ids for the geographies (features) and
 
 Examples can be found in the JSON files in the testdata/graph directory.
 
-Note: The graph may contain a virtual "OUT_OF_STATE" node and virtual "OUT_OF_STATE" neighbors, 
-so you can detect when a feature is on the border of the state (see below). 
+*Note: The graph may contain a virtual "OUT_OF_STATE" node and virtual "OUT_OF_STATE" neighbors, 
+so you can detect when a feature is on the border of the state (see below).*
 
 If you pass all the feature ids for a state, 
 you can check whether the graph for the state is fully connected.
