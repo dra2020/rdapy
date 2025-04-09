@@ -55,31 +55,33 @@ h2 {
 pre,
 code {
     font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-    background-color: $github-code-background;
     border-radius: 6px;
 }
 
 code {
     padding: 0.2em 0.4em;
     font-size: 90%;
+    background-color: #f6f8fa;
 }
 
 pre {
     padding: 16px;
     overflow: auto;
     line-height: 1.45;
-    background-color: $github-code-background;
+    background-color: #f6f8fa !important;
+    /* Force background color */
     border: 1px solid #ddd;
     margin-bottom: 16px;
+}
 
-    code {
-        padding: 0;
-        font-size: 14px; // Larger font size for code blocks
-        background-color: transparent;
-        display: block;
-        white-space: pre;
-        overflow-x: auto;
-    }
+pre code {
+    padding: 0;
+    font-size: 14px;
+    background-color: #f6f8fa !important;
+    /* Force background color */
+    display: block;
+    white-space: pre;
+    overflow-x: auto;
 }
 
 // Tables
