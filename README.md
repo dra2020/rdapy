@@ -1,6 +1,6 @@
 # rdapy
 
-Redistricting analytics in Python
+Redistricting Analytics in Python
 
 This repository ([rdapy](https://github.com/dra2020/rdapy)) re-implements 
 the main analytics used in [Dave's Redistricting](https://davesredistricting.org/) (DRA),
