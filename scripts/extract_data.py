@@ -3,9 +3,19 @@
 """
 EXTRACT DATA & SHAPES FROM A GEOJSON FILE
 
+TODO - Revise this for new geojson files
+
 $ scripts/extract_data.py \
 --geojson testdata/data/NC_vtd_datasets.geojson \
 --data-map testdata/data/NC_data_map.json \
+--graph testdata/intermediate/NC_graph.json \
+--data temp/DEBUG_input_data.jsonl
+
+TODO - New geojson files
+
+$ scripts/extract_data.py \
+--geojson ../../local/geojson_data/new/_NC_2020_VD_tabblock.vtd.datasets.geojson  \
+--data-map ../../local/geojson_data/new/sample-data-map.json \
 --graph testdata/intermediate/NC_graph.json \
 --data temp/DEBUG_input_data.jsonl
 
@@ -254,7 +264,7 @@ def parse_args() -> Namespace:
 
     parser.add_argument(
         "--geojson",
-        help="The GeoJSON file",
+        help="The input GeoJSON file",
         type=str,
     )
     parser.add_argument(
@@ -270,7 +280,7 @@ def parse_args() -> Namespace:
     )
     parser.add_argument(
         "--data",
-        help="Where to write the output JSON file",
+        help="The output JSON file",
         type=str,
     )
 
