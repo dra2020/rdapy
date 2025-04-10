@@ -14,14 +14,9 @@ from argparse import ArgumentParser, Namespace
 
 from typing import Any, List, Dict
 
-import json, contextlib, os, sys
-
-from pandas import DataFrame
+import json
 
 from rdapy import smart_write
-
-EPSILON: float = 1.0e-12
-OUT_OF_STATE: str = "OUT_OF_STATE"
 
 
 def main() -> None:
@@ -63,7 +58,9 @@ def main() -> None:
 
 
 def make_map():
-    return {
+    """Make a data map for extracting data & shapes from a geojson file."""
+
+    data_map: Dict[str, Any] = {
         "version": 4,
         "source": "../../local/geojson_data/new/",
         "path": "_NC_2020_VD_tabblock.vtd.datasets.geojson",
@@ -113,6 +110,8 @@ def make_map():
         },
     }
 
+    return data_map
+
 
 def parse_args() -> Namespace:
     """Parse command line arguments."""
@@ -155,6 +154,12 @@ def parse_args() -> Namespace:
         type=lambda s: s.split(","),
         help="Comma-separated list of election datasets to use",
         default=["E_16-20_COMP"],
+    )
+    parser.add_argument(
+        "--version",
+        help="The version # to use",
+        type=str,
+        default="v4",  # DRA's published geojson files
     )
 
     parser.add_argument(
