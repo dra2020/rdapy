@@ -4,8 +4,8 @@
 MAP SCORING DATA TO TO A GIVEN GEOJSON FILE
 
 $ scripts/map_scoring_data.py \
---geojson ../../local/new/_NC_2020_VD_tabblock.vtd.datasets.geojson \
---data-map temp/TEST_data_map.json \
+--geojson ../../local/geojson_data/new/_NC_2020_VD_tabblock.vtd.datasets.geojson \
+--data-map temp/TEST_data_map.json
 
 """
 
@@ -52,10 +52,66 @@ def main() -> None:
             for k, v in datasets[e]["members"].items():
                 implied_elections.append(v)
 
+    data_map: Dict[str, Any] = make_map()
+
+    print(data_map)
+
     # with open(args.data_map, "r") as f:
     #     data_map: Dict[str, Any] = json.load(f)
 
     pass
+
+
+def make_map():
+    return {
+        "version": 4,
+        "source": "../../local/geojson_data/new/",
+        "path": "_NC_2020_VD_tabblock.vtd.datasets.geojson",
+        "geoid": "id",
+        "census": {"fields": {"total_pop": "Total"}, "datasets": ["T_20_CENS"]},
+        "vap": {
+            "fields": {
+                "total_vap": "Total",
+                "white_vap": "White",
+                "hispanic_vap": "Hispanic",
+                "black_vap": "Black",
+                "native_vap": "Native",
+                "asian_vap": "Asian",
+                "pacific_vap": "Pacific",
+                "minority_vap": "Min_derived",
+            },
+            "datasets": ["V_20_VAP"],
+        },
+        "cvap": {
+            "fields": {
+                "total_cvap": "Total",
+                "white_cvap": "White",
+                "hispanic_cvap": "Hispanic",
+                "black_cvap": "Black",
+                "native_cvap": "Native",
+                "asian_cvap": "Asian",
+                "pacific_cvap": "Pacific",
+                "minority_cvap": "Min_derived",
+            },
+            "datasets": ["V_20_CVAP"],
+        },
+        "election": {
+            "fields": {"tot_votes": "Total", "dem_votes": "Dem", "rep_votes": "Rep"},
+            "datasets": [
+                "E_16-20_COMP",
+                "E_20_PRES",
+                "E_20_GOV",
+                "E_20_SEN",
+                "E_16_PRES",
+                "E_20_AG",
+                "E_16_SEN",
+            ],
+        },
+        "shapes": {
+            "fields": {"geometry": "geometry"},
+            "datasets": ["DRA_simplified_shapes"],
+        },
+    }
 
 
 def parse_args() -> Namespace:
