@@ -14,7 +14,7 @@ from argparse import ArgumentParser, Namespace
 
 from typing import Any, List, Dict
 
-import json
+import os, json
 
 from rdapy import smart_write
 
@@ -47,7 +47,20 @@ def main() -> None:
             for k, v in datasets[e]["members"].items():
                 implied_elections.append(v)
 
-    data_map: Dict[str, Any] = make_map()
+    # Get the directory and filename of the geojson file
+    directory: str
+    filename: str
+    directory, filename = os.path.split(args.geojson)
+
+    data_map: Dict[str, Any] = make_map(
+        census=args.census,
+        vap=args.vap,
+        cvap=args.cvap,
+        elections=implied_elections,
+        dir=directory,
+        file=filename,
+        version=args.version,
+    )
 
     print(data_map)
 
@@ -57,15 +70,24 @@ def main() -> None:
     pass
 
 
-def make_map():
+def make_map(
+    *,
+    census: str,
+    vap: str,
+    cvap: str,
+    elections: List[str],
+    dir: str,
+    file: str,
+    version: str,
+) -> Dict[str, Any]:
     """Make a data map for extracting data & shapes from a geojson file."""
 
     data_map: Dict[str, Any] = {
-        "version": 4,
-        "source": "../../local/geojson_data/new/",
-        "path": "_NC_2020_VD_tabblock.vtd.datasets.geojson",
+        "version": version,
+        "source": dir,  # TODO - Change to directory
+        "path": file,  # TODO - Change to file
         "geoid": "id",
-        "census": {"fields": {"total_pop": "Total"}, "datasets": ["T_20_CENS"]},
+        "census": {"fields": {"total_pop": "Total"}, "datasets": [census]},
         "vap": {
             "fields": {
                 "total_vap": "Total",
@@ -77,7 +99,7 @@ def make_map():
                 "pacific_vap": "Pacific",
                 "minority_vap": "Min_derived",
             },
-            "datasets": ["V_20_VAP"],
+            "datasets": [vap],
         },
         "cvap": {
             "fields": {
@@ -90,19 +112,11 @@ def make_map():
                 "pacific_cvap": "Pacific",
                 "minority_cvap": "Min_derived",
             },
-            "datasets": ["V_20_CVAP"],
+            "datasets": [cvap],
         },
         "election": {
             "fields": {"tot_votes": "Total", "dem_votes": "Dem", "rep_votes": "Rep"},
-            "datasets": [
-                "E_16-20_COMP",
-                "E_20_PRES",
-                "E_20_GOV",
-                "E_20_SEN",
-                "E_16_PRES",
-                "E_20_AG",
-                "E_16_SEN",
-            ],
+            "datasets": elections,
         },
         "shapes": {
             "fields": {"geometry": "geometry"},
