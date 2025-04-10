@@ -16,7 +16,7 @@ from typing import Any, List, Dict
 
 import os, json
 
-from rdapy import smart_write
+from rdapy import write_json
 
 
 def main() -> None:
@@ -45,14 +45,15 @@ def main() -> None:
     for e in input_elections:
         if "members" in datasets[e]:
             for k, v in datasets[e]["members"].items():
-                implied_elections.append(v)
+                if v in datasets:
+                    implied_elections.append(v)
 
     # Get the directory and filename of the geojson file
     directory: str
     filename: str
     directory, filename = os.path.split(args.geojson)
 
-    data_map: Dict[str, Any] = make_map(
+    data_mapping: Dict[str, Any] = make_map(
         census=args.census,
         vap=args.vap,
         cvap=args.cvap,
@@ -62,12 +63,9 @@ def main() -> None:
         version=args.version,
     )
 
-    print(data_map)
+    write_json(args.data_map, data_mapping)
 
-    # with open(args.data_map, "r") as f:
-    #     data_map: Dict[str, Any] = json.load(f)
-
-    pass
+    pass  # For debugging
 
 
 def make_map(
@@ -97,7 +95,7 @@ def make_map(
                 "native_vap": "Native",
                 "asian_vap": "Asian",
                 "pacific_vap": "Pacific",
-                "minority_vap": "Min_derived",
+                "minority_vap": "DERIVED",
             },
             "datasets": [vap],
         },
@@ -110,7 +108,7 @@ def make_map(
                 "native_cvap": "Native",
                 "asian_cvap": "Asian",
                 "pacific_cvap": "Pacific",
-                "minority_cvap": "Min_derived",
+                "minority_cvap": "DERIVED",
             },
             "datasets": [cvap],
         },
