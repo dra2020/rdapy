@@ -84,28 +84,7 @@ scripts/extract_data.py \
 --geojson "$GEOJSON" \
 --data-map "$temp_data_map" \
 --graph "$GRAPH" \
---data "$temp_data"
-
-cat "$PLANS" \
-| 
-scripts/aggregate.py \
---state "$STATE" \
---plan-type "$PLAN_TYPE" \
---data "$temp_data" \
---graph "$GRAPH" \
---mode "$MODE" \
-| 
-scripts/score.py \
---state "$STATE" \
---plan-type "$PLAN_TYPE" \
---data "$temp_data" \
---graph "$GRAPH" \
---mode "$MODE" \
-|
-scripts/write.py \
---data "$temp_data" \
---scores "$SCORES" \
---by-district "$BY_DISTRICT"
+--data temp/TEST_input_data.jsonl
 
 echo
 echo "Done!"

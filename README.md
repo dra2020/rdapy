@@ -76,6 +76,19 @@ scripts/SCORE.sh \
 --by-district temp/TEST_congress_by-district.jsonl
 ```
 
+TODO
+
+```bash
+scripts/SCORE.sh \
+--state NC \
+--plan-type congress \
+--geojson ~/local/geojson_data/new/_NC_2020_VD_tabblock.vtd.datasets.geojson \
+--graph testdata/intermediate/NC_graph.json \
+--plans testdata/ensemble/NC_congress_plans.100.jsonl \
+--scores temp/TEST_congress_scores.csv \
+--by-district temp/TEST_congress_by-district.jsonl
+```
+
 ## Development
 
 There is a `launch.json` for VS Code debugging in the `docs` directory.

@@ -13,6 +13,7 @@ These scripts are in the `scripts` directory.
 The main bash script takes an ensemble of plans and input data and 
 generates a CSV file of scores and a JSONL file of by-district measures.
 
+TODO - Update
 ```bash
 scripts/SCORE.sh \
 --state xx \
