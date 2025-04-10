@@ -16,6 +16,20 @@
             ],
         },
         {
+            "name": "Debug map_scoring_data.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "--geojson",
+                "../../local/geojson_data/new/_NC_2020_VD_tabblock.vtd.datasets.geojson",
+                "--data-map",
+                "temp/DEBUG_data_map.json",
+            ],
+        },
+        {
             "name": "Debug extract_data.py",
             "type": "debugpy",
             "request": "launch",

@@ -12,18 +12,11 @@ $ scripts/map_scoring_data.py \
 import argparse
 from argparse import ArgumentParser, Namespace
 
-from typing import Any, List, Dict, Tuple, TextIO, Optional, Generator
+from typing import Any, List, Dict
 
 import json, contextlib, os, sys
 
 from pandas import DataFrame
-from geopandas import GeoDataFrame
-from shapely.geometry import (
-    shape,
-    Polygon,
-    MultiPolygon,
-    Point,
-)
 
 from rdapy import smart_write
 
@@ -36,67 +29,31 @@ def main() -> None:
 
     args: Namespace = parse_args()
 
-    # Load the data map, the geojson file, & the adjacency graph
+    input_elections: List[str] = (
+        args.elections
+        if isinstance(args.elections, list)
+        else args.elections.split(",")
+    )
 
-    with open(args.data_map, "r") as f:
-        data_map: Dict[str, Any] = json.load(f)
+    # Load the geojson
+
     with open(args.geojson, "r") as f:
         geojson: Dict[str, Any] = json.load(f)
-    with open(args.graph, "r") as f:
-        graph: Dict[str, List[str]] = json.load(f)
 
-    # Index the shapes by geoid
+    # Grab the datasets
 
-    df: DataFrame = DataFrame([f.get("properties", {}) for f in geojson["features"]])
-    gdf: GeoDataFrame = GeoDataFrame(df, geometry=[shape(f["geometry"]) for f in geojson["features"]])  # type: ignore
-    shp_by_geoid: Dict[str, Polygon | MultiPolygon] = index_shapes(gdf)
+    datasets: Dict[str, Any] = geojson["datasets"]
 
-    # Collect the census, demographic, election, and shape data (including abstracts)
+    # Expand the composite elections specified to include the constituent elections
 
-    by_geoid: Dict[str, Any] = dict()
+    implied_elections: List[str] = input_elections.copy()
+    for e in input_elections:
+        if "members" in datasets[e]:
+            for k, v in datasets[e]["members"].items():
+                implied_elections.append(v)
 
-    for feature in geojson["features"]:
-        geoid: str = feature["properties"][data_map["geoid"]]
-        precinct_data: Dict[str, Any] = {"geoid": geoid}
-
-        # Cull the census, demographic, election, and shape data
-
-        data_abstract: Dict[str, Any] = abstract_data(feature, data_map)
-        precinct_data.update(data_abstract)
-
-        # Abstract the shape
-
-        shp: Polygon | MultiPolygon = shp_by_geoid[geoid]
-        shp_abstract: Dict[str, Any] = abstract_shape(shp_by_geoid, graph, geoid, shp)
-        # Override the 'center' with DRA's label coordinates
-        shp_abstract["center"] = (
-            feature["properties"]["labelx"],
-            feature["properties"]["labely"],
-        )
-        precinct_data.update(shp_abstract)
-
-        by_geoid[geoid] = precinct_data
-
-    # Format the data as JSONL records & write them disk
-
-    records: List[Dict[str, Any]] = [
-        {"geoid": geoid, **values} for geoid, values in by_geoid.items()
-    ]
-
-    with smart_write(args.data) as output_stream:
-        # Write the scores metadata record to the by-district file
-        metadata_record: Dict[str, Any] = {
-            "_tag_": "metadata",
-            "properties": data_map,
-        }
-        write_record(metadata_record, output_stream)
-
-        for record in records:
-            record: Dict[str, Any] = {
-                "_tag_": "precinct",
-                "data": record,
-            }
-            write_record(record, output_stream)
+    # with open(args.data_map, "r") as f:
+    #     data_map: Dict[str, Any] = json.load(f)
 
     pass
 
@@ -123,7 +80,25 @@ def parse_args() -> Namespace:
         "--census",
         help="The census dataset to use",
         type=str,
-        default="census",
+        default="T_20_CENS",
+    )
+    parser.add_argument(
+        "--vap",
+        help="The VAP dataset to use",
+        type=str,
+        default="V_20_VAP",
+    )
+    parser.add_argument(
+        "--cvap",
+        help="The VAP dataset to use",
+        type=str,
+        default="V_20_CVAP",
+    )
+    parser.add_argument(
+        "--elections",
+        type=lambda s: s.split(","),
+        help="Comma-separated list of election datasets to use",
+        default=["E_16-20_COMP"],
     )
 
     parser.add_argument(
