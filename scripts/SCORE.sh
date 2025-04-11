@@ -7,6 +7,10 @@ PLANS=""
 SCORES=""
 BY_DISTRICT=""
 MODE="all"
+CENSUS="T_20_CENS"
+VAP="V_20_VAP"
+CVAP="V_20_CVAP"
+ELECTION="E_16-20_COMP"
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -43,6 +47,22 @@ while [[ $# -gt 0 ]]; do
       MODE="$2"
       shift 2
       ;;
+    --census)
+      CENSUS="$2"
+      shift 2
+      ;;
+    --vap)
+      VAP="$2"
+      shift 2
+      ;;
+    --cvap)
+      CVAP="$2"
+      shift 2
+      ;;
+    --elections)
+      ELECTION="$2"
+      shift 2
+      ;;
     *)
       echo "Unknown argument: $1"
       exit 1
@@ -54,6 +74,12 @@ done
 if [[ -z "$STATE" || -z "$PLAN_TYPE" || -z "$GEOJSON" || -z "$GRAPH" || -z "$PLANS" || -z "$SCORES" || -z "$BY_DISTRICT" ]]; then
   echo "Error: Missing required arguments"
   echo "Usage: SCORE.sh --state <xx> --plan-type <chamber> --geojson <path> --graph <path> --plans <path> --scores <path> --by-district <path>"
+  echo "Optional arguments:"
+  echo "  --mode <mode>         Analysis mode (default: all)"
+  echo "  --census <census>     Census data to use (default: T_20_CENS)"
+  echo "  --vap <vap>           Voting age population data to use (default: V_20_VAP)"
+  echo "  --cvap <cvap>         Citizen voting age population data to use (default: V_20_CVAP)"
+  echo "  --elections <elec>    Election data to use (default: E_16-20_COMP)"
   exit 1
 fi
 
@@ -78,13 +104,17 @@ temp_data=$(mktemp /tmp/data.XXXXXX)
 
 scripts/map_scoring_data.py \
 --geojson "$GEOJSON" \
---data-map "$temp_data_map"
+--data-map "$temp_data_map" \
+--data "$temp_data" \
+--census "$CENSUS" \
+--vap "$VAP" \
+--cvap "$CVAP" \
+--elections "$ELECTION"
 
 scripts/extract_data.py \
 --geojson "$GEOJSON" \
 --data-map "$temp_data_map" \
 --graph "$GRAPH" \
---data "$temp_data"
 
 cat "$PLANS" \
 | 
