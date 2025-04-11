@@ -10,10 +10,11 @@ These scripts are in the `scripts` directory.
 
 ### SCORE.sh
 
-The main bash script takes an ensemble of plans and input data and 
+This example bash script takes an ensemble of plans, a DRA geojson file, and an adjacency graph, and 
 generates a CSV file of scores and a JSONL file of by-district measures.
+By default, it uses 2020 census, VAP, and CVAP data from geojson, as well as the 2016-2020 election composite.
+Only one election is scored at this time.
 
-TODO - Update
 ```bash
 scripts/SCORE.sh \
 --state xx \
@@ -31,8 +32,6 @@ where:
 *   The `plan-type` is `congress`, 'upper`, or `lower`, for upper and lower state house.
 *   The `geojson` is a [Dave's Redistricting](https://davesredistricting.org/) (DRA) precinct GeoJSON file with data coded by dataset.
     An example is provided in `testdata/data/NC_vtd_datasets.geojson`.
-*   The `data-map` is a JSON file that maps how to extract data from the GeoJSON.
-    An example is provided in `testdata/data/NC_data_map.json`.
 *   The `graph` is a JSON file that contains the node/list of neighbors adjacency graph of the precincts.
     An example is provided in `testdata/intermediate/NC_graph.json`.
 *   The `plans` is a JSONL file that contains the ensemble of plans to be scored.
@@ -72,9 +71,18 @@ scripts/extract_graph.py \
 *Note: This script can read a CSV file that contains more precinct-to-precinct adjacencies to add to the graph,
 "mods" for ["operational contiguity"](https://medium.com/dra-2020/contiguity-20f23ea15969).*
 
-#### Extracting Data from a DRA GeoJSON
+#### Mapping Scoring Data to a DRA GeoJSON
 
-TODO - Update
+This script maps the data needed for scoring plans to the data in a DRA GeoJSON file.
+The specific datasets used can be specified as optional arguments.
+
+```bash
+scripts/map_scoring_data.py \
+--geojson path/to/DRA.geojson \
+--data-map path/to/data_map.json
+```
+
+#### Extracting Data from a DRA GeoJSON
 
 This script extracts data from a DRA GeoJSON file and writes it to a JSONL file,
 using the data map to determine what data to extract.
