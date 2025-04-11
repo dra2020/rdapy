@@ -32,13 +32,14 @@ h2 {
 	font-size: 2em;
 }
 
-a {
+a,
+a:visited {
 	color: #0366d6;
-	text-decoration: underline; // Keeping links underlined by default
+	text-decoration: underline;
 	font-weight: normal;
 
 	&:hover {
-		text-decoration: underline; // Maintain underline on hover
+		text-decoration: underline;
 	}
 }
 
