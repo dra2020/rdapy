@@ -4,7 +4,7 @@ title: Data Maps
 permalink: data-maps/
 ---
 
-TODO - Finish this in some fashion.
+TODO - FINISH THIS.
 
 The `extract_data.py` script takes a `geojson` and a `data-map` as arguments.
 

@@ -19,7 +19,6 @@ scripts/SCORE.sh \
 --state xx \
 --plan-type congress \
 --geojson path/to/DRA.geojson \
---data-map path/to/data_map.json \
 --graph path/to/adjacency_graph.json \
 --plans path/to/plans.jsonl \
 --scores path/to/scores.csv \
