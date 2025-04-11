@@ -10,7 +10,7 @@
             "cwd": "${workspaceFolder}",
             "args": [
                 "--geojson",
-                "testdata/data/NC_vtd_datasets.geojson",
+                "testdata/data/NC_vtd_datasets.v3.geojson",
                 "--graph",
                 "temp/DEBUG_graph.json",
             ],
@@ -38,9 +38,9 @@
             "cwd": "${workspaceFolder}",
             "args": [
                 "--geojson",
-                "testdata/data/NC_vtd_datasets.geojson",
+                "testdata/data/NC_vtd_datasets.v3.geojson",
                 "--data-map",
-                "testdata/data/data_map.json",
+                "testdata/intermediate/NC_data_map.v3.json",
                 "--graph",
                 "testdata/intermediate/NC_graph.json",
                 "--data",

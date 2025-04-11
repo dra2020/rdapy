@@ -6,16 +6,16 @@ EXTRACT DATA & SHAPES FROM A GEOJSON FILE
 TODO - Revise this for new geojson files
 
 $ scripts/extract_data.py \
---geojson testdata/data/NC_vtd_datasets.geojson \
---data-map testdata/data/NC_data_map.json \
+--geojson testdata/data/NC_vtd_datasets.v3.geojson \
+--data-map testdata/intermediate/NC_data_map.v3.json \
 --graph testdata/intermediate/NC_graph.json \
 --data temp/DEBUG_input_data.jsonl
 
 TODO - New geojson files
 
 $ scripts/extract_data.py \
---geojson ../../local/geojson_data/new/_NC_2020_VD_tabblock.vtd.datasets.geojson  \
---data-map ../../local/geojson_data/new/sample-data-map.json \
+--geojson testdata/data/NC_vtd_datasets.v4.geojson \
+--data-map testdata/intermediate/NC_data_map.v4.json \
 --graph testdata/intermediate/NC_graph.json \
 --data temp/DEBUG_input_data.jsonl
 
