@@ -1,5 +1,5 @@
 {
-    "version": "v4",
+    "version": 4,
     "source": "testdata/data",
     "path": "NC_vtd_datasets.v4.geojson",
     "geoid": "id",
