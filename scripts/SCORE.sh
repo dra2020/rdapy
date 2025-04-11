@@ -105,7 +105,6 @@ temp_data=$(mktemp /tmp/data.XXXXXX)
 scripts/map_scoring_data.py \
 --geojson "$GEOJSON" \
 --data-map "$temp_data_map" \
---data "$temp_data" \
 --census "$CENSUS" \
 --vap "$VAP" \
 --cvap "$CVAP" \
@@ -115,6 +114,7 @@ scripts/extract_data.py \
 --geojson "$GEOJSON" \
 --data-map "$temp_data_map" \
 --graph "$GRAPH" \
+--data "$temp_data"
 
 cat "$PLANS" \
 | 
