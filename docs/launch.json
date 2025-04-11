@@ -10,9 +10,23 @@
             "cwd": "${workspaceFolder}",
             "args": [
                 "--geojson",
-                "testdata/data/NC_vtd_datasets.geojson",
+                "testdata/data/NC_vtd_datasets.v4.geojson",
                 "--graph",
                 "temp/DEBUG_graph.json",
+            ],
+        },
+        {
+            "name": "Debug map_scoring_data.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "--geojson",
+                "testdata/data/NC_vtd_datasets.v4.geojson",
+                "--data-map",
+                "temp/DEBUG_data_map.json",
             ],
         },
         {
@@ -24,9 +38,9 @@
             "cwd": "${workspaceFolder}",
             "args": [
                 "--geojson",
-                "testdata/data/NC_vtd_datasets.geojson",
+                "testdata/data/NC_vtd_datasets.v4.geojson",
                 "--data-map",
-                "testdata/data/data_map.json",
+                "testdata/intermediate/NC_data_map.v4.json",
                 "--graph",
                 "testdata/intermediate/NC_graph.json",
                 "--data",
@@ -46,7 +60,7 @@
                 "--plan-type",
                 "congress",
                 "--data",
-                "testdata/intermediate/NC_input_data.jsonl",
+                "testdata/intermediate/NC_input_data.v4.jsonl",
                 "--graph",
                 "testdata/intermediate/NC_graph.json",
                 "--mode",
@@ -54,7 +68,7 @@
                 "--input",
                 "testdata/ensemble/NC_congress_plans.100.jsonl",
                 "--output",
-                "temp/temp/DEBUG_aggregates.jsonl"
+                "temp/DEBUG_aggs.jsonl"
             ],
         },
         {
@@ -70,13 +84,13 @@
                 "--plan-type",
                 "congress",
                 "--data",
-                "testdata/intermediate/NC_input_data.jsonl",
+                "testdata/intermediate/NC_input_data.v4.jsonl",
                 "--graph",
                 "testdata/intermediate/NC_graph.json",
                 "--mode",
                 "all",
                 "--input",
-                "testdata/intermediate/NC_congress_aggs.100.jsonl",
+                "testdata/intermediate/NC_congress_aggs.100.v4.jsonl",
                 "--output",
                 "temp/DEBUG_scores.jsonl"
             ],
@@ -90,9 +104,9 @@
             "cwd": "${workspaceFolder}",
             "args": [
                 "--input",
-                "testdata/intermediate/NC_congress_scores.100.jsonl",
+                "testdata/intermediate/NC_congress_scores.100.v4.jsonl",
                 "--data",
-                "testdata/intermediate/NC_input_data.jsonl",
+                "testdata/intermediate/NC_input_data.v4.jsonl",
                 "--scores",
                 "temp/DEBUG_scores.csv",
                 "--by-district",

@@ -68,8 +68,7 @@ and that the command-line interface works:
 scripts/SCORE.sh \
 --state NC \
 --plan-type congress \
---geojson testdata/data/NC_vtd_datasets.geojson \
---data-map testdata/data/NC_data_map.json \
+--geojson testdata/data/NC_vtd_datasets.v4.geojson \
 --graph testdata/intermediate/NC_graph.json \
 --plans testdata/ensemble/NC_congress_plans.100.jsonl \
 --scores temp/TEST_congress_scores.csv \

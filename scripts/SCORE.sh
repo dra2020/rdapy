@@ -2,7 +2,6 @@
 
 # Default values
 GEOJSON=""
-DATA_MAP=""
 GRAPH=""
 PLANS=""
 SCORES=""
@@ -22,10 +21,6 @@ while [[ $# -gt 0 ]]; do
       ;;
     --geojson)
       GEOJSON="$2"
-      shift 2
-      ;;
-    --data-map)
-      DATA_MAP="$2"
       shift 2
       ;;
     --graph)
@@ -56,9 +51,9 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Check if all required arguments are provided
-if [[ -z "$STATE" || -z "$PLAN_TYPE" || -z "$GEOJSON" || -z "$DATA_MAP" || -z "$GRAPH" || -z "$PLANS" || -z "$SCORES" || -z "$BY_DISTRICT" ]]; then
+if [[ -z "$STATE" || -z "$PLAN_TYPE" || -z "$GEOJSON" || -z "$GRAPH" || -z "$PLANS" || -z "$SCORES" || -z "$BY_DISTRICT" ]]; then
   echo "Error: Missing required arguments"
-  echo "Usage: SCORE.sh --state <xx> --plan-type <chamber> --geojson <path> --data-map <path> --graph <path> --plans <path> --scores <path> --by-district <path>"
+  echo "Usage: SCORE.sh --state <xx> --plan-type <chamber> --geojson <path> --graph <path> --plans <path> --scores <path> --by-district <path>"
   exit 1
 fi
 
@@ -78,11 +73,16 @@ if [[ "$is_valid_mode" == false ]]; then
   exit 1
 fi
 
+temp_data_map=$(mktemp /tmp/data-map.XXXXXX)
 temp_data=$(mktemp /tmp/data.XXXXXX)
+
+scripts/map_scoring_data.py \
+--geojson "$GEOJSON" \
+--data-map "$temp_data_map"
 
 scripts/extract_data.py \
 --geojson "$GEOJSON" \
---data-map "$DATA_MAP" \
+--data-map "$temp_data_map" \
 --graph "$GRAPH" \
 --data "$temp_data"
 
