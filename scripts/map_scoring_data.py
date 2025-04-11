@@ -4,8 +4,8 @@
 MAP SCORING DATA TO TO A GIVEN GEOJSON FILE
 
 $ scripts/map_scoring_data.py \
---geojson ../../local/geojson_data/new/_NC_2020_VD_tabblock.vtd.datasets.geojson \
---data-map temp/TEST_data_map.json
+--geojson testdata/data/NC_vtd_datasets.v4.geojson \
+--data-map temp/DEBUG_data_map.json
 
 """
 

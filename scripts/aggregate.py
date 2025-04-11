@@ -8,11 +8,12 @@ AGGREGATE DATA & SHAPES BY DISTRICT FOR PLANS
 
 Usage:
 
-scripts/aggregate.py \
+cat testdata/ensemble/NC_congress_plans.100.jsonl \
+| scripts/aggregate.py \
 --state NC \
 --plan-type congress \
---data testdata/intermediate/NC_input_data.jsonl \
---graph testdata/intermediate/NC_graph.json < testdata/ensemble/NC_congress_plans.100.jsonl > temp/DEBUG_aggregates.jsonl
+--data testdata/intermediate/NC_input_data.v3.jsonl \
+--graph testdata/intermediate/NC_graph.json > temp/DEBUG_aggregates.jsonl
 
 -or-
 
@@ -20,9 +21,8 @@ cat testdata/ensemble/NC_congress_plans.100.jsonl \
 | scripts/aggregate.py \
 --state NC \
 --plan-type congress \
---data testdata/intermediate/NC_input_data.jsonl \
+--data testdata/intermediate/NC_input_data.v4.jsonl \
 --graph testdata/intermediate/NC_graph.json > temp/DEBUG_aggregates.jsonl
-
 
 """
 
