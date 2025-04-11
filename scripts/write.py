@@ -9,16 +9,15 @@ WRITE SCORES
 
 Usage:
 
-scripts/write.py \
---data testdata/intermediate/NC_input_data.jsonl \
---scores temp/DEBUG_scores.csv \
---by-district temp/DEBUG_by-district.jsonl < testdata/intermediate/NC_congress_scores.100.jsonl
-
--or-
-
-cat testdata/intermediate/NC_congress_scores.100.jsonl \
+cat testdata/intermediate/NC_congress_scores.100.v3.jsonl \
 | scripts/write.py \
---data testdata/intermediate/NC_input_data.jsonl \
+--data testdata/intermediate/NC_input_data.v3.jsonl \
+--scores temp/DEBUG_scores.csv \
+--by-district temp/DEBUG_by-district.jsonl
+
+cat testdata/intermediate/NC_congress_scores.100.v4.jsonl \
+| scripts/write.py \
+--data testdata/intermediate/NC_input_data.v4.jsonl \
 --scores temp/DEBUG_scores.csv \
 --by-district temp/DEBUG_by-district.jsonl
 
