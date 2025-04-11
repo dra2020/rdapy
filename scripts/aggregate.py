@@ -13,16 +13,21 @@ cat testdata/ensemble/NC_congress_plans.100.jsonl \
 --state NC \
 --plan-type congress \
 --data testdata/intermediate/NC_input_data.v3.jsonl \
---graph testdata/intermediate/NC_graph.json > temp/DEBUG_aggregates.jsonl
-
--or-
+--graph testdata/intermediate/NC_graph.json > temp/DEBUG_aggs.jsonl
 
 cat testdata/ensemble/NC_congress_plans.100.jsonl \
 | scripts/aggregate.py \
 --state NC \
 --plan-type congress \
 --data testdata/intermediate/NC_input_data.v4.jsonl \
---graph testdata/intermediate/NC_graph.json > temp/DEBUG_aggregates.jsonl
+--graph testdata/intermediate/NC_graph.json > temp/DEBUG_aggs.jsonl
+
+cat testdata/ensemble/NC_congress_plans.100.jsonl \
+| scripts/aggregate.py \
+--state NC \
+--plan-type congress \
+--data testdata/intermediate/NC_input_data.v4.jsonl \
+--graph testdata/intermediate/NC_graph.json > testdata/intermediate/NC_congress_aggs.100.v4.jsonl
 
 """
 
