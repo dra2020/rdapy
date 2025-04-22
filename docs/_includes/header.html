@@ -1,13 +1,21 @@
 <aside>
     <div class="container">
         <style>
-            /* More specific selector to target all links in the navigation */
+            /* Basic styling for all links in the navigation */
             aside .container nav ul li a {
                 color: black !important;
-                /* The !important flag overrides other styles */
                 text-decoration: none !important;
                 font-size: 1.2rem;
-                /* Adjust size as needed */
+                font-weight: bold;
+                /* Makes the text heavier/bolder */
+            }
+
+            /* Style for when hovering over links */
+            aside .container nav ul li a:hover {
+                background-color: transparent !important;
+                /* Keeps background transparent on hover */
+                cursor: pointer;
+                /* Ensures the hand cursor still appears */
             }
         </style>
         <nav>
