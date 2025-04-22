@@ -37,7 +37,7 @@ where:
 *   The `plans` is a JSONL file that contains the ensemble of plans to be scored.
     The plans can be simple dictionaries of geoid:district assignments, or
     they can be tagged 'plan' records in the ensemble format used by `rdatools/rdatools` and `rdatools/rdautils`.
-    An example of the latter is provided in `testdata/ensemble/NC_congress_plans.100.jsonl`.
+    An example of the latter is provided in `testdata/input/NC_congress_plans.tagged.jsonl`.
 
 The script writes a set of plan-level scores to a CSV file
 a set of by-district measures to a JSONL file, and 

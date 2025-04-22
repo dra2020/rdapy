@@ -153,7 +153,7 @@ class TestScorecard:
         xx: str = "NC"
 
         # Get one plan from the test ensemble
-        test_plans: str = "testdata/ensemble/NC_congress_plans.100.jsonl"
+        test_plans: str = "testdata/input/NC_congress_plans.tagged.jsonl"
         with smart_read(test_plans) as ensemble_stream:
             for i, line in enumerate(ensemble_stream):
                 # Skip the metadata and ReCom graph records
