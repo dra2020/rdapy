@@ -9,6 +9,14 @@ $ scripts/from_csvs.py \
 --files testdata/input/csvs/NC_congress.001.csv \
 --output temp/TEST_plans.jsonl
 
+-or-
+
+$ scripts/from_csvs.py \
+--state NC \
+--plan-type congress \
+--files testdata/input/csvs/NC_congress.*.csv \
+--output temp/TEST_plans.jsonl
+
 For documentation, type:
 
 $ scripts/from_csvs.py -h
@@ -20,6 +28,7 @@ import argparse
 from typing import Any, Dict, List
 
 import os
+import glob
 from pathlib import Path
 
 from rdapy import (
@@ -54,7 +63,7 @@ def main():
 
         for plan_path in absolute_paths:
             plan_csv: List[Dict[str, int]] = read_csv(plan_path, [str, int])
-            assignments: Dict[str, int] = csv_to_dict(plan_csv)
+            assignments: Dict[str, int] = invert_plan(plan_csv)
 
             filename = Path(plan_path).name
             plan_record: PlanRecord = {
@@ -66,11 +75,24 @@ def main():
 
 
 def get_absolute_paths(file_paths):
-    """Convert relative paths to absolute paths."""
-    return [os.path.abspath(path) for path in file_paths]
+    """Convert relative paths to absolute paths and expand wildcards."""
+
+    expanded_paths = []
+    for path in file_paths:
+        # Expand any wildcards in the path
+        matched_paths = glob.glob(path)
+        if matched_paths:
+            # If the pattern matched any files, add them all
+            expanded_paths.extend(matched_paths)
+        else:
+            # If no files matched, keep the original path (it will fail later if the file doesn't exist)
+            expanded_paths.append(path)
+
+    # Convert to absolute paths
+    return [os.path.abspath(path) for path in expanded_paths]
 
 
-def csv_to_dict(plan_csv: List[Dict[str, int]]) -> Dict[str, int]:
+def invert_plan(plan_csv: List[Dict[str, int]]) -> Dict[str, int]:
     """Convert a preinct-assignment CSV into a dictionary of precincts and districts."""
 
     geoid_fields: List[str] = ["GEOID", "GEOID20", "GEOID30"]
@@ -111,7 +133,6 @@ def parse_args():
         help="The uncompressed, tagged output JSONL file",
     )
 
-    # Parse arguments
     args = parser.parse_args()
 
     return args
