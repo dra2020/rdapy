@@ -31,6 +31,8 @@ from .ensemble_io import (
     format_scores,
     write_record,
     read_record,
+    MetadataRecord,
+    PlanRecord,
 )
 
 

@@ -110,6 +110,8 @@ from .score import (
     load_data,
     load_graph,
     format_scores,
+    MetadataRecord,
+    PlanRecord,
 )
 
 

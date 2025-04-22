@@ -2,9 +2,20 @@
 ENSEMBLE I/O
 """
 
-from typing import Any, Optional, Dict, Generator, TextIO
+from typing import Any, Optional, Dict, Generator, TextIO, TypedDict
 
 import os, sys, contextlib, json
+
+
+class PlanRecord(TypedDict):
+    _tag_: str
+    name: str
+    plan: Dict[str, int]
+
+
+class MetadataRecord(TypedDict):
+    _tag_: str
+    properties: Dict[str, Any]
 
 
 @contextlib.contextmanager
