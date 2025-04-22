@@ -3,17 +3,15 @@
 """
 CREATE A TAGGED ASSIGNMENT-FORMAT JSONL FROM A LIST OF PRECINCT-ASSIGNMENT FILES (CSVS).
 
+NOTE - This script assumes that all the CSV files are for the same state and plan type.
+
 $ scripts/from_csvs.py \
---state NC \
---plan-type congress \
 --files testdata/input/csvs/NC_congress.001.csv \
 --output temp/TEST_plans.jsonl
 
 -or-
 
 $ scripts/from_csvs.py \
---state NC \
---plan-type congress \
 --files testdata/input/csvs/NC_congress.*.csv \
 --output temp/TEST_plans.jsonl
 
@@ -41,6 +39,7 @@ from rdapy import (
 
 
 def main():
+    """Convert one or more precinct-assignment CSVs into a tagged JSONL ensemble file."""
 
     args: argparse.Namespace = parse_args()
 
