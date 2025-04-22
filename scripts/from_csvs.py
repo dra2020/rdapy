@@ -24,7 +24,6 @@ from pathlib import Path
 
 from rdapy import (
     read_csv,
-    PlanCSV,
     smart_write,
     write_record,
     PlanRecord,
@@ -54,7 +53,7 @@ def main():
         write_record(metadata_record, ensemble_stream)
 
         for plan_path in absolute_paths:
-            plan_csv: PlanCSV = read_csv(plan_path, [str, int])
+            plan_csv: List[Dict[str, int]] = read_csv(plan_path, [str, int])
             assignments: Dict[str, int] = csv_to_dict(plan_csv)
 
             filename = Path(plan_path).name
