@@ -70,7 +70,7 @@ scripts/SCORE.sh \
 --plan-type congress \
 --geojson testdata/data/NC_vtd_datasets.v4.geojson \
 --graph testdata/intermediate/NC_graph.json \
---plans testdata/input/NC_congress_plans.tagged.jsonl \
+--plans testdata/plans/NC_congress_plans.tagged.jsonl \
 --scores temp/TEST_congress_scores.csv \
 --by-district temp/TEST_congress_by-district.jsonl
 ```
