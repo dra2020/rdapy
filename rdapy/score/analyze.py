@@ -1,6 +1,6 @@
 """
 ANALYZE ("SCORE") A PLAN
-- There are 4 types of datasets -- census, VAP, election, and shapes.
+- There are 5 types of datasets -- census, VAP, CVAP, election, and shapes.
 - Input "data" can include multiple datasets of the same type -- e.g., multiple elections.
 - Because a plan can be scored against more than one dataset of a given type,
   scores are always in the context of the dataset used in the scoring.

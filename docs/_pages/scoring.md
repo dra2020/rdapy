@@ -108,7 +108,46 @@ cat path/to/plans.jsonl \
 --data path/to/input_data.jsonl \
 --graph path/to/adjacency_graph.json > path/to/plans_plus_aggregates.jsonl
 ```
-The script also passes an optional metadata record through to STDOUT.
+
+This script reads plans as JSONL from the input stream.
+Each plan can be a simple dictionary of geoid:district assignments, or
+a tagged format with the `"_tag_"` tag equal to `"plan"` and the `"plan"` key containing the geoid:district pairs.
+Examples of these formats can be found in `testdata/plans/` in `NC_congress_plans.naked.jsonl` and `NC_congress_plans.tagged.jsonl`, respectively.
+
+If the JSON records are in tagged format, metadata records are passed through unchanged, 
+as are any other records.
+
+In addition to any records simply passed through, the output stream contains a record for each plan with
+the geoid:district assignments in the `"plan"` key and the district-level aggregates in the `"aggregates"` key. 
+Aggregates hierarchically encode the type of dataset (census, vap, cvap, election, shape), 
+the dataset key (defined by DRA in the README for the GeoJSON), the aggregate name (e.g., "dem_by_district"), and 
+the aggregates by district. For example:
+
+`"election": {"E_16-20_COMP": {"dem_by_district": [...]`.
+
+The first item in each list is a state-level aggregate, and the rest are district-level aggregates for districts 1 to N.
+
+You can see an example in `testdata/scoring/NC_congress_aggs.100.v4.jsonl`.
+
+##### Helpers
+
+Two helper scripts make it easy to use other input formats, instead of the two described above.
+
+This script takes a JSON file that has a `"plan`"` key with a list of geoid:district assignment dictionaries and
+produces a stream of JSON tagged records that can be input to the `aggregate.py` script.
+
+```bash
+scripts/from_json.py \
+--input testdata/plans/NC_congress_plans.legacy.json
+```
+
+Similarly, this script takes a list of CSV files, or a wildcard pattern for CSV files in a directory, 
+reads each CSV file, and converts them into a stream of JSON tagged records that can be input to the `aggregate.py` script.
+
+```bash
+scripts/from_csvs.py \
+--files testdata/plans/csvs/NC_congress.*.csv
+```
 
 #### Scoring Plans
 
@@ -137,3 +176,6 @@ cat path/to/scores_plus_aggregates.jsonl \
 --scores path/to/scores.csv \
 --by-district path/to/by-district.jsonl
 ```
+
+If you want output in a different format, you can process the output of the `score.py` script directly, 
+e.g., using `jq`.
