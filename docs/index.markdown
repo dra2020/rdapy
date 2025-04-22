@@ -29,6 +29,9 @@ and how to preprocess raw block-level data into the formats required by the anal
 ### Command-Line Interface
 
 The command-line interface uses the package and enables [high-volume offline scoring](./scoring/).
+This toolchain uses [DRA GeoJSON files](TODO) as input data and scores each plan in an ensemble or collection
+on several dozen metrics described in [Scores (Metrics)]({{ '/scores' | prepend: site.baseurl }})
+generating a CSV file with one row of scores per plan.
 
 ### Installation
 
