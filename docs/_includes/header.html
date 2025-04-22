@@ -1,9 +1,11 @@
 <aside>
     <div class="container">
         <style>
-            aside nav ul li a {
-                color: black;
-                text-decoration: none;
+            /* More specific selector to target all links in the navigation */
+            aside .container nav ul li a {
+                color: black !important;
+                /* The !important flag overrides other styles */
+                text-decoration: none !important;
                 font-size: 1.2rem;
                 /* Adjust size as needed */
             }
@@ -13,7 +15,7 @@
                 <li><a href="{{ '/' | prepend: site.baseurl }}">Home</a></li>
                 <li><a href="https://github.com/dra2020/rdapy">rdapy</a></li>
                 <li><a href="https://github.com/dra2020/dra-analytics">dra-analytics</a></li>
-                <li><a href="https://davesredistricting.org/maps#home">DRA</a></li>
+                <li><a href="https://davesredistricting.org/maps#home">Dave's Redistricting</a></li>
                 <li><a href="{{ '/about' | prepend: site.baseurl }}">About</a></li>
             </ul>
         </nav>
