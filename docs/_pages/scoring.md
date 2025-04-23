@@ -46,9 +46,9 @@ The scores here also include several metrics not yet in the DRA app, including:
 
 ### SCORE.sh
 
-This example bash script takes an ensemble of plans, a DRA geojson file, and an adjacency graph, and 
-generates a CSV file of scores and a JSONL file of by-district measures.
-By default, it uses 2020 census, VAP, and CVAP data from geojson, as well as the 2016-2020 election composite.
+This example bash script shows how to take an ensemble of plans, a DRA geojson file, and an adjacency graph, and 
+generate a CSV file of scores and a JSONL file of by-district measures.
+It uses 2020 census, VAP, and CVAP data from geojson, as well as the 2016-2020 election composite.
 Only one election is scored at this time.
 
 ```bash
@@ -66,7 +66,8 @@ where:
 
 *   The state is a two-character state code.
 *   The `plan-type` is `congress`, 'upper`, or `lower`, for upper and lower state house.
-*   The `geojson` is a [Dave's Redistricting](https://davesredistricting.org/) (DRA) precinct GeoJSON file with data coded by dataset.
+*   The `geojson` is a [Dave's Redistricting](https://davesredistricting.org/) (DRA) 
+    precinct GeoJSON file with data coded by dataset.
     An example is provided in `testdata/data/NC_vtd_datasets.geojson`.
 *   The `graph` is a JSON file that contains the node/list of neighbors adjacency graph of the precincts.
     An example is provided in `testdata/intermediate/NC_graph.json`.
@@ -111,6 +112,8 @@ scripts/extract_graph.py \
 
 This script maps the data needed for scoring plans to the data in a DRA GeoJSON file.
 The specific datasets used can be specified as optional arguments.
+The default datasets are the 2020 census, VAP, and CVAP data,
+and the composite election dataset for 2016-2020 elections.
 
 ```bash
 scripts/map_scoring_data.py \

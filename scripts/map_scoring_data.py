@@ -89,8 +89,8 @@ def make_map(
 
     data_map: Dict[str, Any] = {
         "version": version,
-        "source": dir,  # TODO - Change to directory
-        "path": file,  # TODO - Change to file
+        "directory": dir,
+        "file": file,
         "geoid": "id",
         "census": {"fields": {"total_pop": "Total"}, "datasets": [census]},
         "vap": {
