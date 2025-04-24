@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # For example:
-# cat input.txt | scripts/SAMPLE.sh -k 100 | grep "pattern"
+# cat input.txt | scripts/SAMPLE.sh -k 100
 
 # Default sample rate
 SAMPLE_RATE=100

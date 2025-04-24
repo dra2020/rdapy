@@ -45,3 +45,14 @@ cat testdata/plans/canonical/NC_congress_plans.canonical.jsonl \
 | scripts/canonical_to_assignments.py \
 --graph testdata/plans/canonical/NC_congress_recom_graph.seeded.json
 ```
+
+There's an associated script that subsamples plans that you can use in conjunction with the above
+(or any stream of JSONL records).
+For example, this keeps every 100th canonical record:
+
+```bash
+cat testdata/plans/canonical/NC_congress_plans.canonical.jsonl \
+| scripts/canonical_to_assignments.py \
+--graph testdata/plans/canonical/NC_congress_recom_graph.seeded.json \
+| scripts/SAMPLE.sh -k 100
+```
