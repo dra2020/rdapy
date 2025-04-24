@@ -10,7 +10,7 @@ These scripts are in the `scripts` directory.
 
 ### Input Data
 
-The data & shapes used by this scoring toolchain are [Dave's Redistricting (DRA) GeoJSON files](TODO).
+The data & shapes used by this scoring toolchain are [Dave's Redistricting](https://davesredistricting.org/) (DRA) [GeoJSON files](TODO).
 The specifics of that format are described there.
 The frontend data-processing scripts here depend on that custom GeoJSON format.
 
@@ -66,8 +66,7 @@ where:
 
 *   The state is a two-character state code.
 *   The `plan-type` is `congress`, 'upper`, or `lower`, for upper and lower state house.
-*   The `geojson` is a [Dave's Redistricting](https://davesredistricting.org/) (DRA) 
-    precinct GeoJSON file with data coded by dataset.
+*   The `geojson` is a DRA precinct GeoJSON file with data coded by dataset.
     An example is provided in `testdata/data/NC_vtd_datasets.geojson`.
 *   The `graph` is a JSON file that contains the node/list of neighbors adjacency graph of the precincts.
     An example is provided in `testdata/intermediate/NC_graph.json`.
