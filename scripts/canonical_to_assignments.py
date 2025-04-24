@@ -19,6 +19,8 @@ from typing import Any, Dict, List
 import argparse
 from argparse import ArgumentParser, Namespace
 
+from gerrychain import Graph
+
 from rdapy import (
     load_data,
     load_graph,
@@ -35,6 +37,7 @@ def main():
 
     args = parse_arguments()
 
+    recom_graph: Graph = Graph.from_json(args.graph)
     # adjacency_graph: Dict[str, List[str]] = load_graph(args.graph)
 
     with smart_read(args.input) as input_stream:

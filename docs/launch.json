@@ -12,8 +12,8 @@
                 "--geojson",
                 "testdata/data/NC_vtd_datasets.v4.geojson",
                 "--graph",
-                "temp/DEBUG_graph.json",
-            ],
+                "temp/DEBUG_graph.json"
+            ]
         },
         {
             "name": "Debug map_scoring_data.py",
@@ -26,8 +26,8 @@
                 "--geojson",
                 "testdata/data/NC_vtd_datasets.v4.geojson",
                 "--data-map",
-                "temp/DEBUG_data_map.json",
-            ],
+                "temp/DEBUG_data_map.json"
+            ]
         },
         {
             "name": "Debug extract_data.py",
@@ -44,8 +44,24 @@
                 "--graph",
                 "testdata/intermediate/NC_graph.json",
                 "--data",
-                "temp/DEBUG_input_data.jsonl",
-            ],
+                "temp/DEBUG_input_data.jsonl"
+            ]
+        },
+        {
+            "name": "Debug canonical_to_assignments.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "--graph",
+                "testdata/plans/canonical/NC_congress_recom_graph.seeded.json",
+                "--input",
+                "testdata/plans/canonical/NC_congress_plans.canonical.jsonl",
+                "--output",
+                "temp/DEBUG_plans.jsonl"
+            ]
         },
         {
             "name": "Debug aggregate.py",
@@ -69,7 +85,7 @@
                 "testdata/plans/NC_congress_plans.tagged.jsonl",
                 "--output",
                 "temp/DEBUG_aggs.jsonl"
-            ],
+            ]
         },
         {
             "name": "Debug score.py",
@@ -93,7 +109,7 @@
                 "testdata/intermediate/NC_congress_aggs.100.v4.jsonl",
                 "--output",
                 "temp/DEBUG_scores.jsonl"
-            ],
+            ]
         },
         {
             "name": "Debug write.py",
@@ -111,7 +127,7 @@
                 "temp/DEBUG_scores.csv",
                 "--by-district",
                 "temp/DEBUG_by-district.jsonl"
-            ],
+            ]
         }
     ]
 }
