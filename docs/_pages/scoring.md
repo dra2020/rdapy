@@ -167,7 +167,7 @@ The first item in each list is a state-level aggregate, and the rest are distric
 
 You can see an example in `testdata/intermediate/NC_congress_aggs.100.v4.jsonl`.
 
-There are some helper scripts to convert some [alternative formats]({{ '/formats' | prepend: site.baseurl }}) 
+There are some helper scripts to convert [alternative formats]({{ '/formats' | prepend: site.baseurl }}) 
 into the tagged format that can be ingested by the `aggregate.py` script.
 
 #### Scoring Plans
