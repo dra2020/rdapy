@@ -79,7 +79,7 @@ where:
 The script writes a set of plan-level scores to a CSV file
 a set of by-district measures to a JSONL file, and 
 metadata for the scores in a JSON file.
-Examples of these files can be found in `testdata/scoring/`.
+Examples of these files can be found in `testdata/examples/`.
 
 The plan-level scores are described in [Scores (Metrics)]({{ '/scores' | prepend: site.baseurl }}).
 
@@ -166,7 +166,7 @@ the aggregates by district. For example:
 
 The first item in each list is a state-level aggregate, and the rest are district-level aggregates for districts 1 to N.
 
-You can see an example in `testdata/scoring/NC_congress_aggs.100.v4.jsonl`.
+You can see an example in `testdata/intermediate/NC_congress_aggs.100.v4.jsonl`.
 
 **Helpers**
 
