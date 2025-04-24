@@ -28,6 +28,7 @@ A few are not included for various reasons:
     so that is not included here.
 *   "Know it when you see it" (KIWYSI) compactness (see [Compactness](https://medium.com/dra-2020/compactness-8e0ee3851126))
     is very expensive, so it's not included here. The straightforward way to calculate compactness metrics for a plan is, of course, to first create district shapes based on the precinct assignments and then compute the metrics using those shapes. Unfortunately, the simple naive approach to creating district shapes — “dissolving” precinct shapes into district shapes — is a very expensive operation. Even with just precinct shapes (i.e., not blocks), that can take ~60 seconds for a North Carolina plan. Traditional compactness measures of Reock and Polsby-Popper can be computed quickly using pre-computed shapes attributes without actually having district shapes.
+*   Gamma and Global Symmetry aren't included, as they are legacy measures that are not widely used.
 
 The scores here also include several metrics not yet in the DRA app, including:
 
