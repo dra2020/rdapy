@@ -2,13 +2,17 @@
 TEST SAMPLE SCORECARDS
 """
 
-from typing import Any, Dict, List, Generator, List, Tuple, TextIO, TypeAlias
+from typing import Any, Dict, List, Generator, List, Tuple, TextIO
 
 from collections import OrderedDict
 import pandas as pd
 
 from rdapy.score.utils import *
-from rdapy.score.aggregate import aggregate_districts, arcs_are_symmetric
+from rdapy.score.aggregate import (
+    aggregate_districts,
+    arcs_are_symmetric,
+    DatasetKey,
+)
 from rdapy.score.analyze import (
     Aggregates,
     score_plan,
@@ -21,14 +25,16 @@ cycle: str = "2020"
 testdata_dir: str = "testdata/score"
 
 
-def flatten_scorecard(nested_dict):
-    result = {}
+def flatten_scorecard(dataset_keyed_scorecard):
+    """For legacy tests, flatten the scorecard dictionary by removing the dataset keys."""
 
-    # Iterate through each inner dictionary and update the result
-    for inner_dict in nested_dict.values():
-        result.update(inner_dict)
+    flattened: Dict[str, Any] = dict()
 
-    return result
+    for T in ["census", "vap", "cvap", "election", "shapes"]:
+        dataset: DatasetKey = list(dataset_keyed_scorecard[T].keys())[0]
+        flattened.update(dataset_keyed_scorecard[T][dataset])
+
+    return flattened
 
 
 class TestScorecard:
