@@ -142,13 +142,11 @@ def score_plan(
     n_districts: int = metadata["D"]
     n_counties: int = metadata["C"]
 
-    # TODO - DELETE
-    # scorecard: Dict[str, Any] = dict()
     scorecard: Dict[str, Any] = {
         census_dataset: {},
         vap_dataset: {},
         cvap_dataset: {},
-        election_dataset: {},
+        election_dataset: {},  # TODO
         shapes_dataset: {},
     }
 
@@ -283,11 +281,12 @@ def score_plan(
         "county_splits",
         "splitting",
     ]
-    for metric in scorecard:
-        if scorecard[metric] is None or metric == "by_district":
-            continue
-        if metric not in int_metrics:
-            scorecard[metric] = round(scorecard[metric], precision)
+    for dataset, metrics in scorecard.items():
+        for metric, value in metrics.items():
+            if value is None:  # Was: or metric == "by_district":
+                continue
+            if metric not in int_metrics:
+                scorecard[dataset][metric] = round(value, precision)
 
     return scorecard, new_aggs
 
