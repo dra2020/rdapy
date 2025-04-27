@@ -125,7 +125,7 @@ def make_map(
         },
         "shapes": {
             "fields": {"geometry": "geometry"},
-            "datasets": ["DRA_simplified_shapes"],
+            "datasets": ["S_20_DRA"],
         },
     }
 

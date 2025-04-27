@@ -94,7 +94,7 @@
             "geometry": "geometry"
         },
         "datasets": [
-            "DRA_simplified_shapes"
+            "S_20_DRA"
         ]
     }
 }
