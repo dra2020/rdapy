@@ -246,9 +246,7 @@ def aggregate_data_by_district(
     census_dataset: DatasetKey = get_dataset(data_metadata, "census")
     vap_dataset: DatasetKey = get_dataset(data_metadata, "vap")
     cvap_dataset: DatasetKey = get_dataset(data_metadata, "cvap")
-    # TODO - DELETE
     election_datasets: List[DatasetKey] = get_datasets(data_metadata, "election")
-    # election_dataset: DatasetKey = get_dataset(data_metadata, "election")
 
     # Set up the aggregates
 
@@ -259,9 +257,6 @@ def aggregate_data_by_district(
     tot_by_district: Dict[str, List[int]] = {
         e: [0] * (n_districts + 1) for e in election_datasets
     }
-    # TODO - DELETE
-    # dem_by_district: Aggregate = [0] * (n_districts + 1)
-    # tot_by_district: Aggregate = [0] * (n_districts + 1)
     vaps_by_district: Dict[str, List[int]] = {
         demo: [0] * (n_districts + 1)
         for demo in get_fields(data_metadata, "vap", vap_dataset)
@@ -365,14 +360,6 @@ def aggregate_data_by_district(
                     "tot_by_district": tot_by_district[election_dataset],
                 }
             )
-        # TODO - DELETE
-        # aggs["election"] = {election_dataset: {}}
-        # aggs["election"][election_dataset].update(
-        #     {
-        #         "dem_by_district": dem_by_district,
-        #         "tot_by_district": tot_by_district,
-        #     }
-        # )
 
     if which in ["all", "minority"]:
         aggs["vap"] = {vap_dataset: {}}
@@ -403,7 +390,6 @@ def aggregate_shapes_by_district(
     if debug:
         arcs_are_symmetric(data_by_geoid)
 
-    # TODO - Enable multiple datasets per type
     shapes_dataset: DatasetKey = get_dataset(data_metadata, "shapes")
     census_dataset: DatasetKey = get_dataset(data_metadata, "census")
 
@@ -440,16 +426,6 @@ def aggregate_shapes_by_district(
         by_district_temp["exterior"][district].extend(
             exterior(geoid, district, geoid_index, data_by_geoid, graph)
         )
-
-    # for geoid, district in geoid_index.items():
-    #     by_district["area"][district] += data[geoid]["area"]
-    #     by_district["area"][0] += data[geoid]["area"]
-    #     by_district["perimeter"][district] += border_length(
-    #         geoid, district, geoid_index, data, graph
-    #     )
-    #     by_district_temp["exterior"][district].extend(
-    #         exterior(geoid, district, geoid_index, data, graph)
-    #     )
 
     # Calculate district diameters
 
