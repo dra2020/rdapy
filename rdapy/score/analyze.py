@@ -142,14 +142,22 @@ def score_plan(
     n_districts: int = metadata["D"]
     n_counties: int = metadata["C"]
 
-    scorecard: Dict[str, Any] = dict()
+    # TODO - DELETE
+    # scorecard: Dict[str, Any] = dict()
+    scorecard: Dict[str, Any] = {
+        census_dataset: {},
+        vap_dataset: {},
+        cvap_dataset: {},
+        election_dataset: {},
+        shapes_dataset: {},
+    }
 
     if mode in ["all", "general"]:
         deviation: float = calc_population_deviation(
             aggs["census"][census_dataset],
             n_districts,
         )
-        scorecard["population_deviation"] = deviation
+        scorecard[census_dataset]["population_deviation"] = deviation
 
     if mode in ["all", "partisan"]:
         partisan_metrics: Dict[str, Optional[float]] = calc_partisan_metrics(
@@ -158,14 +166,14 @@ def score_plan(
         )
         estimated_seat_pct = partisan_metrics.pop("estimated_seat_pct")
         assert estimated_seat_pct is not None
-        scorecard.update(partisan_metrics)
+        scorecard[election_dataset].update(partisan_metrics)
 
-        scorecard["proportionality"] = rate_proportionality(
+        scorecard[election_dataset]["proportionality"] = rate_proportionality(
             scorecard["pr_deviation"],
             scorecard["estimated_vote_pct"],
             estimated_seat_pct,
         )
-        scorecard["competitiveness"] = rate_competitiveness(
+        scorecard[election_dataset]["competitiveness"] = rate_competitiveness(
             scorecard["competitive_districts"] / n_districts
         )
 
@@ -177,7 +185,7 @@ def score_plan(
             mmd_counts: Dict[str, int] = calculate_mmd_simple(
                 aggs["cvap"][cvap_dataset]
             )
-            scorecard.update(mmd_counts)
+            scorecard[cvap_dataset].update(mmd_counts)
 
         # Revised minority ratings that don't click Black VAP % below 37%
 
@@ -186,9 +194,9 @@ def score_plan(
                 aggs["vap"][vap_dataset], n_districts, vap_keys
             )
         )
-        scorecard.update(alt_minority_metrics)
+        scorecard[vap_dataset].update(alt_minority_metrics)
 
-        scorecard["minority"] = rate_minority_opportunity(
+        scorecard[vap_dataset]["minority"] = rate_minority_opportunity(
             alt_minority_metrics["opportunity_districts"],
             alt_minority_metrics["proportional_opportunities"],
             alt_minority_metrics["coalition_districts"],
@@ -225,9 +233,9 @@ def score_plan(
         energy: float = calc_energy(assignments, data, pop_field)  # type: ignore
         compactness_metrics["population_compactness"] = energy
 
-        scorecard.update(compactness_metrics)
+        scorecard[shapes_dataset].update(compactness_metrics)
 
-        scorecard["compactness"] = rate_compactness(
+        scorecard[shapes_dataset]["compactness"] = rate_compactness(
             scorecard["reock"], scorecard["polsby_popper"]
         )
 
@@ -237,8 +245,8 @@ def score_plan(
         splitting_metrics, splitting_by_district = calc_splitting_metrics(
             aggs["census"][census_dataset], n_districts
         )
-        scorecard.update(splitting_metrics)
-        scorecard["splitting"] = rate_splitting(
+        scorecard[census_dataset].update(splitting_metrics)
+        scorecard[census_dataset]["splitting"] = rate_splitting(
             scorecard["county_splitting"],
             scorecard["district_splitting"],
             n_counties,
