@@ -22,13 +22,6 @@ cat testdata/plans/NC_congress_plans.tagged.jsonl \
 --data testdata/intermediate/NC_input_data.v4.jsonl \
 --graph testdata/intermediate/NC_graph.json > temp/DEBUG_aggs.jsonl
 
-cat testdata/plans/NC_congress_plans.tagged.jsonl \
-| scripts/aggregate.py \
---state NC \
---plan-type congress \
---data testdata/intermediate/NC_input_data.v4.jsonl \
---graph testdata/intermediate/NC_graph.json > testdata/intermediate/NC_congress_aggs.100.v4.jsonl
-
 """
 
 from typing import Any, Dict, List

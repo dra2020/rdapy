@@ -123,7 +123,7 @@ def score_plan(
 ) -> Tuple[Dict[str, Any], Aggregates]:
     """Score a plan."""
 
-    # Pulled 'extended' scoring moved out separately
+    # Pulled 'extended' scoring out separately
     assert mode in [
         "all",
         "general",
