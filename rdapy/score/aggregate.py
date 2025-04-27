@@ -35,11 +35,9 @@ Aggregates: TypeAlias = Dict[DatasetType, Dict[DatasetKey, NamedAggregates]]
 def get_dataset(metadata: Dict[str, Any], dataset_type: str) -> DatasetKey:
     """Return the first dataset for a dataset type. Some legacy logic."""
 
-    i: int = 0
-
     dataset: DatasetKey = "default" if dataset_type != "cvap" else "N/A"
-    if dataset_type in metadata and metadata[dataset_type]["datasets"][i] != "":
-        dataset = metadata[dataset_type]["datasets"][i]
+    if dataset_type in metadata and metadata[dataset_type]["datasets"][0] != "":
+        dataset = metadata[dataset_type]["datasets"][0]
 
     return dataset
 
@@ -48,6 +46,11 @@ def get_datasets(metadata: Dict[str, Any], dataset_type: str) -> List[DatasetKey
     """Return all datasets for a dataset type."""
 
     assert dataset_type in metadata
+
+    # HACK for legacy tests
+    if len(metadata[dataset_type]["datasets"]) == 1:
+        return [get_dataset(metadata, dataset_type)]
+
     return metadata[dataset_type]["datasets"]
 
 
