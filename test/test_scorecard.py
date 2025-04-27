@@ -28,7 +28,7 @@ class TestScorecard:
             plan: PlanCSV = read_plan(plan_path)
             geoid_index: Dict[str, int] = index_plan(plan)
 
-            data_path: str = f"../vtd_data/2020_VTD/{xx}/{xx}_input_data.v1.jsonl"
+            data_path: str = f"testdata/score/{xx}_input_data.v1.jsonl"
 
             ### BOILERPLATE - DON'T CHANGE THIS ###
 
@@ -169,7 +169,7 @@ class TestScorecard:
                 plan: Dict[Precinct, District] = in_record["plan"]
                 break
 
-        data_path: str = f"../vtd_data/2020_VTD/{xx}/{xx}_input_data.v1.jsonl"
+        data_path: str = f"testdata/score/{xx}_input_data.v1.jsonl"
 
         input_metadata: Dict[str, Any]
         precinct_data: List[Dict[str, Any]]
