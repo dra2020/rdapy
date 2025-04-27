@@ -133,8 +133,11 @@ def score_plan(
         "splitting",
     ]
 
-    # TODO - Enable specific & multiple datasets per type
-    datasets: Dict[str, str] = default_datasets(data_map)
+    census_dataset: DatasetKey = get_dataset(data_map, "census")
+    vap_dataset: DatasetKey = get_dataset(data_map, "vap")
+    cvap_dataset: DatasetKey = get_dataset(data_map, "cvap")
+    election_dataset: DatasetKey = get_dataset(data_map, "election")
+    shapes_dataset: DatasetKey = get_dataset(data_map, "shapes")
 
     n_districts: int = metadata["D"]
     n_counties: int = metadata["C"]
@@ -143,14 +146,14 @@ def score_plan(
 
     if mode in ["all", "general"]:
         deviation: float = calc_population_deviation(
-            aggs["census"][datasets["census"]],
+            aggs["census"][census_dataset],
             n_districts,
         )
         scorecard["population_deviation"] = deviation
 
     if mode in ["all", "partisan"]:
         partisan_metrics: Dict[str, Optional[float]] = calc_partisan_metrics(
-            aggs["election"][datasets["election"]],
+            aggs["election"][election_dataset],
             n_districts,
         )
         estimated_seat_pct = partisan_metrics.pop("estimated_seat_pct")
@@ -172,7 +175,7 @@ def score_plan(
 
         if mmd_scoring:
             mmd_counts: Dict[str, int] = calculate_mmd_simple(
-                aggs["cvap"][datasets["cvap"]]
+                aggs["cvap"][cvap_dataset]
             )
             scorecard.update(mmd_counts)
 
@@ -180,7 +183,7 @@ def score_plan(
 
         alt_minority_metrics: Dict[str, float] = (
             calc_minority_metrics(  # Was: calc_alt_minority_metrics(
-                aggs["vap"][datasets["vap"]], n_districts, vap_keys
+                aggs["vap"][vap_dataset], n_districts, vap_keys
             )
         )
         scorecard.update(alt_minority_metrics)
@@ -194,7 +197,7 @@ def score_plan(
 
     if mode in ["all", "compactness"]:
         compactness_by_district: Dict[str, List[float]] = calc_compactness_metrics(
-            aggs["shapes"][datasets["shapes"]], n_districts
+            aggs["shapes"][shapes_dataset], n_districts
         )
         compactness_metrics: Dict[str, float] = {
             "reock": compactness_by_district["reock"][0],
@@ -232,7 +235,7 @@ def score_plan(
         splitting_metrics: Dict[str, float]
         splitting_by_district: Dict[str, List[float]]
         splitting_metrics, splitting_by_district = calc_splitting_metrics(
-            aggs["census"][datasets["census"]], n_districts
+            aggs["census"][census_dataset], n_districts
         )
         scorecard.update(splitting_metrics)
         scorecard["splitting"] = rate_splitting(
@@ -245,10 +248,10 @@ def score_plan(
     # Combine the by-district metrics
     new_aggs: Aggregates = aggs.copy()
     if mode in ["all", "compactness"]:
-        new_aggs["shapes"][datasets["shapes"]].update(compactness_by_district)
+        new_aggs["shapes"][shapes_dataset].update(compactness_by_district)
     if mode in ["all", "splitting"]:
-        new_aggs["census"][datasets["census"]].update(splitting_by_district)
-        new_aggs["census"][datasets["census"]].pop("CxD")
+        new_aggs["census"][census_dataset].update(splitting_by_district)
+        new_aggs["census"][census_dataset].pop("CxD")
 
     # Trim the floating point numbers
     precision: int = 4
@@ -276,20 +279,6 @@ def score_plan(
             scorecard[metric] = round(scorecard[metric], precision)
 
     return scorecard, new_aggs
-
-
-def default_datasets(input_metadata: Dict[str, Any]) -> Dict[str, str]:
-    """Get the default/first datasets"""
-
-    datasets: Dict[str, str] = {
-        "census": get_dataset(input_metadata, "census"),
-        "vap": get_dataset(input_metadata, "vap"),
-        "cvap": get_dataset(input_metadata, "cvap"),
-        "election": get_dataset(input_metadata, "election"),
-        "shapes": get_dataset(input_metadata, "shapes"),
-    }
-
-    return datasets
 
 
 ### CALCULATE ANALYTICS BY AREA ###
