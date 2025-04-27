@@ -21,6 +21,16 @@ cycle: str = "2020"
 testdata_dir: str = "testdata/score"
 
 
+def flatten_scorecard(nested_dict):
+    result = {}
+
+    # Iterate through each inner dictionary and update the result
+    for inner_dict in nested_dict.values():
+        result.update(inner_dict)
+
+    return result
+
+
 class TestScorecard:
     def test_scorecard(self) -> None:
         for xx in ["NC", "NJ"]:
@@ -67,6 +77,8 @@ class TestScorecard:
                 mode="all",
                 mmd_scoring=False,
             )
+
+            scorecard = flatten_scorecard(scorecard)
 
             #
 
@@ -206,6 +218,8 @@ class TestScorecard:
             mode="all",
             mmd_scoring=False,
         )
+
+        scorecard = flatten_scorecard(scorecard)
 
         # The actual scores
 
