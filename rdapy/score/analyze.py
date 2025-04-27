@@ -169,12 +169,12 @@ def score_plan(
         scorecard[election_dataset].update(partisan_metrics)
 
         scorecard[election_dataset]["proportionality"] = rate_proportionality(
-            scorecard["pr_deviation"],
-            scorecard["estimated_vote_pct"],
+            scorecard[election_dataset]["pr_deviation"],
+            scorecard[election_dataset]["estimated_vote_pct"],
             estimated_seat_pct,
         )
         scorecard[election_dataset]["competitiveness"] = rate_competitiveness(
-            scorecard["competitive_districts"] / n_districts
+            scorecard[election_dataset]["competitive_districts"] / n_districts
         )
 
     if mode in ["all", "minority"]:
@@ -236,7 +236,8 @@ def score_plan(
         scorecard[shapes_dataset].update(compactness_metrics)
 
         scorecard[shapes_dataset]["compactness"] = rate_compactness(
-            scorecard["reock"], scorecard["polsby_popper"]
+            scorecard[shapes_dataset]["reock"],
+            scorecard[shapes_dataset]["polsby_popper"],
         )
 
     if mode in ["all", "splitting"]:
@@ -247,8 +248,8 @@ def score_plan(
         )
         scorecard[census_dataset].update(splitting_metrics)
         scorecard[census_dataset]["splitting"] = rate_splitting(
-            scorecard["county_splitting"],
-            scorecard["district_splitting"],
+            scorecard[census_dataset]["county_splitting"],
+            scorecard[census_dataset]["district_splitting"],
             n_counties,
             n_districts,
         )
@@ -266,19 +267,21 @@ def score_plan(
     int_metrics: List[str] = [
         "pr_seats",
         "fptp_seats",
+        "proportionality",
+        "competitive_district_count",
+        "competitiveness",
         "proportional_opportunities",
         "proportional_coalitions",
+        "mmd_black",
+        "mmd_hispanic",
+        "mmd_coalition",
+        "minority",
         "cut_score",
         "spanning_tree_score",
+        "compactness",
         "counties_split",
         "county_splits",
-        "proportionality",
-        "competitiveness",
-        "minority",
-        "minority_alt",
-        "compactness",
         "splitting",
-        "mod_districts",
     ]
     for metric in scorecard:
         if scorecard[metric] is None or metric == "by_district":
