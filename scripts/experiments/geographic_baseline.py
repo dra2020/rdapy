@@ -6,11 +6,11 @@ EXPERIMENT: GEOGRAPHIC SEATS AND ADVANTAGE
 
 from typing import Any, List, Dict, Deque
 
+import json
+
 from rdapy import (
     load_data,
     load_graph,
-    collect_metadata,
-    geoids_from_precinct_data,
 )
 
 from rdapy.score import (
@@ -96,10 +96,7 @@ geoid_to_index = {geoid: idx for idx, geoid in enumerate(adjacency_graph.keys())
 
 tot_seats_whole: float = 0.0
 tot_seats_fractional: float = 0.0
-precincts: Dict[str, Dict[str, Any]] = dict()
 dl: DistanceLedger = DistanceLedger()
-
-print(f"{{")
 
 for i, geoid in enumerate(geoids):
     nh_q: Deque[Neighbor] = make_neighborhood(
@@ -126,17 +123,20 @@ for i, geoid in enumerate(geoids):
     # tot_seats_whole += whole_seats * proportion
     # tot_seats_fractional += fractional_seats * proportion
 
-    precincts[geoid] = {
+    record = {
+        "geoid": geoid,
         "Vf": Vf,
         "fractional_seats": fractional_seats,
         "whole_seats": whole_seats,
         "neighborhood": indexed_nh,
     }
-    print(f"  {precincts},")
+    print(json.dumps(record))
+    # print(f"  {record}")
+
+    if i > 10:
+        break
 
     pass  # for debugging
-
-print(f"}}")
 
 pass
 

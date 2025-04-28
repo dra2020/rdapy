@@ -9,10 +9,13 @@ from typing import Any, List, Dict, Tuple, Set, NamedTuple, Deque
 import math
 from collections import deque, defaultdict
 
-import rdapy as rda
+# TODO - DELETE
+# import rdapy as rda
 
 from .utils import OUT_OF_STATE
 from ..utils import approx_equal
+from ..partisan import est_seat_probability
+from ..graph import is_connected
 
 
 def distance(a: Tuple[float, float], b: Tuple[float, float]) -> float:
@@ -186,7 +189,7 @@ def make_neighborhood(
         for n in list(do_q):
             if (nh_pop + n.pop) < target * (1.0 + pop_tol):
                 nh_ids.append(n.geoid)
-                if rda.is_connected(nh_ids, graph):
+                if is_connected(nh_ids, graph):
                     nh_q.append(n)
                     nh_pop += n.pop
                     do_q.remove(n)
@@ -230,7 +233,7 @@ def neighborhood_results(
         tot_votes += n.tot_votes
 
     Vf: float = dem_votes / tot_votes
-    fractional_seats: float = rda.est_seat_probability(Vf)
+    fractional_seats: float = est_seat_probability(Vf)
     whole_seats: float = 1.0 if Vf > 0.5 else 0.0
     if approx_equal(Vf, 0.5):
         whole_seats = 0.5
