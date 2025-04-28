@@ -106,7 +106,7 @@
                 "--mode",
                 "all",
                 "--input",
-                "testdata/examples/NC_congress_aggs.100.v4.jsonl",
+                "testdata/examples/NC_congress_aggs.100.v5.jsonl",
                 "--output",
                 "temp/DEBUG_scores.jsonl"
             ]
@@ -120,7 +120,7 @@
             "cwd": "${workspaceFolder}",
             "args": [
                 "--input",
-                "testdata/examples/NC_congress_scores.100.v4.jsonl",
+                "testdata/examples/NC_congress_scores.100.v5.jsonl",
                 "--data",
                 "testdata/examples/NC_input_data.v4.jsonl",
                 "--scores",
