@@ -218,7 +218,9 @@ def make_neighborhood(
     return nh_q
 
 
-def neighborhood_results(nh_q: Deque[Neighbor]) -> Tuple[float, float, float]:
+def neighborhood_results(
+    nh_q: Deque[Neighbor],
+) -> Tuple[float, float, float, List[str]]:
     """Calculate the partisan results for a precinct's neighborhood."""
 
     dem_votes: int = 0
@@ -233,7 +235,9 @@ def neighborhood_results(nh_q: Deque[Neighbor]) -> Tuple[float, float, float]:
     if approx_equal(Vf, 0.5):
         whole_seats = 0.5
 
-    return Vf, fractional_seats, whole_seats
+    neighbors: List[str] = [node.geoid for node in nh_q][1:]
+
+    return Vf, fractional_seats, whole_seats, neighbors
 
 
 ### END ###

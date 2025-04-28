@@ -37,6 +37,8 @@ graph_path: str = "testdata/examples/NC_graph.json"
 verbose: bool = True
 debug: bool = False
 
+granularity: int = ndistricts
+
 #
 
 data_map: Dict[str, Any]
@@ -68,60 +70,50 @@ for precinct in input_data:
     data[geoid]["dem_votes"] = precinct[dem_votes_field]
     data[geoid]["tot_votes"] = precinct[dem_votes_field] + precinct[rep_votes_field]
 
-print(f"State population: {state_pop}")
+target_pop: int = state_pop // granularity
+
+# Process each precinct
+
+tot_seats_whole: float = 0.0
+tot_seats_fractional: float = 0.0
+precincts: Dict[str, Dict[str, Any]] = dict()
 dl: DistanceLedger = DistanceLedger()
 
-precincts: Dict[str, Dict[str, Any]] = dict()
+print(f"{{")
 
-for granularity in [ndistricts, ncounties]:
-    print(f"Granularity: {granularity}")
-    target_pop: int = state_pop // granularity
-    print(f"Target population: {target_pop}")
+for i, geoid in enumerate(geoids):
+    nh_q: Deque[Neighbor] = make_neighborhood(
+        geoid,
+        data,
+        adjacency_graph,
+        ledger=dl,
+        target=target_pop,
+    )
 
-    # Process each precinct
+    pop: int = nh_q[0].pop
+    Vf: float
+    fractional_seats: float
+    whole_seats: float
+    neighborhood: List[str]
+    Vf, fractional_seats, whole_seats, neighborhood = neighborhood_results(nh_q)
 
-    tot_seats_whole: float = 0.0
-    tot_seats_fractional: float = 0.0
-    for i, geoid in enumerate(geoids):
-        nh_q: Deque[Neighbor] = make_neighborhood(
-            geoid,
-            data,
-            adjacency_graph,
-            ledger=dl,
-            target=target_pop,
-        )
+    proportion: float = ndistricts * (pop / state_pop)
 
-        pop: int = nh_q[0].pop
-        Vf: float
-        fractional_seats: float
-        whole_seats: float
-        Vf, fractional_seats, whole_seats = neighborhood_results(nh_q)
+    tot_seats_whole += whole_seats * proportion
+    tot_seats_fractional += fractional_seats * proportion
 
-        proportion: float = ndistricts * (pop / state_pop)
+    precincts[geoid] = {
+        "geoid": geoid,
+        "Vf": Vf,
+        "fractional_seats": fractional_seats,
+        "whole_seats": whole_seats,
+        "neighborhood": neighborhood,
+    }
+    print(f"  {precincts},")
 
-        tot_seats_whole += whole_seats * proportion
-        tot_seats_fractional += fractional_seats * proportion
+    pass  # for debugging
 
-        precincts[geoid] = {
-            "geoid": geoid,
-            "Vf": Vf,
-            "fractional_seats": fractional_seats,
-            "whole_seats": whole_seats,
-        }
-
-    #     if verbose:
-    #         print(
-    #             f"{i},{geoid},{Vf:.2f},{fractional_seats:.2f},{whole_seats:f},{tot_seats_whole:f},{tot_seats_fractional:f}"
-    #         )
-
-    #     pass
-
-    # print(
-    #     f"Geographic seats: {tot_seats_whole:.2f} | {tot_seats_fractional:f}, for neighorhood granualarity {granularity}"
-    # )
-    break  # Just neighborhood size = district size for now
-
-print(precincts)
+print(f"}}")
 
 pass
 
