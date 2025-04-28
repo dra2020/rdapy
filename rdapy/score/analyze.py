@@ -23,6 +23,7 @@ import rdapy as rda
 from .utils import Precinct, District
 from .aggregate import (
     get_dataset,
+    get_datasets,
     get_fields,
     DatasetKey,
     Aggregates,
@@ -133,20 +134,22 @@ def score_plan(
         "splitting",
     ]
 
+    n_districts: int = metadata["D"]
+    n_counties: int = metadata["C"]
+
     census_dataset: DatasetKey = get_dataset(data_map, "census")
     vap_dataset: DatasetKey = get_dataset(data_map, "vap")
     cvap_dataset: DatasetKey = get_dataset(data_map, "cvap")
-    election_dataset: DatasetKey = get_dataset(data_map, "election")
+    election_datasets: List[DatasetKey] = get_datasets(data_map, "election")
+    # election_dataset: DatasetKey = get_dataset(data_map, "election")
     shapes_dataset: DatasetKey = get_dataset(data_map, "shapes")
-
-    n_districts: int = metadata["D"]
-    n_counties: int = metadata["C"]
 
     scorecard: Dict[str, Any] = {
         "census": {census_dataset: {}},
         "vap": {vap_dataset: {}},
         "cvap": {cvap_dataset: {}},
-        "election": {election_dataset: {}},  # TODO - Add multiple elections
+        "election": {e: {} for e in election_datasets},
+        # "election": {election_dataset: {}},
         "shapes": {shapes_dataset: {}},
     }
 
@@ -158,27 +161,28 @@ def score_plan(
         scorecard["census"][census_dataset]["population_deviation"] = deviation
 
     if mode in ["all", "partisan"]:
-        partisan_metrics: Dict[str, Optional[float]] = calc_partisan_metrics(
-            aggs["election"][election_dataset],
-            n_districts,
-        )
-        estimated_seat_pct = partisan_metrics.pop("estimated_seat_pct")
-        assert estimated_seat_pct is not None
-        scorecard["election"][election_dataset].update(partisan_metrics)
+        for election_dataset in election_datasets:
+            partisan_metrics: Dict[str, Optional[float]] = calc_partisan_metrics(
+                aggs["election"][election_dataset],
+                n_districts,
+            )
+            estimated_seat_pct = partisan_metrics.pop("estimated_seat_pct")
+            assert estimated_seat_pct is not None
+            scorecard["election"][election_dataset].update(partisan_metrics)
 
-        scorecard["election"][election_dataset]["proportionality"] = (
-            rate_proportionality(
-                scorecard["election"][election_dataset]["pr_deviation"],
-                scorecard["election"][election_dataset]["estimated_vote_pct"],
-                estimated_seat_pct,
+            scorecard["election"][election_dataset]["proportionality"] = (
+                rate_proportionality(
+                    scorecard["election"][election_dataset]["pr_deviation"],
+                    scorecard["election"][election_dataset]["estimated_vote_pct"],
+                    estimated_seat_pct,
+                )
             )
-        )
-        scorecard["election"][election_dataset]["competitiveness"] = (
-            rate_competitiveness(
-                scorecard["election"][election_dataset]["competitive_districts"]
-                / n_districts
+            scorecard["election"][election_dataset]["competitiveness"] = (
+                rate_competitiveness(
+                    scorecard["election"][election_dataset]["competitive_districts"]
+                    / n_districts
+                )
             )
-        )
 
     if mode in ["all", "minority"]:
         vap_dataset: DatasetKey = get_dataset(data_map, "vap")
