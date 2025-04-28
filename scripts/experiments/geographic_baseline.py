@@ -71,6 +71,8 @@ for precinct in input_data:
 print(f"State population: {state_pop}")
 dl: DistanceLedger = DistanceLedger()
 
+precincts: Dict[str, Dict[str, Any]] = dict()
+
 for granularity in [ndistricts, ncounties]:
     print(f"Granularity: {granularity}")
     target_pop: int = state_pop // granularity
@@ -100,17 +102,26 @@ for granularity in [ndistricts, ncounties]:
         tot_seats_whole += whole_seats * proportion
         tot_seats_fractional += fractional_seats * proportion
 
-        if verbose:
-            print(
-                f"{i},{geoid},{Vf:.2f},{fractional_seats:.2f},{whole_seats:f},{tot_seats_whole:f},{tot_seats_fractional:f}"
-            )
+        precincts[geoid] = {
+            "geoid": geoid,
+            "Vf": Vf,
+            "fractional_seats": fractional_seats,
+            "whole_seats": whole_seats,
+        }
 
-        pass
+    #     if verbose:
+    #         print(
+    #             f"{i},{geoid},{Vf:.2f},{fractional_seats:.2f},{whole_seats:f},{tot_seats_whole:f},{tot_seats_fractional:f}"
+    #         )
 
-    print(
-        f"Geographic seats: {tot_seats_whole:.2f} | {tot_seats_fractional:f}, for neighorhood granualarity {granularity}"
-    )
+    #     pass
+
+    # print(
+    #     f"Geographic seats: {tot_seats_whole:.2f} | {tot_seats_fractional:f}, for neighorhood granualarity {granularity}"
+    # )
     break  # Just neighborhood size = district size for now
+
+print(precincts)
 
 pass
 
