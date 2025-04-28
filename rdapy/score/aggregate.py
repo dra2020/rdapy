@@ -32,18 +32,26 @@ Aggregates: TypeAlias = Dict[DatasetType, Dict[DatasetKey, NamedAggregates]]
 ### DATASET HELPERS ###
 
 
-def get_dataset(metadata: Dict[str, Any], dataset_type: str, i: int = 0) -> DatasetKey:
-    dataset: DatasetKey = "default" if dataset_type != "cvap" else "N/A"
-    if dataset_type in metadata and metadata[dataset_type]["datasets"][i] != "":
-        dataset = metadata[dataset_type]["datasets"][i]
+def get_dataset(metadata: Dict[str, Any], dataset_type: str) -> DatasetKey:
+    """Return the first dataset for a dataset type. Some legacy logic."""
 
-    # dataset: DatasetKey = (
-    #     metadata[dataset_type]["datasets"][i]
-    #     if metadata[dataset_type]["datasets"][i] != ""
-    #     else "default"
-    # )
+    dataset: DatasetKey = "default" if dataset_type != "cvap" else "N/A"
+    if dataset_type in metadata and metadata[dataset_type]["datasets"][0] != "":
+        dataset = metadata[dataset_type]["datasets"][0]
 
     return dataset
+
+
+def get_datasets(metadata: Dict[str, Any], dataset_type: str) -> List[DatasetKey]:
+    """Return all datasets for a dataset type."""
+
+    assert dataset_type in metadata
+
+    # HACK for legacy tests
+    if "version" not in metadata or metadata["version"] < 2:
+        return [get_dataset(metadata, dataset_type)]
+
+    return metadata[dataset_type]["datasets"]
 
 
 def get_fields(
@@ -241,14 +249,17 @@ def aggregate_data_by_district(
     census_dataset: DatasetKey = get_dataset(data_metadata, "census")
     vap_dataset: DatasetKey = get_dataset(data_metadata, "vap")
     cvap_dataset: DatasetKey = get_dataset(data_metadata, "cvap")
-    # TODO - Enable multiple election datasets
-    election_dataset: DatasetKey = get_dataset(data_metadata, "election")
+    election_datasets: List[DatasetKey] = get_datasets(data_metadata, "election")
 
     # Set up the aggregates
 
     pop_by_district: Aggregate = [0] * (n_districts + 1)
-    dem_by_district: Aggregate = [0] * (n_districts + 1)
-    tot_by_district: Aggregate = [0] * (n_districts + 1)
+    dem_by_district: Dict[str, List[int]] = {
+        e: [0] * (n_districts + 1) for e in election_datasets
+    }
+    tot_by_district: Dict[str, List[int]] = {
+        e: [0] * (n_districts + 1) for e in election_datasets
+    }
     vaps_by_district: Dict[str, List[int]] = {
         demo: [0] * (n_districts + 1)
         for demo in get_fields(data_metadata, "vap", vap_dataset)
@@ -275,37 +286,36 @@ def aggregate_data_by_district(
                 raise ValueError(f"Populated geoid ({geoid}) not in the plan!")
         district: int = geoid_index[geoid]
 
-        # pop: int
-        # if which in ["all", "general", "splitting"]:
-        #     pop = int(
-        #         precinct[
-        #             get_fields(data_metadata, "census", census_dataset)["total_pop"]
-        #         ]
-        #     )
-
         if which in ["all", "general"]:
             pop_by_district[district] += pop
             pop_by_district[0] += pop
 
         if which in ["all", "partisan"]:
-            dem: int = int(
-                precinct[
-                    get_fields(data_metadata, "election", election_dataset)["dem_votes"]
-                ]
-            )
-            tot: int = int(
-                precinct[
-                    get_fields(data_metadata, "election", election_dataset)["dem_votes"]
-                ]
-            ) + int(
-                precinct[
-                    get_fields(data_metadata, "election", election_dataset)["rep_votes"]
-                ]
-            )
-            dem_by_district[district] += dem
-            dem_by_district[0] += dem
-            tot_by_district[district] += tot
-            tot_by_district[0] += tot
+            for election_dataset in election_datasets:
+                dem: int = int(
+                    precinct[
+                        get_fields(data_metadata, "election", election_dataset)[
+                            "dem_votes"
+                        ]
+                    ]
+                )
+                tot: int = int(
+                    precinct[
+                        get_fields(data_metadata, "election", election_dataset)[
+                            "dem_votes"
+                        ]
+                    ]
+                ) + int(
+                    precinct[
+                        get_fields(data_metadata, "election", election_dataset)[
+                            "rep_votes"
+                        ]
+                    ]
+                )
+                dem_by_district[election_dataset][district] += dem
+                dem_by_district[election_dataset][0] += dem
+                tot_by_district[election_dataset][district] += tot
+                tot_by_district[election_dataset][0] += tot
 
         if which in ["all", "minority"]:
             # for dem's' in vap & cvap fields:
@@ -343,13 +353,16 @@ def aggregate_data_by_district(
             aggs["census"][census_dataset].update({"CxD": CxD})
 
     if which in ["all", "partisan"]:
-        aggs["election"] = {election_dataset: {}}
-        aggs["election"][election_dataset].update(
-            {
-                "dem_by_district": dem_by_district,
-                "tot_by_district": tot_by_district,
-            }
-        )
+        aggs["election"] = {
+            election_dataset: {} for election_dataset in election_datasets
+        }
+        for election_dataset in election_datasets:
+            aggs["election"][election_dataset].update(
+                {
+                    "dem_by_district": dem_by_district[election_dataset],
+                    "tot_by_district": tot_by_district[election_dataset],
+                }
+            )
 
     if which in ["all", "minority"]:
         aggs["vap"] = {vap_dataset: {}}
@@ -380,7 +393,6 @@ def aggregate_shapes_by_district(
     if debug:
         arcs_are_symmetric(data_by_geoid)
 
-    # TODO - Enable multiple datasets per type
     shapes_dataset: DatasetKey = get_dataset(data_metadata, "shapes")
     census_dataset: DatasetKey = get_dataset(data_metadata, "census")
 
@@ -417,16 +429,6 @@ def aggregate_shapes_by_district(
         by_district_temp["exterior"][district].extend(
             exterior(geoid, district, geoid_index, data_by_geoid, graph)
         )
-
-    # for geoid, district in geoid_index.items():
-    #     by_district["area"][district] += data[geoid]["area"]
-    #     by_district["area"][0] += data[geoid]["area"]
-    #     by_district["perimeter"][district] += border_length(
-    #         geoid, district, geoid_index, data, graph
-    #     )
-    #     by_district_temp["exterior"][district].extend(
-    #         exterior(geoid, district, geoid_index, data, graph)
-    #     )
 
     # Calculate district diameters
 

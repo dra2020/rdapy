@@ -23,6 +23,7 @@ import rdapy as rda
 from .utils import Precinct, District
 from .aggregate import (
     get_dataset,
+    get_datasets,
     get_fields,
     DatasetKey,
     Aggregates,
@@ -123,7 +124,7 @@ def score_plan(
 ) -> Tuple[Dict[str, Any], Aggregates]:
     """Score a plan."""
 
-    # Pulled 'extended' scoring moved out separately
+    # Pulled 'extended' scoring out separately
     assert mode in [
         "all",
         "general",
@@ -133,38 +134,55 @@ def score_plan(
         "splitting",
     ]
 
-    # TODO - Enable specific & multiple datasets per type
-    datasets: Dict[str, str] = default_datasets(data_map)
-
     n_districts: int = metadata["D"]
     n_counties: int = metadata["C"]
 
-    scorecard: Dict[str, Any] = dict()
+    census_dataset: DatasetKey = get_dataset(data_map, "census")
+    vap_dataset: DatasetKey = get_dataset(data_map, "vap")
+    cvap_dataset: DatasetKey = get_dataset(data_map, "cvap")
+    election_datasets: List[DatasetKey] = get_datasets(data_map, "election")
+    # election_dataset: DatasetKey = get_dataset(data_map, "election")
+    shapes_dataset: DatasetKey = get_dataset(data_map, "shapes")
+
+    scorecard: Dict[str, Any] = {
+        "census": {census_dataset: {}},
+        "vap": {vap_dataset: {}},
+        "cvap": {cvap_dataset: {}},
+        "election": {e: {} for e in election_datasets},
+        # "election": {election_dataset: {}},
+        "shapes": {shapes_dataset: {}},
+    }
 
     if mode in ["all", "general"]:
         deviation: float = calc_population_deviation(
-            aggs["census"][datasets["census"]],
+            aggs["census"][census_dataset],
             n_districts,
         )
-        scorecard["population_deviation"] = deviation
+        scorecard["census"][census_dataset]["population_deviation"] = deviation
 
     if mode in ["all", "partisan"]:
-        partisan_metrics: Dict[str, Optional[float]] = calc_partisan_metrics(
-            aggs["election"][datasets["election"]],
-            n_districts,
-        )
-        estimated_seat_pct = partisan_metrics.pop("estimated_seat_pct")
-        assert estimated_seat_pct is not None
-        scorecard.update(partisan_metrics)
+        for election_dataset in election_datasets:
+            partisan_metrics: Dict[str, Optional[float]] = calc_partisan_metrics(
+                aggs["election"][election_dataset],
+                n_districts,
+            )
+            estimated_seat_pct = partisan_metrics.pop("estimated_seat_pct")
+            assert estimated_seat_pct is not None
+            scorecard["election"][election_dataset].update(partisan_metrics)
 
-        scorecard["proportionality"] = rate_proportionality(
-            scorecard["pr_deviation"],
-            scorecard["estimated_vote_pct"],
-            estimated_seat_pct,
-        )
-        scorecard["competitiveness"] = rate_competitiveness(
-            scorecard["competitive_districts"] / n_districts
-        )
+            scorecard["election"][election_dataset]["proportionality"] = (
+                rate_proportionality(
+                    scorecard["election"][election_dataset]["pr_deviation"],
+                    scorecard["election"][election_dataset]["estimated_vote_pct"],
+                    estimated_seat_pct,
+                )
+            )
+            scorecard["election"][election_dataset]["competitiveness"] = (
+                rate_competitiveness(
+                    scorecard["election"][election_dataset]["competitive_districts"]
+                    / n_districts
+                )
+            )
 
     if mode in ["all", "minority"]:
         vap_dataset: DatasetKey = get_dataset(data_map, "vap")
@@ -172,20 +190,20 @@ def score_plan(
 
         if mmd_scoring:
             mmd_counts: Dict[str, int] = calculate_mmd_simple(
-                aggs["cvap"][datasets["cvap"]]
+                aggs["cvap"][cvap_dataset]
             )
-            scorecard.update(mmd_counts)
+            scorecard["cvap"][cvap_dataset].update(mmd_counts)
 
         # Revised minority ratings that don't click Black VAP % below 37%
 
         alt_minority_metrics: Dict[str, float] = (
             calc_minority_metrics(  # Was: calc_alt_minority_metrics(
-                aggs["vap"][datasets["vap"]], n_districts, vap_keys
+                aggs["vap"][vap_dataset], n_districts, vap_keys
             )
         )
-        scorecard.update(alt_minority_metrics)
+        scorecard["vap"][vap_dataset].update(alt_minority_metrics)
 
-        scorecard["minority"] = rate_minority_opportunity(
+        scorecard["vap"][vap_dataset]["minority"] = rate_minority_opportunity(
             alt_minority_metrics["opportunity_districts"],
             alt_minority_metrics["proportional_opportunities"],
             alt_minority_metrics["coalition_districts"],
@@ -194,7 +212,7 @@ def score_plan(
 
     if mode in ["all", "compactness"]:
         compactness_by_district: Dict[str, List[float]] = calc_compactness_metrics(
-            aggs["shapes"][datasets["shapes"]], n_districts
+            aggs["shapes"][shapes_dataset], n_districts
         )
         compactness_metrics: Dict[str, float] = {
             "reock": compactness_by_district["reock"][0],
@@ -222,22 +240,23 @@ def score_plan(
         energy: float = calc_energy(assignments, data, pop_field)  # type: ignore
         compactness_metrics["population_compactness"] = energy
 
-        scorecard.update(compactness_metrics)
+        scorecard["shapes"][shapes_dataset].update(compactness_metrics)
 
-        scorecard["compactness"] = rate_compactness(
-            scorecard["reock"], scorecard["polsby_popper"]
+        scorecard["shapes"][shapes_dataset]["compactness"] = rate_compactness(
+            scorecard["shapes"][shapes_dataset]["reock"],
+            scorecard["shapes"][shapes_dataset]["polsby_popper"],
         )
 
     if mode in ["all", "splitting"]:
         splitting_metrics: Dict[str, float]
         splitting_by_district: Dict[str, List[float]]
         splitting_metrics, splitting_by_district = calc_splitting_metrics(
-            aggs["census"][datasets["census"]], n_districts
+            aggs["census"][census_dataset], n_districts
         )
-        scorecard.update(splitting_metrics)
-        scorecard["splitting"] = rate_splitting(
-            scorecard["county_splitting"],
-            scorecard["district_splitting"],
+        scorecard["census"][census_dataset].update(splitting_metrics)
+        scorecard["census"][census_dataset]["splitting"] = rate_splitting(
+            scorecard["census"][census_dataset]["county_splitting"],
+            scorecard["census"][census_dataset]["district_splitting"],
             n_counties,
             n_districts,
         )
@@ -245,51 +264,41 @@ def score_plan(
     # Combine the by-district metrics
     new_aggs: Aggregates = aggs.copy()
     if mode in ["all", "compactness"]:
-        new_aggs["shapes"][datasets["shapes"]].update(compactness_by_district)
+        new_aggs["shapes"][shapes_dataset].update(compactness_by_district)
     if mode in ["all", "splitting"]:
-        new_aggs["census"][datasets["census"]].update(splitting_by_district)
-        new_aggs["census"][datasets["census"]].pop("CxD")
+        new_aggs["census"][census_dataset].update(splitting_by_district)
+        new_aggs["census"][census_dataset].pop("CxD")
 
     # Trim the floating point numbers
     precision: int = 4
     int_metrics: List[str] = [
         "pr_seats",
         "fptp_seats",
+        "proportionality",
+        "competitive_district_count",
+        "competitiveness",
         "proportional_opportunities",
         "proportional_coalitions",
+        "mmd_black",
+        "mmd_hispanic",
+        "mmd_coalition",
+        "minority",
         "cut_score",
         "spanning_tree_score",
+        "compactness",
         "counties_split",
         "county_splits",
-        "proportionality",
-        "competitiveness",
-        "minority",
-        "minority_alt",
-        "compactness",
         "splitting",
-        "mod_districts",
     ]
-    for metric in scorecard:
-        if scorecard[metric] is None or metric == "by_district":
-            continue
-        if metric not in int_metrics:
-            scorecard[metric] = round(scorecard[metric], precision)
+    for type_, datasets_ in scorecard.items():
+        for dataset_, metrics in datasets_.items():
+            for metric_, value_ in metrics.items():
+                if value_ is None:  # Was: or metric == "by_district":
+                    continue
+                if metric_ not in int_metrics:
+                    scorecard[type_][dataset_][metric_] = round(value_, precision)
 
     return scorecard, new_aggs
-
-
-def default_datasets(input_metadata: Dict[str, Any]) -> Dict[str, str]:
-    """Get the default/first datasets"""
-
-    datasets: Dict[str, str] = {
-        "census": get_dataset(input_metadata, "census"),
-        "vap": get_dataset(input_metadata, "vap"),
-        "cvap": get_dataset(input_metadata, "cvap"),
-        "election": get_dataset(input_metadata, "election"),
-        "shapes": get_dataset(input_metadata, "shapes"),
-    }
-
-    return datasets
 
 
 ### CALCULATE ANALYTICS BY AREA ###

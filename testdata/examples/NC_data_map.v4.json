@@ -1,0 +1,68 @@
+{
+    "version": 4,
+    "source": "testdata/data",
+    "path": "NC_vtd_datasets.v4.geojson",
+    "geoid": "id",
+    "census": {
+        "fields": {
+            "total_pop": "Total"
+        },
+        "datasets": [
+            "T_20_CENS"
+        ]
+    },
+    "vap": {
+        "fields": {
+            "total_vap": "Total",
+            "white_vap": "White",
+            "hispanic_vap": "Hispanic",
+            "black_vap": "Black",
+            "native_vap": "Native",
+            "asian_vap": "Asian",
+            "pacific_vap": "Pacific",
+            "minority_vap": "DERIVED"
+        },
+        "datasets": [
+            "V_20_VAP"
+        ]
+    },
+    "cvap": {
+        "fields": {
+            "total_cvap": "Total",
+            "white_cvap": "White",
+            "hispanic_cvap": "Hispanic",
+            "black_cvap": "Black",
+            "native_cvap": "Native",
+            "asian_cvap": "Asian",
+            "pacific_cvap": "Pacific",
+            "minority_cvap": "DERIVED"
+        },
+        "datasets": [
+            "V_20_CVAP"
+        ]
+    },
+    "election": {
+        "fields": {
+            "tot_votes": "Total",
+            "dem_votes": "Dem",
+            "rep_votes": "Rep"
+        },
+        "datasets": [
+            "E_16-20_COMP",
+            "E_20_PRES",
+            "E_20_GOV",
+            "E_20_SEN",
+            "E_16_PRES",
+            "E_20_AG",
+            "E_16_SEN"
+        ]
+    },
+    "shapes": {
+        "fields": {
+            "geometry": "geometry"
+        },
+        "datasets": [
+            "S_20_DRA"
+        ]
+    }
+}

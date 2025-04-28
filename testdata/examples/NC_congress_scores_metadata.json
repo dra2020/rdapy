@@ -31,62 +31,62 @@
     "units": "VTD",
     "username": "alecramsay",
     "verbose": false,
-    "version": 3,
-    "source": "../../local/geojson_data/",
-    "path": "_NC_2020_VD_tabblock.vtd.datasets.geojson",
+    "version": 4,
+    "source": "testdata/data",
+    "path": "NC_vtd_datasets.v4.geojson",
     "geoid": "id",
     "census": {
         "fields": {
-            "total_pop": "Tot"
+            "total_pop": "Total"
         },
         "datasets": [
-            "D20F"
+            "T_20_CENS"
         ]
     },
     "vap": {
         "fields": {
-            "total_vap": "Tot",
-            "white_vap": "Wh",
-            "hispanic_vap": "His",
-            "black_vap": "BlC",
-            "native_vap": "NatC",
-            "asian_vap": "AsnC",
-            "pacific_vap": "PacC",
-            "minority_vap": "Min_derived"
+            "total_vap": "Total",
+            "white_vap": "White",
+            "hispanic_vap": "Hispanic",
+            "black_vap": "Black",
+            "native_vap": "Native",
+            "asian_vap": "Asian",
+            "pacific_vap": "Pacific",
+            "minority_vap": "DERIVED"
         },
         "datasets": [
-            "D20T"
+            "V_20_VAP"
         ]
     },
     "cvap": {
         "fields": {
-            "total_cvap": "Tot",
-            "white_cvap": "Wh",
-            "hispanic_cvap": "His",
-            "black_cvap": "BlC",
-            "native_cvap": "NatC",
-            "asian_cvap": "AsnC",
-            "pacific_cvap": "PacC",
-            "minority_cvap": "Min_derived"
+            "total_cvap": "Total",
+            "white_cvap": "White",
+            "hispanic_cvap": "Hispanic",
+            "black_cvap": "Black",
+            "native_cvap": "Native",
+            "asian_cvap": "Asian",
+            "pacific_cvap": "Pacific",
+            "minority_cvap": "DERIVED"
         },
         "datasets": [
-            "D20TACS"
+            "V_20_CVAP"
         ]
     },
     "election": {
         "fields": {
-            "tot_votes": "Tot",
-            "dem_votes": "D",
-            "rep_votes": "R"
+            "tot_votes": "Total",
+            "dem_votes": "Dem",
+            "rep_votes": "Rep"
         },
         "datasets": [
-            "C16GCO",
-            "E20GPR",
-            "E20GGO",
-            "E20GSE",
-            "E16GPR",
-            "E20GAG",
-            "E16GSE"
+            "E_16-20_COMP",
+            "E_20_PRES",
+            "E_20_GOV",
+            "E_20_SEN",
+            "E_16_PRES",
+            "E_20_AG",
+            "E_16_SEN"
         ]
     },
     "shapes": {
@@ -94,7 +94,7 @@
             "geometry": "geometry"
         },
         "datasets": [
-            "DRA_simplified_shapes"
+            "S_20_DRA"
         ]
     }
 }
