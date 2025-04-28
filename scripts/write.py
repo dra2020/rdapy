@@ -21,6 +21,12 @@ cat testdata/intermediate/NC_congress_scores.100.v4.jsonl \
 --scores temp/DEBUG_scores.csv \
 --by-district temp/DEBUG_by-district.jsonl
 
+cat testdata/intermediate/NC_congress_scores.100.v5.jsonl \
+| scripts/write.py \
+--data testdata/intermediate/NC_input_data.v4.jsonl \
+--scores temp/DEBUG_scores.csv \
+--by-district temp/DEBUG_by-district.jsonl
+
 """
 
 import argparse
@@ -67,7 +73,8 @@ def main() -> None:
                     assert record["_tag_"] == "scores"
 
                     scores: Dict[str, Any] = {"name": record["name"]}
-                    scores.update(record["scores"])
+                    scores.update(flatten_scores(record["scores"]))
+                    # scores.update(record["scores"])
 
                     if i == 0:
                         cols: List[str] = list(scores.keys())
@@ -87,6 +94,23 @@ def main() -> None:
                     i += 1
 
     pass  # for debugging
+
+
+def flatten_scores(scores: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Convert a scores JSONL record that has dataset types, datasets, and metrics & values
+    into a flat dictionary with dataset.metric:value key:value pairs.
+    """
+
+    flattened: Dict[str, Any] = {}
+
+    for dataset_type in scores:
+        for dataset in scores[dataset_type]:
+            for metric in scores[dataset_type][dataset]:
+                qualified_key = f"{dataset}.{metric}"
+                flattened[qualified_key] = scores[dataset_type][dataset][metric]
+
+    return flattened
 
 
 def parse_args():
