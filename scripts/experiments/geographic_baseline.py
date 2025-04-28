@@ -28,6 +28,24 @@ from rdapy.score.geographic import (
 
 #
 
+
+def index_graph(adjacency_graph: Dict[str, List[str]]) -> List[Dict[str, Any]]:
+    """Convert a node/list of neighbors adjacency graph (dict) to a list of dicts with nodes converted to indices."""
+
+    geoid_to_index = {geoid: idx for idx, geoid in enumerate(adjacency_graph.keys())}
+
+    indexed_graph: List[Dict[str, Any]] = []
+
+    for geoid, neighbors in adjacency_graph.items():
+        neighbor_indices = [geoid_to_index[neighbor] for neighbor in neighbors]
+
+        indexed_graph.append({"geoid": geoid, "neighbors": neighbor_indices})
+
+    return indexed_graph
+
+
+#
+
 xx: str = "NC"
 plan_type: str = "congress"
 ndistricts: int = 14
@@ -72,6 +90,8 @@ for precinct in input_data:
 
 target_pop: int = state_pop // granularity
 
+geoid_to_index = {geoid: idx for idx, geoid in enumerate(adjacency_graph.keys())}
+
 # Process each precinct
 
 tot_seats_whole: float = 0.0
@@ -88,26 +108,29 @@ for i, geoid in enumerate(geoids):
         adjacency_graph,
         ledger=dl,
         target=target_pop,
-    )
+    )  # TODO - Use an indexed_graph instead
 
     pop: int = nh_q[0].pop
     Vf: float
     fractional_seats: float
     whole_seats: float
     neighborhood: List[str]
-    Vf, fractional_seats, whole_seats, neighborhood = neighborhood_results(nh_q)
+    Vf, fractional_seats, whole_seats, neighborhood = neighborhood_results(
+        nh_q
+    )  # TODO - Use an indexed_graph instead
 
-    proportion: float = ndistricts * (pop / state_pop)
+    indexed_nh: List[int] = [geoid_to_index[geoid] for geoid in neighborhood]
 
-    tot_seats_whole += whole_seats * proportion
-    tot_seats_fractional += fractional_seats * proportion
+    # proportion: float = ndistricts * (pop / state_pop)
+
+    # tot_seats_whole += whole_seats * proportion
+    # tot_seats_fractional += fractional_seats * proportion
 
     precincts[geoid] = {
-        "geoid": geoid,
         "Vf": Vf,
         "fractional_seats": fractional_seats,
         "whole_seats": whole_seats,
-        "neighborhood": neighborhood,
+        "neighborhood": indexed_nh,
     }
     print(f"  {precincts},")
 
