@@ -9,7 +9,7 @@ $ scripts/map_scoring_data.py \
 
 $ scripts/map_scoring_data.py \
 --geojson testdata/data/NC_vtd_datasets.v4.geojson \
---data-map testdata/intermediate/NC_data_map.v4.json
+--data-map testdata/examples/NC_data_map.v4.json
 
 NOTE -- The default datasets are for 2020 census, VAP, and CVAP data,
 and the composite election dataset for 2016-2020 elections.

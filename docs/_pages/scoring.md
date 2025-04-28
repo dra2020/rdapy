@@ -70,7 +70,7 @@ where:
 *   The `geojson` is a DRA precinct GeoJSON file with data coded by dataset.
     An example is provided in `testdata/data/NC_vtd_datasets.geojson`.
 *   The `graph` is a JSON file that contains the node/list of neighbors adjacency graph of the precincts.
-    An example is provided in `testdata/intermediate/NC_graph.json`.
+    An example is provided in `testdata/examples/NC_graph.json`.
 *   The `plans` is a JSONL file that contains the ensemble of plans to be scored.
     The plans can be simple dictionaries of geoid:district assignments, or
     they can be tagged 'plan' records in the ensemble format used by `rdatools/rdatools` and `rdatools/rdautils`.
@@ -166,7 +166,7 @@ the aggregates by district. For example:
 
 The first item in each list is a state-level aggregate, and the rest are district-level aggregates for districts 1 to N.
 
-You can see an example in `testdata/intermediate/NC_congress_aggs.100.v4.jsonl`.
+You can see an example in `testdata/examples/NC_congress_aggs.100.v4.jsonl`.
 
 There are some helper scripts to convert [alternative formats]({{ '/formats' | prepend: site.baseurl }}) 
 into the tagged format that can be ingested by the `aggregate.py` script.
