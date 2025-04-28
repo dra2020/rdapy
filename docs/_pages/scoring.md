@@ -162,7 +162,7 @@ Aggregates hierarchically encode the type of dataset (census, vap, cvap, electio
 the dataset key (defined by DRA in the README for the GeoJSON), the aggregate name (e.g., "dem_by_district"), and 
 the aggregates by district. For example:
 
-`"election": {"E_16-20_COMP": {"dem_by_district": [...]`.
+`{"election": {"E_16-20_COMP": {"dem_by_district": [...] ...} ...}`.
 
 The first item in each list is a state-level aggregate, and the rest are district-level aggregates for districts 1 to N.
 
@@ -186,6 +186,14 @@ cat path/to/plans_plus_aggregates.jsonl \
 --graph path/to/adjacency_graph.json > path/to/scores_plus_aggregates.jsonl
 ```
 
+Analogous to the `aggregate.py` script output, scoring writes plan-level scores in a hierarchical JSONL format:
+the type of dataset (census, vap, cvap, election, shape), 
+the dataset key, and
+the metric name and value.
+For example:
+
+`{"election": {"E_16-20_COMP": {"estimated_vote_pct": 0.4943, ...} ...} ...}`.
+
 #### Write Scores to Disk
 
 This script reads a stream of scores with district aggregates from STDIN,
@@ -199,5 +207,7 @@ cat path/to/scores_plus_aggregates.jsonl \
 --by-district path/to/by-district.jsonl
 ```
 
-If you want output in a different format, you can process the output of the `score.py` script directly, 
-e.g., using `jq`.
+To keep the plan-level scores a simple CSV, this script "flattens" the hierarchical JSONL format
+making field names by combining the dataset keys and metric names with a period, e.g., `E_16-20_COMP.estimated_seats`.
+If you want output in a different format, you can process the output of the `score.py` script 
+with a different script-let or directly, e.g., using `jq`.
