@@ -13,7 +13,6 @@ $ scripts/geographic-experiment/eval_neighborhoods.py
 from typing import Any, List, Dict, Deque
 
 import json
-import array
 
 from rdapy import (
     load_data,
@@ -42,8 +41,6 @@ neighborhoods_path: str = "~/local/geographic/NC_precinct_neighborhoods.jsonl"
 
 verbose: bool = True
 debug: bool = False
-
-# granularity: int = ndistricts
 
 #
 
@@ -94,8 +91,13 @@ with smart_read(neighborhoods_path) as input_stream:
             neighborhood, data, dem_votes_field, rep_votes_field
         )
 
-        if i > 10:
-            break
+        record = {
+            "geoid": geoid,
+            "Vf": Vf,
+            "fractional_seats": fractional_seats,
+            "whole_seats": whole_seats,
+        }
+        print(json.dumps(record))
 
         pass  # for debugging
 

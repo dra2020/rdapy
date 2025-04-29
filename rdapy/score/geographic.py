@@ -237,7 +237,7 @@ def nh_partisan_lean(
         dem_votes += data[geoid][dem_votes_field]
         tot_votes += data[geoid][dem_votes_field] + data[geoid][rep_votes_field]
 
-    Vf: float = dem_votes / tot_votes
+    Vf: float = dem_votes / tot_votes if tot_votes > 0 else 0.0
     fractional_seats: float = est_seat_probability(Vf)
     whole_seats: float = 1.0 if Vf > 0.5 else 0.0
     if approx_equal(Vf, 0.5):
