@@ -9,17 +9,18 @@ from typing import Any, List, Dict, Tuple, Set, NamedTuple, Deque
 import math
 from collections import deque, defaultdict
 
-# TODO - DELETE
-# import rdapy as rda
-
 from .utils import OUT_OF_STATE
 from ..utils import approx_equal
 from ..partisan import est_seat_probability
 from ..graph import is_connected
 
 
-def distance(a: Tuple[float, float], b: Tuple[float, float]) -> float:
-    """Calculate a proxy for the distance between two points expressed as (lon, lat) tuples."""
+def distance_proxy(a: Tuple[float, float], b: Tuple[float, float]) -> float:
+    """
+    Calculate a proxy for the distance between two points expressed as (lon, lat) tuples.
+
+    No need for sqrt() since we are only *comparing* distances.
+    """
 
     lat_squared: float = (a[1] - b[1]) * (a[1] - b[1])
     lon_squared: float = (a[0] - b[0]) * (a[0] - b[0])
@@ -27,10 +28,10 @@ def distance(a: Tuple[float, float], b: Tuple[float, float]) -> float:
     return lat_squared + lon_squared
 
 
-# def distance(a: Tuple[float, float], b: Tuple[float, float]) -> float:
-#     """Calculate the distance between two points expressed as (lon, lat) tuples."""
+def distance(a: Tuple[float, float], b: Tuple[float, float]) -> float:
+    """Calculate the distance between two points expressed as (lon, lat) tuples."""
 
-#     return math.sqrt((a[1] - b[1]) * (a[1] - b[1]) + (a[0] - b[0]) * (a[0] - b[0]))
+    return math.sqrt((a[1] - b[1]) * (a[1] - b[1]) + (a[0] - b[0]) * (a[0] - b[0]))
 
 
 def make_pair(precinct1: str, precinct2: str) -> Tuple[str, str]:
@@ -56,7 +57,7 @@ class DistanceLedger:
         if pair in self.distances:
             return self.distances[pair]
         else:
-            d: float = distance(center1, center2)
+            d: float = distance_proxy(center1, center2)
             self.distances[pair] = d
             return d
 
@@ -200,6 +201,7 @@ def make_neighborhood(
 
     # NOTE - How do you distinguish between exhausting the region queue and
     # not being able to add any more connected precincts to get w/in tolerance?
+
     pop_dev_pct: float = (nh_pop - target) / target
     assert (
         abs(pop_dev_pct) < pop_tol
