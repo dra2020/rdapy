@@ -60,9 +60,25 @@ rep_votes_field: str = get_fields(data_map, "election", election_dataset)["rep_v
 
 data: Dict[str, Dict[str, Any]] = dict()
 
+state_pop: int = 0
+dem_votes: int = 0
+tot_votes: int = 0
+
 for precinct in input_data:
     geoid: str = precinct["geoid"]
     data[geoid] = precinct.copy()
+
+    state_pop += precinct[total_pop_field]
+    dem_votes += precinct[dem_votes_field]
+    tot_votes += precinct[dem_votes_field] + precinct[rep_votes_field]
+
+estimated_vote_pct: float = dem_votes / tot_votes if tot_votes > 0 else 0.0
+
+# print(f"Total population: {state_pop}")
+# print(f"Estimated two-party Democratic vote share: {estimated_vote_pct:.4f}")
+
+# Total population: 10439388
+# Estimated two-party Democratic vote share: 0.4943
 
 #
 
@@ -93,6 +109,7 @@ with smart_read(neighborhoods_path) as input_stream:
 
         record = {
             "geoid": geoid,
+            "pop": pop,
             "Vf": Vf,
             "fractional_seats": fractional_seats,
             "whole_seats": whole_seats,
