@@ -6,7 +6,7 @@ for Jon Eguia & Jeff Barton's geographic (central) advantage metric
 
 For example:
 
-$ scripts/geographic-experiment/eval_neighborhoods.py
+$ scripts/geographic-experiment/eval_nhs.py
 
 """
 

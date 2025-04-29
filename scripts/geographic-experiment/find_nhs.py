@@ -8,7 +8,7 @@ It's an expensive operation, so persist the results to disk for subsequent (re)u
 
 For example:
 
-$ scripts/geographic-experiment/find_neighborhoods.py
+$ scripts/geographic-experiment/find_nhs.py
 
 """
 
