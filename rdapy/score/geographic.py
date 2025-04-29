@@ -6,7 +6,7 @@ NOTE - What are ways to speed this up?
 
 from typing import Any, List, Dict, Tuple, Set, NamedTuple, Deque
 
-import math
+import math, array, base64, json
 from collections import deque, defaultdict
 
 from .utils import OUT_OF_STATE
@@ -225,7 +225,7 @@ def make_neighborhood(
 
 def neighborhood_results(
     nh_q: Deque[Neighbor],
-) -> Tuple[float, float, float, List[str]]:
+) -> Tuple[float, float, float]:
     """Calculate the partisan results for a precinct's neighborhood."""
 
     dem_votes: int = 0
@@ -240,9 +240,55 @@ def neighborhood_results(
     if approx_equal(Vf, 0.5):
         whole_seats = 0.5
 
-    neighbors: List[str] = [node.geoid for node in nh_q][1:]
+    return Vf, fractional_seats, whole_seats
 
-    return Vf, fractional_seats, whole_seats, neighbors
+
+### BIT ARRAY HELPERS ###
+
+
+def init_bit_array(size: int) -> array.array:
+    bits = array.array("B", [0] * ((size + 7) // 8))
+
+    return bits
+
+
+def set_bit(array, index, value):
+    byte_index = index // 8
+    bit_index = index % 8
+    if value:
+        array[byte_index] |= 1 << bit_index
+    else:
+        array[byte_index] &= ~(1 << bit_index)
+
+
+def get_bit(arr, index):
+    byte_index = index // 8
+    bit_index = index % 8
+    return bool(arr[byte_index] & (1 << bit_index))
+
+
+def serialize_bits(bit_array):
+    byte_data = bit_array.tobytes()
+    base64_str = base64.b64encode(byte_data).decode("ascii")
+
+    # Create a JSON object with metadata
+    json_data = {
+        "encoding": "base64",
+        "type": "bit_array",
+        "length": len(bit_array) * 8,  # Total bits
+        "data": base64_str,
+    }
+    return json.dumps(json_data)
+
+
+def deserialize_bits(json_string):
+    json_data = json.loads(json_string)
+    byte_data = base64.b64decode(json_data["data"])
+
+    # Create new array from bytes
+    bit_array = array.array("B")
+    bit_array.frombytes(byte_data)
+    return bit_array
 
 
 ### END ###
