@@ -6,14 +6,15 @@ for Jon Eguia & Jeff Barton's geographic (central) advantage metric
 
 It's an expensive operation, so persist the results to disk for subsequent (re)use.
 
-scripts/geographic-experiment/find_neighborhoods.py
+For example:
+
+$ scripts/geographic-experiment/find_neighborhoods.py
 
 """
 
 from typing import Any, List, Dict, Deque
 
 import json
-import array
 
 from rdapy import (
     load_data,
@@ -87,8 +88,6 @@ nprecincts: int = len(geoids)
 
 # Process each precinct
 
-tot_seats_whole: float = 0.0
-tot_seats_fractional: float = 0.0
 dl: DistanceLedger = DistanceLedger()
 
 for i, geoid in enumerate(geoids):

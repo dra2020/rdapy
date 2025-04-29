@@ -223,16 +223,19 @@ def make_neighborhood(
     return nh_q
 
 
-def neighborhood_results(
-    nh_q: Deque[Neighbor],
+def nh_partisan_lean(
+    neighborhood: List[str],
+    data: Dict[str, Dict[str, Any]],
+    dem_votes_field: str,
+    rep_votes_field: str,
 ) -> Tuple[float, float, float]:
     """Calculate the partisan results for a precinct's neighborhood."""
 
     dem_votes: int = 0
     tot_votes: int = 0
-    for n in nh_q:
-        dem_votes += n.dem_votes
-        tot_votes += n.tot_votes
+    for geoid in neighborhood:
+        dem_votes += data[geoid][dem_votes_field]
+        tot_votes += data[geoid][dem_votes_field] + data[geoid][rep_votes_field]
 
     Vf: float = dem_votes / tot_votes
     fractional_seats: float = est_seat_probability(Vf)
@@ -241,6 +244,26 @@ def neighborhood_results(
         whole_seats = 0.5
 
     return Vf, fractional_seats, whole_seats
+
+
+# def neighborhood_results(
+#     nh_q: Deque[Neighbor],
+# ) -> Tuple[float, float, float]:
+#     """Calculate the partisan results for a precinct's neighborhood."""
+
+#     dem_votes: int = 0
+#     tot_votes: int = 0
+#     for n in nh_q:
+#         dem_votes += n.dem_votes
+#         tot_votes += n.tot_votes
+
+#     Vf: float = dem_votes / tot_votes
+#     fractional_seats: float = est_seat_probability(Vf)
+#     whole_seats: float = 1.0 if Vf > 0.5 else 0.0
+#     if approx_equal(Vf, 0.5):
+#         whole_seats = 0.5
+
+#     return Vf, fractional_seats, whole_seats
 
 
 ### BIT ARRAY HELPERS ###
