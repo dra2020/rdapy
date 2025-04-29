@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
 """
-EXPERIMENT: GEOGRAPHIC SEATS AND ADVANTAGE
+EXPERIMENT: FIND THE "NEIGHBORHOOD" FOR EACH PRECINCT
+for Jon Eguia & Jeff Barton's geographic (central) advantage metric
 
+It's an expensive operation, so persist the results to disk for subsequent (re)use.
 
-scripts/geographic-experiment/find_neighborhoods.py > temp/NC_precinct_neighborhoods.jsonl
+scripts/geographic-experiment/find_neighborhoods.py
 
 """
 
@@ -41,7 +43,6 @@ ndistricts: int = 14
 ncounties: int = 100
 data_path: str = "testdata/examples/NC_input_data.v4.jsonl"
 graph_path: str = "testdata/examples/NC_graph.json"
-output_dir: str = "~/local/geographic"
 
 verbose: bool = True
 debug: bool = False
