@@ -10,7 +10,7 @@ $ scripts/geographic-experiment/find_district_cores.py
 
 """
 
-from typing import Any, List, Dict
+from typing import Any, List, Dict, Set
 
 import json, csv
 
@@ -31,7 +31,7 @@ from rdapy.score.geographic import (
 graph_path: str = "testdata/examples/NC_graph.json"
 
 neighborhoods_path: str = "~/local/geographic/NC_precinct_neighborhoods.jsonl"
-precincts_path: str = "~/local/geographic/NC_precinct_partisan.descending.jsonl"
+precincts_path: str = "~/local/geographic/NC_precinct_partisan-lean.jsonl"
 csv_path: str = "-"
 
 verbose: bool = True
@@ -48,43 +48,54 @@ geoid_to_index: Dict[str, int] = index_geoids(list(adjacency_graph.keys()))
 index_to_geoid: Dict[int, str] = reverse_index(geoid_to_index)
 nprecincts: int = len(geoid_to_index)
 
-# Find the precincts with Vf >= 0.55 neighborhoods, i.e., uncompetitive D-packed
+# Load the precinct neighborhoods
 
-candidates: Dict[str, Dict[str, Any]] = dict()
-with smart_read(precincts_path) as precints_stream:
-    for i, line in enumerate(precints_stream):
+neighborhoods: Dict[str, Dict[str, Any]] = dict()
+with smart_read(neighborhoods_path) as nh_stream:
+    for i, line in enumerate(nh_stream):
         parsed_line = json.loads(line)
 
         geoid: str = parsed_line["geoid"]
-        Vf: float = parsed_line["Vf"]
-        candidates[geoid] = parsed_line.copy()
+        neighborhoods[geoid] = parsed_line.copy()
 
-        if Vf < 0.55:
-            break
+# Load the precinct partisan leanings
 
-        pass  # for debugging
+precincts: List[Dict[str, Any]] = list()
+with smart_read(precincts_path) as precincts_stream:
+    for i, line in enumerate(precincts_stream):
+        parsed_line = json.loads(line)
+        precincts.append(parsed_line)
 
-# TODO - Find a set of disjoint (independent) district cores
+# Find a set of disjoint (independent) D-packed district cores
+
+seen: Set[str] = set()
+
+D_packed: List[Dict[str, Any]] = list()
+precincts.sort(key=lambda x: x["Vf"])
+
+for i, precinct in enumerate(precincts):
+    if precinct["Vf"] < 0.55:
+        continue
+
+    geoid: str = precinct["geoid"]
+    neighborhood: List[str] = get_neighborhood(
+        geoid, neighborhoods[geoid], index_to_geoid, debug=False
+    )
+
+    if set(neighborhood).isdisjoint(seen):
+        D_packed.append({"geoid": geoid, "neighborhood": neighborhood})
+        seen.update(neighborhood)
+
 
 pass  # for debugging
-
-# # Load the precinct neighborhoods
-
-# neighborhoods: Dict[str, Dict[str, Any]] = dict()
-# with smart_read(neighborhoods_path) as input_stream:
-#     for i, line in enumerate(input_stream):
-#         parsed_line = json.loads(line)
-
-#         geoid: str = parsed_line["geoid"]
-#         neighborhoods[geoid] = parsed_line.copy()
-#         # neighborhoods[geoid] = parsed_line["neighborhood"]
-
-# # Get the geoids for the precinct's neighborhood
 
 # neighborhood: List[str] = get_neighborhood(
 #     geoid, neighborhoods[root_geoid], index_to_geoid, debug=debug
 # )
-# assert root_geoid in neighborhood, f"Missing {root_geoid} in its own neighborhood!"
+# assert (
+#     root_geoid in neighborhood
+# ), f"Missing {root_geoid} in its own neighborhood!"
+
 
 # # Make a precinct-assignment dictionary
 
