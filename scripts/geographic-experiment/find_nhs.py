@@ -47,7 +47,7 @@ data_path: str = "testdata/examples/NC_input_data.v4.jsonl"
 graph_path: str = "testdata/examples/NC_graph.json"
 
 verbose: bool = True
-debug: bool = False
+debug: bool = True
 
 granularity: int = ndistricts
 
@@ -110,7 +110,7 @@ for i, geoid in enumerate(geoids):
     for offset in indexed_nh:
         set_bit(bits, offset, True)
 
-    serialized_bits = serialize_bits(bits)
+    serialized_bits = serialize_bits(bits, nprecincts)
     if debug:
         deserialized_bits = deserialize_bits(serialized_bits)
         assert deserialized_bits == bits, f"Failed to roundtrip bits for {geoid}"

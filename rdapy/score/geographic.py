@@ -298,7 +298,7 @@ def get_bit(arr, index):
     return bool(arr[byte_index] & (1 << bit_index))
 
 
-def serialize_bits(bit_array):
+def serialize_bits(bit_array, size: int):
     byte_data = bit_array.tobytes()
     base64_str = base64.b64encode(byte_data).decode("ascii")
 
@@ -306,7 +306,7 @@ def serialize_bits(bit_array):
     json_data = {
         "encoding": "base64",
         "type": "bit_array",
-        "length": len(bit_array) * 8,  # Total bits
+        "length": size,
         "data": base64_str,
     }
     return json.dumps(json_data)
@@ -315,6 +315,7 @@ def serialize_bits(bit_array):
 def deserialize_bits(json_string):
     json_data = json.loads(json_string)
     byte_data = base64.b64decode(json_data["data"])
+    # size: int = json_data["length"]
 
     # Create new array from bytes
     bit_array = array.array("B")
