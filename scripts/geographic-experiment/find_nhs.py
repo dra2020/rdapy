@@ -47,7 +47,7 @@ data_path: str = "testdata/examples/NC_input_data.v4.jsonl"
 graph_path: str = "testdata/examples/NC_graph.json"
 
 verbose: bool = True
-debug: bool = True
+debug: bool = False
 
 granularity: int = ndistricts
 
@@ -102,6 +102,8 @@ for i, geoid in enumerate(geoids):
     )
 
     indexed_nh: List[int] = [geoid_to_index[id] for id in [node.geoid for node in nh_q]]
+    nneighbors: int = len(indexed_nh)
+    checksum: int = sum(indexed_nh)
     assert geoid_to_index[geoid] in indexed_nh, f"Missing {geoid} in neighborhood"
 
     bits = init_bit_array(nprecincts)
@@ -115,6 +117,8 @@ for i, geoid in enumerate(geoids):
 
     record = {
         "geoid": geoid,
+        "size:": nneighbors,
+        "checksum": checksum,
         "neighborhood": serialized_bits,
     }
     print(json.dumps(record))

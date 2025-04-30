@@ -1,1 +1,0 @@
-jq -s 'sort_by(.Vf) | reverse[]' NC_precinct_partisan.jsonl | jq -c '.' > NC_precinct_partisan.sorted.jsonl
