@@ -21,8 +21,6 @@ from rdapy import (
 from rdapy.score.geographic import (
     index_geoids,
     reverse_index,
-    get_bit,
-    deserialize_bits,
     get_neighborhood,
 )
 

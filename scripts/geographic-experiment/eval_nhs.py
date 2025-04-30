@@ -26,7 +26,12 @@ from rdapy.score import (
     get_fields,
 )
 
-from rdapy.score.geographic import get_bit, deserialize_bits, nh_partisan_lean
+from rdapy.score.geographic import (
+    index_geoids,
+    reverse_index,
+    get_neighborhood,
+    nh_partisan_lean,
+)
 
 #
 
@@ -37,7 +42,8 @@ from rdapy.score.geographic import get_bit, deserialize_bits, nh_partisan_lean
 data_path: str = "testdata/examples/NC_input_data.v4.jsonl"
 graph_path: str = "testdata/examples/NC_graph.json"
 
-neighborhoods_path: str = "~/local/geographic/NC_precinct_neighborhoods.jsonl"
+neighborhoods_path: str = "-"
+# neighborhoods_path: str = "~/local/geographic/NC_precinct_neighborhoods.jsonl"
 
 verbose: bool = True
 debug: bool = False
@@ -82,8 +88,8 @@ estimated_vote_pct: float = dem_votes / tot_votes if tot_votes > 0 else 0.0
 
 #
 
-geoid_to_index = {geoid: idx for idx, geoid in enumerate(adjacency_graph.keys())}
-index_to_geoid = {idx: geoid for geoid, idx in geoid_to_index.items()}
+geoid_to_index: Dict[str, int] = index_geoids(list(adjacency_graph.keys()))
+index_to_geoid: Dict[int, str] = reverse_index(geoid_to_index)
 nprecincts: int = len(geoid_to_index)
 
 with smart_read(neighborhoods_path) as input_stream:
@@ -92,10 +98,14 @@ with smart_read(neighborhoods_path) as input_stream:
 
         geoid: str = parsed_line["geoid"]
 
-        bits = deserialize_bits(parsed_line["neighborhood"])
-        neighborhood: List[str] = [
-            index_to_geoid[idx] for idx in range(len(bits)) if get_bit(bits, idx)
-        ]
+        neighborhood: List[str] = get_neighborhood(
+            geoid, parsed_line, index_to_geoid, debug=debug
+        )
+
+        # bits = deserialize_bits(parsed_line["neighborhood"])
+        # neighborhood: List[str] = [
+        #     index_to_geoid[idx] for idx in range(len(bits)) if get_bit(bits, idx)
+        # ]
 
         pop: int = data[geoid][total_pop_field]
 
