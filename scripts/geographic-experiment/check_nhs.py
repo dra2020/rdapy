@@ -24,10 +24,10 @@ from rdapy.score.geographic import get_bit, deserialize_bits
 
 graph_path: str = "testdata/examples/NC_graph.json"
 neighborhoods_path: str = "-"
-# neighborhoods_path: str = "~/local/geographic/NC_precinct_neighborhoods.jsonl"
+neighborhoods_path: str = "~/local/geographic/NC_precinct_neighborhoods.jsonl"
 
 verbose: bool = True
-debug: bool = False
+debug: bool = True
 
 #
 
@@ -45,8 +45,9 @@ with smart_read(neighborhoods_path) as input_stream:
         geoid: str = parsed_line["geoid"]
 
         bits = deserialize_bits(parsed_line["neighborhood"])
+        size = len(bits) * 8
         neighborhood: List[str] = [
-            index_to_geoid[idx] for idx in range(len(bits)) if get_bit(bits, idx)
+            index_to_geoid[idx] for idx in range(size) if get_bit(bits, idx)
         ]
 
         neighbors: List[int] = [geoid_to_index[id] for id in neighborhood]
