@@ -114,6 +114,7 @@ bits = deserialize_bits(precincts[root_geoid])
 neighborhood: List[str] = [
     index_to_geoid[idx] for idx in range(len(bits)) if get_bit(bits, idx)
 ]
+assert root_geoid in neighborhood, f"Missing {root_geoid} in neighborhood"
 
 pass  # for debugging
 
