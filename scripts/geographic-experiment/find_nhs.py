@@ -31,6 +31,7 @@ from rdapy.score.geographic import (
     DistanceLedger,
     Neighbor,
     make_neighborhood,
+    index_geoids,
     init_bit_array,
     set_bit,
     serialize_bits,
@@ -84,8 +85,8 @@ for precinct in input_data:
 
 target_pop: int = state_pop // granularity
 
-geoid_to_index = {geoid: idx for idx, geoid in enumerate(adjacency_graph.keys())}
-nprecincts: int = len(geoids)
+geoid_to_index: Dict[str, int] = index_geoids(list(adjacency_graph.keys()))
+nprecincts: int = len(geoid_to_index)
 
 # Process each precinct
 

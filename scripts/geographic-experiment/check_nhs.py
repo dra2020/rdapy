@@ -18,13 +18,19 @@ from rdapy import (
     smart_read,
 )
 
-from rdapy.score.geographic import get_bit, deserialize_bits
+from rdapy.score.geographic import (
+    index_geoids,
+    reverse_index,
+    get_bit,
+    deserialize_bits,
+    get_neighborhood,
+)
 
 #
 
 graph_path: str = "testdata/examples/NC_graph.json"
 neighborhoods_path: str = "-"
-neighborhoods_path: str = "~/local/geographic/NC_precinct_neighborhoods.jsonl"
+# neighborhoods_path: str = "~/local/geographic/NC_precinct_neighborhoods.jsonl"
 
 verbose: bool = True
 debug: bool = True
@@ -35,8 +41,8 @@ adjacency_graph: Dict[str, List[str]] = load_graph(graph_path)
 
 #
 
-geoid_to_index = {geoid: idx for idx, geoid in enumerate(adjacency_graph.keys())}
-index_to_geoid = {idx: geoid for geoid, idx in geoid_to_index.items()}
+geoid_to_index: Dict[str, int] = index_geoids(list(adjacency_graph.keys()))
+index_to_geoid: Dict[int, str] = reverse_index(geoid_to_index)
 
 with smart_read(neighborhoods_path) as input_stream:
     for i, line in enumerate(input_stream):
@@ -44,23 +50,7 @@ with smart_read(neighborhoods_path) as input_stream:
 
         geoid: str = parsed_line["geoid"]
 
-        bits = deserialize_bits(parsed_line["neighborhood"])
-        size = len(bits) * 8
-        neighborhood: List[str] = [
-            index_to_geoid[idx] for idx in range(size) if get_bit(bits, idx)
-        ]
-
-        neighbors: List[int] = [geoid_to_index[id] for id in neighborhood]
-        nneighbors: int = len(neighbors)
-        checksum: int = sum(neighbors)
-
-        assert geoid in neighborhood, f"Missing {geoid} in neighborhood"
-        assert (
-            nneighbors == parsed_line["size"]
-        ), f"Mismatch in number of neighbors for {geoid} ({nneighbors} != {parsed_line['size']})"
-        assert checksum == parsed_line["checksum"], f"Checksum mismatch for {geoid}"
-
-        print(f"Neighborhood for {geoid} roundtripped successfully ...")
+        get_neighborhood(geoid, parsed_line, index_to_geoid, debug=debug)
 
         pass  # for debugging
 

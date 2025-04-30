@@ -274,7 +274,48 @@ def nh_partisan_lean(
 #     return Vf, fractional_seats, whole_seats
 
 
+def get_neighborhood(
+    geoid: str,
+    data: Dict[str, Any],
+    index_to_geoid: Dict[int, str],
+    debug: bool = False,
+) -> List[str]:
+    """Deserialize a neighborhood from a JSON string & verify it."""
+
+    bits = deserialize_bits(data["neighborhood"])
+    size = len(bits) * 8
+
+    neighbors: List[int] = [idx for idx in range(size) if get_bit(bits, idx)]
+    neighborhood: List[str] = [index_to_geoid[idx] for idx in neighbors]
+
+    if debug:
+        nneighbors: int = len(neighbors)
+        checksum: int = sum(neighbors)
+
+        assert geoid in neighborhood, f"{geoid} in not in own neighborhood"
+        assert (
+            nneighbors == data["size"]
+        ), f"Wrong size neighborhood for {geoid} ({nneighbors} vs. {data['size']})"
+        assert checksum == data["checksum"], f"Checksum mismatch for {geoid}"
+
+        print(f"Neighborhood for {geoid} roundtripped successfully ...")
+
+    return neighborhood
+
+
 ### BIT ARRAY HELPERS ###
+
+
+def index_geoids(geoids: List[str]) -> Dict[str, int]:
+    """Create a mapping of geoids to their indices in a canonical list."""
+
+    return {geoid: idx for idx, geoid in enumerate(geoids)}
+
+
+def reverse_index(geoid_to_index: Dict[str, int]) -> Dict[int, str]:
+    """Create a back mapping of indices to their geoids."""
+
+    return {idx: geoid for geoid, idx in geoid_to_index.items()}
 
 
 def init_bit_array(size: int) -> array.array:
