@@ -66,10 +66,9 @@ with smart_read(precincts_path) as precincts_stream:
         parsed_line = json.loads(line)
         precincts.append(parsed_line)
 
-# Find a set of disjoint (independent) D-packed district cores
+### Find prototypical D-packed, R-packed, and competitive district cores ###
 
 seen: Set[str] = set()
-
 D_packed: List[Dict[str, Any]] = list()
 precincts.sort(key=lambda x: x["Vf"])
 
@@ -84,6 +83,40 @@ for i, precinct in enumerate(precincts):
 
     if set(neighborhood).isdisjoint(seen):
         D_packed.append({"geoid": geoid, "neighborhood": neighborhood})
+        seen.update(neighborhood)
+
+seen: Set[str] = set()
+R_packed: List[Dict[str, Any]] = list()
+precincts.sort(key=lambda x: x["Vf"], reverse=True)
+
+for i, precinct in enumerate(precincts):
+    if precinct["Vf"] > 0.45:
+        continue
+
+    geoid: str = precinct["geoid"]
+    neighborhood: List[str] = get_neighborhood(
+        geoid, neighborhoods[geoid], index_to_geoid, debug=False
+    )
+
+    if set(neighborhood).isdisjoint(seen):
+        R_packed.append({"geoid": geoid, "neighborhood": neighborhood})
+        seen.update(neighborhood)
+
+seen: Set[str] = set()
+competitive: List[Dict[str, Any]] = list()
+precincts.sort(key=lambda x: abs(1.0 - x["Vf"]))
+
+for i, precinct in enumerate(precincts):
+    if precinct["Vf"] < 0.45 or precinct["Vf"] > 0.55:
+        continue
+
+    geoid: str = precinct["geoid"]
+    neighborhood: List[str] = get_neighborhood(
+        geoid, neighborhoods[geoid], index_to_geoid, debug=False
+    )
+
+    if set(neighborhood).isdisjoint(seen):
+        competitive.append({"geoid": geoid, "neighborhood": neighborhood})
         seen.update(neighborhood)
 
 
