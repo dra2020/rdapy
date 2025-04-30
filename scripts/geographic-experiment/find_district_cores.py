@@ -85,24 +85,7 @@ for i, precinct in enumerate(precincts):
         D_packed.append({"geoid": geoid, "neighborhood": neighborhood})
         seen.update(neighborhood)
 
-seen: Set[str] = set()
-R_packed: List[Dict[str, Any]] = list()
-precincts.sort(key=lambda x: x["Vf"], reverse=True)
-
-for i, precinct in enumerate(precincts):
-    if precinct["Vf"] > 0.45:
-        continue
-
-    geoid: str = precinct["geoid"]
-    neighborhood: List[str] = get_neighborhood(
-        geoid, neighborhoods[geoid], index_to_geoid, debug=False
-    )
-
-    if set(neighborhood).isdisjoint(seen):
-        R_packed.append({"geoid": geoid, "neighborhood": neighborhood})
-        seen.update(neighborhood)
-
-seen: Set[str] = set()
+# seen: Set[str] = set()
 competitive: List[Dict[str, Any]] = list()
 precincts.sort(key=lambda x: abs(1.0 - x["Vf"]))
 
@@ -119,17 +102,24 @@ for i, precinct in enumerate(precincts):
         competitive.append({"geoid": geoid, "neighborhood": neighborhood})
         seen.update(neighborhood)
 
+# seen: Set[str] = set()
+R_packed: List[Dict[str, Any]] = list()
+precincts.sort(key=lambda x: x["Vf"], reverse=True)
+
+for i, precinct in enumerate(precincts):
+    if precinct["Vf"] > 0.45:
+        continue
+
+    geoid: str = precinct["geoid"]
+    neighborhood: List[str] = get_neighborhood(
+        geoid, neighborhoods[geoid], index_to_geoid, debug=False
+    )
+
+    if set(neighborhood).isdisjoint(seen):
+        R_packed.append({"geoid": geoid, "neighborhood": neighborhood})
+        seen.update(neighborhood)
+
 # See if which sets of distrit cores are disjoint
-
-
-# def are_disjoint_lists_of_sets(list_of_sets1, list_of_sets2):
-#     # Flatten each list of sets into a single set
-#     flattened_set1 = set().union(*list_of_sets1)
-#     flattened_set2 = set().union(*list_of_sets2)
-
-#     # Check if the flattened sets are disjoint
-#     return flattened_set1.isdisjoint(flattened_set2)
-
 
 D_packed_precincts: List[str] = list()
 for i, district in enumerate(D_packed):
@@ -140,19 +130,22 @@ for i, district in enumerate(R_packed):
     R_packed_precincts.extend(district["neighborhood"])
 
 competitive_precincts: List[str] = list()
-for i, district in enumerate(R_packed):
+for i, district in enumerate(competitive):
     competitive_precincts.extend(district["neighborhood"])
 
+print(f"# of D-packed district cores: {len(D_packed)}")
 if set(D_packed_precincts).isdisjoint(R_packed_precincts):
     print("D-packed and R-packed precincts are disjoint")
 else:
     print("D-packed and R-packed precincts are NOT disjoint!")
 
+print(f"# of R-packed district cores: {len(R_packed)}")
 if set(D_packed_precincts).isdisjoint(competitive_precincts):
     print("D-packed and competitive precincts are disjoint")
 else:
     print("D-packed and competitive precincts are NOT disjoint!")
 
+print(f"# of competitive district cores: {len(competitive)}")
 if set(R_packed_precincts).isdisjoint(competitive_precincts):
     print("R-packed and competitive precincts are disjoint")
 else:
