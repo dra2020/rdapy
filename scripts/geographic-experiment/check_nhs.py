@@ -23,7 +23,8 @@ from rdapy.score.geographic import get_bit, deserialize_bits
 #
 
 graph_path: str = "testdata/examples/NC_graph.json"
-neighborhoods_path: str = "~/local/geographic/NC_precinct_neighborhoods.jsonl"
+neighborhoods_path: str = "-"
+# neighborhoods_path: str = "~/local/geographic/NC_precinct_neighborhoods.jsonl"
 
 verbose: bool = True
 debug: bool = False
@@ -54,9 +55,11 @@ with smart_read(neighborhoods_path) as input_stream:
 
         assert geoid in neighborhood, f"Missing {geoid} in neighborhood"
         assert (
-            nneighbors == parsed_line["nneighbors"]
-        ), f"Mismatch in number of neighbors for {geoid}"
+            nneighbors == parsed_line["size"]
+        ), f"Mismatch in number of neighbors for {geoid} ({nneighbors} != {parsed_line['size']})"
         assert checksum == parsed_line["checksum"], f"Checksum mismatch for {geoid}"
+
+        print(f"Neighborhood for {geoid} roundtripped successfully ...")
 
         pass  # for debugging
 

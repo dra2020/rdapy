@@ -117,7 +117,7 @@ for i, geoid in enumerate(geoids):
 
     record = {
         "geoid": geoid,
-        "size:": nneighbors,
+        "size": nneighbors,
         "checksum": checksum,
         "neighborhood": serialized_bits,
     }
