@@ -140,6 +140,11 @@ def make_region(
     other_neighbors: List[Neighbor] = neighbors[split_index:]
     other_neighbors.sort(key=lambda x: x.distance)
 
+    if debug:
+        assert geoid in [p.geoid for p in nearest_neighbors] or geoid in [
+            p.geoid for p in other_neighbors
+        ], f"Missing {geoid} in region"
+
     return deque(nearest_neighbors + other_neighbors)
 
 
@@ -219,6 +224,9 @@ def make_neighborhood(
         else:
             nh_q.append(last)
             break
+
+    if debug:
+        assert geoid in [p.geoid for p in nh_q], f"Missing {geoid} in neighborhood"
 
     return nh_q
 

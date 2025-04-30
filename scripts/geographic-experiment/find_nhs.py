@@ -97,11 +97,12 @@ for i, geoid in enumerate(geoids):
         adjacency_graph,
         ledger=dl,
         target=target_pop,
+        debug=debug,
     )
 
-    indexed_nh: List[int] = [
-        geoid_to_index[geoid] for geoid in [node.geoid for node in nh_q]
-    ]
+    indexed_nh: List[int] = [geoid_to_index[id] for id in [node.geoid for node in nh_q]]
+    assert geoid_to_index[geoid] in indexed_nh, f"Missing {geoid} in neighborhood"
+
     bits = init_bit_array(nprecincts)
     for offset in indexed_nh:
         set_bit(bits, offset, True)
