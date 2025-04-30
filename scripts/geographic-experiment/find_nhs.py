@@ -47,6 +47,8 @@ ncounties: int = 100
 data_path: str = "testdata/examples/NC_input_data.v4.jsonl"
 graph_path: str = "testdata/examples/NC_graph.json"
 
+slack: float = 0.05
+
 verbose: bool = True
 debug: bool = True
 
@@ -99,6 +101,7 @@ for i, geoid in enumerate(geoids):
         adjacency_graph,
         ledger=dl,
         target=target_pop,
+        slack=slack,
         debug=debug,
     )
 

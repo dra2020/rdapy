@@ -155,7 +155,7 @@ def make_neighborhood(
     *,
     ledger: DistanceLedger,
     target: int,
-    pop_tol: float = 0.01,
+    slack: float = 0.05,
     debug: bool = False,
 ) -> Deque[Neighbor]:
     """
@@ -193,7 +193,7 @@ def make_neighborhood(
         do_q.append(rg_q.popleft())
 
         for n in list(do_q):
-            if (nh_pop + n.pop) < target * (1.0 + pop_tol):
+            if (nh_pop + n.pop) < target * (1.0 - slack):
                 nh_ids.append(n.geoid)
                 if is_connected(nh_ids, graph):
                     nh_q.append(n)
@@ -207,12 +207,8 @@ def make_neighborhood(
     # NOTE - How do you distinguish between exhausting the region queue and
     # not being able to add any more connected precincts to get w/in tolerance?
 
-    pop_dev_pct: float = (nh_pop - target) / target
-    assert (
-        abs(pop_dev_pct) < pop_tol
-    ), f"Population deviation {pop_dev_pct} exceeds tolerance {pop_tol}!"
-
     # Remove precincts while that reduces the deviation from the target population
+    # NOTE - This step should be a no-op if the neighborhood is already under the target population
 
     prev_dev: int = abs(nh_pop - target)
     while True:
