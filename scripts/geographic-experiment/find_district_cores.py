@@ -119,6 +119,8 @@ for i, precinct in enumerate(precincts):
         R_packed.append({"geoid": geoid, "neighborhood": neighborhood})
         seen.update(neighborhood)
 
+# TODO - Which pairs of district cores overlap?
+
 # See if which sets of distrct cores are disjoint
 
 D_packed_precincts: List[str] = list()
