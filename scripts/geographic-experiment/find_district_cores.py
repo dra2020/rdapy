@@ -48,51 +48,61 @@ geoid_to_index: Dict[str, int] = index_geoids(list(adjacency_graph.keys()))
 index_to_geoid: Dict[int, str] = reverse_index(geoid_to_index)
 nprecincts: int = len(geoid_to_index)
 
-# Get the root geoid of the most D-packed neighborhood
+# Find the precincts with Vf >= 0.55 neighborhoods, i.e., uncompetitive D-packed
 
-root_geoid: str = ""
+candidates: Dict[str, Dict[str, Any]] = dict()
 with smart_read(precincts_path) as precints_stream:
-    line = precints_stream.readline()
-    parsed_line = json.loads(line)
-    root_geoid: str = parsed_line["geoid"]
-
-pass  # for debugging
-
-# Load the precinct neighborhoods
-
-neighborhoods: Dict[str, Dict[str, Any]] = dict()
-with smart_read(neighborhoods_path) as input_stream:
-    for i, line in enumerate(input_stream):
+    for i, line in enumerate(precints_stream):
         parsed_line = json.loads(line)
 
         geoid: str = parsed_line["geoid"]
-        neighborhoods[geoid] = parsed_line.copy()
-        # neighborhoods[geoid] = parsed_line["neighborhood"]
+        Vf: float = parsed_line["Vf"]
+        candidates[geoid] = parsed_line.copy()
 
-# Get the geoids for the precinct's neighborhood
+        if Vf < 0.55:
+            break
 
-neighborhood: List[str] = get_neighborhood(
-    geoid, neighborhoods[root_geoid], index_to_geoid, debug=debug
-)
-assert root_geoid in neighborhood, f"Missing {root_geoid} in its own neighborhood!"
+        pass  # for debugging
 
-# Make a precinct-assignment dictionary
-
-assignments: List[Dict[str, Any]] = []
-for geoid in geoids:
-    district: int = 1 if geoid in neighborhood else 2  # HACK
-    assignments.append({"GEOID": geoid, "DISTRICT": district})
-
-with smart_write(csv_path) as assignment_stream:
-    for i, row in enumerate(assignments):
-        if i == 0:
-            cols: List[str] = list(row.keys())
-            writer: csv.DictWriter = csv.DictWriter(assignment_stream, fieldnames=cols)
-            writer.writeheader()
-
-        writer.writerow(row)
-
+# TODO - Find a set of disjoint (independent) district cores
 
 pass  # for debugging
+
+# # Load the precinct neighborhoods
+
+# neighborhoods: Dict[str, Dict[str, Any]] = dict()
+# with smart_read(neighborhoods_path) as input_stream:
+#     for i, line in enumerate(input_stream):
+#         parsed_line = json.loads(line)
+
+#         geoid: str = parsed_line["geoid"]
+#         neighborhoods[geoid] = parsed_line.copy()
+#         # neighborhoods[geoid] = parsed_line["neighborhood"]
+
+# # Get the geoids for the precinct's neighborhood
+
+# neighborhood: List[str] = get_neighborhood(
+#     geoid, neighborhoods[root_geoid], index_to_geoid, debug=debug
+# )
+# assert root_geoid in neighborhood, f"Missing {root_geoid} in its own neighborhood!"
+
+# # Make a precinct-assignment dictionary
+
+# assignments: List[Dict[str, Any]] = []
+# for geoid in geoids:
+#     district: int = 1 if geoid in neighborhood else 2  # HACK
+#     assignments.append({"GEOID": geoid, "DISTRICT": district})
+
+# with smart_write(csv_path) as assignment_stream:
+#     for i, row in enumerate(assignments):
+#         if i == 0:
+#             cols: List[str] = list(row.keys())
+#             writer: csv.DictWriter = csv.DictWriter(assignment_stream, fieldnames=cols)
+#             writer.writeheader()
+
+#         writer.writerow(row)
+
+
+# pass  # for debugging
 
 ### END ###

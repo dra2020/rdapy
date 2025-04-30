@@ -1,5 +1,7 @@
 # Workflow for Boundary Analysis Experiment
 
+TODO - Shrink neighborhood size to 90% of a target district size.
+
 ```bash
 scripts/geographic-experiment/find_nhs.py > NC_precinct_neighborhoods.jsonl
 ```
