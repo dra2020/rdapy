@@ -2,9 +2,9 @@
 GEOGRAPHIC "NEIGHBORHOODS" A LA JON EGUIA & JEFF BARTON
 """
 
-from typing import Any, List, Dict, Tuple, Set, NamedTuple, Generator
+from typing import Any, List, Dict, Tuple, Set, NamedTuple, Generator, TextIO
 
-import math
+import math, json
 
 # TODO - DELETE
 # from rdapy import est_seat_probability, approx_equal, OUT_OF_STATE, is_connected
@@ -12,7 +12,7 @@ from rdapy.partisan import est_seat_probability
 from rdapy.graph import is_connected, OUT_OF_STATE
 from rdapy.utils import approx_equal
 
-from .packunpack import deserialize_bits, get_bit
+from .packunpack import deserialize_bits, get_bit, index_geoids, reverse_index
 
 
 def distance_proxy(a: Tuple[float, float], b: Tuple[float, float]) -> float:
@@ -200,6 +200,45 @@ def nh_partisan_lean(
         whole_seats = 0.5
 
     return Vf, fractional_seats, whole_seats
+
+
+def calc_geographic_baseline(
+    input_stream: TextIO,
+    ndistricts: int,
+    state_pop: int,
+    data: Dict[str, Dict[str, Any]],
+    geoids: List[str],
+    *,
+    debug: bool = False,
+) -> float:
+    """Calculate Jon Eguia & Jeff Barton's geographic baseline for a state."""
+
+    geoid_to_index: Dict[str, int] = index_geoids(geoids)
+    index_to_geoid: Dict[int, str] = reverse_index(geoid_to_index)
+
+    geographic_seats: float = 0.0
+
+    for i, line in enumerate(input_stream):
+        parsed_line = json.loads(line)
+
+        geoid: str = parsed_line["geoid"]
+
+        neighborhood: List[str] = unpack_neighborhood(
+            geoid, parsed_line, index_to_geoid, debug=debug
+        )
+
+        pop: int = data[geoid]["pop"]
+
+        Vf: float
+        fractional_seats: float
+        whole_seats: float
+        neighborhood: List[str]
+        Vf, fractional_seats, whole_seats = nh_partisan_lean(neighborhood, data)
+
+        proportion: float = ndistricts * (pop / state_pop)
+        geographic_seats += fractional_seats * proportion
+
+    return geographic_seats
 
 
 ### END ###

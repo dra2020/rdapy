@@ -25,6 +25,7 @@ from .geographic import (
     make_neighborhood,
     unpack_neighborhood,
     nh_partisan_lean,
+    calc_geographic_baseline,
 )
 
 # TODO - DELETE
