@@ -6,8 +6,6 @@ from typing import Any, List, Dict, Tuple, Set, NamedTuple, Generator, TextIO
 
 import math, json
 
-# TODO - DELETE
-# from rdapy import est_seat_probability, approx_equal, OUT_OF_STATE, is_connected
 from rdapy.partisan import est_seat_probability
 from rdapy.graph import is_connected, OUT_OF_STATE
 from rdapy.utils import approx_equal
@@ -175,10 +173,7 @@ def unpack_neighborhood(
     return neighborhood
 
 
-### EVALUATE A NEIGHBORHOOD ###
-
-
-def nh_partisan_lean(
+def eval_partisan_lean(
     neighborhood: List[str],
     data: Dict[str, Dict[str, Any]],
     *,
@@ -233,7 +228,7 @@ def calc_geographic_baseline(
         fractional_seats: float
         whole_seats: float
         neighborhood: List[str]
-        Vf, fractional_seats, whole_seats = nh_partisan_lean(neighborhood, data)
+        Vf, fractional_seats, whole_seats = eval_partisan_lean(neighborhood, data)
 
         proportion: float = ndistricts * (pop / state_pop)
         geographic_seats += fractional_seats * proportion

@@ -28,10 +28,6 @@ from rdapy import (
 from rdapy.score import (
     index_data,
     calc_geographic_baseline,
-    # index_geoids,
-    # reverse_index,
-    # unpack_neighborhood,
-    # nh_partisan_lean,
 )  # TODO - Integrate with the rest of the package
 
 
@@ -63,31 +59,6 @@ def main():
         geographic_seats: float = calc_geographic_baseline(
             input_stream, args.ndistricts, state_pop, data, geoids
         )
-
-        # geoid_to_index: Dict[str, int] = index_geoids(geoids)
-        # index_to_geoid: Dict[int, str] = reverse_index(geoid_to_index)
-
-        # geographic_seats: float = 0.0
-
-        # for i, line in enumerate(input_stream):
-        #     parsed_line = json.loads(line)
-
-        #     geoid: str = parsed_line["geoid"]
-
-        #     neighborhood: List[str] = unpack_neighborhood(
-        #         geoid, parsed_line, index_to_geoid, debug=args.debug
-        #     )
-
-        #     pop: int = data[geoid]["pop"]
-
-        #     Vf: float
-        #     fractional_seats: float
-        #     whole_seats: float
-        #     neighborhood: List[str]
-        #     Vf, fractional_seats, whole_seats = nh_partisan_lean(neighborhood, data)
-
-        #     proportion: float = args.ndistricts * (pop / state_pop)
-        #     geographic_seats += fractional_seats * proportion
 
     # TODO - A proof of concept that state-level values can be computed once
 

@@ -24,12 +24,8 @@ from .geographic import (
     nearest_connected_neighbor,
     make_neighborhood,
     unpack_neighborhood,
-    nh_partisan_lean,
+    eval_partisan_lean,
     calc_geographic_baseline,
 )
-
-# TODO - DELETE
-# from .districts import *
-# from .plans import *
 
 name = "staking"
