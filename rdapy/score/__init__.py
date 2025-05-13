@@ -12,4 +12,6 @@ from .aggregate import (
 )
 from .analyze import score_plans, score_plan
 
+from .geographic import *
+
 name: str = "score"
