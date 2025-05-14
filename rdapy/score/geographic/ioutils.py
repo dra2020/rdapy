@@ -9,7 +9,7 @@ from collections import defaultdict
 
 from rdapy.score import (
     smart_read,
-    smart_write,
+    # smart_write,
     OUT_OF_STATE,
     get_dataset,
     DatasetKey,
@@ -31,16 +31,17 @@ def load_neighborhoods(nh_path: str) -> Dict[str, Dict[str, Any]]:
     return neighborhoods
 
 
-def load_evaluations(evals_path: str) -> List[Dict[str, Any]]:
-    """Load evaluations from a JSONL file."""
+# TODO - DELETE
+# def load_evaluations(evals_path: str) -> List[Dict[str, Any]]:
+#     """Load evaluations from a JSONL file."""
 
-    evaluations: List[Dict[str, Any]] = list()
-    with smart_read(evals_path) as precincts_stream:
-        for i, line in enumerate(precincts_stream):
-            parsed_line = json.loads(line)
-            evaluations.append(parsed_line)
+#     evaluations: List[Dict[str, Any]] = list()
+#     with smart_read(evals_path) as precincts_stream:
+#         for i, line in enumerate(precincts_stream):
+#             parsed_line = json.loads(line)
+#             evaluations.append(parsed_line)
 
-    return evaluations
+#     return evaluations
 
 
 def index_data(
@@ -92,35 +93,36 @@ def index_data(
     return data, geoids, aggs
 
 
-def districts_to_plan(
-    districts: Dict[int, Dict[str, Any]],
-    *,
-    geoid_field: str = "GEOID",
-    district_field: str = "DISTRICT",
-) -> List[Dict[str, Any]]:
-    """Convert a dict of geoids by district to a plan."""
+# TODO - DELETE
+# def districts_to_plan(
+#     districts: Dict[int, Dict[str, Any]],
+#     *,
+#     geoid_field: str = "GEOID",
+#     district_field: str = "DISTRICT",
+# ) -> List[Dict[str, Any]]:
+#     """Convert a dict of geoids by district to a plan."""
 
-    plan: List[Dict[str, Any]] = list()
-    for id, district_info in districts.items():
-        for geoid in district_info["geoids"]:
-            plan.append({geoid_field: geoid, district_field: str(id)})
+#     plan: List[Dict[str, Any]] = list()
+#     for id, district_info in districts.items():
+#         for geoid in district_info["geoids"]:
+#             plan.append({geoid_field: geoid, district_field: str(id)})
 
-    return plan
+#     return plan
 
+# TODO - DELETE
+# def write_plan(plan: List[Dict[str, Any]], plan_path: str) -> None:
+#     """Write a plan in List[{"GEOID": str, "DISTRICT": int}] format to a CSV file."""
 
-def write_plan(plan: List[Dict[str, Any]], plan_path: str) -> None:
-    """Write a plan in List[{"GEOID": str, "DISTRICT": int}] format to a CSV file."""
+#     with smart_write(plan_path) as assignment_stream:
+#         for i, row in enumerate(plan):
+#             if i == 0:
+#                 cols: List[str] = list(row.keys())
+#                 writer: csv.DictWriter = csv.DictWriter(
+#                     assignment_stream, fieldnames=cols
+#                 )
+#                 writer.writeheader()
 
-    with smart_write(plan_path) as assignment_stream:
-        for i, row in enumerate(plan):
-            if i == 0:
-                cols: List[str] = list(row.keys())
-                writer: csv.DictWriter = csv.DictWriter(
-                    assignment_stream, fieldnames=cols
-                )
-                writer.writeheader()
-
-            writer.writerow(row)
+#             writer.writerow(row)
 
 
 ### END ###
