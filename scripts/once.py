@@ -67,7 +67,7 @@ def main():
     # Read in the neighborhoods once
 
     neighborhoods: List[Dict[str, Any]] = list()
-    by_dataset: Dict[str, float] = {}
+    by_dataset: Dict[str, Any] = {}
 
     with smart_read(args.neighborhoods) as input_stream:
         for i, line in enumerate(input_stream):
@@ -79,7 +79,9 @@ def main():
     for dataset in election_datasets:
         dem_votes_field: str = get_fields(data_map, "election", dataset)["dem_votes"]
         tot_votes_field: str = get_fields(data_map, "election", dataset)["tot_votes"]
-        geographic_baseline: float = calc_geographic_baseline(
+        fractional_seats: float
+        whole_seats: float
+        fractional_seats, whole_seats = calc_geographic_baseline(
             neighborhoods,
             n_districts,
             state_pop,
@@ -89,9 +91,11 @@ def main():
             dem_votes_field,
             tot_votes_field,
         )
-        by_dataset[dataset] = geographic_baseline
+        by_dataset[dataset] = {
+            "fractional_seats": fractional_seats,
+            "whole_seats": whole_seats,
+        }
 
-    # TODO - Add both fractional and whole seats
     record: Dict[str, Any] = {
         "geographic_baseline": by_dataset,
     }

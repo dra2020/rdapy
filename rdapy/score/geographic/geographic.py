@@ -215,13 +215,14 @@ def calc_geographic_baseline(
     tot_votes_field: str,
     *,
     debug: bool = False,
-) -> float:
+) -> Tuple[float, float]:
     """Calculate Jon Eguia & Jeff Barton's geographic baseline for a state."""
 
     geoid_to_index: Dict[str, int] = index_geoids(geoids)
     index_to_geoid: Dict[int, str] = reverse_index(geoid_to_index)
 
-    geographic_seats: float = 0.0
+    tot_fractional_seats: float = 0.0
+    tot_whole_seats: float = 0.0
 
     for i, parsed_line in enumerate(neighborhoods):
         geoid: str = parsed_line["geoid"]
@@ -245,9 +246,10 @@ def calc_geographic_baseline(
         )
 
         proportion: float = ndistricts * (pop / state_pop)
-        geographic_seats += fractional_seats * proportion
+        tot_fractional_seats += fractional_seats * proportion
+        tot_whole_seats += whole_seats * proportion
 
-    return geographic_seats
+    return tot_fractional_seats, tot_whole_seats
 
 
 ### END ###
