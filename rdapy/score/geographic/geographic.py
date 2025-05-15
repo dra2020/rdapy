@@ -178,7 +178,6 @@ def unpack_neighborhood(
     return neighborhood
 
 
-# TODO - Update this to reflect multiple election datasets
 def eval_partisan_lean(
     neighborhood: List[str],
     data: Dict[str, Dict[str, Any]],
@@ -202,10 +201,8 @@ def eval_partisan_lean(
     return Vf, fractional_seats, whole_seats
 
 
-# TODO - Finish updating this to reflect multiple election datasets
 def calc_geographic_baseline(
     neighborhoods: List[Dict[str, Any]],
-    # input_stream: TextIO,
     ndistricts: int,
     state_pop: int,
     data: Dict[str, Dict[str, Any]],
@@ -218,26 +215,18 @@ def calc_geographic_baseline(
 ) -> Tuple[float, float]:
     """Calculate Jon Eguia & Jeff Barton's geographic baseline for a state."""
 
-    geoid_to_index: Dict[str, int] = index_geoids(geoids)
-    index_to_geoid: Dict[int, str] = reverse_index(geoid_to_index)
-
     tot_fractional_seats: float = 0.0
     tot_whole_seats: float = 0.0
 
-    for i, parsed_line in enumerate(neighborhoods):
-        geoid: str = parsed_line["geoid"]
-
-        # TODO - Refactor and do this once
-        neighborhood: List[str] = unpack_neighborhood(
-            geoid, parsed_line, index_to_geoid, debug=debug
-        )
+    for precinct in neighborhoods:
+        geoid: str = precinct["geoid"]
+        neighborhood: List[str] = precinct["neighborhood"]
 
         pop: int = data[geoid][total_pop_field]
 
         Vf: float
         fractional_seats: float
         whole_seats: float
-        neighborhood: List[str]
         Vf, fractional_seats, whole_seats = eval_partisan_lean(
             neighborhood,
             data,

@@ -26,7 +26,6 @@ from rdapy import (
     smart_read,
     collect_metadata,
     sorted_geoids,
-    calc_best_seats,
 )
 
 from rdapy.score import (
@@ -35,6 +34,9 @@ from rdapy.score import (
     get_datasets,
     get_fields,
     DatasetKey,
+    index_geoids,
+    reverse_index,
+    unpack_neighborhood,
     calc_geographic_baseline,
 )  # TODO - Integrate with the rest of the package
 
@@ -64,21 +66,29 @@ def main():
 
     election_datasets: List[DatasetKey] = get_datasets(data_map, "election")
 
-    # Read in the neighborhoods once
+    # Read in & unpack the neighborhoods once
 
     neighborhoods: List[Dict[str, Any]] = list()
-    by_dataset: Dict[str, Any] = {}
+    geoid_to_index: Dict[str, int] = index_geoids(geoids)
+    index_to_geoid: Dict[int, str] = reverse_index(geoid_to_index)
 
     with smart_read(args.neighborhoods) as input_stream:
         for i, line in enumerate(input_stream):
             parsed_line = json.loads(line)
-            neighborhoods.append(parsed_line)
+
+            geoid: str = parsed_line["geoid"]
+            neighborhood: List[str] = unpack_neighborhood(
+                geoid, parsed_line, index_to_geoid, debug=args.debug
+            )
+            neighborhoods.append({"geoid": geoid, "neighborhood": neighborhood})
 
     # Compute the geographic baseline for each election dataset
 
+    by_dataset: Dict[str, Any] = {}
     for dataset in election_datasets:
         dem_votes_field: str = get_fields(data_map, "election", dataset)["dem_votes"]
         tot_votes_field: str = get_fields(data_map, "election", dataset)["tot_votes"]
+
         fractional_seats: float
         whole_seats: float
         fractional_seats, whole_seats = calc_geographic_baseline(
@@ -91,6 +101,7 @@ def main():
             dem_votes_field,
             tot_votes_field,
         )
+
         by_dataset[dataset] = {
             "fractional_seats": fractional_seats,
             "whole_seats": whole_seats,
