@@ -8,6 +8,7 @@ from .aggregate import (
     Aggregates,
     DatasetKey,
     get_dataset,
+    get_datasets,
     get_fields,
 )
 from .analyze import score_plans, score_plan

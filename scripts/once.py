@@ -31,6 +31,9 @@ from rdapy import (
 
 from rdapy.score import (
     index_data,
+    get_datasets,
+    get_fields,
+    DatasetKey,
     calc_geographic_baseline,
 )  # TODO - Integrate with the rest of the package
 
@@ -48,7 +51,9 @@ def main():
 
     geoids: List[str] = geoids_from_precinct_data(input_data)
     metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
+
     n_districts: int = metadata["D"]
+    election_datasets: List[DatasetKey] = get_datasets(data_map, "election")
 
     #
 
@@ -56,12 +61,14 @@ def main():
     geoids: List[str]  # NOTE - Sorted. Overwrites the above which is no longer needed.
     aggs: Dict[str, int]
     data, geoids, aggs = index_data(data_map, input_data, debug=args.debug)
-
-    # Compute state-level values once
-
     state_pop: int = aggs["state_pop"]
-    Vf: float = aggs["state_dem_votes"] / aggs["state_tot_votes"]
-    bestS: int = calc_best_seats(n_districts, Vf)
+
+    # TODO - DELETE
+    # # Compute state-level values once
+
+    # state_pop: int = aggs["state_pop"]
+    # Vf: float = aggs["state_dem_votes"] / aggs["state_tot_votes"]
+    # bestS: int = calc_best_seats(n_districts, Vf)
 
     # Add a geographic baseline to the state data
 
@@ -71,9 +78,9 @@ def main():
         )
 
     record: Dict[str, Any] = {
-        "state_pop": state_pop,
-        "estimated_vote_pct": Vf,
-        "best_seats": bestS,  # Whole seats closest to proportional
+        # "state_pop": state_pop,
+        # "estimated_vote_pct": Vf,
+        # "best_seats": bestS,  # Whole seats closest to proportional
         "geographic_seats": geographic_seats,
     }
     print(json.dumps(record))

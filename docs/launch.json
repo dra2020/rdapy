@@ -64,6 +64,24 @@
             ]
         },
         {
+            "name": "Debug once.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "--state",
+                "NC",
+                "--plan-type",
+                "congress",
+                "--data",
+                "testdata/examples/NC_input_data.v4.jsonl",
+                "--neighborhoods",
+                "temp/DEBUG_NC_congress_neighborhoods.jsonl"
+            ]
+        },
+        {
             "name": "Debug aggregate.py",
             "type": "debugpy",
             "request": "launch",
