@@ -105,7 +105,7 @@ from .score import (
     smart_write,
     read_record,
     write_record,
-    geoids_from_precinct_data,
+    sorted_geoids,
     collect_metadata,
     load_data,
     load_graph,

@@ -25,7 +25,7 @@ from rdapy import (
     load_data,
     smart_read,
     collect_metadata,
-    geoids_from_precinct_data,
+    sorted_geoids,
     calc_best_seats,
 )
 
@@ -49,7 +49,7 @@ def main():
     input_data: List[Dict[str, Any]]
     data_map, input_data = load_data(args.data)
 
-    geoids: List[str] = geoids_from_precinct_data(input_data)
+    geoids: List[str] = sorted_geoids(input_data)
     metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
 
     n_districts: int = metadata["D"]

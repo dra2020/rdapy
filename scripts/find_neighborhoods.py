@@ -28,11 +28,14 @@ from rdapy import (
     load_data,
     load_graph,
     collect_metadata,
-    geoids_from_precinct_data,
+    sorted_geoids,
 )
 
 from rdapy.score import (
     index_data,
+    get_dataset,
+    DatasetKey,
+    get_fields,
     DistanceLedger,
     Neighbor,
     make_neighborhood,
@@ -56,18 +59,18 @@ def main():
     data_map, input_data = load_data(args.data)
     adjacency_graph: Dict[str, List[str]] = load_graph(args.graph)
 
-    geoids: List[str] = geoids_from_precinct_data(input_data)
+    data_by_geoid: Dict[str, Dict[str, Any]] = index_data(input_data)
+    geoids: List[str] = sorted_geoids(input_data)
+
     metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
     n_districts: int = metadata["D"]
 
     #
 
-    data: Dict[str, Dict[str, Any]]
-    geoids: List[str]  # NOTE - Sorted. Overwrites the above which is no longer needed.
-    aggs: Dict[str, int]
-    data, geoids, aggs = index_data(data_map, input_data, debug=args.debug)
-
-    target_pop: int = aggs["state_pop"] // n_districts
+    census_dataset: DatasetKey = get_dataset(data_map, "census")
+    total_pop_field: str = get_fields(data_map, "census", census_dataset)["total_pop"]
+    state_pop: int = sum([precinct[total_pop_field] for precinct in input_data])
+    target_pop: int = state_pop // n_districts
 
     geoid_to_index: Dict[str, int] = index_geoids(geoids)
     nprecincts: int = len(geoid_to_index)
@@ -79,7 +82,8 @@ def main():
     for i, geoid in enumerate(geoids):
         nh_q: List[Neighbor] = make_neighborhood(
             geoid,
-            data,
+            data_by_geoid,
+            total_pop_field,
             adjacency_graph,
             ledger=dl,
             size=target_pop,

@@ -45,53 +45,54 @@ def load_neighborhoods(nh_path: str) -> Dict[str, Dict[str, Any]]:
 
 
 # TODO - Generalize this for multiple election datasets
-def index_data(
-    data_map: Dict[str, Any], input_data: List[Dict[str, Any]], *, debug: bool = False
-) -> Tuple[Dict[str, Dict[str, Any]], List[str], Dict[str, int]]:
+def index_data(input_data: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
     """Index precinct data by geoid."""
 
-    census_dataset: DatasetKey = get_dataset(data_map, "census")
-    total_pop_field: str = get_fields(data_map, "census", census_dataset)["total_pop"]
-    election_dataset: DatasetKey = get_dataset(data_map, "election")
-    dem_votes_field: str = get_fields(data_map, "election", election_dataset)[
-        "dem_votes"
-    ]
-    rep_votes_field: str = get_fields(data_map, "election", election_dataset)[
-        "rep_votes"
-    ]
+    # census_dataset: DatasetKey = get_dataset(data_map, "census")
+    # total_pop_field: str = get_fields(data_map, "census", census_dataset)["total_pop"]
+    # election_dataset: DatasetKey = get_dataset(data_map, "election")
+    # dem_votes_field: str = get_fields(data_map, "election", election_dataset)[
+    #     "dem_votes"
+    # ]
+    # rep_votes_field: str = get_fields(data_map, "election", election_dataset)[
+    #     "rep_votes"
+    # ]
 
-    data: Dict[str, Dict[str, Any]] = dict()
-    geoids: List[str] = list()
-    aggs: Dict[str, int] = defaultdict(int)
+    data: Dict[str, Dict[str, Any]] = {
+        precinct["geoid"]: precinct for precinct in input_data
+    }
+    # geoids: List[str] = list()
+    # aggs: Dict[str, int] = defaultdict(int)
 
-    j: int = 0
-    for i, precinct in enumerate(input_data):
-        geoid: str = precinct["geoid"]
-        if geoid == OUT_OF_STATE:
-            if debug:
-                print("Skipping OUT_OF_STATE ...")
-            continue
-        j += 1
+    # j: int = 0
+    # for i, precinct in enumerate(input_data):
+    #     geoid: str = precinct["geoid"]
+    #     if geoid == OUT_OF_STATE:
+    #         if debug:
+    #             print("Skipping OUT_OF_STATE ...")
+    #         continue
+    #     j += 1
 
-        geoids.append(geoid)
-        data[geoid] = dict()
+    #     geoids.append(geoid)
+    #     data[geoid] = dict()
 
-        pop: int = precinct[total_pop_field]
+    #     pop: int = precinct[total_pop_field]
 
-        data[geoid]["pop"] = pop
-        data[geoid]["center"] = precinct["center"]
-        data[geoid]["dem_votes"] = precinct[dem_votes_field]
-        data[geoid]["tot_votes"] = precinct[dem_votes_field] + precinct[rep_votes_field]
+    #     data[geoid]["pop"] = pop
+    #     data[geoid]["center"] = precinct["center"]
+    #     data[geoid]["dem_votes"] = precinct[dem_votes_field]
+    #     data[geoid]["tot_votes"] = precinct[dem_votes_field] + precinct[rep_votes_field]
 
-        aggs["state_pop"] += data[geoid]["pop"]
-        aggs["state_dem_votes"] += data[geoid]["dem_votes"]
-        aggs["state_tot_votes"] += data[geoid]["tot_votes"]
+    #     aggs["state_pop"] += data[geoid]["pop"]
+    #     aggs["state_dem_votes"] += data[geoid]["dem_votes"]
+    #     aggs["state_tot_votes"] += data[geoid]["tot_votes"]
 
-    geoids.sort()
+    # geoids.sort()
 
-    assert len(geoids) == j, f"Expected {j} geoids, got {len(geoids)}"
+    # assert len(geoids) == j, f"Expected {j} geoids, got {len(geoids)}"
 
-    return data, geoids, aggs
+    # return data, geoids, aggs
+    return data
 
 
 # TODO - DELETE

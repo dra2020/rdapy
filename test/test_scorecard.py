@@ -54,7 +54,7 @@ class TestScorecard:
             input_metadata, precinct_data, adjacency_graph = unpack_input_data(
                 data_path
             )
-            geoids: List[str] = geoids_from_precinct_data(precinct_data)
+            geoids: List[str] = sorted_geoids(precinct_data)
             metadata: Dict[str, Any] = collect_metadata(xx, "congress", geoids)
 
             data_by_geoid: Dict[str, Any] = {
@@ -193,7 +193,7 @@ class TestScorecard:
         precinct_data: List[Dict[str, Any]]
         adjacency_graph: Dict[str, List[str]]
         input_metadata, precinct_data, adjacency_graph = unpack_input_data(data_path)
-        geoids: List[str] = geoids_from_precinct_data(precinct_data)
+        geoids: List[str] = sorted_geoids(precinct_data)
         metadata: Dict[str, Any] = collect_metadata(xx, "congress", geoids)
 
         data_by_geoid: Dict[str, Any] = {

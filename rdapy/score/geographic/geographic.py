@@ -9,6 +9,7 @@ import math, json
 from rdapy.partisan import est_seat_probability
 from rdapy.graph import is_connected, OUT_OF_STATE
 from rdapy.utils import approx_equal
+from ..aggregate import DatasetKey
 
 from .packunpack import deserialize_bits, get_bit, index_geoids, reverse_index
 
@@ -68,7 +69,8 @@ class Neighbor(NamedTuple):
 
 def nearest_connected_neighbor(
     node: str,
-    data: Dict[str, Dict[str, Any]],
+    data_by_geoid: Dict[str, Dict[str, Any]],
+    total_pop_field: str,
     graph: Dict[str, List[str]],
     *,
     ledger: DistanceLedger,
@@ -77,7 +79,7 @@ def nearest_connected_neighbor(
     """Return the nearest connected neighbors to a precinct in increasing order of distance."""
 
     yielded: Set[str] = set()
-    queue: List[Neighbor] = [Neighbor(node, 0.0, data[node]["pop"])]
+    queue: List[Neighbor] = [Neighbor(node, 0.0, data_by_geoid[node][total_pop_field])]
 
     while True:
         if len(queue) == 0:
@@ -103,9 +105,12 @@ def nearest_connected_neighbor(
                 Neighbor(
                     neighbor,
                     ledger.distance_between(
-                        node, data[node]["center"], neighbor, data[neighbor]["center"]
+                        node,
+                        data_by_geoid[node]["center"],
+                        neighbor,
+                        data_by_geoid[neighbor]["center"],
                     ),
-                    data[neighbor]["pop"],
+                    data_by_geoid[neighbor][total_pop_field],
                 )
             )
         queue.sort(key=lambda x: x.distance, reverse=True)
@@ -115,7 +120,8 @@ def nearest_connected_neighbor(
 
 def make_neighborhood(
     geoid: str,
-    data: Dict[str, Dict[str, Any]],
+    data_by_geoid: Dict[str, Dict[str, Any]],
+    total_pop_field: str,
     graph: Dict[str, List[str]],
     *,
     ledger: DistanceLedger,
@@ -128,7 +134,7 @@ def make_neighborhood(
     neighborhood: List[Neighbor] = list()
 
     for neighbor in nearest_connected_neighbor(
-        geoid, data, graph, ledger=ledger, debug=debug
+        geoid, data_by_geoid, total_pop_field, graph, ledger=ledger, debug=debug
     ):
         if neighbor.pop + sum([n.pop for n in neighborhood]) < size * (1.0 - slack):
             neighborhood.append(neighbor)

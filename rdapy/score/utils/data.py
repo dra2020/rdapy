@@ -90,12 +90,15 @@ def collect_metadata(xx: str, plan_type: str, geoids: List[str]) -> Dict[str, An
     return metadata
 
 
-def geoids_from_precinct_data(
+def sorted_geoids(
     precinct_data: List[Dict[str, Any]], *, geoid: str = "geoid"
 ) -> List[str]:
-    """Return a list of GEOIDs from data indexed (keyed) by geoid."""
+    """Return a list of sorted GEOIDs from input data."""
 
     geoids: List[str] = [precinct[geoid] for precinct in precinct_data]
+    if OUT_OF_STATE in geoids:
+        geoids.remove(OUT_OF_STATE)
+    geoids.sort()
 
     return geoids
 
