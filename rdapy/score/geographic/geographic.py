@@ -4,12 +4,11 @@ GEOGRAPHIC "NEIGHBORHOODS" A LA JON EGUIA & JEFF BARTON
 
 from typing import Any, List, Dict, Tuple, Set, NamedTuple, Generator, TextIO
 
-import math, json
+import math
 
 from rdapy.partisan import est_seat_probability
 from rdapy.graph import is_connected, OUT_OF_STATE
 from rdapy.utils import approx_equal
-from ..aggregate import DatasetKey
 
 from .packunpack import deserialize_bits, get_bit, index_geoids, reverse_index
 
@@ -183,8 +182,8 @@ def unpack_neighborhood(
 def eval_partisan_lean(
     neighborhood: List[str],
     data: Dict[str, Dict[str, Any]],
-    dem_votes_field: str = "dem_votes",
-    tot_votes_field: str = "tot_votes",
+    dem_votes_field: str,
+    tot_votes_field: str,
 ) -> Tuple[float, float, float]:
     """Calculate the partisan results for a precinct's neighborhood."""
 
@@ -211,8 +210,9 @@ def calc_geographic_baseline(
     state_pop: int,
     data: Dict[str, Dict[str, Any]],
     geoids: List[str],
+    total_pop_field: str,
     dem_votes_field: str,
-    rep_votes_field: str,
+    tot_votes_field: str,
     *,
     debug: bool = False,
 ) -> float:
@@ -231,7 +231,7 @@ def calc_geographic_baseline(
             geoid, parsed_line, index_to_geoid, debug=debug
         )
 
-        pop: int = data[geoid]["pop"]
+        pop: int = data[geoid][total_pop_field]
 
         Vf: float
         fractional_seats: float
@@ -240,8 +240,8 @@ def calc_geographic_baseline(
         Vf, fractional_seats, whole_seats = eval_partisan_lean(
             neighborhood,
             data,
-            # dem_votes_field,
-            # rep_votes_field,
+            dem_votes_field,
+            tot_votes_field,
         )
 
         proportion: float = ndistricts * (pop / state_pop)

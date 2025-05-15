@@ -1,12 +1,8 @@
-# staking/__init__.py
+# geographic/__init__.py
 
 from .ioutils import (
     load_neighborhoods,
     index_data,
-    # TODO - DELETE
-    # load_evaluations,
-    # districts_to_plan,
-    # write_plan,
 )
 
 from .packunpack import (
@@ -29,4 +25,4 @@ from .geographic import (
     calc_geographic_baseline,
 )
 
-name = "staking"
+name = "geographic"

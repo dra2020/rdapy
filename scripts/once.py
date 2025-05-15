@@ -31,6 +31,7 @@ from rdapy import (
 
 from rdapy.score import (
     index_data,
+    get_dataset,
     get_datasets,
     get_fields,
     DatasetKey,
@@ -49,19 +50,19 @@ def main():
     input_data: List[Dict[str, Any]]
     data_map, input_data = load_data(args.data)
 
+    data_by_geoid: Dict[str, Dict[str, Any]] = index_data(input_data)
     geoids: List[str] = sorted_geoids(input_data)
-    metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
 
+    metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
     n_districts: int = metadata["D"]
-    election_datasets: List[DatasetKey] = get_datasets(data_map, "election")
 
     #
 
-    data: Dict[str, Dict[str, Any]]
-    geoids: List[str]  # NOTE - Sorted. Overwrites the above which is no longer needed.
-    aggs: Dict[str, int]
-    data, geoids, aggs = index_data(data_map, input_data, debug=args.debug)
-    state_pop: int = aggs["state_pop"]
+    census_dataset: DatasetKey = get_dataset(data_map, "census")
+    total_pop_field: str = get_fields(data_map, "census", census_dataset)["total_pop"]
+    state_pop: int = sum([precinct[total_pop_field] for precinct in input_data])
+
+    election_datasets: List[DatasetKey] = get_datasets(data_map, "election")
 
     # Read in the neighborhoods once
 
@@ -77,18 +78,20 @@ def main():
 
     for dataset in election_datasets:
         dem_votes_field: str = get_fields(data_map, "election", dataset)["dem_votes"]
-        rep_votes_field: str = get_fields(data_map, "election", dataset)["rep_votes"]
+        tot_votes_field: str = get_fields(data_map, "election", dataset)["tot_votes"]
         geographic_baseline: float = calc_geographic_baseline(
             neighborhoods,
             n_districts,
             state_pop,
-            data,
+            data_by_geoid,
             geoids,
+            total_pop_field,
             dem_votes_field,
-            rep_votes_field,
+            tot_votes_field,
         )
         by_dataset[dataset] = geographic_baseline
 
+    # TODO - Add both fractional and whole seats
     record: Dict[str, Any] = {
         "geographic_baseline": by_dataset,
     }
