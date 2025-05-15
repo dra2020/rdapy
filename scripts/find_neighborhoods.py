@@ -59,19 +59,18 @@ def main():
     data_map, input_data = load_data(args.data)
     adjacency_graph: Dict[str, List[str]] = load_graph(args.graph)
 
-    data_by_geoid: Dict[str, Dict[str, Any]] = index_data(input_data)
-    geoids: List[str] = sorted_geoids(input_data)
+    #
 
+    geoids: List[str] = sorted_geoids(input_data)
     metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
     n_districts: int = metadata["D"]
-
-    #
 
     census_dataset: DatasetKey = get_dataset(data_map, "census")
     total_pop_field: str = get_fields(data_map, "census", census_dataset)["total_pop"]
     state_pop: int = sum([precinct[total_pop_field] for precinct in input_data])
     target_pop: int = state_pop // n_districts
 
+    data_by_geoid: Dict[str, Dict[str, Any]] = index_data(input_data)
     geoid_to_index: Dict[str, int] = index_geoids(geoids)
     nprecincts: int = len(geoid_to_index)
 

@@ -10,7 +10,7 @@ from rdapy.partisan import est_seat_probability
 from rdapy.graph import is_connected, OUT_OF_STATE
 from rdapy.utils import approx_equal
 
-from .packunpack import deserialize_bits, get_bit, index_geoids, reverse_index
+from .packunpack import deserialize_bits, get_bit
 
 
 def distance_proxy(a: Tuple[float, float], b: Tuple[float, float]) -> float:
