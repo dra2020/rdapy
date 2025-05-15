@@ -9,9 +9,10 @@ It's an expensive operation, so persist the results to disk for subsequent (re)u
 For example:
 
 $ scripts/find_nhs.py \
---ndistricts 14 \
+--state NC \
+--plan-type congress \
 --data testdata/examples/NC_input_data.v4.jsonl \
---graph testdata/examples/NC_graph.json > path/to/neighborhoods.jsonl
+--graph testdata/examples/NC_graph.json > temp/DEBUG_neighborhoods.jsonl
 
 """
 
@@ -25,6 +26,8 @@ import json
 from rdapy import (
     load_data,
     load_graph,
+    collect_metadata,
+    geoids_from_precinct_data,
 )
 
 from rdapy.score import (
@@ -52,15 +55,16 @@ def main():
     data_map, input_data = load_data(args.data)
     adjacency_graph: Dict[str, List[str]] = load_graph(args.graph)
 
+    geoids: List[str] = geoids_from_precinct_data(input_data)
+    metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
+    n_districts: int = metadata["D"]
+
     data: Dict[str, Dict[str, Any]]
     geoids: List[str]
     aggs: Dict[str, int]
     data, geoids, aggs = index_data(data_map, input_data, debug=args.debug)
 
-    target_pop: int = aggs["state_pop"] // args.ndistricts
-    estimated_estimated_vote_pct: float = (
-        aggs["state_dem_votes"] / aggs["state_tot_votes"]
-    )
+    target_pop: int = aggs["state_pop"] // n_districts
 
     geoid_to_index: Dict[str, int] = index_geoids(geoids)
     nprecincts: int = len(geoid_to_index)
@@ -117,7 +121,13 @@ def parse_arguments():
         description="Parse command line arguments."
     )
 
-    parser.add_argument("--ndistricts", type=int, help="The number of districts")
+    parser.add_argument("--state", type=str, help="State abbreviation")
+    parser.add_argument(
+        "--plan-type",
+        type=str,
+        dest="plan_type",
+        help="Plan type (e.g., congress)",
+    )
 
     parser.add_argument(
         "--data",
