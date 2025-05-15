@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 
 """
-EXPERIMENT: CALCULATE THE GEOGRAPHIC BASELINE
-using Jon Eguia & Jeff Barton's geographic (central) advantage metric
+DO ONE-TIME CALCULATIONS
 
 For example:
 
-$ scripts/calc_geographic_baseline.py \
---ndistricts 14 \
---data testdata/examples/NC_input_data.v4.jsonl < path/to/neighborhoods.jsonl > path/to/state.json
+$ scripts/once.py \
+--state NC \
+--plan-type congress \
+--data testdata/examples/NC_input_data.v4.jsonl \
+< temp/DEBUG_NC_congress_neighborhoods.jsonl \
+> temp/DEBUG_NC_congress.json
 
 """
 
@@ -22,6 +24,8 @@ import json
 from rdapy import (
     load_data,
     smart_read,
+    collect_metadata,
+    geoids_from_precinct_data,
     calc_best_seats,
 )
 
@@ -42,25 +46,29 @@ def main():
     input_data: List[Dict[str, Any]]
     data_map, input_data = load_data(args.data)
 
+    geoids: List[str] = geoids_from_precinct_data(input_data)
+    metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
+    n_districts: int = metadata["D"]
+
+    #
+
     data: Dict[str, Dict[str, Any]]
-    geoids: List[str]
+    geoids: List[str]  # NOTE - Sorted. Overwrites the above which is no longer needed.
     aggs: Dict[str, int]
     data, geoids, aggs = index_data(data_map, input_data, debug=args.debug)
 
-    # TODO - A proof of concept that state-level values can be computed once
+    # Compute state-level values once
 
     state_pop: int = aggs["state_pop"]
     Vf: float = aggs["state_dem_votes"] / aggs["state_tot_votes"]
-    bestS: int = calc_best_seats(args.ndistricts, Vf)
+    bestS: int = calc_best_seats(n_districts, Vf)
 
     # Add a geographic baseline to the state data
 
     with smart_read(args.neighborhoods) as input_stream:
         geographic_seats: float = calc_geographic_baseline(
-            input_stream, args.ndistricts, state_pop, data, geoids
+            input_stream, n_districts, state_pop, data, geoids
         )
-
-    # TODO - A proof of concept that state-level values can be computed once
 
     record: Dict[str, Any] = {
         "state_pop": state_pop,
@@ -78,7 +86,13 @@ def parse_arguments():
         description="Parse command line arguments."
     )
 
-    parser.add_argument("--ndistricts", type=int, help="The number of districts")
+    parser.add_argument("--state", type=str, help="State abbreviation")
+    parser.add_argument(
+        "--plan-type",
+        type=str,
+        dest="plan_type",
+        help="Plan type (e.g., congress)",
+    )
 
     parser.add_argument(
         "--data",

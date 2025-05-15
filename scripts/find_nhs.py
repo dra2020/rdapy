@@ -12,7 +12,8 @@ $ scripts/find_nhs.py \
 --state NC \
 --plan-type congress \
 --data testdata/examples/NC_input_data.v4.jsonl \
---graph testdata/examples/NC_graph.json > temp/DEBUG_neighborhoods.jsonl
+--graph testdata/examples/NC_graph.json \
+> temp/DEBUG_NC_congress_neighborhoods.jsonl
 
 """
 
@@ -59,8 +60,10 @@ def main():
     metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
     n_districts: int = metadata["D"]
 
+    #
+
     data: Dict[str, Dict[str, Any]]
-    geoids: List[str]
+    geoids: List[str]  # NOTE - Sorted. Overwrites the above which is no longer needed.
     aggs: Dict[str, int]
     data, geoids, aggs = index_data(data_map, input_data, debug=args.debug)
 
