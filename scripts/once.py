@@ -17,7 +17,7 @@ $ scripts/once.py \
 import argparse
 from argparse import ArgumentParser, Namespace
 
-from typing import Any, List, Dict
+from typing import Any, List, Dict, TextIO
 
 import json
 
@@ -63,25 +63,34 @@ def main():
     data, geoids, aggs = index_data(data_map, input_data, debug=args.debug)
     state_pop: int = aggs["state_pop"]
 
-    # TODO - DELETE
-    # # Compute state-level values once
+    # Read in the neighborhoods once
 
-    # state_pop: int = aggs["state_pop"]
-    # Vf: float = aggs["state_dem_votes"] / aggs["state_tot_votes"]
-    # bestS: int = calc_best_seats(n_districts, Vf)
-
-    # Add a geographic baseline to the state data
+    neighborhoods: List[Dict[str, Any]] = list()
+    by_dataset: Dict[str, float] = {}
 
     with smart_read(args.neighborhoods) as input_stream:
-        geographic_seats: float = calc_geographic_baseline(
-            input_stream, n_districts, state_pop, data, geoids
+        for i, line in enumerate(input_stream):
+            parsed_line = json.loads(line)
+            neighborhoods.append(parsed_line)
+
+    # Compute the geographic baseline for each election dataset
+
+    for dataset in election_datasets:
+        dem_votes_field: str = get_fields(data_map, "election", dataset)["dem_votes"]
+        rep_votes_field: str = get_fields(data_map, "election", dataset)["rep_votes"]
+        geographic_baseline: float = calc_geographic_baseline(
+            neighborhoods,
+            n_districts,
+            state_pop,
+            data,
+            geoids,
+            dem_votes_field,
+            rep_votes_field,
         )
+        by_dataset[dataset] = geographic_baseline
 
     record: Dict[str, Any] = {
-        # "state_pop": state_pop,
-        # "estimated_vote_pct": Vf,
-        # "best_seats": bestS,  # Whole seats closest to proportional
-        "geographic_seats": geographic_seats,
+        "geographic_baseline": by_dataset,
     }
     print(json.dumps(record))
 

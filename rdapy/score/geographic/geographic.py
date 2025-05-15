@@ -198,7 +198,8 @@ def eval_partisan_lean(
 
 
 def calc_geographic_baseline(
-    input_stream: TextIO,
+    neighborhoods: List[Dict[str, Any]],
+    # input_stream: TextIO,
     ndistricts: int,
     state_pop: int,
     data: Dict[str, Dict[str, Any]],
@@ -213,8 +214,9 @@ def calc_geographic_baseline(
 
     geographic_seats: float = 0.0
 
-    for i, line in enumerate(input_stream):
-        parsed_line = json.loads(line)
+    # for i, line in enumerate(input_stream):
+    for i, parsed_line in enumerate(neighborhoods):
+        # parsed_line = json.loads(line)
 
         geoid: str = parsed_line["geoid"]
 
