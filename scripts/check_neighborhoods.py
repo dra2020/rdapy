@@ -5,19 +5,20 @@ EXPERIMENT: VERIFY THAT THE "NEIGHBORHOOD" FOR EACH PRECINCT ROUNDTRIPS
 
 For example:
 
-$ scripts/check_nhs.py \
---graph testdata/examples/NC_graph.json < path/to/neighborhoods.jsonl
+$ scripts/check_neighborhoods.py \
+--data testdata/examples/NC_input_data.v4.jsonl \
+< temp/DEBUG_NC_congress_neighborhoods.jsonl
 
 """
 
 import argparse
 from argparse import ArgumentParser, Namespace
 
-from typing import Any, List, Dict
+from typing import List, Dict, Any
 
 import json
 
-from rdapy import load_graph, smart_read, OUT_OF_STATE
+from rdapy import load_data, sorted_geoids, smart_read, OUT_OF_STATE
 
 from rdapy.score import (
     index_geoids,
@@ -33,13 +34,13 @@ def main():
 
     #
 
-    adjacency_graph: Dict[str, List[str]] = load_graph(args.graph)
+    data_map: Dict[str, Any]
+    input_data: List[Dict[str, Any]]
+    data_map, input_data = load_data(args.data)
 
-    geoids: List[str] = list(adjacency_graph.keys())
-    if OUT_OF_STATE in geoids:
-        print(f"Removing {OUT_OF_STATE} from geoids")
-        geoids.remove(OUT_OF_STATE)
-    geoids.sort()
+    #
+
+    geoids: List[str] = sorted_geoids(input_data)
 
     geoid_to_index: Dict[str, int] = index_geoids(geoids)
     index_to_geoid: Dict[int, str] = reverse_index(geoid_to_index)
@@ -61,9 +62,9 @@ def parse_arguments():
     )
 
     parser.add_argument(
-        "--graph",
+        "--data",
         type=str,
-        help="Path to graph file",
+        help="Path to input data file",
     )
     parser.add_argument(
         "--neighborhoods",
