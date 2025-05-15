@@ -44,6 +44,7 @@ def load_neighborhoods(nh_path: str) -> Dict[str, Dict[str, Any]]:
 #     return evaluations
 
 
+# TODO - Generalize this for multiple election datasets
 def index_data(
     data_map: Dict[str, Any], input_data: List[Dict[str, Any]], *, debug: bool = False
 ) -> Tuple[Dict[str, Dict[str, Any]], List[str], Dict[str, int]]:

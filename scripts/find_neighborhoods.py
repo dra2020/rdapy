@@ -8,7 +8,7 @@ It's an expensive operation, so persist the results to disk for subsequent (re)u
 
 For example:
 
-$ scripts/find_nhs.py \
+$ scripts/find_neighborhoods.py \
 --state NC \
 --plan-type congress \
 --data testdata/examples/NC_input_data.v4.jsonl \
