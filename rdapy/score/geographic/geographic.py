@@ -136,6 +136,11 @@ def make_neighborhood(
     # if the last attempted neighbor is too large. One could skip that one
     # and continue, provided the neighborhood were still connected.
     # The generator doesn't support skipping yielded precincts though.
+
+    # TODO - Alternatively, one could choose to add the last neighbor,
+    # if it puts the neighborhood over the target size, but the delta
+    # would be smaller than not adding it. This would make neighborhoods
+    # "the closest to target size."
     for neighbor in nearest_connected_neighbor(
         geoid, data_by_geoid, total_pop_field, graph, ledger=ledger, debug=debug
     ):
