@@ -132,6 +132,10 @@ def make_neighborhood(
 
     neighborhood: List[Neighbor] = list()
 
+    # NOTE - This could theoretically terminate earlier than ideally,
+    # if the last attempted neighbor is too large. One could skip that one
+    # and continue, provided the neighborhood were still connected.
+    # The generator doesn't support skipping yielded precincts though.
     for neighbor in nearest_connected_neighbor(
         geoid, data_by_geoid, total_pop_field, graph, ledger=ledger, debug=debug
     ):
