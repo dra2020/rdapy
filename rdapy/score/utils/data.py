@@ -4,7 +4,7 @@ INPUT DATA
 
 from typing import Any, Dict, Generator, List, Tuple, TextIO, Set
 
-import json
+import os, json
 
 from .constants import COUNTIES_BY_STATE, DISTRICTS_BY_STATE, OUT_OF_STATE
 from .types import ParseGeoID
@@ -21,7 +21,7 @@ def load_data(data_path) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
     Returns:
         list: List of precinct data dictionaries
     """
-    with open(data_path, "r") as f:
+    with open(os.path.expanduser(data_path), "r") as f:
         records = [json.loads(line) for line in f]
 
     data_map: Dict[str, Any] = dict()
@@ -47,7 +47,7 @@ def load_graph(graph_path) -> Dict[str, List[str]]:
     Returns:
         dict: Dictionary mapping node IDs to lists of connected node IDs
     """
-    with open(graph_path, "r") as f:
+    with open(os.path.expanduser(graph_path), "r") as f:
         graph_data = json.load(f)
     return {key: list(value) for key, value in graph_data.items()}
 
