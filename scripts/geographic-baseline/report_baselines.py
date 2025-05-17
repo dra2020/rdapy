@@ -41,14 +41,14 @@ def main():
             with open(os.path.expanduser(baseline_path), "r") as f:
                 baselines = json.load(f)["geographic_baseline"]
 
-            print(f"{xx}/{chamber}:")
+            combo: str = f"{xx}/{chamber}:"
+
+            print(f"{combo:<16} {"Fract":>} / {"Whole":>}")
             for dataset, values in baselines.items():
                 print(
-                    f"  {dataset:<15} {values["fractional_seats"]:>5.2f} / {values["whole_seats"]:>5.2f}"
+                    f"  {dataset:<14} {values["fractional_seats"]:>5.2f} / {values["whole_seats"]:>5.2f}"
                 )
             print()
-
-    pass  # for debugging
 
 
 def parse_arguments():
