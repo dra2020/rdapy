@@ -162,7 +162,7 @@
                 "--data",
                 "~/local/temp-data/ME_input_data.v4.jsonl",
                 "--graph",
-                "local/dra-to-publish/ME_2020_graph.json"
+                "~/local/dra-to-publish/ME_2020_graph.json"
             ]
         }
     ]
