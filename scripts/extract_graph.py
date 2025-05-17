@@ -24,9 +24,10 @@ from shapely.geometry import (
 )
 from libpysal.weights import Rook, WSP
 
+from rdapy import is_connected, OUT_OF_STATE
+
 
 EPSILON: float = 1.0e-12
-OUT_OF_STATE: str = "OUT_OF_STATE"
 
 
 def main() -> None:
@@ -207,37 +208,6 @@ def is_consistent(graph: Dict[str, List[str]]) -> bool:
                 return False
 
     return True
-
-
-def is_connected(geos: List[Any], adjacency: Dict[Any, List[Any]]) -> bool:
-    """Make sure a graph is fully connected *internally*, i.e., w/o regard to the virtual state boundary "shapes".
-
-    Kenshi's iterative implementation of the recursive algorithm
-
-    geos - the list of geographies
-    adjacency - the connectedness of the geos
-    """
-    visited: Set[Any] = set()
-
-    all_geos: Set[Any] = set(geos)
-    all_geos.discard(OUT_OF_STATE)
-
-    start: str = next(iter(all_geos))
-    assert start != OUT_OF_STATE
-
-    to_process: List[Any] = [start]
-    while to_process:
-        node: Any = to_process.pop()
-        visited.add(node)
-        neighbors: List[Any] = list(adjacency[node])
-        if OUT_OF_STATE in neighbors:
-            neighbors.remove(OUT_OF_STATE)
-        neighbors_to_visit: List[Any] = [
-            n for n in neighbors if n in all_geos and n not in visited
-        ]
-        to_process.extend(neighbors_to_visit)
-
-    return len(visited) == len(all_geos)
 
 
 def parse_args() -> Namespace:
