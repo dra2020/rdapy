@@ -124,30 +124,40 @@ def make_neighborhood(
     graph: Dict[str, List[str]],
     *,
     ledger: DistanceLedger,
-    size: int,
-    slack: float = 0.05,
+    target_size: int,
     debug: bool = False,
 ) -> List[Neighbor]:
-    """Find the 'neighborhood' around a precinct."""
+    """Find the 'neighborhood' around a precinct closest to the target size."""
 
     neighborhood: List[Neighbor] = list()
+    neighborhood_pop: int = 0
 
-    # NOTE - This could theoretically terminate earlier than ideally,
-    # if the last attempted neighbor is too large. One could skip that one
-    # and continue, provided the neighborhood were still connected.
-    # The generator doesn't support skipping yielded precincts though.
-
-    # TODO - Alternatively, one could choose to add the last neighbor,
-    # if it puts the neighborhood over the target size, but the delta
-    # would be smaller than not adding it. This would make neighborhoods
-    # "the closest to target size."
-    for neighbor in nearest_connected_neighbor(
-        geoid, data_by_geoid, total_pop_field, graph, ledger=ledger, debug=debug
+    for i, neighbor in enumerate(
+        nearest_connected_neighbor(
+            geoid, data_by_geoid, total_pop_field, graph, ledger=ledger, debug=debug
+        )
     ):
-        if neighbor.pop + sum([n.pop for n in neighborhood]) < size * (1.0 - slack):
+        if i == 0:
             neighborhood.append(neighbor)
-        else:
-            break
+            neighborhood_pop = neighbor.pop
+            continue
+
+        new_pop: int = neighborhood_pop + neighbor.pop
+
+        if new_pop <= target_size:
+            neighborhood.append(neighbor)
+            neighborhood_pop += neighbor.pop
+            continue
+
+        if new_pop > target_size and (new_pop - target_size) < (
+            target_size - neighborhood_pop
+        ):
+            neighborhood.append(neighbor)
+            neighborhood_pop += neighbor.pop
+
+        break
+
+    assert len(neighborhood) > 0, f"Neighborhood is empty for {geoid}!"
 
     return neighborhood
 

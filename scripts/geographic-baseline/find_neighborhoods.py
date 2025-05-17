@@ -85,8 +85,7 @@ def main():
             total_pop_field,
             adjacency_graph,
             ledger=dl,
-            size=target_pop,
-            slack=args.slack,
+            target_size=target_pop,
             debug=args.debug,
         )
 
@@ -144,10 +143,6 @@ def parse_arguments():
         "--graph",
         type=str,
         help="Path to graph file",
-    )
-
-    parser.add_argument(
-        "--slack", type=float, default=0.00, help="How much slack to allow"
     )
 
     parser.add_argument("--debug", dest="debug", action="store_true", help="Debug mode")
