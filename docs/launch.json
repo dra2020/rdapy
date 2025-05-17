@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug extract_graph.py",
+            "name": "extract_graph.py",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
@@ -16,7 +16,7 @@
             ]
         },
         {
-            "name": "Debug map_scoring_data.py",
+            "name": "map_scoring_data.py",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
@@ -30,7 +30,7 @@
             ]
         },
         {
-            "name": "Debug extract_data.py",
+            "name": "extract_data.py",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
@@ -38,17 +38,17 @@
             "cwd": "${workspaceFolder}",
             "args": [
                 "--geojson",
-                "testdata/data/NC_vtd_datasets.v4.geojson",
+                "~/local/dra-to-publish/_CA_2020_VD_tabblock.vtd.datasets.geojson",
                 "--data-map",
-                "testdata/examples/NC_data_map.v4.json",
+                "~/local/temp-data/CA_data_map.v4.json",
                 "--graph",
-                "testdata/examples/NC_graph.json",
+                "~/local/dra-to-publish/CA_2020_graph.json",
                 "--data",
                 "temp/DEBUG_input_data.jsonl"
             ]
         },
         {
-            "name": "Debug canonical_to_assignments.py",
+            "name": "canonical_to_assignments.py",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
@@ -64,7 +64,7 @@
             ]
         },
         {
-            "name": "Debug once.py",
+            "name": "once.py",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
@@ -82,7 +82,7 @@
             ]
         },
         {
-            "name": "Debug aggregate.py",
+            "name": "aggregate.py",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
@@ -106,7 +106,7 @@
             ]
         },
         {
-            "name": "Debug score.py",
+            "name": "score.py",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
@@ -130,7 +130,7 @@
             ]
         },
         {
-            "name": "Debug write.py",
+            "name": "write.py",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
@@ -145,6 +145,24 @@
                 "temp/DEBUG_scores.csv",
                 "--by-district",
                 "temp/DEBUG_by-district.jsonl"
+            ]
+        },
+        {
+            "name": "find_neighborhoods.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "--state",
+                "ME",
+                "--plan-type",
+                "lower",
+                "--data",
+                "~/local/temp-data/ME_input_data.v4.jsonl",
+                "--graph",
+                "local/dra-to-publish/ME_2020_graph.json"
             ]
         }
     ]
