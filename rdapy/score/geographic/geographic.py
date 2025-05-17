@@ -172,17 +172,14 @@ def unpack_neighborhood(
 
     neighborhood: List[str] = [index_to_geoid[idx] for idx in neighbors]
 
-    if debug:
-        nneighbors: int = len(neighbors)
-        checksum: int = sum(neighbors)
+    nneighbors: int = len(neighbors)
+    checksum: int = sum(neighbors)
 
-        assert geoid in neighborhood, f"{geoid} in not in own neighborhood"
-        assert (
-            nneighbors == packed_data["size"]
-        ), f"Wrong size neighborhood for {geoid} ({nneighbors} vs. {packed_data['size']})"
-        assert checksum == packed_data["checksum"], f"Checksum mismatch for {geoid}"
-
-        print(f"Neighborhood for {geoid} roundtripped successfully ...")
+    assert geoid in neighborhood, f"{geoid} in not in own neighborhood"
+    assert (
+        nneighbors == packed_data["size"]
+    ), f"Wrong size neighborhood for {geoid} ({nneighbors} vs. {packed_data['size']})"
+    assert checksum == packed_data["checksum"], f"Checksum mismatch for {geoid}"
 
     return neighborhood
 
