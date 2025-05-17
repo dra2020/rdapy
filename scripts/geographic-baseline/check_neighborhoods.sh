@@ -15,11 +15,6 @@ scripts/geographic-baseline/check_neighborhoods.py \
 --data ~/local/temp-data/AL_input_data.v4.jsonl \
 < ~/local/geographic-baseline/AL_lower_neighborhoods.jsonl
 
-echo Checking the neighborhoods for AK/congress ...
-scripts/geographic-baseline/check_neighborhoods.py \
---data ~/local/temp-data/AK_input_data.v4.jsonl \
-< ~/local/geographic-baseline/AK_congress_neighborhoods.jsonl
-
 echo Checking the neighborhoods for AK/upper ...
 scripts/geographic-baseline/check_neighborhoods.py \
 --data ~/local/temp-data/AK_input_data.v4.jsonl \
@@ -39,11 +34,6 @@ echo Checking the neighborhoods for AZ/upper ...
 scripts/geographic-baseline/check_neighborhoods.py \
 --data ~/local/temp-data/AZ_input_data.v4.jsonl \
 < ~/local/geographic-baseline/AZ_upper_neighborhoods.jsonl
-
-echo Checking the neighborhoods for AZ/lower ...
-scripts/geographic-baseline/check_neighborhoods.py \
---data ~/local/temp-data/AZ_input_data.v4.jsonl \
-< ~/local/geographic-baseline/AZ_lower_neighborhoods.jsonl
 
 echo Checking the neighborhoods for AR/congress ...
 scripts/geographic-baseline/check_neighborhoods.py \
@@ -104,11 +94,6 @@ echo Checking the neighborhoods for CT/lower ...
 scripts/geographic-baseline/check_neighborhoods.py \
 --data ~/local/temp-data/CT_input_data.v4.jsonl \
 < ~/local/geographic-baseline/CT_lower_neighborhoods.jsonl
-
-echo Checking the neighborhoods for DE/congress ...
-scripts/geographic-baseline/check_neighborhoods.py \
---data ~/local/temp-data/DE_input_data.v4.jsonl \
-< ~/local/geographic-baseline/DE_congress_neighborhoods.jsonl
 
 echo Checking the neighborhoods for DE/upper ...
 scripts/geographic-baseline/check_neighborhoods.py \
@@ -174,11 +159,6 @@ echo Checking the neighborhoods for ID/upper ...
 scripts/geographic-baseline/check_neighborhoods.py \
 --data ~/local/temp-data/ID_input_data.v4.jsonl \
 < ~/local/geographic-baseline/ID_upper_neighborhoods.jsonl
-
-echo Checking the neighborhoods for ID/lower ...
-scripts/geographic-baseline/check_neighborhoods.py \
---data ~/local/temp-data/ID_input_data.v4.jsonl \
-< ~/local/geographic-baseline/ID_lower_neighborhoods.jsonl
 
 echo Checking the neighborhoods for IL/congress ...
 scripts/geographic-baseline/check_neighborhoods.py \
@@ -400,11 +380,6 @@ scripts/geographic-baseline/check_neighborhoods.py \
 --data ~/local/temp-data/NE_input_data.v4.jsonl \
 < ~/local/geographic-baseline/NE_upper_neighborhoods.jsonl
 
-echo Checking the neighborhoods for NE/lower ...
-scripts/geographic-baseline/check_neighborhoods.py \
---data ~/local/temp-data/NE_input_data.v4.jsonl \
-< ~/local/geographic-baseline/NE_lower_neighborhoods.jsonl
-
 echo Checking the neighborhoods for NV/congress ...
 scripts/geographic-baseline/check_neighborhoods.py \
 --data ~/local/temp-data/NV_input_data.v4.jsonl \
@@ -444,11 +419,6 @@ echo Checking the neighborhoods for NJ/upper ...
 scripts/geographic-baseline/check_neighborhoods.py \
 --data ~/local/temp-data/NJ_input_data.v4.jsonl \
 < ~/local/geographic-baseline/NJ_upper_neighborhoods.jsonl
-
-echo Checking the neighborhoods for NJ/lower ...
-scripts/geographic-baseline/check_neighborhoods.py \
---data ~/local/temp-data/NJ_input_data.v4.jsonl \
-< ~/local/geographic-baseline/NJ_lower_neighborhoods.jsonl
 
 echo Checking the neighborhoods for NM/congress ...
 scripts/geographic-baseline/check_neighborhoods.py \
@@ -494,11 +464,6 @@ echo Checking the neighborhoods for NC/lower ...
 scripts/geographic-baseline/check_neighborhoods.py \
 --data ~/local/temp-data/NC_input_data.v4.jsonl \
 < ~/local/geographic-baseline/NC_lower_neighborhoods.jsonl
-
-echo Checking the neighborhoods for ND/congress ...
-scripts/geographic-baseline/check_neighborhoods.py \
---data ~/local/temp-data/ND_input_data.v4.jsonl \
-< ~/local/geographic-baseline/ND_congress_neighborhoods.jsonl
 
 echo Checking the neighborhoods for ND/upper ...
 scripts/geographic-baseline/check_neighborhoods.py \
@@ -600,11 +565,6 @@ scripts/geographic-baseline/check_neighborhoods.py \
 --data ~/local/temp-data/SC_input_data.v4.jsonl \
 < ~/local/geographic-baseline/SC_lower_neighborhoods.jsonl
 
-echo Checking the neighborhoods for SD/congress ...
-scripts/geographic-baseline/check_neighborhoods.py \
---data ~/local/temp-data/SD_input_data.v4.jsonl \
-< ~/local/geographic-baseline/SD_congress_neighborhoods.jsonl
-
 echo Checking the neighborhoods for SD/upper ...
 scripts/geographic-baseline/check_neighborhoods.py \
 --data ~/local/temp-data/SD_input_data.v4.jsonl \
@@ -660,11 +620,6 @@ scripts/geographic-baseline/check_neighborhoods.py \
 --data ~/local/temp-data/UT_input_data.v4.jsonl \
 < ~/local/geographic-baseline/UT_lower_neighborhoods.jsonl
 
-echo Checking the neighborhoods for VT/congress ...
-scripts/geographic-baseline/check_neighborhoods.py \
---data ~/local/temp-data/VT_input_data.v4.jsonl \
-< ~/local/geographic-baseline/VT_congress_neighborhoods.jsonl
-
 echo Checking the neighborhoods for VT/upper ...
 scripts/geographic-baseline/check_neighborhoods.py \
 --data ~/local/temp-data/VT_input_data.v4.jsonl \
@@ -700,11 +655,6 @@ scripts/geographic-baseline/check_neighborhoods.py \
 --data ~/local/temp-data/WA_input_data.v4.jsonl \
 < ~/local/geographic-baseline/WA_upper_neighborhoods.jsonl
 
-echo Checking the neighborhoods for WA/lower ...
-scripts/geographic-baseline/check_neighborhoods.py \
---data ~/local/temp-data/WA_input_data.v4.jsonl \
-< ~/local/geographic-baseline/WA_lower_neighborhoods.jsonl
-
 echo Checking the neighborhoods for WV/congress ...
 scripts/geographic-baseline/check_neighborhoods.py \
 --data ~/local/temp-data/WV_input_data.v4.jsonl \
@@ -734,11 +684,6 @@ echo Checking the neighborhoods for WI/lower ...
 scripts/geographic-baseline/check_neighborhoods.py \
 --data ~/local/temp-data/WI_input_data.v4.jsonl \
 < ~/local/geographic-baseline/WI_lower_neighborhoods.jsonl
-
-echo Checking the neighborhoods for WY/congress ...
-scripts/geographic-baseline/check_neighborhoods.py \
---data ~/local/temp-data/WY_input_data.v4.jsonl \
-< ~/local/geographic-baseline/WY_congress_neighborhoods.jsonl
 
 echo Checking the neighborhoods for WY/upper ...
 scripts/geographic-baseline/check_neighborhoods.py \
