@@ -51,7 +51,7 @@ def main():
 
             geoid: str = parsed_line["geoid"]
 
-            unpack_neighborhood(geoid, parsed_line, index_to_geoid, debug=True)
+            unpack_neighborhood(geoid, parsed_line, index_to_geoid, debug=args.debug)
 
 
 def parse_arguments():
@@ -72,6 +72,7 @@ def parse_arguments():
         help="The input stream of neighborhoods",
     )
 
+    parser.add_argument("--debug", dest="debug", action="store_true", help="Debug mode")
     parser.add_argument(
         "-v", "--verbose", dest="verbose", action="store_true", help="Verbose mode"
     )
