@@ -12,9 +12,27 @@ $ scripts/utility/generate_mods.py \
 import argparse
 from argparse import ArgumentParser, Namespace
 
-from typing import Any, List, Dict, Set
+from typing import Any, List, Dict, Set, NamedTuple
 
-from rdapy import load_graph, OUT_OF_STATE, is_connected, connected_subsets
+import sys
+
+from rdapy import (
+    load_graph,
+    OUT_OF_STATE,
+    load_data,
+    is_connected,
+    connected_subsets,
+)
+
+from rdapy.score import index_data, DatasetKey, get_dataset, get_fields
+
+
+class Island(NamedTuple):
+    id: int
+    population: int
+    precincts: int
+    coastal: List[str]
+    inland: List[str]
 
 
 def main() -> None:
@@ -24,9 +42,16 @@ def main() -> None:
 
     #
 
+    data_map: Dict[str, Any]
+    input_data: List[Dict[str, Any]]
+    data_map, input_data = load_data(args.data)
     adjacency_graph: Dict[str, List[str]] = load_graph(args.graph)
 
     #
+
+    data_by_geoid: Dict[str, Dict[str, Any]] = index_data(input_data)
+    census_dataset: DatasetKey = get_dataset(data_map, "census")
+    total_pop_field: str = get_fields(data_map, "census", census_dataset)["total_pop"]
 
     geoids: List[str] = list(adjacency_graph.keys())
     geoids.remove(OUT_OF_STATE)
@@ -34,9 +59,35 @@ def main() -> None:
 
     if is_connected(geoids, adjacency_graph):
         print(f"Graph is fully connected.")
-    else:
-        print(f"WARNING: Graph is NOT fully connected!")
-        subsets: List[Set[Any]] = connected_subsets(geoids, adjacency_graph)
+        sys.exit(0)
+
+    print(f"WARNING: Graph is NOT fully connected!")
+    subsets: List[Set[Any]] = connected_subsets(geoids, adjacency_graph)
+    islands: List[Island] = list()
+
+    for i, subset in enumerate(subsets):
+        id: int = i + 1
+        pop: int = 0
+        precincts: int = 0
+        coastal: List[str] = list()
+        inland: List[str] = list()
+
+        for geoid in subset:
+            precincts += 1
+            pop += data_by_geoid[geoid][total_pop_field]
+
+            is_coastal: bool = True if geoid in adjacency_graph[OUT_OF_STATE] else False
+            if is_coastal:
+                coastal.append(geoid)
+            else:
+                inland.append(geoid)
+
+        islands.append(Island(id, pop, precincts, coastal, inland))
+
+    # Sort islands by population
+    islands.sort(key=lambda x: x.population, reverse=True)
+
+    pass
 
 
 ### HELPERS ###
@@ -53,6 +104,11 @@ def parse_args() -> Namespace:
         "--graph",
         help="The output JSON file containing the adjacency graph",
         type=str,
+    )
+    parser.add_argument(
+        "--data",
+        type=str,
+        help="Path to input data file",
     )
     parser.add_argument(
         "--mods",
