@@ -12,10 +12,9 @@ $ scripts/utility/generate_mods.py \
 import argparse
 from argparse import ArgumentParser, Namespace
 
-from typing import Any, List, Dict
-import json
+from typing import Any, List, Dict, Set
 
-from rdapy import load_data, load_graph, sorted_geoids, is_connected, OUT_OF_STATE
+from rdapy import load_graph, OUT_OF_STATE, is_connected, connected_subsets
 
 
 def main() -> None:
@@ -37,6 +36,7 @@ def main() -> None:
         print(f"Graph is fully connected.")
     else:
         print(f"WARNING: Graph is NOT fully connected!")
+        subsets: List[Set[Any]] = connected_subsets(geoids, adjacency_graph)
 
 
 ### HELPERS ###
