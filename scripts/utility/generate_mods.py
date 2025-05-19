@@ -146,6 +146,8 @@ def main() -> None:
         p2: str = shortest_edges[pair].to_geoid
         distance: float = shortest_edges[pair].distance
         G.add_edge(i1, i2, weight=distance, geoid1=p1, geoid2=p2)
+    T = nx.minimum_spanning_tree(G)
+    connections = sorted(T.edges(data=True))
 
     pass
 
