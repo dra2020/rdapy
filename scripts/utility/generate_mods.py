@@ -71,13 +71,13 @@ def main() -> None:
         print(f"Graph is fully connected.")
         sys.exit(0)
 
-    print(f"WARNING: Graph is NOT fully connected!")
+    # Graph is not fully connected.
 
     # Find all the connected subsets of precincts ("islands" including a mainland)
 
     subsets: List[Set[Any]] = connected_subsets(geoids, adjacency_graph)
 
-    # Separate precincts into coastal and inland areas
+    # Segregate precincts into coasts and inland areas
 
     islands: List[Island] = list()
 
@@ -92,8 +92,7 @@ def main() -> None:
             precincts += 1
             pop += data_by_geoid[geoid][total_pop_field]
 
-            is_coastal: bool = True if geoid in adjacency_graph[OUT_OF_STATE] else False
-            if is_coastal:
+            if geoid in adjacency_graph[OUT_OF_STATE]:
                 coastal.append(geoid)
             else:
                 inland.append(geoid)
@@ -104,22 +103,15 @@ def main() -> None:
 
     dl: DistanceLedger = DistanceLedger()
 
-    n_islands: int = len(islands)
-    island_pairs: List[Tuple[int, int]] = list(combinations(range(n_islands), 2))
+    island_pairs: List[Tuple[int, int]] = list(combinations(range(len(islands)), 2))
     possible_edges: Dict[Tuple[int, int], List[Connection]] = dict()
     shortest_edges: Dict[Tuple[int, int], Connection] = dict()
 
     for pair in island_pairs:
-        i1: int = pair[0]
-        i2: int = pair[1]
-
         possible_edges[pair] = list()
 
-        coast1: List[str] = islands[i1].coastal
-        coast2: List[str] = islands[i2].coastal
-
-        for c1 in coast1:
-            for c2 in coast2:
+        for c1 in islands[pair[0]].coastal:
+            for c2 in islands[pair[1]].coastal:
                 distance: float = dl.distance_between(
                     c1, data_by_geoid[c1]["center"], c2, data_by_geoid[c2]["center"]
                 )
@@ -131,15 +123,16 @@ def main() -> None:
     # Find the shortest distance paths that fully connect the islands, using a minimum spanning tree
 
     G = nx.Graph()
-    for i in range(n_islands):
+    for i in range(len(islands)):
         G.add_node(i)
     for pair in island_pairs:
-        i1: int = pair[0]
-        i2: int = pair[1]
-        p1: str = shortest_edges[pair].from_geoid
-        p2: str = shortest_edges[pair].to_geoid
-        distance: float = shortest_edges[pair].distance
-        G.add_edge(i1, i2, weight=distance, geoid1=p1, geoid2=p2)
+        G.add_edge(
+            pair[0],
+            pair[1],
+            weight=shortest_edges[pair].distance,
+            geoid1=shortest_edges[pair].from_geoid,
+            geoid2=shortest_edges[pair].to_geoid,
+        )
     T = nx.minimum_spanning_tree(G)
     connections = sorted(T.edges(data=True))
 
