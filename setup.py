@@ -7,23 +7,11 @@ https://packaging.python.org/en/latest/specifications/declaring-project-metadata
 python setup.py register
 python setup.py register sdist upload
 
-https://packaging.python.org/en/latest/tutorials/packaging-projects/
-
-Once:
-
-$ python3 -m pip install --upgrade build
-$ python3 -m pip install --upgrade twine
-
-Each iteration:
-
-$ python3 -m build
-$ python3 -m twine upload --repository pypi dist/*
-
 """
 
 setup(
     name="rdapy",
-    version="2.0.1",
+    version="2.1.0",
     description="Redistricting analytics in Python",
     url="https://github.com/dra2020/rdapy",
     author="alecramsay",
