@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
 """
-EXTRACT AN ADJACENCY GRAPH FROM A GEOJSON FILE
+APPLY CONTIGUITY MODS TO FULLY CONNECT AN ADJACENCY GRAPH
 
-$ scripts/extract_graph.py \
---geojson testdata/data/NC_vtd_datasets.geojson \
---graph temp/DEBUG_graph.json
+$ scripts/utility/apply_contiguity_mods.py \
+--graph ~/local/dra-to-publish/HI_2020_graph.json \
+--mods ~/local/adjacency-graphs/HI_2020_contiguity_mods.csv \
+> ~/local/adjacency-graphs/HI_2020_graph.json
 
 """
 
@@ -24,49 +25,46 @@ from shapely.geometry import (
 )
 from libpysal.weights import Rook, WSP
 
-from rdapy import is_consistent, is_connected, OUT_OF_STATE
+from rdapy import is_consistent, is_connected, OUT_OF_STATE, load_graph
 
 
 EPSILON: float = 1.0e-12
 
 
 def main() -> None:
-    """Extract census, demographic, election, and shape data from DRA's .geojson file."""
+    """Update an adjacency graph with additional connections."""
 
     args: Namespace = parse_args()
 
-    # Load the geojson & create a rook adjacency graph
+    # Load the unmodified adjacency graph
 
-    with open(args.geojson, "r") as f:
-        geojson: Dict[str, Any] = json.load(f)
-
-    df: DataFrame = DataFrame([f.get("properties", {}) for f in geojson["features"]])
-    gdf: GeoDataFrame = GeoDataFrame(df, geometry=[shape(f["geometry"]) for f in geojson["features"]])  # type: ignore
-    graph: Dict[str, List[str]] = from_dataframe(gdf)
+    adjacency_graph: Dict[str, List[str]] = load_graph(args.graph)
 
     # Add "operational contiguity" mods, if any
 
-    if args.mods:
-        mods: List = read_mods(args.mods)
+    mods: List = read_mods(args.mods)
 
-        for mod in mods:
-            graph = add_adjacency(graph, mod[1], mod[2])
+    for mod in mods:
+        adjacency_graph = add_adjacency(adjacency_graph, mod[1], mod[2])
 
     # Make sure the graph is consistent & fully connected
 
-    if not is_consistent(graph):
+    is_good: bool = True
+    if not is_consistent(adjacency_graph):
         print(f"WARNING: Graph is not consistent.")
+        is_good = False
 
-    geoids: List[str | int] = list(graph.keys())
-    if not is_connected(geoids, graph):
+    geoids: List[str | int] = list(adjacency_graph.keys())
+    if not is_connected(geoids, adjacency_graph):
         print(f"WARNING: Graph is not fully connected.")
+        is_good = False
 
-    # Write the graph to a JSON file
+    if not is_good:
+        sys.exit(1)
 
-    with open(args.graph, "w", encoding="utf-8") as f:
-        json.dump(graph, f, ensure_ascii=False, indent=4)
+    # Write the graph to STDOUT
 
-    pass
+    print(json.dumps(adjacency_graph, indent=4))
 
 
 ### HELPERS ###
@@ -204,18 +202,13 @@ def parse_args() -> Namespace:
     )
 
     parser.add_argument(
-        "--geojson",
-        help="The GeoJSON file",
+        "--graph",
+        help="The adjacency graph JSON file",
         type=str,
     )
     parser.add_argument(
         "--mods",
-        help="An optional file containing contiguity modifications",
-        type=str,
-    )
-    parser.add_argument(
-        "--graph",
-        help="The output JSON file containing the adjacency graph",
+        help="A file containing contiguity modifications",
         type=str,
     )
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 """
-GENERATE MODS FOR TO FULLY CONNECT AN ADJACENCY GRAPH
+GENERATE CONTIGUITY MODS TO FULLY CONNECT AN ADJACENCY GRAPH
 
-$ scripts/utility/generate_mods.py \
+$ scripts/utility/generate_contiguity_mods.py \
 --graph ~/local/dra-to-publish/HI_2020_graph.json \
 --data ~/local/temp-data/HI_input_data.v4.jsonl \
---mods temp/DEBUG_graph_mods.json
+> ~/local/adjacency-graphs/HI_2020_contiguity_mods.csv
 
 """
 
@@ -163,11 +163,6 @@ def parse_args() -> Namespace:
         "--data",
         type=str,
         help="Path to input data file",
-    )
-    parser.add_argument(
-        "--mods",
-        type=str,
-        help="Path to output mods file",
     )
 
     parser.add_argument(

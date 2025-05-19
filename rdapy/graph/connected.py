@@ -9,6 +9,20 @@ from typing import Any, List, Dict, Set
 from .constants import *
 
 
+def is_consistent(graph: Dict[str, List[str]]) -> bool:
+    """Make sure each node is in every neighbor's neighbor list"""
+
+    for node, neighbors in graph.items():
+        for neighbor in neighbors:
+            neighbor_neighbors: List[str] = graph[neighbor]
+            if node in neighbor_neighbors:
+                pass
+            else:
+                return False
+
+    return True
+
+
 def is_connected(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
     """Is a district fully connected?
     i.e., w/o regard to the virtual state boundary "shapes".
