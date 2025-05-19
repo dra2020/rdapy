@@ -18,6 +18,8 @@ from typing import Any, List, Dict, Tuple, Set, NamedTuple
 import sys
 from itertools import combinations
 
+import networkx as nx
+
 from rdapy import (
     load_graph,
     OUT_OF_STATE,
@@ -43,10 +45,10 @@ class Connection(NamedTuple):
     distance: float
 
 
-class Edge(NamedTuple):
-    from_node: int
-    to_node: int
-    Connection: Connection
+# class Edge(NamedTuple):
+#     from_node: int
+#     to_node: int
+#     link: Connection
 
 
 def main() -> None:
@@ -131,6 +133,19 @@ def main() -> None:
                 possible_edges[pair].append(edge)
         possible_edges[pair].sort(key=lambda x: x.distance)
         shortest_edges[pair] = possible_edges[pair][0]
+
+    # Find the minimum spanning tree
+
+    G = nx.Graph()
+    for i in range(n_islands):
+        G.add_node(i)
+    for pair in island_pairs:
+        i1: int = pair[0]
+        i2: int = pair[1]
+        p1: str = shortest_edges[pair].from_geoid
+        p2: str = shortest_edges[pair].to_geoid
+        distance: float = shortest_edges[pair].distance
+        G.add_edge(i1, i2, weight=distance, geoid1=p1, geoid2=p2)
 
     pass
 
