@@ -116,9 +116,6 @@ scripts/extract_data.py \
 --graph "$GRAPH" \
 --data "$temp_data"
 
-# TODO - Find precinct neighborhoods
-# TODO - Calculate state-level values
-
 cat "$PLANS" \
 | 
 scripts/aggregate.py \
