@@ -107,9 +107,10 @@ class Connection(NamedTuple):
 def generate_contiguity_mods(
     geoids: List[str],
     adjacency_graph: Dict[str, List[str]],
+    data_map: Dict[str, Any],
     data_by_geoid: Dict[str, Dict[str, Any]],
 ) -> List[Connection]:
-    """Find all the connected subsets of precincts ("islands" including a mainland)"""
+    """Find all the connected subsets of precincts -- "islands" potentially including a mainland"""
 
     census_dataset: DatasetKey = get_dataset(data_map, "census")
     total_pop_field: str = get_fields(data_map, "census", census_dataset)["total_pop"]

@@ -24,7 +24,9 @@ from rdapy import (
     OUT_OF_STATE,
     load_data,
     is_connected,
-    connected_subsets,
+    # connected_subsets,
+    generate_contiguity_mods,
+    Connection,
 )
 
 from rdapy import index_data, DatasetKey, get_dataset, get_fields, DistanceLedger
@@ -136,6 +138,10 @@ def main() -> None:
     #     )
     # T = nx.minimum_spanning_tree(G)
     # connections = sorted(T.edges(data=True))
+
+    connections = generate_contiguity_mods(
+        geoids, adjacency_graph, data_map, data_by_geoid
+    )
 
     # Generate these edges as additional connections ("mods")
 

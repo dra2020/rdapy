@@ -28,6 +28,8 @@ from .graph import (
     is_embedded,
     OUT_OF_STATE,
     connected_subsets,
+    generate_contiguity_mods,
+    Connection,
 )
 
 from .minority import (
