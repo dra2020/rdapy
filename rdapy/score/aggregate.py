@@ -6,7 +6,9 @@ from typing import Any, List, Dict, TypeAlias, Literal, TextIO
 
 import sys, json
 
-from rdapy.utils import approx_equal
+# TODO
+# from rdapy.utils import approx_equal
+from ..utils import approx_equal
 from .utils import (
     District,
     GeoIDIndex,

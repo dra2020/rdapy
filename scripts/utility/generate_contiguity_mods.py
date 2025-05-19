@@ -145,8 +145,11 @@ def main() -> None:
 
     # Generate these edges as additional connections ("mods")
 
-    for _, _, data in connections:
-        print(f"+,{data["geoid1"]},{data["geoid2"]}")
+    # for _, _, data in connections:
+    #     print(f"+,{data["geoid1"]},{data["geoid2"]}")
+
+    for connection in connections:
+        print(f"+,{connection.from_geoid},{connection.to_geoid}")
 
     pass
 

@@ -4,8 +4,6 @@ UTILITIES FOR READING & WRITING AND WORKING WITH PLANS
 
 from typing import TypeAlias, List, Dict
 
-from rdapy.utils import read_csv
-
 Precinct: TypeAlias = str
 District: TypeAlias = int
 PlanCSV: TypeAlias = List[Dict[Precinct, District]]

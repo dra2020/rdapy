@@ -6,10 +6,14 @@ from typing import Any, List, Dict, Tuple, Set, NamedTuple, Generator, TextIO
 
 import math
 
-from rdapy.partisan import est_seat_probability
-from rdapy.graph import is_connected, OUT_OF_STATE
-from rdapy.utils import approx_equal
+# TODO
+# from rdapy.partisan import est_seat_probability
+# from rdapy.graph import is_connected, OUT_OF_STATE
+# from rdapy.utils import approx_equal
 
+from ...partisan import est_seat_probability
+from ...graph import is_connected, OUT_OF_STATE
+from ...utils import approx_equal
 from .packunpack import deserialize_bits, get_bit
 
 
