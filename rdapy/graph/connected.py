@@ -10,7 +10,9 @@ from itertools import combinations
 import networkx as nx
 
 from .constants import *
-from ..score.aggregate import DatasetKey, get_dataset, get_fields
+from ..utils import DatasetKey, get_dataset, get_fields
+
+# from ..score.aggregate import DatasetKey, get_dataset, get_fields
 from ..utils import DistanceLedger
 
 
