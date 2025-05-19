@@ -4,9 +4,11 @@
 EXTRACT AN ADJACENCY GRAPH FROM A GEOJSON FILE
 
 $ scripts/utility/extract_graph.py \
---geojson ~/local/dra-to-publish/_HI_2020_VD_tabblock.vtd.datasets.geojson \
---graph ~/local/adjacency-graphs/HI_2020_graph.json
+--geojson /path/to/input.geojson \
+--graph /path/to/output-graph.json
 
+NOTE - If the graph is not fully connected, the output file will have
+"_NOT_CONNECTED" appended to the filename.
 """
 
 import argparse

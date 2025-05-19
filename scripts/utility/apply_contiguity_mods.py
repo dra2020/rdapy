@@ -4,10 +4,11 @@
 APPLY CONTIGUITY MODS TO FULLY CONNECT AN ADJACENCY GRAPH
 
 $ scripts/utility/apply_contiguity_mods.py \
---graph ~/local/dra-to-publish/HI_2020_graph.json \
---mods ~/local/adjacency-graphs/HI_2020_contiguity_mods.csv \
-> ~/local/adjacency-graphs/HI_2020_graph.json
+--graph /path/to/input-graph.json \
+--mods/path/to/contiguity_mods.csv \
+> /path/to/output-graph.json
 
+NOTE - Make sure the input and output graph files are different!
 """
 
 import argparse

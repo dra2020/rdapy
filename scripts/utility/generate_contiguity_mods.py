@@ -4,10 +4,11 @@
 GENERATE CONTIGUITY MODS TO FULLY CONNECT AN ADJACENCY GRAPH
 
 $ scripts/utility/generate_contiguity_mods.py \
---graph ~/local/dra-to-publish/HI_2020_graph.json \
---data ~/local/temp-data/HI_input_data.v4.jsonl \
-> ~/local/adjacency-graphs/HI_2020_contiguity_mods.csv
+--graph /path/to/input-graph.json \
+--data /path/to/input_data.jsonl \
+> /path/to/contiguity_mods.csv
 
+NOTE - The input data are extracted from a DRA geojson using scripts/extract_data.py.
 """
 
 import argparse
