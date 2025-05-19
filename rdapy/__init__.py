@@ -131,7 +131,6 @@ from .score import (
     reverse_index,
     unpack_neighborhood,
     calc_geographic_baseline,
-    DistanceLedger,
     Neighbor,
     make_neighborhood,
     init_bit_array,

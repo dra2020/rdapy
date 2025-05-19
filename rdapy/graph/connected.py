@@ -11,7 +11,7 @@ import networkx as nx
 
 from .constants import *
 from ..score.aggregate import DatasetKey, get_dataset, get_fields
-from ..score.geographic import DistanceLedger
+from ..utils import DistanceLedger
 
 
 def is_consistent(graph: Dict[str, List[str]]) -> bool:
