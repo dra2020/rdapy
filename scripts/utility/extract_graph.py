@@ -3,9 +3,9 @@
 """
 EXTRACT AN ADJACENCY GRAPH FROM A GEOJSON FILE
 
-$ scripts/extract_graph.py \
---geojson testdata/data/NC_vtd_datasets.geojson \
---graph temp/DEBUG_graph.json
+$ scripts/utility/extract_graph.py \
+--geojson ~/local/dra-to-publish/_HI_2020_VD_tabblock.vtd.datasets.geojson \
+--graph ~/local/adjacency-graphs/HI_2020_graph.json
 
 """
 
@@ -42,31 +42,28 @@ def main() -> None:
 
     df: DataFrame = DataFrame([f.get("properties", {}) for f in geojson["features"]])
     gdf: GeoDataFrame = GeoDataFrame(df, geometry=[shape(f["geometry"]) for f in geojson["features"]])  # type: ignore
-    graph: Dict[str, List[str]] = from_dataframe(gdf)
+    adjacency_graph: Dict[str, List[str]] = from_dataframe(gdf)
 
-    # Add "operational contiguity" mods, if any
+    # Check whether the graph is consistent & fully connected
 
-    if args.mods:
-        mods: List = read_mods(args.mods)
-
-        for mod in mods:
-            graph = add_adjacency(graph, mod[1], mod[2])
-
-    # Make sure the graph is consistent & fully connected
-
-    if not is_consistent(graph):
+    is_good: bool = True
+    if not is_consistent(adjacency_graph):
         print(f"WARNING: Graph is not consistent.")
+        is_good = False
 
-    geoids: List[str | int] = list(graph.keys())
-    if not is_connected(geoids, graph):
+    geoids: List[str | int] = list(adjacency_graph.keys())
+    if not is_connected(geoids, adjacency_graph):
         print(f"WARNING: Graph is not fully connected.")
+        is_good = False
 
     # Write the graph to a JSON file
 
-    with open(args.graph, "w", encoding="utf-8") as f:
-        json.dump(graph, f, ensure_ascii=False, indent=4)
+    graph_path: str = os.path.abspath(args.graph)
+    if not is_good:
+        graph_path = os.path.splitext(graph_path)[0] + "_NOT_CONNECTED.json"
 
-    pass
+    with open(graph_path, "w", encoding="utf-8") as f:
+        json.dump(adjacency_graph, f, ensure_ascii=False, indent=4)
 
 
 ### HELPERS ###
@@ -153,49 +150,6 @@ def _add_out_of_state_neighbors(
     return new_graph
 
 
-def read_mods(mods_csv) -> List:
-    """Read a CSV file of modifications to a graph.
-
-    Example:
-
-    +, 440099902000, 440099901000
-    """
-
-    mods: List = list()
-
-    try:
-        # Get the full path to the .csv
-        mods_path: str = os.path.expanduser(mods_csv)
-
-        with open(mods_path, mode="r", encoding="utf-8-sig") as f_input:
-            reader: Iterable[List[str]] = csv.reader(
-                f_input, skipinitialspace=True, delimiter=",", quoting=csv.QUOTE_NONE
-            )
-
-            for row in reader:
-                mods.append(row)
-
-    except Exception:
-        print("Exception reading mods.csv")
-        sys.exit()
-
-    return mods
-
-
-def add_adjacency(
-    graph: Dict[str, List[str]], node1: str | int, node2: str | int
-) -> Dict[str, List[str]]:
-    """Connect two nodes in the graph."""
-
-    if node1 not in graph or node2 not in graph:
-        raise ValueError("Both nodes must be in the graph to connect them.")
-
-    graph[node1].append(node2)
-    graph[node2].append(node1)
-
-    return graph
-
-
 def parse_args() -> Namespace:
     """Parse command line arguments."""
 
@@ -206,11 +160,6 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--geojson",
         help="The GeoJSON file",
-        type=str,
-    )
-    parser.add_argument(
-        "--mods",
-        help="An optional file containing contiguity modifications",
         type=str,
     )
     parser.add_argument(
