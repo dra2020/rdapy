@@ -5,6 +5,7 @@ GENERATE MODS FOR TO FULLY CONNECT AN ADJACENCY GRAPH
 
 $ scripts/utility/generate_mods.py \
 --graph ~/local/dra-to-publish/HI_2020_graph.json \
+--data ~/local/temp-data/HI_input_data.v4.jsonl \
 --mods temp/DEBUG_graph_mods.json
 
 """
@@ -12,9 +13,10 @@ $ scripts/utility/generate_mods.py \
 import argparse
 from argparse import ArgumentParser, Namespace
 
-from typing import Any, List, Dict, Set, NamedTuple
+from typing import Any, List, Dict, Tuple, Set, NamedTuple
 
 import sys
+from itertools import combinations
 
 from rdapy import (
     load_graph,
@@ -24,7 +26,7 @@ from rdapy import (
     connected_subsets,
 )
 
-from rdapy.score import index_data, DatasetKey, get_dataset, get_fields
+from rdapy.score import index_data, DatasetKey, get_dataset, get_fields, DistanceLedger
 
 
 class Island(NamedTuple):
@@ -62,11 +64,17 @@ def main() -> None:
         sys.exit(0)
 
     print(f"WARNING: Graph is NOT fully connected!")
+
+    # Find all the connected subsets of precincts
+
     subsets: List[Set[Any]] = connected_subsets(geoids, adjacency_graph)
+
+    # Separate precincts into coastal and inland areas
+
     islands: List[Island] = list()
 
     for i, subset in enumerate(subsets):
-        id: int = i + 1
+        id: int = i
         pop: int = 0
         precincts: int = 0
         coastal: List[str] = list()
@@ -84,8 +92,24 @@ def main() -> None:
 
         islands.append(Island(id, pop, precincts, coastal, inland))
 
-    # Sort islands by population
-    islands.sort(key=lambda x: x.population, reverse=True)
+    # Find the distance between each pair of islands
+
+    dl: DistanceLedger = DistanceLedger()
+
+    n_islands: int = len(islands)
+    island_pairs: List[Tuple[int, int]] = list(combinations(range(n_islands), 2))
+    for pair in island_pairs:
+        i1: int = pair[0]
+        i2: int = pair[1]
+
+        coast1: List[str] = islands[i1].coastal
+        coast2: List[str] = islands[i2].coastal
+
+        for c1 in coast1:
+            for c2 in coast2:
+                distance: float = dl.distance_between(
+                    c1, data_by_geoid[c1]["center"], c2, data_by_geoid[c2]["center"]
+                )
 
     pass
 
