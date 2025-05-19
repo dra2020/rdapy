@@ -156,15 +156,26 @@ def abstract_data(feature, data_map: Dict[str, Any]) -> Dict[str, Any]:
                     ]
                 case "census" | "vap" | "cvap" | "election":
                     fields: Dict[str, str] = data_map[dataset_type]["fields"]
+                    i: int = 0
+                    j: int = 0
                     for k, v in fields.items():
                         if dataset_type == "vap" and k == "minority_vap":
                             continue
                         if dataset_type == "cvap" and k == "minority_cvap":
                             continue
+                        i += 1
                         qualified_field = f"{dataset}_{v}"
-                        data_abstract[qualified_field] = feature["properties"][
-                            "datasets"
-                        ][dataset][v]
+                        data_abstract[qualified_field] = 0  # Guard against missing data
+                        if dataset in feature["properties"]["datasets"]:
+                            data_abstract[qualified_field] = feature["properties"][
+                                "datasets"
+                            ][dataset][v]
+                        else:
+                            j += 1
+                            id: str = feature["properties"]["id"]
+                            print(
+                                f"WARNING: Dataset {dataset} not in feature {id}'s properties! {j} of {i}"
+                            )
 
                     if dataset_type == "vap" or dataset_type == "cvap":
                         minority_field: str = f"minority_{dataset_type}"

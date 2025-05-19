@@ -22,7 +22,7 @@ from .data import (
     load_data,
     load_graph,
     collect_metadata,
-    geoids_from_precinct_data,
+    sorted_geoids,
 )
 
 from .ensemble_io import (

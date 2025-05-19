@@ -41,7 +41,7 @@ from rdapy import (
     load_data,
     load_graph,
     collect_metadata,
-    geoids_from_precinct_data,
+    sorted_geoids,
     smart_read,
     smart_write,
     score_plans,
@@ -58,7 +58,7 @@ def main():
     data_map, input_data = load_data(args.data)
     adjacency_graph: Dict[str, List[str]] = load_graph(args.graph)
 
-    geoids: List[str] = geoids_from_precinct_data(input_data)
+    geoids: List[str] = sorted_geoids(input_data)
     metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
 
     with smart_read(args.input) as input_stream:
