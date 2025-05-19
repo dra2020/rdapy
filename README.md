@@ -19,11 +19,9 @@ To install the package:
 pip install rdapy
 ```
 
-Then
+The latest version of the package is 2.1.0.
 
-```
-import rdapy
-```
+Then in your code, either `import rdapy` or `from rdapy import ...`.
 
 ## Setting up the Command-Line Interface
 
