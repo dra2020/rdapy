@@ -45,12 +45,6 @@ class Connection(NamedTuple):
     distance: float
 
 
-# class Edge(NamedTuple):
-#     from_node: int
-#     to_node: int
-#     link: Connection
-
-
 def main() -> None:
     """Generate 'mods' (additional connections) to fully connect an adjacency graph."""
 
@@ -79,7 +73,7 @@ def main() -> None:
 
     print(f"WARNING: Graph is NOT fully connected!")
 
-    # Find all the connected subsets of precincts
+    # Find all the connected subsets of precincts ("islands" including a mainland)
 
     subsets: List[Set[Any]] = connected_subsets(geoids, adjacency_graph)
 
@@ -106,7 +100,7 @@ def main() -> None:
 
         islands.append(Island(id, pop, precincts, coastal, inland))
 
-    # Find the distance between each pair of islands
+    # Find the shortest distance between each pair of islands
 
     dl: DistanceLedger = DistanceLedger()
 
@@ -134,7 +128,7 @@ def main() -> None:
         possible_edges[pair].sort(key=lambda x: x.distance)
         shortest_edges[pair] = possible_edges[pair][0]
 
-    # Find the minimum spanning tree
+    # Find the shortest distance paths that fully connect the islands, using a minimum spanning tree
 
     G = nx.Graph()
     for i in range(n_islands):
@@ -148,6 +142,11 @@ def main() -> None:
         G.add_edge(i1, i2, weight=distance, geoid1=p1, geoid2=p2)
     T = nx.minimum_spanning_tree(G)
     connections = sorted(T.edges(data=True))
+
+    # Generate these edges as additional connections ("mods")
+
+    for _, _, data in connections:
+        print(f"+,{data["geoid1"]},{data["geoid2"]}")
 
     pass
 
