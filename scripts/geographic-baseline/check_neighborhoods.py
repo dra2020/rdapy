@@ -18,13 +18,14 @@ from typing import List, Dict, Any
 
 import json
 
-from rdapy import load_data, sorted_geoids, smart_read, OUT_OF_STATE
-
-from rdapy.score import (
+from rdapy import (
+    load_data,
+    sorted_geoids,
+    smart_read,
     index_geoids,
     reverse_index,
     unpack_neighborhood,
-)  # TODO - Integrate with the rest of the package
+)
 
 
 def main():

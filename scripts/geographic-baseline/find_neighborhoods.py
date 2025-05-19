@@ -29,9 +29,6 @@ from rdapy import (
     load_graph,
     collect_metadata,
     sorted_geoids,
-)
-
-from rdapy.score import (
     index_data,
     get_dataset,
     DatasetKey,
@@ -44,7 +41,7 @@ from rdapy.score import (
     set_bit,
     serialize_bits,
     deserialize_bits,
-)  # TODO - Integrate with the rest of the package
+)
 
 
 def main():

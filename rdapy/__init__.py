@@ -113,6 +113,23 @@ from .score import (
     MetadataRecord,
     PlanRecord,
     PlanCSV,
+    DISTRICTS_BY_STATE,
+    index_data,
+    get_dataset,
+    get_datasets,
+    get_fields,
+    DatasetKey,
+    index_geoids,
+    reverse_index,
+    unpack_neighborhood,
+    calc_geographic_baseline,
+    DistanceLedger,
+    Neighbor,
+    make_neighborhood,
+    init_bit_array,
+    set_bit,
+    serialize_bits,
+    deserialize_bits,
 )
 
 

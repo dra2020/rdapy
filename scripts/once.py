@@ -26,9 +26,6 @@ from rdapy import (
     smart_read,
     collect_metadata,
     sorted_geoids,
-)
-
-from rdapy.score import (
     index_data,
     get_dataset,
     get_datasets,
@@ -38,7 +35,7 @@ from rdapy.score import (
     reverse_index,
     unpack_neighborhood,
     calc_geographic_baseline,
-)  # TODO - Integrate with the rest of the package
+)
 
 
 def main():
