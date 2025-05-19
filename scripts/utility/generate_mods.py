@@ -37,6 +37,18 @@ class Island(NamedTuple):
     inland: List[str]
 
 
+class Connection(NamedTuple):
+    from_geoid: str
+    to_geoid: str
+    distance: float
+
+
+class Edge(NamedTuple):
+    from_node: int
+    to_node: int
+    Connection: Connection
+
+
 def main() -> None:
     """Generate 'mods' (additional connections) to fully connect an adjacency graph."""
 
@@ -98,9 +110,14 @@ def main() -> None:
 
     n_islands: int = len(islands)
     island_pairs: List[Tuple[int, int]] = list(combinations(range(n_islands), 2))
+    possible_edges: Dict[Tuple[int, int], List[Connection]] = dict()
+    shortest_edges: Dict[Tuple[int, int], Connection] = dict()
+
     for pair in island_pairs:
         i1: int = pair[0]
         i2: int = pair[1]
+
+        possible_edges[pair] = list()
 
         coast1: List[str] = islands[i1].coastal
         coast2: List[str] = islands[i2].coastal
@@ -110,6 +127,10 @@ def main() -> None:
                 distance: float = dl.distance_between(
                     c1, data_by_geoid[c1]["center"], c2, data_by_geoid[c2]["center"]
                 )
+                edge: Connection = Connection(c1, c2, distance)
+                possible_edges[pair].append(edge)
+        possible_edges[pair].sort(key=lambda x: x.distance)
+        shortest_edges[pair] = possible_edges[pair][0]
 
     pass
 
