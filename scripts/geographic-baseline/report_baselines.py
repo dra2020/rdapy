@@ -14,7 +14,7 @@ from argparse import ArgumentParser, Namespace
 
 import os, json
 
-from rdapy.score import DISTRICTS_BY_STATE
+from rdapy import DISTRICTS_BY_STATE
 
 
 def main():

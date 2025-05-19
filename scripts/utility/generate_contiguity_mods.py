@@ -14,12 +14,10 @@ NOTE - The input data are extracted from a DRA geojson using scripts/extract_dat
 import argparse
 from argparse import ArgumentParser, Namespace
 
-from typing import Any, List, Dict, Tuple, Set, NamedTuple
+from typing import Any, List, Dict, NamedTuple
 
 import sys
-from itertools import combinations
 
-import networkx as nx
 
 from rdapy import (
     load_graph,
@@ -29,21 +27,21 @@ from rdapy import (
     connected_subsets,
 )
 
-from rdapy.score import index_data, DatasetKey, get_dataset, get_fields, DistanceLedger
+from rdapy import index_data, DatasetKey, get_dataset, get_fields, DistanceLedger
 
 
-class Island(NamedTuple):
-    id: int
-    population: int
-    precincts: int
-    coastal: List[str]
-    inland: List[str]
+# class Island(NamedTuple):
+#     id: int
+#     population: int
+#     precincts: int
+#     coastal: List[str]
+#     inland: List[str]
 
 
-class Connection(NamedTuple):
-    from_geoid: str
-    to_geoid: str
-    distance: float
+# class Connection(NamedTuple):
+#     from_geoid: str
+#     to_geoid: str
+#     distance: float
 
 
 def main() -> None:
@@ -61,8 +59,9 @@ def main() -> None:
     #
 
     data_by_geoid: Dict[str, Dict[str, Any]] = index_data(input_data)
-    census_dataset: DatasetKey = get_dataset(data_map, "census")
-    total_pop_field: str = get_fields(data_map, "census", census_dataset)["total_pop"]
+    # TODO - Factor this out
+    # census_dataset: DatasetKey = get_dataset(data_map, "census")
+    # total_pop_field: str = get_fields(data_map, "census", census_dataset)["total_pop"]
 
     geoids: List[str] = list(adjacency_graph.keys())
     geoids.remove(OUT_OF_STATE)
@@ -74,68 +73,69 @@ def main() -> None:
 
     # Graph is not fully connected.
 
-    # Find all the connected subsets of precincts ("islands" including a mainland)
+    # TODO - Factor this out
+    # # Find all the connected subsets of precincts ("islands" including a mainland)
 
-    subsets: List[Set[Any]] = connected_subsets(geoids, adjacency_graph)
+    # subsets: List[Set[Any]] = connected_subsets(geoids, adjacency_graph)
 
-    # Segregate precincts into coasts and inland areas
+    # # Segregate precincts into coasts and inland areas
 
-    islands: List[Island] = list()
+    # islands: List[Island] = list()
 
-    for i, subset in enumerate(subsets):
-        id: int = i
-        pop: int = 0
-        precincts: int = 0
-        coastal: List[str] = list()
-        inland: List[str] = list()
+    # for i, subset in enumerate(subsets):
+    #     id: int = i
+    #     pop: int = 0
+    #     precincts: int = 0
+    #     coastal: List[str] = list()
+    #     inland: List[str] = list()
 
-        for geoid in subset:
-            precincts += 1
-            pop += data_by_geoid[geoid][total_pop_field]
+    #     for geoid in subset:
+    #         precincts += 1
+    #         pop += data_by_geoid[geoid][total_pop_field]
 
-            if geoid in adjacency_graph[OUT_OF_STATE]:
-                coastal.append(geoid)
-            else:
-                inland.append(geoid)
+    #         if geoid in adjacency_graph[OUT_OF_STATE]:
+    #             coastal.append(geoid)
+    #         else:
+    #             inland.append(geoid)
 
-        islands.append(Island(id, pop, precincts, coastal, inland))
+    #     islands.append(Island(id, pop, precincts, coastal, inland))
 
-    # Find the shortest distance between each pair of islands
+    # # Find the shortest distance between each pair of islands
 
-    dl: DistanceLedger = DistanceLedger()
+    # dl: DistanceLedger = DistanceLedger()
 
-    island_pairs: List[Tuple[int, int]] = list(combinations(range(len(islands)), 2))
-    possible_edges: Dict[Tuple[int, int], List[Connection]] = dict()
-    shortest_edges: Dict[Tuple[int, int], Connection] = dict()
+    # island_pairs: List[Tuple[int, int]] = list(combinations(range(len(islands)), 2))
+    # possible_edges: Dict[Tuple[int, int], List[Connection]] = dict()
+    # shortest_edges: Dict[Tuple[int, int], Connection] = dict()
 
-    for pair in island_pairs:
-        possible_edges[pair] = list()
+    # for pair in island_pairs:
+    #     possible_edges[pair] = list()
 
-        for c1 in islands[pair[0]].coastal:
-            for c2 in islands[pair[1]].coastal:
-                distance: float = dl.distance_between(
-                    c1, data_by_geoid[c1]["center"], c2, data_by_geoid[c2]["center"]
-                )
-                edge: Connection = Connection(c1, c2, distance)
-                possible_edges[pair].append(edge)
-        possible_edges[pair].sort(key=lambda x: x.distance)
-        shortest_edges[pair] = possible_edges[pair][0]
+    #     for c1 in islands[pair[0]].coastal:
+    #         for c2 in islands[pair[1]].coastal:
+    #             distance: float = dl.distance_between(
+    #                 c1, data_by_geoid[c1]["center"], c2, data_by_geoid[c2]["center"]
+    #             )
+    #             edge: Connection = Connection(c1, c2, distance)
+    #             possible_edges[pair].append(edge)
+    #     possible_edges[pair].sort(key=lambda x: x.distance)
+    #     shortest_edges[pair] = possible_edges[pair][0]
 
-    # Find the shortest distance paths that fully connect the islands, using a minimum spanning tree
+    # # Find the shortest distance paths that fully connect the islands, using a minimum spanning tree
 
-    G = nx.Graph()
-    for i in range(len(islands)):
-        G.add_node(i)
-    for pair in island_pairs:
-        G.add_edge(
-            pair[0],
-            pair[1],
-            weight=shortest_edges[pair].distance,
-            geoid1=shortest_edges[pair].from_geoid,
-            geoid2=shortest_edges[pair].to_geoid,
-        )
-    T = nx.minimum_spanning_tree(G)
-    connections = sorted(T.edges(data=True))
+    # G = nx.Graph()
+    # for i in range(len(islands)):
+    #     G.add_node(i)
+    # for pair in island_pairs:
+    #     G.add_edge(
+    #         pair[0],
+    #         pair[1],
+    #         weight=shortest_edges[pair].distance,
+    #         geoid1=shortest_edges[pair].from_geoid,
+    #         geoid2=shortest_edges[pair].to_geoid,
+    #     )
+    # T = nx.minimum_spanning_tree(G)
+    # connections = sorted(T.edges(data=True))
 
     # Generate these edges as additional connections ("mods")
 
