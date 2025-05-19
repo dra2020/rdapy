@@ -111,7 +111,7 @@ def generate_contiguity_mods(
     adjacency_graph: Dict[str, List[str]],
     data_map: Dict[str, Any],
     data_by_geoid: Dict[str, Dict[str, Any]],
-) -> List[Connection]:
+) -> List[Tuple[int, int, Dict[str, Any]]]:
     """Find all the connected subsets of precincts -- "islands" potentially including a mainland"""
 
     census_dataset: DatasetKey = get_dataset(data_map, "census")
