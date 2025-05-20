@@ -1,9 +1,6 @@
-#!/usr/bin/env python3
-
 """
 ROUGH EQUALITY UTILITIES
 """
-
 
 from pytest import approx
 from typing import Any

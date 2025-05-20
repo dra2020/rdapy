@@ -15,13 +15,12 @@ NOTE - This file takes its name from the Analyze tab in DRA.
 from typing import Any, List, Dict, Tuple, Optional, TextIO
 
 import sys, json
-from collections import defaultdict
 
-# NOTE -- This is a relative reference w/in the project, not a use of a `pip install`ed package.
+# NOTE -- This is a relative reference w/in the project to avoid a long list of imports,
+# not a use of a `pip install`ed package
 import rdapy as rda
 
-from .utils import Precinct, District
-from .aggregate import (
+from ..utils import (
     get_dataset,
     get_datasets,
     get_fields,
@@ -29,6 +28,7 @@ from .aggregate import (
     Aggregates,
     NamedAggregates,
 )
+from .utils import Precinct, District
 from .partisan import calc_efficiency_gap_wasted_votes, calc_average_margin
 from .majority_minority import calculate_mmd_simple
 from .discrete_compactness import (

@@ -4,9 +4,7 @@
 TEST POPULATION DEVIATION
 """
 
-
-from rdapy.equal import *
-from rdapy.utils import *
+from rdapy import *
 from testutils import *
 
 

@@ -2,6 +2,8 @@
 
 """
 Sample partisan analytics starting from raw data
+
+TODO - Rework this to use a `testdata` GeoJSON.
 """
 
 from collections import defaultdict

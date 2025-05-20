@@ -9,8 +9,8 @@ import numpy as np
 from scipy.linalg import det
 from collections import defaultdict
 
+from ..graph import OUT_OF_STATE
 from .utils import (
-    OUT_OF_STATE,
     is_water_only,
     Precinct,
     District,

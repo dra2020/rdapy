@@ -22,7 +22,15 @@ from .compactness import (
 
 from .equal import calc_population_deviation
 
-from .graph import is_connected, is_embedded, OUT_OF_STATE, connected_subsets
+from .graph import (
+    is_consistent,
+    is_connected,
+    is_embedded,
+    OUT_OF_STATE,
+    connected_subsets,
+    generate_contiguity_mods,
+    Connection,
+)
 
 from .minority import (
     calc_proportional_districts,
@@ -123,7 +131,6 @@ from .score import (
     reverse_index,
     unpack_neighborhood,
     calc_geographic_baseline,
-    DistanceLedger,
     Neighbor,
     make_neighborhood,
     init_bit_array,

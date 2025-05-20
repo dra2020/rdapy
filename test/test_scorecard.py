@@ -7,18 +7,16 @@ from typing import Any, Dict, List, Generator, List, Tuple, TextIO
 from collections import OrderedDict
 import pandas as pd
 
-from rdapy.score.utils import *
+from rdapy import *
 from rdapy.score.aggregate import (
     aggregate_districts,
     arcs_are_symmetric,
-    DatasetKey,
 )
 from rdapy.score.analyze import (
-    Aggregates,
     score_plan,
     calc_compactness_metrics,
 )
-from rdapy.utils import *
+from rdapy.score.utils import Precinct, District, GeoIDIndex
 from testutils import *
 
 cycle: str = "2020"

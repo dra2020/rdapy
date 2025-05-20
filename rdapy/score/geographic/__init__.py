@@ -14,9 +14,6 @@ from .packunpack import (
     reverse_index,
 )
 from .geographic import (
-    distance_proxy,
-    make_precinct_pair,
-    DistanceLedger,
     Neighbor,
     nearest_connected_neighbor,
     make_neighborhood,

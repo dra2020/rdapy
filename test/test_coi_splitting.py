@@ -4,9 +4,7 @@
 TEST COI SPLITTING
 """
 
-
-from rdapy.splitting import *
-from rdapy.utils import *
+from rdapy import approx_equal, uncertainty_of_membership, effective_splits
 from testutils import *
 
 

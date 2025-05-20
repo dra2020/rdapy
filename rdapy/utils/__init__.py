@@ -2,5 +2,7 @@
 
 from .readwrite import *
 from .approxequal import *
+from .distance import *
+from .datasets import *
 
 name: str = "utils"

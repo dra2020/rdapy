@@ -6,7 +6,8 @@ from typing import Any, Dict, Generator, List, Tuple, TextIO, Set
 
 import os, json
 
-from .constants import COUNTIES_BY_STATE, DISTRICTS_BY_STATE, OUT_OF_STATE
+from ...graph import OUT_OF_STATE
+from .constants import COUNTIES_BY_STATE, DISTRICTS_BY_STATE
 from .types import ParseGeoID
 from .ensemble_io import smart_read, read_record
 

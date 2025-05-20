@@ -4,9 +4,8 @@
 TEST COMPETITIVENESS & RESPONSIVENESS METRICS
 """
 
-
-from rdapy.partisan import *
-from rdapy.utils import *
+from rdapy import *
+from rdapy.partisan import EPSILON
 from testutils import *
 
 

@@ -3,7 +3,6 @@
 from .constants import (
     DISTRICTS_BY_STATE,
     COUNTIES_BY_STATE,
-    OUT_OF_STATE,
     is_water_only,
     EPSILON,
 )

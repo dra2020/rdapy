@@ -6,10 +6,9 @@ NOTE - Despite PyLance warnings, this code is valid and works with pytest.
 
 from typing import Dict
 
-from rdapy.utils import approx_equal
+from rdapy import approx_equal
 from rdapy.score.discrete_compactness import (
     calc_cut_score,
-    calc_spanning_tree_score,
     calc_spanning_tree_score,
     split_graph_by_districts,
 )
