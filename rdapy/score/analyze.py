@@ -16,7 +16,8 @@ from typing import Any, List, Dict, Tuple, Optional, TextIO
 
 import sys, json
 
-# TODO -- This is a relative reference w/in the project, not a use of a `pip install`ed package.
+# NOTE -- This is a relative reference w/in the project to avoid a long list of imports,
+# not a use of a `pip install`ed package
 import rdapy as rda
 
 from ..utils import (
