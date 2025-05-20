@@ -2,9 +2,9 @@
 
 TODO
 
-  - map-data.sh <<< Update to use __all__
-  - extract-data.sh
-  - find-neighorhoods.sh
-  - check-neighborhoods.sh
-  - once.sh
+  - MAP-DATA.sh <<< Update to use __ALL__
+  - EXTRACT-DATA.sh
+  - FIND-NEIGHORHOODS.sh
+  - CHECK-NEIGHBORHOODS.sh
+  - ONCE.sh
   - report_baselines.py
