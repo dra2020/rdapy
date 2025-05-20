@@ -4,7 +4,7 @@ TEST "MORE" SCORES THAT WE'VE ADDED
 
 from typing import List
 
-from rdapy.utils import approx_equal
+from rdapy import approx_equal
 from rdapy.score.majority_minority import is_single_demo_mmd, is_coalition_mmd
 from rdapy.score.partisan import calc_efficiency_gap_wasted_votes
 

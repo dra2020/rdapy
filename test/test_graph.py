@@ -5,8 +5,8 @@ TEST GRAPH FUNCTIONS
 """
 
 from collections import defaultdict
-from rdapy.graph import *
-from rdapy.utils import *
+
+from rdapy import *
 from testutils import *
 
 

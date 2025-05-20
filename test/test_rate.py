@@ -6,8 +6,28 @@ TEST NORMALIZATION & RATINGS
 
 import random
 
-from rdapy.rate import *
-from rdapy.utils import *
+from rdapy import approx_equal
+from rdapy.rate import (
+    rate_reock,
+    rate_polsby,
+    Normalizer,
+    is_antimajoritarian,
+    AVG_SV_ERROR,
+    extra_bonus,
+    adjust_deviation,
+    REOCK_MIN,
+    REOCK_MAX,
+    POLSBY_MIN,
+    POLSBY_MAX,
+    rate_proportionality,
+    rate_competitiveness,
+    rate_minority_opportunity,
+    rate_compactness,
+    rate_splitting,
+    best_target,
+    rate_county_splitting,
+    rate_district_splitting,
+)
 from testutils import *
 
 EPSILON: float = 1 / 10**6

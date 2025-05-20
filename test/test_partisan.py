@@ -4,9 +4,8 @@
 TEST PARTISAN METRICS
 """
 
-
-from rdapy.partisan import *
-from rdapy.utils import *
+from rdapy import *
+from rdapy.partisan import key_RV_points
 from testutils import *
 
 
