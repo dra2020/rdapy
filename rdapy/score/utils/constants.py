@@ -112,10 +112,6 @@ COUNTIES_BY_STATE: Dict[str, int] = {
     "WY": 23,
 }
 
-### OUT OF STATE ###
-
-OUT_OF_STATE: str = "OUT_OF_STATE"
-
 
 def is_water_only(geoid):
     """A more general solution: A lexical hack to identify water-only precincts that are sometimes missing from plans."""

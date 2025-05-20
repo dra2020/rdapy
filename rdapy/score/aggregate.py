@@ -6,6 +6,7 @@ from typing import Any, List, Dict, TextIO
 
 import sys, json
 
+from ..graph import OUT_OF_STATE
 from ..utils import (
     approx_equal,
     Aggregate,
@@ -21,7 +22,6 @@ from .utils import (
     ParseGeoID,
     County,
     Graph,
-    OUT_OF_STATE,
     is_water_only,
 )
 from .smallestenclosingcircle import wl_make_circle

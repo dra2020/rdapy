@@ -39,10 +39,9 @@ from shapely.geometry import (
     Point,
 )
 
-from rdapy import smart_write
+from rdapy import smart_write, OUT_OF_STATE
 
 EPSILON: float = 1.0e-12
-OUT_OF_STATE: str = "OUT_OF_STATE"
 
 
 def main() -> None:
