@@ -15,12 +15,12 @@ fi
 # Store state code from argument
 STATE=$1
 
-scripts/utility/generate_contiguity_mods.py \
+scripts/graph/generate_contiguity_mods.py \
 --graph ${GRAPH_PATH}/"${STATE}"_${CYCLE}_graph_NOT_CONNECTED.json \
 --data ${DATA_PATH}/"${STATE}"_input_data.v4.jsonl \
 > ${GRAPH_PATH}/"${STATE}"_contiguity_mods.py \
 
-scripts/utility/apply_contiguity_mods.py \
+scripts/graph/apply_contiguity_mods.py \
 --graph ${GRAPH_PATH}/"${STATE}"_${CYCLE}_graph_NOT_CONNECTED.json \
 --mods ${GRAPH_PATH}/"${STATE}"_${CYCLE}_contiguity_mods.csv \
 > ${GRAPH_PATH}/"${STATE}"_${CYCLE}_graph.json

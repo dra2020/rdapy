@@ -3,7 +3,7 @@
 """
 EXTRACT AN ADJACENCY GRAPH FROM A GEOJSON FILE
 
-$ scripts/utility/extract_graph.py \
+$ scripts/graph/extract_graph.py \
 --geojson /path/to/input.geojson \
 --graph /path/to/output-graph.json
 

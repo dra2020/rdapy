@@ -3,7 +3,7 @@
 """
 GENERATE CONTIGUITY MODS TO FULLY CONNECT AN ADJACENCY GRAPH
 
-$ scripts/utility/generate_contiguity_mods.py \
+$ scripts/graph/generate_contiguity_mods.py \
 --graph /path/to/input-graph.json \
 --data /path/to/input_data.jsonl \
 > /path/to/contiguity_mods.csv

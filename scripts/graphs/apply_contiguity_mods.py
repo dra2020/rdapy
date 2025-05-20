@@ -3,7 +3,7 @@
 """
 APPLY CONTIGUITY MODS TO FULLY CONNECT AN ADJACENCY GRAPH
 
-$ scripts/utility/apply_contiguity_mods.py \
+$ scripts/graph/apply_contiguity_mods.py \
 --graph /path/to/input-graph.json \
 --mods/path/to/contiguity_mods.csv \
 > /path/to/output-graph.json
