@@ -10,7 +10,7 @@
             "cwd": "${workspaceFolder}",
             "args": [
                 "--geojson",
-                "testdata/data/NC_vtd_datasets.v4.geojson",
+                "~/local/dra-to-publish/_HI_2020_VD_tabblock.vtd.datasets.geojson",
                 "--graph",
                 "temp/DEBUG_graph.json"
             ]
@@ -27,6 +27,8 @@
                 "testdata/data/NC_vtd_datasets.v4.geojson",
                 "--data-map",
                 "temp/DEBUG_data_map.json"
+                // "--elections",
+                // "__all__"
             ]
         },
         {
@@ -163,6 +165,20 @@
                 "~/local/temp-data/ME_input_data.v4.jsonl",
                 "--graph",
                 "~/local/dra-to-publish/ME_2020_graph.json"
+            ]
+        },
+        {
+            "name": "generate_mods.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "--graph",
+                "~/local/dra-to-publish/HI_2020_graph.json",
+                "--data",
+                "~/local/temp-data/HI_input_data.v4.jsonl"
             ]
         }
     ]

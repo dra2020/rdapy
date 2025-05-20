@@ -48,12 +48,20 @@ def main() -> None:
 
     # Expand the composite elections specified to include the constituent elections
 
+    all_elections: bool = False
     implied_elections: List[str] = input_elections.copy()
-    for e in input_elections:
-        if "members" in datasets[e]:
-            for k, v in datasets[e]["members"].items():
-                if v in datasets:
-                    implied_elections.append(v)
+    if input_elections == ["__all__"]:
+        all_elections = True
+        implied_elections = list()
+
+    if all_elections:  # Grab all elections
+        implied_elections = [e for e in datasets.keys() if e.startswith("E_")]
+    else:  # Grab the specified elections & their constituent elections
+        for e in input_elections:
+            if "members" in datasets[e]:
+                for k, v in datasets[e]["members"].items():
+                    if v in datasets:
+                        implied_elections.append(v)
 
     # Get the directory and filename of the geojson file
     directory: str
@@ -172,7 +180,7 @@ def parse_args() -> Namespace:
         "--elections",
         type=lambda s: s.split(","),
         help="Comma-separated list of election datasets to use",
-        default=["E_16-20_COMP"],
+        default=["E_16-20_COMP"],  # Use `__all__` to get all elections
     )
     parser.add_argument(
         "--version",
