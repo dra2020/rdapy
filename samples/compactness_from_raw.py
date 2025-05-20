@@ -2,6 +2,8 @@
 
 """
 Sample compactness analytics starting from raw data
+
+TODO - Rework this to use a `testdata` GeoJSON.
 """
 
 import pandas as pd

@@ -2,6 +2,8 @@
 
 """
 Sample adjacencies analysis starting from raw data
+
+TODO - Rework this to use a `testdata` GeoJSON.
 """
 
 from typing import Any, Optional, Iterable

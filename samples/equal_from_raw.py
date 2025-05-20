@@ -2,6 +2,8 @@
 
 """
 Sample population deviation starting from raw data
+
+TODO - Rework this to use `testdata` data.
 """
 
 from collections import defaultdict
