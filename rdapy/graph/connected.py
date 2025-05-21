@@ -12,8 +12,9 @@ import networkx as nx
 from .constants import *
 from ..utils import DatasetKey, get_dataset, get_fields
 
-# from ..score.aggregate import DatasetKey, get_dataset, get_fields
 from ..utils import DistanceLedger
+
+# TODO - Cull dead code.
 
 
 def is_consistent(graph: Dict[str, List[str]]) -> bool:
@@ -94,7 +95,7 @@ def connected_subsets(ids: List[Any], graph: Dict[str, List[str]]) -> List[Set[A
 
 class Island(NamedTuple):
     id: int
-    population: int
+    # population: int
     precincts: int
     coastal: List[str]
     inland: List[str]
@@ -114,8 +115,8 @@ def generate_contiguity_mods(
 ) -> List[Tuple[int, int, Dict[str, Any]]]:
     """Find all the connected subsets of precincts -- "islands" potentially including a mainland"""
 
-    census_dataset: DatasetKey = get_dataset(data_map, "census")
-    total_pop_field: str = get_fields(data_map, "census", census_dataset)["total_pop"]
+    # census_dataset: DatasetKey = get_dataset(data_map, "census")
+    # total_pop_field: str = get_fields(data_map, "census", census_dataset)["total_pop"]
 
     subsets: List[Set[Any]] = connected_subsets(geoids, adjacency_graph)
 
@@ -132,14 +133,15 @@ def generate_contiguity_mods(
 
         for geoid in subset:
             precincts += 1
-            pop += data_by_geoid[geoid][total_pop_field]
+            # pop += data_by_geoid[geoid][total_pop_field]
 
             if geoid in adjacency_graph[OUT_OF_STATE]:
                 coastal.append(geoid)
             else:
                 inland.append(geoid)
 
-        islands.append(Island(id, pop, precincts, coastal, inland))
+        islands.append(Island(id, precincts, coastal, inland))
+        # islands.append(Island(id, pop, precincts, coastal, inland))
 
     # Find the shortest distance between each pair of islands
 
