@@ -9,7 +9,7 @@ from typing import Any, List, Dict, Set, Tuple, NamedTuple
 from itertools import combinations
 import networkx as nx
 
-from .constants import *
+from .constants import OUT_OF_STATE
 from ..utils import DatasetKey, get_dataset, get_fields
 
 from ..utils import DistanceLedger
