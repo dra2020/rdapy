@@ -11,6 +11,8 @@ create data maps
 scripts/geographic-baseline/MAP-DATA.sh
 ```
 
+TODO - Do the graph stuff here.
+
 and extract the data to `~/local/temp-data`.
 
 ```bash
