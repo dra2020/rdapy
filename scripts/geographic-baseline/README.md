@@ -2,8 +2,10 @@
 
 With:
 
-* DRA GeoJSON's in `~/local/dra-to-publish/` and
-* Fully connected adjancency graphs in `~/local/adjacency-graphs/`
+* DRA GeoJSON's in `~/local/dra-to-publish/` --- ???
+* Fully connected adjancency graphs in `~/local/adjacency-graphs/` --- ???
+
+Those two are apples and oranges--not the same point in the stream.
 
 create data maps
 
