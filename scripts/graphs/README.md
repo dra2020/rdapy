@@ -2,6 +2,15 @@
 
 TODO -- Need to make this work w/o relying on the extracted data used in scoring.
 
+Sequence:
+
+* Extract graph -> /tmp/locations
+* Check
+* Fix
+
+
+
+
 ```bash
 scripts/graphs/EXTRACT-GRAPHS.sh
 ```

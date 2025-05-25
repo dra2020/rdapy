@@ -3,19 +3,20 @@
 """
 EXTRACT AN ADJACENCY GRAPH FROM A GEOJSON FILE
 
-$ scripts/graph/extract_graph.py \
+$ scripts/graphs/extract_graph.py \
 --geojson /path/to/input.geojson \
---graph /path/to/output-graph.json
+--graph /path/to/output-graph.json \
+--locations /path/to/precinct-locations.json
 
 NOTE - If the graph is not fully connected, the output file will have
-"_NOT_CONNECTED" appended to the filename.
+  "_NOT_CONNECTED" appended to the filename.
 """
 
 import argparse
 from argparse import ArgumentParser, Namespace
 
-from typing import Any, List, Dict, Set, Iterable
-import os, sys, json, csv
+from typing import Any, List, Dict, Tuple
+import os, json
 
 from pandas import DataFrame
 from geopandas import GeoDataFrame
@@ -66,6 +67,25 @@ def main() -> None:
 
     with open(graph_path, "w", encoding="utf-8") as f:
         json.dump(adjacency_graph, f, ensure_ascii=False, indent=4)
+
+    if args.locations:
+        location_by_geoid: Dict[str, Any] = dict()
+        geoid_field: str = "id"
+
+        for feature in geojson["features"]:
+            geoid: str = feature["properties"][geoid_field]
+
+            # Use DRA's label coordinates as the "center" of the precinct
+            center: Tuple[float, float] = (
+                feature["properties"]["labelx"],
+                feature["properties"]["labely"],
+            )
+
+            location_by_geoid[geoid] = center
+
+        locations_path: str = os.path.abspath(args.locations)
+        with open(locations_path, "w", encoding="utf-8") as f:
+            json.dump(location_by_geoid, f, ensure_ascii=False, indent=4)
 
 
 ### HELPERS ###
@@ -163,10 +183,17 @@ def parse_args() -> Namespace:
         "--geojson",
         help="The GeoJSON file",
         type=str,
+        required=True,
     )
     parser.add_argument(
         "--graph",
         help="The output JSON file containing the adjacency graph",
+        type=str,
+        required=True,
+    )
+    parser.add_argument(
+        "--locations",
+        help="The output JSON file containing preinct locations",
         type=str,
     )
 
