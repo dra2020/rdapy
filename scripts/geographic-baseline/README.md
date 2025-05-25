@@ -16,15 +16,14 @@ This is a long-running script! It take many hours on an M4 MacBook.
 scripts/geographic-baseline/FIND-NEIGHORHOODS.sh
 ```
 
+These neighborhoods only need to be found once per census cycle: they only depend on total population.
+
 Because they are quite large, neighborhoods are stored in a highly compressed format.
 You can confirm that they "round trip" correctly, you can run this script.
 
 ```bash
 scripts/geographic-baseline/CHECK-NEIGHBORHOODS.sh
 ```
-
-While geographic baselines (computed below) need to be updated as new elections are available,
-the neighborhoods only need to be done once per census cycle--they only depend on total population.
 
 ## Calculate baselines
 
@@ -34,7 +33,11 @@ Once you have computed neighborhoods, you can calculate baselines for each state
 scripts/geographic-baseline/ONCE.sh
 ```
 
-Other one-time preprocessing could be added to this script.
+The geographic baselines for a state need to be updated every time a new elections is available for that state.
+See the appropriate lines in `ONCE.sh`.
+
+Right now, the only thing we precompute is geographic baselines.
+Other one-time preprocessing could, however, be added to this script.
 
 You can produce a report of the geographic baselines, using this script.
 
