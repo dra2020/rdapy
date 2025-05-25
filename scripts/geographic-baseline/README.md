@@ -10,7 +10,7 @@ Those steps are described in the README files in the `scripts/graphs` and `scrip
 ## Find neighborhoods
 
 With those done, you find "neighborhoods" for each state and chamber combination.
-This is a long-running script!
+This is a long-running script! It take many hours on an M4 MacBook.
 
 ```bash
 scripts/geographic-baseline/FIND-NEIGHORHOODS.sh
