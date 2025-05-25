@@ -1,6 +1,6 @@
 # How to Extract Data from GeoJSON Files
 
-With fully connected adjacency graphs in hand, you can extract precinct data from the geojson files.
+With fully connected adjacency graphs in hand, you can extract precinct data for scoring from the geojson files.
 
 ## Create data maps
 
