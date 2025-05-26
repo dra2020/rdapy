@@ -1,4 +1,8 @@
-# How to Generate Contiguity Graphs
+---
+layout: page
+title: Extracting Contiguity Graphs
+permalink: extracting-graphs/
+---
 
 In order to extract precinct data from DRA's geojson files, 
 you need to first extract fully connected adjacency graphs.

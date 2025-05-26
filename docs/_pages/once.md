@@ -1,7 +1,11 @@
-# How to Pre-compute Geographic Baselines
+---
+layout: page
+title: One-time Preprocessing
+permalink: once/
+---
 
-To generate baselines for the geographic advantage metric, 
-you first need to:
+To generate baselines for the geographic advantage metric, you need to pre-compute geographic baselines.
+To do that, first:
 
 * Extract fully connected adjancency graphs from the DRA geojsons, and
 * Extract input data from DRA geojson files for all available elections
