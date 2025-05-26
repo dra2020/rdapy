@@ -150,8 +150,7 @@ scripts/score/score.py \
 --plan-type "$PLAN_TYPE" \
 --data "$temp_data" \
 --graph "$GRAPH" \
---mode "$MODE" \
-$PRECOMPUTED_FLAG \
+--mode "$MODE" $PRECOMPUTED_FLAG \
 |
 scripts/score/write.py \
 --data "$temp_data" \

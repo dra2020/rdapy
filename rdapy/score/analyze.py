@@ -167,7 +167,8 @@ def score_plan(
         for election_dataset in election_datasets:
             geographic_baselines: Dict[str, Any] = dict()
             if (
-                "geographic_baseline" in precomputed
+                precomputed
+                and "geographic_baseline" in precomputed
                 and election_dataset in precomputed["geographic_baseline"]
             ):
                 geographic_baselines = precomputed["geographic_baseline"][
@@ -372,9 +373,10 @@ def calc_partisan_metrics(
     partisan_metrics["turnout_bias"] = all_results["bias"]["tOf"]
     partisan_metrics["lopsided_outcomes"] = all_results["bias"]["lO"]
 
-    partisan_metrics["geographic_advantage"] = (
-        partisan_metrics["estimated_seats"] - geographic_baselines["whole_seats"]
-    )
+    if geographic_baselines and "whole_seats" in geographic_baselines:
+        partisan_metrics["geographic_advantage"] = (
+            partisan_metrics["estimated_seats"] - geographic_baselines["whole_seats"]
+        )
 
     partisan_metrics["competitive_district_count"] = all_results["responsiveness"][
         "cSimple"
