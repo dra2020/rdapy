@@ -4,7 +4,7 @@ title: Boosting Scoring Throughput
 permalink: throughput/
 ---
 
-By default, the `SCORE.sh` scripts calculates all metrics ("scores") for all plans in an input ensemble.
+By default, the `SCORE.sh` script calculates all metrics ("scores") for all plans in an input ensemble.
 When the ensemble is large, this can take a long time.
 
 You can use a combination of two techniques to increase scoring throughput:
