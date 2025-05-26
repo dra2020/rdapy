@@ -19,7 +19,7 @@ To install the package:
 pip install rdapy
 ```
 
-The latest version of the package is 2.1.0.
+The latest version of the package is 2.2.0.
 
 Then in your code, either `import rdapy` or `from rdapy import ...`.
 
@@ -68,6 +68,7 @@ scripts/score/SCORE.sh \
 --plan-type congress \
 --geojson testdata/data/NC_vtd_datasets.v4.geojson \
 --graph testdata/examples/NC_graph.json \
+--precomputed testdata/precomputed/NC_congress_precomputed.json \
 --plans testdata/plans/NC_congress_plans.tagged.jsonl \
 --scores temp/TEST_congress_scores.csv \
 --by-district temp/TEST_congress_by-district.jsonl

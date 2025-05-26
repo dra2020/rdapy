@@ -46,7 +46,9 @@ def score_plans(
     data_map: Dict[str, Any],
     adjacency_graph: Dict[str, List[str]],
     metadata: Dict[str, Any],
+    *,
     mode: str,
+    precomputed: Dict[str, Any],
 ) -> None:
     """
     Read plans & district aggregates as JSONL from the input stream.
@@ -84,6 +86,7 @@ def score_plans(
                     metadata=metadata,
                     data_map=data_map,
                     mode=mode,
+                    precomputed=precomputed,
                 )
 
                 scores_with_aggs: Dict[str, Any] = {
@@ -119,6 +122,8 @@ def score_plan(
     data_map: Dict[str, Any],
     #
     mode: str = "all",  # Or one of "general", "partisan", "minority", "compactness", "splitting"
+    precomputed: Dict[str, Any],
+    #
     mmd_scoring: bool = True,  # If False, don't do MMD scoring for backwards compatibility w/ tests.
     add_spanning_tree_score: bool = False,  # Too expensive for scoring plans in bulk.
 ) -> Tuple[Dict[str, Any], Aggregates]:
@@ -141,7 +146,6 @@ def score_plan(
     vap_dataset: DatasetKey = get_dataset(data_map, "vap")
     cvap_dataset: DatasetKey = get_dataset(data_map, "cvap")
     election_datasets: List[DatasetKey] = get_datasets(data_map, "election")
-    # election_dataset: DatasetKey = get_dataset(data_map, "election")
     shapes_dataset: DatasetKey = get_dataset(data_map, "shapes")
 
     scorecard: Dict[str, Any] = {
@@ -149,7 +153,6 @@ def score_plan(
         "vap": {vap_dataset: {}},
         "cvap": {cvap_dataset: {}},
         "election": {e: {} for e in election_datasets},
-        # "election": {election_dataset: {}},
         "shapes": {shapes_dataset: {}},
     }
 
@@ -162,9 +165,17 @@ def score_plan(
 
     if mode in ["all", "partisan"]:
         for election_dataset in election_datasets:
+            geographic_baselines: Dict[str, Any] = dict()
+            if (
+                precomputed
+                and "geographic_baseline" in precomputed
+                and election_dataset in precomputed["geographic_baseline"]
+            ):
+                geographic_baselines = precomputed["geographic_baseline"][
+                    election_dataset
+                ]
             partisan_metrics: Dict[str, Optional[float]] = calc_partisan_metrics(
-                aggs["election"][election_dataset],
-                n_districts,
+                aggs["election"][election_dataset], n_districts, geographic_baselines
             )
             estimated_seat_pct = partisan_metrics.pop("estimated_seat_pct")
             assert estimated_seat_pct is not None
@@ -320,7 +331,7 @@ def calc_population_deviation(data: NamedAggregates, n_districts: int) -> float:
 
 
 def calc_partisan_metrics(
-    data: NamedAggregates, n_districts: int
+    data: NamedAggregates, n_districts: int, geographic_baselines: Dict[str, Any]
 ) -> Dict[str, Optional[float]]:
     """Calulate partisan metrics."""
 
@@ -361,6 +372,11 @@ def calc_partisan_metrics(
     partisan_metrics["mean_median_average_district"] = all_results["bias"]["mMd"]
     partisan_metrics["turnout_bias"] = all_results["bias"]["tOf"]
     partisan_metrics["lopsided_outcomes"] = all_results["bias"]["lO"]
+
+    if geographic_baselines and "whole_seats" in geographic_baselines:
+        partisan_metrics["geographic_advantage"] = (
+            partisan_metrics["estimated_seats"] - geographic_baselines["whole_seats"]
+        )
 
     partisan_metrics["competitive_district_count"] = all_results["responsiveness"][
         "cSimple"

@@ -3,6 +3,7 @@
 # Default values
 GEOJSON=""
 GRAPH=""
+PRECOMPUTED=""
 PLANS=""
 SCORES=""
 BY_DISTRICT=""
@@ -29,6 +30,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --graph)
       GRAPH="$2"
+      shift 2
+      ;;
+    --precomputed)
+      PRECOMPUTED="$2"
       shift 2
       ;;
     --plans)
@@ -75,6 +80,7 @@ if [[ -z "$STATE" || -z "$PLAN_TYPE" || -z "$GEOJSON" || -z "$GRAPH" || -z "$PLA
   echo "Error: Missing required arguments"
   echo "Usage: SCORE.sh --state <xx> --plan-type <chamber> --geojson <path> --graph <path> --plans <path> --scores <path> --by-district <path>"
   echo "Optional arguments:"
+  echo "  --precomputed <path>  Path to precomputed data (optional)"
   echo "  --mode <mode>         Analysis mode (default: all)"
   echo "  --census <census>     Census data to use (default: T_20_CENS)"
   echo "  --vap <vap>           Voting age population data to use (default: V_20_VAP)"
@@ -97,6 +103,11 @@ done
 if [[ "$is_valid_mode" == false ]]; then
   echo "Error: Invalid mode '$MODE'. Must be one of: all, general, partisan, minority, compactness, splitting"
   exit 1
+fi
+
+PRECOMPUTED_FLAG=""
+if [[ -n "$PRECOMPUTED" ]]; then
+  PRECOMPUTED_FLAG="--precomputed $PRECOMPUTED"
 fi
 
 temp_data_map=$(mktemp /tmp/data-map.XXXXXX)
@@ -130,7 +141,7 @@ scripts/score/score.py \
 --plan-type "$PLAN_TYPE" \
 --data "$temp_data" \
 --graph "$GRAPH" \
---mode "$MODE" \
+--mode "$MODE" $PRECOMPUTED_FLAG \
 |
 scripts/score/write.py \
 --data "$temp_data" \
