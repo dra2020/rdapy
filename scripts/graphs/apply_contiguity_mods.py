@@ -5,7 +5,7 @@ APPLY CONTIGUITY MODS TO FULLY CONNECT AN ADJACENCY GRAPH
 
 $ scripts/graph/apply_contiguity_mods.py \
 --graph /path/to/input-graph.json \
---mods/path/to/contiguity_mods.csv \
+--mods /path/to/contiguity_mods.csv \
 > /path/to/output-graph.json
 
 NOTE - Make sure the input and output graph files are different!
@@ -14,22 +14,10 @@ NOTE - Make sure the input and output graph files are different!
 import argparse
 from argparse import ArgumentParser, Namespace
 
-from typing import Any, List, Dict, Set, Iterable
+from typing import List, Dict, Iterable
 import os, sys, json, csv
 
-from pandas import DataFrame
-from geopandas import GeoDataFrame
-from shapely.geometry import (
-    shape,
-    Polygon,
-    MultiPolygon,
-)
-from libpysal.weights import Rook, WSP
-
 from rdapy import is_consistent, is_connected, OUT_OF_STATE, load_graph
-
-
-EPSILON: float = 1.0e-12
 
 
 def main() -> None:

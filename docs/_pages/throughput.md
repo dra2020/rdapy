@@ -21,11 +21,11 @@ Used together, the basic process is as follows:
 *   "Vertically" concatenate each set of shards back into one file of scores -or- by-district measurements for each category, and
   - Optionally, "horiztonally" join all the categories files into one overall scores or by-district file.  
 
-There are three utility bash scripts in the `scripts` directory to support this:
+There are three utility bash scripts in the `scripts/throughput` directory to support this:
 
-*   `SHARD.sh` &ndash; e.g., `scripts/SHARD.sh /path/to/plans.jsonl`
-*   `CONCAT_FILES.sh` &ndash; `scripts/CONCAT_FILES.sh /path/to/csvs "NC_congress_scores_compactness_*.csv"` or `scripts/CONCAT_FILES.sh /path/to/csvs "NC_congress_by-district_compactness_*.jsonl" --no-header`
-*   `JOIN_CSVS.sh` &ndash; e.g., `scripts/JOIN_CSVS.sh /path/to/csvs "NC_congress_scores_*.csv"`
+*   `SHARD.sh` &ndash; e.g., `scripts/throughput/SHARD.sh /path/to/plans.jsonl`
+*   `CONCAT_FILES.sh` &ndash; `scripts/throughput/CONCAT_FILES.sh /path/to/csvs "NC_congress_scores_compactness_*.csv"` or `scripts/CONCAT_FILES.sh /path/to/csvs "NC_congress_by-district_compactness_*.jsonl" --no-header`
+*   `JOIN_CSVS.sh` &ndash; e.g., `scripts/throughput/JOIN_CSVS.sh /path/to/csvs "NC_congress_scores_*.csv"`
 
 The `SCORE.sh` script takes an optional `--mode` argument to specify which category of metrics to calculate. 
 The default is to calculate all categories.

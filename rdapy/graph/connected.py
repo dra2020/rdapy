@@ -9,10 +9,8 @@ from typing import Any, List, Dict, Set, Tuple, NamedTuple
 from itertools import combinations
 import networkx as nx
 
-from .constants import *
-from ..utils import DatasetKey, get_dataset, get_fields
+from .constants import OUT_OF_STATE
 
-# from ..score.aggregate import DatasetKey, get_dataset, get_fields
 from ..utils import DistanceLedger
 
 
@@ -94,7 +92,6 @@ def connected_subsets(ids: List[Any], graph: Dict[str, List[str]]) -> List[Set[A
 
 class Island(NamedTuple):
     id: int
-    population: int
     precincts: int
     coastal: List[str]
     inland: List[str]
@@ -109,13 +106,9 @@ class Connection(NamedTuple):
 def generate_contiguity_mods(
     geoids: List[str],
     adjacency_graph: Dict[str, List[str]],
-    data_map: Dict[str, Any],
-    data_by_geoid: Dict[str, Dict[str, Any]],
+    locations_by_geoid: Dict[str, Tuple[float, float]],
 ) -> List[Tuple[int, int, Dict[str, Any]]]:
     """Find all the connected subsets of precincts -- "islands" potentially including a mainland"""
-
-    census_dataset: DatasetKey = get_dataset(data_map, "census")
-    total_pop_field: str = get_fields(data_map, "census", census_dataset)["total_pop"]
 
     subsets: List[Set[Any]] = connected_subsets(geoids, adjacency_graph)
 
@@ -125,21 +118,19 @@ def generate_contiguity_mods(
 
     for i, subset in enumerate(subsets):
         id: int = i
-        pop: int = 0
         precincts: int = 0
         coastal: List[str] = list()
         inland: List[str] = list()
 
         for geoid in subset:
             precincts += 1
-            pop += data_by_geoid[geoid][total_pop_field]
 
             if geoid in adjacency_graph[OUT_OF_STATE]:
                 coastal.append(geoid)
             else:
                 inland.append(geoid)
 
-        islands.append(Island(id, pop, precincts, coastal, inland))
+        islands.append(Island(id, precincts, coastal, inland))
 
     # Find the shortest distance between each pair of islands
 
@@ -155,7 +146,10 @@ def generate_contiguity_mods(
         for c1 in islands[pair[0]].coastal:
             for c2 in islands[pair[1]].coastal:
                 distance: float = dl.distance_between(
-                    c1, data_by_geoid[c1]["center"], c2, data_by_geoid[c2]["center"]
+                    c1,
+                    locations_by_geoid[c1],
+                    c2,
+                    locations_by_geoid[c2],
                 )
                 edge: Connection = Connection(c1, c2, distance)
                 possible_edges[pair].append(edge)

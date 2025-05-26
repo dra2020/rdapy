@@ -17,7 +17,7 @@ $ scripts/once.py \
 import argparse
 from argparse import ArgumentParser, Namespace
 
-from typing import Any, List, Dict, TextIO
+from typing import Any, List, Dict
 
 import json
 

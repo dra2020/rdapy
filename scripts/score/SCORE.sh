@@ -102,7 +102,7 @@ fi
 temp_data_map=$(mktemp /tmp/data-map.XXXXXX)
 temp_data=$(mktemp /tmp/data.XXXXXX)
 
-scripts/map_scoring_data.py \
+scripts/data/map_scoring_data.py \
 --geojson "$GEOJSON" \
 --data-map "$temp_data_map" \
 --census "$CENSUS" \
@@ -110,7 +110,7 @@ scripts/map_scoring_data.py \
 --cvap "$CVAP" \
 --elections "$ELECTION"
 
-scripts/extract_data.py \
+scripts/data/extract_data.py \
 --geojson "$GEOJSON" \
 --data-map "$temp_data_map" \
 --graph "$GRAPH" \
@@ -118,21 +118,21 @@ scripts/extract_data.py \
 
 cat "$PLANS" \
 | 
-scripts/aggregate.py \
+scripts/score/aggregate.py \
 --state "$STATE" \
 --plan-type "$PLAN_TYPE" \
 --data "$temp_data" \
 --graph "$GRAPH" \
 --mode "$MODE" \
 | 
-scripts/score.py \
+scripts/score/score.py \
 --state "$STATE" \
 --plan-type "$PLAN_TYPE" \
 --data "$temp_data" \
 --graph "$GRAPH" \
 --mode "$MODE" \
 |
-scripts/write.py \
+scripts/score/write.py \
 --data "$temp_data" \
 --scores "$SCORES" \
 --by-district "$BY_DISTRICT"

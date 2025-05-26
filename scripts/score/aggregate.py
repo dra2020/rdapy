@@ -1,34 +1,26 @@
 #!/usr/bin/env python3
 
 """
-SCORE PLANS
-- Take in a stream of plans & by-district aggregates (JSONL)
-- Score each plan
-- Write out a stream of scores along with by-district aggregates (JSONL)
-
+AGGREGATE DATA & SHAPES BY DISTRICT FOR PLANS
+- Take in a stream of plans (JSONL)
+- Aggregate data by district
+- Write out a stream of plans with by-district aggregates (JSONL)
 
 Usage:
 
-cat testdata/examples/NC_congress_aggs.100.v3.jsonl \
-| scripts/score.py \
+cat testdata/plans/NC_congress_plans.tagged.jsonl \
+| scripts/score/aggregate.py \
 --state NC \
 --plan-type congress \
 --data testdata/examples/NC_input_data.v3.jsonl \
---graph testdata/examples/NC_graph.json > temp/DEBUG_scores.jsonl
+--graph testdata/examples/NC_graph.json > temp/DEBUG_aggs.jsonl
 
-cat testdata/examples/NC_congress_aggs.100.v4.jsonl \
-| scripts/score.py \
+cat testdata/plans/NC_congress_plans.tagged.jsonl \
+| scripts/score/aggregate.py \
 --state NC \
 --plan-type congress \
 --data testdata/examples/NC_input_data.v4.jsonl \
---graph testdata/examples/NC_graph.json > temp/DEBUG_scores.jsonl
-
-cat testdata/examples/NC_congress_aggs.100.v5.jsonl \
-| scripts/score.py \
---state NC \
---plan-type congress \
---data testdata/examples/NC_input_data.v4.jsonl \
---graph testdata/examples/NC_graph.json > temp/DEBUG_scores.jsonl
+--graph testdata/examples/NC_graph.json > temp/DEBUG_aggs.jsonl
 
 """
 
@@ -44,7 +36,7 @@ from rdapy import (
     sorted_geoids,
     smart_read,
     smart_write,
-    score_plans,
+    aggregate_plans,
 )
 
 
@@ -63,7 +55,7 @@ def main():
 
     with smart_read(args.input) as input_stream:
         with smart_write(args.output) as output_stream:
-            score_plans(
+            aggregate_plans(
                 input_stream,
                 output_stream,
                 input_data,
@@ -103,7 +95,7 @@ def parse_arguments():
         "--mode",
         choices=["all", "general", "partisan", "minority", "compactness", "splitting"],
         default="all",
-        help="Processing mode to use (default: all)",
+        help="Processing mode to use (default: normal)",
     )
 
     parser.add_argument(

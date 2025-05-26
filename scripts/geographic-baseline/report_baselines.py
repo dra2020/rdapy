@@ -16,6 +16,8 @@ import os, json
 
 from rdapy import DISTRICTS_BY_STATE
 
+baseline_dir: str = "~/local/geographic-baseline"
+
 
 def main():
     """Check that neighborhoods roundtrip properly."""
@@ -34,9 +36,7 @@ def main():
 
             i += 1
 
-            baseline_path: str = (
-                f"~/local/geographic-baseline/{xx}_{chamber}_precomputed.json"
-            )
+            baseline_path: str = f"{baseline_dir}/{xx}_{chamber}_precomputed.json"
 
             with open(os.path.expanduser(baseline_path), "r") as f:
                 baselines = json.load(f)["geographic_baseline"]
