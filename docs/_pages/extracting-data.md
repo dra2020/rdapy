@@ -7,13 +7,13 @@ permalink: extracting-data/
 With fully connected adjacency graphs in hand, you can extract precinct data 
 for scoring from the DRA geojson files.
 
-## Create data maps
+### Create data maps
 
 ```bash
 scripts/data/MAP-DATA.sh
 ```
 
-## Extract data from geojson files
+### Extract data from geojson files
 
 ```bash
 scripts/data/EXTRACT-DATA.sh

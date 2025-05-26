@@ -12,7 +12,7 @@ To do that, first:
 
 Those steps are described in the README files in the `scripts/graphs` and `scripts/data` directories, respectively.
 
-## Find neighborhoods
+### Find neighborhoods
 
 With those done, you first find "neighborhoods" for each state and chamber combination.
 This only need to be found once per census cycle: neighborhods only depend on total population and precinct adjacency.
@@ -29,7 +29,7 @@ You can confirm that they "round trip" correctly, you can run this script.
 scripts/geographic-baseline/CHECK-NEIGHBORHOODS.sh
 ```
 
-## Calculate baselines
+### Calculate baselines
 
 Once you have computed neighborhoods, you can calculate baselines for each state and chamber combination.
 
