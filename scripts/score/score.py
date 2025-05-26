@@ -76,7 +76,8 @@ def main():
                 data_map,
                 adjacency_graph,
                 metadata,
-                args.mode,
+                mode=args.mode,
+                precomputed=precomputed,
             )
 
 

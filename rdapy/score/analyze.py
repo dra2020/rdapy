@@ -46,7 +46,9 @@ def score_plans(
     data_map: Dict[str, Any],
     adjacency_graph: Dict[str, List[str]],
     metadata: Dict[str, Any],
+    *,
     mode: str,
+    precomputed: Dict[str, Any],
 ) -> None:
     """
     Read plans & district aggregates as JSONL from the input stream.
