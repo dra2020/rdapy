@@ -118,21 +118,21 @@ scripts/data/extract_data.py \
 
 cat "$PLANS" \
 | 
-scripts/aggregate.py \
+scripts/score/aggregate.py \
 --state "$STATE" \
 --plan-type "$PLAN_TYPE" \
 --data "$temp_data" \
 --graph "$GRAPH" \
 --mode "$MODE" \
 | 
-scripts/score.py \
+scripts/score/score.py \
 --state "$STATE" \
 --plan-type "$PLAN_TYPE" \
 --data "$temp_data" \
 --graph "$GRAPH" \
 --mode "$MODE" \
 |
-scripts/write.py \
+scripts/score/write.py \
 --data "$temp_data" \
 --scores "$SCORES" \
 --by-district "$BY_DISTRICT"

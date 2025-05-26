@@ -63,7 +63,7 @@ pytest
 and that the command-line interface works:
 
 ```bash
-scripts/SCORE.sh \
+scripts/score/SCORE.sh \
 --state NC \
 --plan-type congress \
 --geojson testdata/data/NC_vtd_datasets.v4.geojson \
