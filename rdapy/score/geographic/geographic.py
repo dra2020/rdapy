@@ -148,7 +148,7 @@ def eval_partisan_lean(
     neighborhood: List[str],
     data: Dict[str, Dict[str, Any]],
     dem_votes_field: str,
-    tot_votes_field: str,
+    rep_votes_field: str,
 ) -> Tuple[float, float, float]:
     """Calculate the partisan results for a precinct's neighborhood."""
 
@@ -156,7 +156,8 @@ def eval_partisan_lean(
     tot_votes: int = 0
     for geoid in neighborhood:
         dem_votes += data[geoid][dem_votes_field]
-        tot_votes += data[geoid][tot_votes_field]
+        # NOTE - Two-party votes, not total votes!
+        tot_votes += data[geoid][dem_votes_field] + data[geoid][rep_votes_field]
 
     Vf: float = dem_votes / tot_votes if tot_votes > 0 else 0.0
     fractional_seats: float = est_seat_probability(Vf)
@@ -175,7 +176,7 @@ def calc_geographic_baseline(
     geoids: List[str],
     total_pop_field: str,
     dem_votes_field: str,
-    tot_votes_field: str,
+    rep_votes_field: str,
     *,
     debug: bool = False,
 ) -> Tuple[float, float]:
@@ -197,7 +198,7 @@ def calc_geographic_baseline(
             neighborhood,
             data,
             dem_votes_field,
-            tot_votes_field,
+            rep_votes_field,
         )
 
         proportion: float = ndistricts * (pop / state_pop)

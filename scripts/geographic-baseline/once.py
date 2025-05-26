@@ -84,7 +84,7 @@ def main():
     by_dataset: Dict[str, Any] = {}
     for dataset in election_datasets:
         dem_votes_field: str = get_fields(data_map, "election", dataset)["dem_votes"]
-        tot_votes_field: str = get_fields(data_map, "election", dataset)["tot_votes"]
+        rep_votes_field: str = get_fields(data_map, "election", dataset)["rep_votes"]
 
         fractional_seats: float
         whole_seats: float
@@ -96,7 +96,7 @@ def main():
             geoids,
             total_pop_field,
             dem_votes_field,
-            tot_votes_field,
+            rep_votes_field,
         )
 
         by_dataset[dataset] = {
