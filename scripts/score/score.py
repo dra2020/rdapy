@@ -64,8 +64,9 @@ def main():
     metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
 
     precomputed: Dict[str, Any] = dict()
-    with open(os.path.expanduser(args.precomputed), "r") as f:
-        precomputed = json.load(f)
+    if args.precomputed is not None:
+        with open(os.path.expanduser(args.precomputed), "r") as f:
+            precomputed = json.load(f)
 
     with smart_read(args.input) as input_stream:
         with smart_write(args.output) as output_stream:
