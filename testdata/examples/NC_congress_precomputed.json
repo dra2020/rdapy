@@ -1,0 +1,92 @@
+{
+    "geographic_baseline": {
+        "E_16-22_COMP": {
+            "fractional_seats": 7.36329893990798,
+            "whole_seats": 7.174253893044293
+        },
+        "E_16-20_COMP": {
+            "fractional_seats": 7.275998601091127,
+            "whole_seats": 7.229256734207015
+        },
+        "E_22_SC3": {
+            "fractional_seats": 6.525743624281297,
+            "whole_seats": 6.265563077069254
+        },
+        "E_22_SC5": {
+            "fractional_seats": 6.579808606375843,
+            "whole_seats": 6.2779774063383655
+        },
+        "E_22_SEN": {
+            "fractional_seats": 6.366012289817319,
+            "whole_seats": 6.186225092888572
+        },
+        "E_22_CONG": {
+            "fractional_seats": 6.709953875063093,
+            "whole_seats": 6.608758865941169
+        },
+        "E_20_TREAS": {
+            "fractional_seats": 6.845372124557442,
+            "whole_seats": 6.659742505978307
+        },
+        "E_20_SOS": {
+            "fractional_seats": 8.7508764428955,
+            "whole_seats": 8.937807465341841
+        },
+        "E_20_LTG": {
+            "fractional_seats": 7.27893325049092,
+            "whole_seats": 7.199051706862499
+        },
+        "E_20_GOV": {
+            "fractional_seats": 8.81331476083275,
+            "whole_seats": 9.01040252551203
+        },
+        "E_20_AG": {
+            "fractional_seats": 8.144830398200886,
+            "whole_seats": 8.47075269163288
+        },
+        "E_20_PRES": {
+            "fractional_seats": 7.301158048259921,
+            "whole_seats": 7.0025158562934795
+        },
+        "E_20_SEN": {
+            "fractional_seats": 6.533634220891461,
+            "whole_seats": 6.42825422333185
+        },
+        "E_20_AUD": {
+            "fractional_seats": 8.62897922377787,
+            "whole_seats": 8.870315194722144
+        },
+        "E_16_LTG": {
+            "fractional_seats": 5.805517808694116,
+            "whole_seats": 5.499868383089107
+        },
+        "E_16_SEN": {
+            "fractional_seats": 5.8015184244614915,
+            "whole_seats": 5.339487908678157
+        },
+        "E_16_GOV": {
+            "fractional_seats": 7.511193952255223,
+            "whole_seats": 7.171815819088237
+        },
+        "E_16_AG": {
+            "fractional_seats": 8.281083496474997,
+            "whole_seats": 8.58088309391317
+        },
+        "E_16_PRES": {
+            "fractional_seats": 6.3753092363068395,
+            "whole_seats": 6.140849827595246
+        },
+        "E_14_SEN": {
+            "fractional_seats": 6.443426618845352,
+            "whole_seats": 6.183533555798474
+        },
+        "E_12_PRES": {
+            "fractional_seats": 7.688891637137404,
+            "whole_seats": 8.148743202187703
+        },
+        "E_08_PRES": {
+            "fractional_seats": 7.965362136357865,
+            "whole_seats": 8.29765882827613
+        }
+    }
+}

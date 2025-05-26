@@ -37,6 +37,8 @@ from typing import Any, Dict, List
 import argparse
 from argparse import ArgumentParser, Namespace
 
+import os, json
+
 from rdapy import (
     load_data,
     load_graph,
@@ -61,6 +63,10 @@ def main():
     geoids: List[str] = sorted_geoids(input_data)
     metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
 
+    precomputed: Dict[str, Any] = dict()
+    with open(os.path.expanduser(args.precomputed), "r") as f:
+        precomputed = json.load(f)
+
     with smart_read(args.input) as input_stream:
         with smart_write(args.output) as output_stream:
             score_plans(
@@ -81,23 +87,31 @@ def parse_arguments():
         description="Parse command line arguments."
     )
 
-    parser.add_argument("--state", type=str, help="State abbreviation")
+    parser.add_argument("--state", type=str, required=True, help="State abbreviation")
     parser.add_argument(
         "--plan-type",
         type=str,
         dest="plan_type",
+        required=True,
         help="Plan type (e.g., congress)",
     )
 
     parser.add_argument(
         "--data",
         type=str,
+        required=True,
         help="Path to input data file",
     )
     parser.add_argument(
         "--graph",
         type=str,
+        required=True,
         help="Path to graph file",
+    )
+    parser.add_argument(
+        "--precomputed",
+        type=str,
+        help="Path to an optional JSON file of precomputed values",
     )
     parser.add_argument(
         "--mode",
