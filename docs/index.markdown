@@ -33,6 +33,12 @@ This toolchain uses [DRA GeoJSON files](TODO) as input data and scores each plan
 on several dozen metrics described in [Scores (Metrics)]({{ '/scores' | prepend: site.baseurl }})
 generating a CSV file with one row of scores per plan.
 
+There are some housekeeping scripts to support this scoring:
+
+- [Extracting Contiguity Graphs]({{ '/extracting-graphs' | prepend: site.baseurl }}): Extracts fully connected adjacency graphs from DRA GeoJSON files.
+- [Extracting Data]({{ '/extracting-data' | prepend: site.baseurl }}): Extracts precinct data from DRA GeoJSON files for scoring.
+- [One-time Preprocessing]({{ '/once' | prepend: site.baseurl }}): Pre-computes geographic baselines for the geographic advantage metric.
+
 ### Installation
 
 For installation instructions, see the [README](https://github.com/dra2020/rdapy).

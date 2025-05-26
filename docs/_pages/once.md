@@ -1,7 +1,11 @@
-# How to Pre-compute Geographic Baselines
+---
+layout: page
+title: One-time Preprocessing
+permalink: once/
+---
 
-To generate baselines for the geographic advantage metric, 
-you first need to:
+To generate baselines for the geographic advantage metric, you need to pre-compute geographic baselines.
+To do that, first:
 
 * Extract fully connected adjancency graphs from the DRA geojsons, and
 * Extract input data from DRA geojson files for all available elections
@@ -12,7 +16,7 @@ Those steps are described in the README files in the `scripts/graphs` and `scrip
 
 With those done, you first find "neighborhoods" for each state and chamber combination.
 This only need to be found once per census cycle: neighborhods only depend on total population and precinct adjacency.
-This is a very long-running script--it take many hours on an M4 MacBook!--so the resulting files should be saved.
+This is a very long-running script--it takes nearly 10 hours on an M4 MacBook!--so the resulting files should be saved.
 
 ```bash
 scripts/geographic-baseline/FIND-NEIGHORHOODS.sh

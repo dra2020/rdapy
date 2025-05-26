@@ -1,7 +1,11 @@
-# How to Extract Data from GeoJSON Files
+---
+layout: page
+title: Extracting Data
+permalink: extracting-data/
+---
 
-With fully connected adjacency graphs in hand, 
-you can extract precinct data for scoring from the DRA geojson files.
+With fully connected adjacency graphs in hand, you can extract precinct data 
+for scoring from the DRA geojson files.
 
 ## Create data maps
 
