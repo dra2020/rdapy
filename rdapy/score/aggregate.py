@@ -242,6 +242,7 @@ def aggregate_data_by_district(
                         ]
                     ]
                 )
+                # NOTE - The two-party total, not the total votes!
                 tot: int = int(
                     precinct[
                         get_fields(data_metadata, "election", election_dataset)[
