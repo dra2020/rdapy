@@ -110,15 +110,6 @@ if [[ -n "$PRECOMPUTED" ]]; then
   PRECOMPUTED_FLAG="--precomputed $PRECOMPUTED"
 fi
 
-# echo
-# echo "scripts/score/score.py \\"
-# echo "--state "$STATE" \\"
-# echo "--plan-type "$PLAN_TYPE" \\"
-# echo "--data "$temp_data" \\"
-# echo "--graph "$GRAPH" \\"
-# echo "--mode "$MODE" "$PRECOMPUTED_FLAG" \\"
-# echo
-
 temp_data_map=$(mktemp /tmp/data-map.XXXXXX)
 temp_data=$(mktemp /tmp/data.XXXXXX)
 
