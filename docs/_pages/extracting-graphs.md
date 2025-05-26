@@ -8,7 +8,7 @@ In order to extract precinct data from DRA's geojson files,
 you need to first extract fully connected adjacency graphs.
 For that, you need the GeoJSON files that contain simplified shapes.
 
-## Extract graphs for each state
+### Extract graphs for each state
 
 First run this script.
 It extracts adjacency graphs from the geojsons, and 
@@ -18,7 +18,7 @@ also saves precinct locations to /tmp files that can be used to generate contigu
 scripts/graphs/EXTRACT-GRAPHS.sh
 ```
 
-## Fix graphs, as necessary
+### Fix graphs, as necessary
 
 Any graphs that aren't fully connected will have "_NOT_CONNECTED" appended to their filename
 in the output directory.
