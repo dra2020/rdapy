@@ -14,7 +14,7 @@ The output is streamed to STDOUT if a file is not specified, so it can be piped 
 It writes the rest of the JSON properties as a metadata record.
 
 ```bash
-scripts/from_json.py \
+scripts/formats/from_json.py \
 --input testdata/plans/NC_congress_plans.legacy.json
 ```
 
@@ -27,7 +27,7 @@ synthesizes a stream of JSON tagged records.
 The output is streamed to STDOUT if a file is not specified, so it can be piped into the `aggregate.py` script.
 
 ```bash
-scripts/from_csvs.py \
+scripts/formats/from_csvs.py \
 --files testdata/plans/csvs/NC_congress.*.csv
 ```
 
@@ -42,7 +42,7 @@ the output is streamed to STDOUT if a file is not specified, so it can be piped 
 
 ```bash
 cat testdata/plans/canonical/NC_congress_plans.canonical.jsonl \
-| scripts/canonical_to_assignments.py \
+| scripts/formats/canonical_to_assignments.py \
 --graph testdata/plans/canonical/NC_congress_recom_graph.seeded.json
 ```
 
