@@ -53,7 +53,7 @@ It uses 2020 census, VAP, and CVAP data from geojson, as well as the 2016-2020 e
 Only one election is scored at this time.
 
 ```bash
-scripts/SCORE.sh \
+scripts/score/SCORE.sh \
 --state xx \
 --plan-type congress \
 --geojson path/to/DRA.geojson \

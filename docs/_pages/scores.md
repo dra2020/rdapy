@@ -4,7 +4,7 @@ title: Scores (Metrics)
 permalink: scores/
 ---
 
-These are the metrics ("scores") calculated for a plan, when you run the `scripts/SCORE.sh` script.
+These are the metrics ("scores") calculated for a plan, when you run the `scripts/score/SCORE.sh` script.
 There is a PDF version of this page [here](https://github.com/dra2020/rdapy/blob/main/docs/_pages/scores.pdf).
 
 Metrics fall into one of several categories: 
