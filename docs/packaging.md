@@ -18,4 +18,4 @@ $ python3 -m twine upload --repository pypi dist/rdapy-x.y.z*.*
 
 where x.y.z is the version number. For example:
 
-$ python3 -m twine upload --repository pypi dist/rdapy-2.2.0*.*
+$ python3 -m twine upload --repository pypi dist/rdapy-2.3.0*.*
