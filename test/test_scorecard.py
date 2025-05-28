@@ -80,6 +80,7 @@ class TestScorecard:
                 data_map=input_metadata,
                 mode="all",
                 mmd_scoring=False,
+                precomputed={},
             )
 
             scorecard = flatten_scorecard(scorecard)
@@ -221,6 +222,7 @@ class TestScorecard:
             data_map=input_metadata,
             mode="all",
             mmd_scoring=False,
+            precomputed={},
         )
 
         scorecard = flatten_scorecard(scorecard)
