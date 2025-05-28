@@ -1,8 +1,8 @@
 #!/bin/bash
 
 CYCLE=2020
-GEOJSON_PATH=~/local/dra-to-publish
-GRAPH_PATH=~/local/adjacency-graphs
+GEOJSON_PATH=~/local/dra-to-publish # TODO
+GRAPH_PATH=~/local/adjacency-graphs # TODO
 
 echo Generating adjacency graph for AL ...
 scripts/graphs/extract_graph.py \

@@ -3,6 +3,8 @@
 """
 VERIFY THAN AN ADJACENCY GRAPH IS FULLY CONNECTED
 
+TODO - Update directory paths
+
 $ scripts/graph/check_graph.py \
 --state NC \
 --data ~/local/temp-data/NC_input_data.v4.jsonl \

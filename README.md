@@ -19,7 +19,7 @@ To install the package:
 pip install rdapy
 ```
 
-The latest version of the package is 2.2.0.
+The latest version of the package is 2.3.0.
 
 Then in your code, either `import rdapy` or `from rdapy import ...`.
 

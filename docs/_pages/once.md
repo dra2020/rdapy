@@ -18,6 +18,9 @@ With those done, you first find "neighborhoods" for each state and chamber combi
 This only need to be found once per census cycle: neighborhods only depend on total population and precinct adjacency.
 This is a very long-running script--it takes nearly 10 hours on an M4 MacBook!--so the resulting files should be saved.
 
+This script first deletes all the neighborhoods in the `temp` directory, and
+then finds neighborhoods for each state & chamber combination and writes them there.
+
 ```bash
 scripts/geographic-baseline/FIND-NEIGHORHOODS.sh
 ```
@@ -27,6 +30,14 @@ You can confirm that they "round trip" correctly, you can run this script.
 
 ```bash
 scripts/geographic-baseline/CHECK-NEIGHBORHOODS.sh
+```
+
+Some of the neighborhoods (e.g., for CA) are bigger than 100MB, so you need to compress them before
+committing them to the repository in the `cached` directory.
+To zip and then delete each neighborood file.
+
+```bash
+for file in *_neighborhoods.jsonl; do zip "${file%.jsonl}.zip" "$file" && rm "$file"; done
 ```
 
 ### Calculate baselines

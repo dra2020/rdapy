@@ -5,7 +5,7 @@ DO ONE-TIME CALCULATIONS
 
 For example:
 
-$ scripts/once.py \
+$ scripts/geographic-baseline/once.py \
 --state NC \
 --plan-type congress \
 --data testdata/examples/NC_input_data.v4.jsonl \

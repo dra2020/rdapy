@@ -1,10 +1,10 @@
 #!/bin/bash
 
 CYCLE=2020
-GEOJSON_PATH=~/local/dra-to-publish
-DATA_MAP_PATH=~/local/temp-data
+GEOJSON_PATH=~/local/dra-to-publish # TODO
+DATA_MAP_PATH=temp
 VERSION=v5
-GRAPH_PATH=~/local/adjacency-graphs
+GRAPH_PATH=~/local/adjacency-graphs # TODO
 
 echo Extracting AL data ...
 scripts/data/extract_data.py \
