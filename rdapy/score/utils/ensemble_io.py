@@ -39,6 +39,64 @@ def smart_write(
             fh.close()
 
 
+### SMART READ & HELPER FUNCTIONS ###
+
+
+def _find_jsonl_in_zip(zip_file: zipfile.ZipFile) -> str:
+    """Find and return the first .jsonl file in a ZIP archive."""
+    file_list = zip_file.namelist()
+    jsonl_files = [f for f in file_list if f.endswith(".jsonl")]
+
+    if not jsonl_files:
+        raise ValueError("No .jsonl file found in ZIP archive")
+
+    if len(jsonl_files) > 1:
+        print(
+            f"Warning: Multiple .jsonl files found in ZIP. Using: {jsonl_files[0]}",
+            file=sys.stderr,
+        )
+
+    return jsonl_files[0]
+
+
+@contextlib.contextmanager
+def _read_zip_file(zip_path: str) -> Generator[TextIO, None, None]:
+    """Extract and read a .jsonl file from a ZIP archive."""
+    with zipfile.ZipFile(zip_path, "r") as zip_file:
+        jsonl_filename = _find_jsonl_in_zip(zip_file)
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            zip_file.extract(jsonl_filename, path=temp_dir)
+            extracted_path = os.path.join(temp_dir, jsonl_filename)
+
+            with open(extracted_path, "r", encoding="utf-8") as f:
+                yield f
+
+
+@contextlib.contextmanager
+def _handle_stdin() -> Generator[TextIO, None, None]:
+    """Handle input from stdin, detecting ZIP content automatically."""
+    stdin_data = sys.stdin.buffer.read()
+
+    if stdin_data.startswith(b"PK"):  # ZIP file signature
+        with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as temp_zip:
+            temp_zip.write(stdin_data)
+            temp_zip_path = temp_zip.name
+
+        try:
+            with _read_zip_file(temp_zip_path) as f:
+                yield f
+        finally:
+            try:
+                os.unlink(temp_zip_path)
+            except OSError:
+                pass
+    else:
+        # Regular text content
+        text_content = stdin_data.decode("utf-8")
+        yield io.StringIO(text_content)
+
+
 @contextlib.contextmanager
 def smart_read(
     filename: Optional[str] = None,
@@ -49,81 +107,14 @@ def smart_read(
     Also handles ZIP content piped to stdin.
     """
     if filename is None or filename == "-":
-        # Read from stdin, but check if it's ZIP content
-        stdin_data = sys.stdin.buffer.read()  # Read as bytes
-
-        # Check if this looks like ZIP data (ZIP files start with 'PK')
-        if stdin_data.startswith(b"PK"):
-            print("Detected ZIP content from stdin", file=sys.stderr)
-
-            # Write to temporary file and process as ZIP
-            with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as temp_zip:
-                temp_zip.write(stdin_data)
-                temp_zip_path = temp_zip.name
-
-            try:
-                with zipfile.ZipFile(temp_zip_path, "r") as zip_file:
-                    file_list = zip_file.namelist()
-                    jsonl_files = [f for f in file_list if f.endswith(".jsonl")]
-
-                    if not jsonl_files:
-                        raise ValueError(f"No .jsonl file found in ZIP from stdin")
-
-                    if len(jsonl_files) > 1:
-                        print(
-                            f"Warning: Multiple .jsonl files found in ZIP. Using: {jsonl_files[0]}",
-                            file=sys.stderr,
-                        )
-
-                    jsonl_filename = jsonl_files[0]
-
-                    # Extract to temporary file
-                    with tempfile.TemporaryDirectory() as temp_dir:
-                        zip_file.extract(jsonl_filename, path=temp_dir)
-                        extracted_path = os.path.join(temp_dir, jsonl_filename)
-
-                        # Read the extracted file
-                        with open(extracted_path, "r", encoding="utf-8") as f:
-                            yield f
-            finally:
-                # Clean up temp ZIP file
-                try:
-                    os.unlink(temp_zip_path)
-                except OSError:
-                    pass
-        else:
-            # Regular text content from stdin
-            text_content = stdin_data.decode("utf-8")
-            text_stream = io.StringIO(text_content)
-            yield text_stream
+        with _handle_stdin() as f:
+            yield f
+    elif filename.endswith(".zip"):
+        with _read_zip_file(filename) as f:
+            yield f
     else:
-        if filename.endswith(".zip"):
-            with zipfile.ZipFile(filename, "r") as zip_file:
-                file_list = zip_file.namelist()
-                jsonl_files = [f for f in file_list if f.endswith(".jsonl")]
-
-                if not jsonl_files:
-                    raise ValueError(f"No .jsonl file found in ZIP archive: {filename}")
-
-                if len(jsonl_files) > 1:
-                    print(
-                        f"Warning: Multiple .jsonl files found in ZIP. Using: {jsonl_files[0]}",
-                        file=sys.stderr,
-                    )
-
-                jsonl_filename = jsonl_files[0]
-
-                # Extract to temporary file
-                with tempfile.TemporaryDirectory() as temp_dir:
-                    zip_file.extract(jsonl_filename, path=temp_dir)
-                    extracted_path = os.path.join(temp_dir, jsonl_filename)
-
-                    # Read the extracted file
-                    with open(extracted_path, "r", encoding="utf-8") as f:
-                        yield f
-        else:
-            with open(filename, "r", encoding="utf-8") as f:
-                yield f
+        with open(filename, "r", encoding="utf-8") as f:
+            yield f
 
 
 def format_scores(
