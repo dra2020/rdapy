@@ -4,7 +4,7 @@ ENSEMBLE I/O
 
 from typing import Any, Optional, Dict, Generator, TextIO, TypedDict
 
-import os, sys, contextlib, json
+import os, sys, contextlib, json, zipfile, io, tempfile
 
 
 class PlanRecord(TypedDict):
@@ -43,18 +43,87 @@ def smart_write(
 def smart_read(
     filename: Optional[str] = None,
 ) -> Generator[TextIO | TextIO, None, None]:
-    """Read from a file or stdin."""
+    """
+    Context manager that reads from stdin if filename is None,
+    or from a file (supporting regular files and ZIP files containing JSONL).
+    Also handles ZIP content piped to stdin.
+    """
+    if filename is None or filename == "-":
+        # Read from stdin, but check if it's ZIP content
+        stdin_data = sys.stdin.buffer.read()  # Read as bytes
 
-    if filename and filename != "-":
-        fh: TextIO = open(os.path.expanduser(filename), "r")
+        # Check if this looks like ZIP data (ZIP files start with 'PK')
+        if stdin_data.startswith(b"PK"):
+            print("Detected ZIP content from stdin", file=sys.stderr)
+
+            # Write to temporary file and process as ZIP
+            with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as temp_zip:
+                temp_zip.write(stdin_data)
+                temp_zip_path = temp_zip.name
+
+            try:
+                with zipfile.ZipFile(temp_zip_path, "r") as zip_file:
+                    file_list = zip_file.namelist()
+                    jsonl_files = [f for f in file_list if f.endswith(".jsonl")]
+
+                    if not jsonl_files:
+                        raise ValueError(f"No .jsonl file found in ZIP from stdin")
+
+                    if len(jsonl_files) > 1:
+                        print(
+                            f"Warning: Multiple .jsonl files found in ZIP. Using: {jsonl_files[0]}",
+                            file=sys.stderr,
+                        )
+
+                    jsonl_filename = jsonl_files[0]
+
+                    # Extract to temporary file
+                    with tempfile.TemporaryDirectory() as temp_dir:
+                        zip_file.extract(jsonl_filename, path=temp_dir)
+                        extracted_path = os.path.join(temp_dir, jsonl_filename)
+
+                        # Read the extracted file
+                        with open(extracted_path, "r", encoding="utf-8") as f:
+                            yield f
+            finally:
+                # Clean up temp ZIP file
+                try:
+                    os.unlink(temp_zip_path)
+                except OSError:
+                    pass
+        else:
+            # Regular text content from stdin
+            text_content = stdin_data.decode("utf-8")
+            text_stream = io.StringIO(text_content)
+            yield text_stream
     else:
-        fh = sys.stdin
+        if filename.endswith(".zip"):
+            with zipfile.ZipFile(filename, "r") as zip_file:
+                file_list = zip_file.namelist()
+                jsonl_files = [f for f in file_list if f.endswith(".jsonl")]
 
-    try:
-        yield fh
-    finally:
-        if fh is not sys.stdin:
-            fh.close()
+                if not jsonl_files:
+                    raise ValueError(f"No .jsonl file found in ZIP archive: {filename}")
+
+                if len(jsonl_files) > 1:
+                    print(
+                        f"Warning: Multiple .jsonl files found in ZIP. Using: {jsonl_files[0]}",
+                        file=sys.stderr,
+                    )
+
+                jsonl_filename = jsonl_files[0]
+
+                # Extract to temporary file
+                with tempfile.TemporaryDirectory() as temp_dir:
+                    zip_file.extract(jsonl_filename, path=temp_dir)
+                    extracted_path = os.path.join(temp_dir, jsonl_filename)
+
+                    # Read the extracted file
+                    with open(extracted_path, "r", encoding="utf-8") as f:
+                        yield f
+        else:
+            with open(filename, "r", encoding="utf-8") as f:
+                yield f
 
 
 def format_scores(
