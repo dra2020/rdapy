@@ -1,10 +1,11 @@
 #!/bin/bash
 
 CYCLE=2020
-DATA_PATH=~/local/temp-data
+DATA_PATH=~/local/temp-data # TODO
 VERSION=v5
-GRAPH_PATH=~/local/adjacency-graphs
-NEIGHBORHOOD_PATH=~/local/geographic-baseline
+GRAPH_PATH=~/local/adjacency-graphs # TODO
+NEIGHBORHOOD_PATH=temp
+rm -rf "${NEIGHBORHOOD_PATH}/*_neighborhoods.jsonl"
 
 echo Finding neighborhoods for AL/congress ...
 scripts/geographic-baseline/find_neighborhoods.py \

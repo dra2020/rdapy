@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # CYCLE=2020
-DATA_PATH=~/local/temp-data
+DATA_PATH=~/local/temp-data # TODO
 VERSION=v5
-NEIGHBORHOOD_PATH=~/local/geographic-baseline
-PRECOMPUTED_PATH=~/local/geographic-baseline
+NEIGHBORHOOD_PATH=cached/2020_VTD
+PRECOMPUTED_PATH=cached/2020_VTD
 
 echo Computing the geographic baseline for AL/congress ...
 scripts/geographic-baseline/once.py \

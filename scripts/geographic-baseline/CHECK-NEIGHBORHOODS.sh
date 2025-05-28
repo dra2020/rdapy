@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # CYCLE=2020
-DATA_PATH=~/local/temp-data
+DATA_PATH=~/local/temp-data # TODO
 VERSION=v5
-NEIGHBORHOOD_PATH=~/local/geographic-baseline
+NEIGHBORHOOD_PATH=temp
 
 echo Checking the neighborhoods for AL/congress ...
 scripts/geographic-baseline/check_neighborhoods.py \

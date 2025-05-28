@@ -16,7 +16,7 @@ import os, json
 
 from rdapy import DISTRICTS_BY_STATE
 
-baseline_dir: str = "~/local/geographic-baseline"
+baseline_dir: str = "cached/2020_VTD"
 
 
 def main():
