@@ -137,6 +137,7 @@ from .score import (
     set_bit,
     serialize_bits,
     deserialize_bits,
+    eval_partisan_lean,
 )
 
 
