@@ -115,6 +115,7 @@ from .score import (
     DatasetKey,
     deserialize_bits,
     District,
+    DISTRICTS_BY_STATE,
     eval_partisan_lean,
     format_scores,
     GeoIDIndex,
