@@ -65,7 +65,7 @@ def main():
     census_dataset: DatasetKey = get_dataset(data_map, "census")
     total_pop_field: str = get_fields(data_map, "census", census_dataset)["total_pop"]
     state_pop: int = sum([precinct[total_pop_field] for precinct in input_data])
-    target_pop: int = state_pop // n_districts
+    target_pop: int = int((state_pop // n_districts) * args.size)
 
     data_by_geoid: Dict[str, Dict[str, Any]] = index_data(input_data)
     geoid_to_index: Dict[str, int] = index_geoids(geoids)
@@ -123,11 +123,12 @@ def parse_arguments():
         description="Parse command line arguments."
     )
 
-    parser.add_argument("--state", type=str, help="State abbreviation")
+    parser.add_argument("--state", type=str, required=True, help="State abbreviation")
     parser.add_argument(
         "--plan-type",
         type=str,
         dest="plan_type",
+        required=True,
         help="Plan type (e.g., congress)",
     )
 
@@ -135,11 +136,19 @@ def parse_arguments():
         "--data",
         type=str,
         help="Path to input data file",
+        required=True,
     )
     parser.add_argument(
         "--graph",
         type=str,
+        required=True,
         help="Path to graph file",
+    )
+    parser.add_argument(
+        "--size",
+        type=float,
+        default=1.0,
+        help="Percentage of target size for neighborhoods (default: 1.0)",
     )
 
     parser.add_argument("--debug", dest="debug", action="store_true", help="Debug mode")
