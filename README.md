@@ -78,7 +78,6 @@ Then activate the virtual environment again, and install the required dependenci
 source /path/to/venvs/rdapy/bin/activate
 pip install -r requirements.txt
 pip install --upgrade pip
-pip install -e .
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 ```
 
