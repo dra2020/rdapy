@@ -3,13 +3,16 @@
 Redistricting Analytics in Python
 
 This repository ([rdapy](https://github.com/dra2020/rdapy)) re-implements 
-the main analytics used in [Dave's Redistricting](https://davesredistricting.org/) (DRA),
-ignoring a few DRA-specific aspects (in particular, the five [0-100] ratings).
+the main analytics used in [Dave's Redistricting](https://davesredistricting.org/) (DRA).
 Unlike the analytics used in the app ([dra-analytics](https://github.com/dra2020/dra-analytics))
-which are implememented in TypeScript, these are implemented in Python to make them easier to use outside of DRA.
+which are implememented in TypeScript, 
+these are implemented as a Python package to make them easier to use outside of DRA.
+There is also a command-line interface for high-volume scoring.
 
-There are both a PyPi package and a command-line interface.
-They are described in detail at [the website for this repository](https://dra2020.github.io/rdapy/).
+These are described in detail at [the website for this repository](https://dra2020.github.io/rdapy/).
+
+To use it in your Python, install the package.
+To use the high-volume scoring scripts, set up the command-line interface.
 
 ## Installing the Package
 
@@ -23,25 +26,48 @@ The latest version of the package is 2.3.4.
 
 Then in your code, either `import rdapy` or `from rdapy import ...`.
 
-## Setting up the Command-Line Interface
+## Installing Command-Line Interface
 
-To setup the repository for local command-line use:
+Before installing the command-line interface (CLI),
+make sure you have the prerequisites installed.
 
-Clone the repository:
+### Install Prequisites
+
+The high-volume scoring scripts require Python 3.12 or later.
+If that is not the default on your computer, 
+you can use `pyenv` to manage multiple Python versions.
+These instructions assume you're using `pyenv`.
+
+Install `pyenv` from [Homebrew](https://formulae.brew.sh/formula/pyenv):
+
+```bash
+brew install pyenv
+```
+
+Completing that setup will involve adding a few lines to your shell profile file (like `.bash_profile`).
+
+You can install Python 3.12 from [Homebrew](https://formulae.brew.sh/formula/python@3.12):
+
+```bash
+brew install python@3.12
+```
+
+### Setting Up Your Environment
+
+With the prequisites installed, clone the GitHub repository:
 
 ```bash
 git clone https://github.com/dra2020/rdapy
 cd rdapy
 ```
 
-Then create a virtual environment that uses Python 3.12.
-Then reset Python outside the virtual environment to the normal setting.
-For example, using `pyenv`:
+Then create a virtual environment that uses Python 3.12, and 
+then reset Python outside the virtual environment to the normal setting:
 
 ```bash
 pyenv shell 3.12
-python3 -m venv "./rdapy"
-source "./rdapy/bin/activate"
+python3 -m venv /path/to/venvs/rdapy
+source /path/to/venvs/rdapy/bin/activate
 deactivate
 pyenv shell --unset
 ```
@@ -49,9 +75,11 @@ pyenv shell --unset
 Then activate the virtual environment again, and install the required dependencies:
 
 ```bash
-source "./rdapy/bin/activate"
+source /path/to/venvs/rdapy/bin/activate
 pip install -r requirements.txt
 pip install --upgrade pip
+pip install -e .
+export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 ```
 
 Finally, test that the automated tests run:
@@ -60,7 +88,7 @@ Finally, test that the automated tests run:
 pytest
 ```
 
-and that the command-line interface works:
+Then test that the command-line interface works:
 
 ```bash
 scripts/score/SCORE.sh \
@@ -70,9 +98,11 @@ scripts/score/SCORE.sh \
 --graph testdata/examples/NC_graph.json \
 --precomputed testdata/examples/NC_congress_precomputed.json \
 --plans testdata/plans/NC_congress_plans.tagged.jsonl \
---scores temp/TEST_congress_scores.csv \
---by-district temp/TEST_congress_by-district.jsonl
+--scores /path/to/TEST_scores.csv \
+--by-district /path/to/TEST_by-district.jsonl
 ```
+
+Replace `/path/to` with where you want the output files to go.
 
 ## Development
 
