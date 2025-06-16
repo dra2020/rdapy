@@ -54,7 +54,21 @@ def abstract_data(feature, data_map: Dict[str, Any]) -> Dict[str, Any]:
                         data_map["shapes"]["fields"][field]
                     ]
                 case "census" | "vap" | "cvap" | "election":
-                    fields: Dict[str, str] = data_map[dataset_type]["fields"]
+                    fields: Dict[str, str] = data_map[dataset_type]["fields"].copy()
+
+                    # Handle VAP_NH special case
+                    if dataset_type == "vap" and dataset.endswith("VAP_NH"):
+                        for k, v in fields.items():
+                            if k in [
+                                "black_vap",
+                                "asian_vap",
+                                "pacific_vap",
+                                "native_vap",
+                            ]:
+                                fields[k] = v + "Alone"
+                        pass  # for debugging
+                    ###
+
                     i: int = 0
                     j: int = 0
                     for k, v in fields.items():
