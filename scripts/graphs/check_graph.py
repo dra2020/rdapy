@@ -5,17 +5,17 @@ VERIFY THAN AN ADJACENCY GRAPH IS FULLY CONNECTED
 
 TODO - Update directory paths
 
-$ scripts/graph/check_graph.py \
+$ scripts/graphs/check_graph.py \
 --state NC \
 --data ~/local/temp-data/NC_input_data.v4.jsonl \
 --graph ~/local/dra-to-publish/NC_2020_graph.json
 
-$ scripts/graph/check_graph.py \
+$ scripts/graphs/check_graph.py \
 --state CA \
 --data ~/local/temp-data/CA_input_data.v4.jsonl \
 --graph ~/local/dra-to-publish/CA_2020_graph.json
 
-$ scripts/graph/check_graph.py \
+$ scripts/graphs/check_graph.py \
 --state HI \
 --data ~/local/temp-data/HI_input_data.v4.jsonl \
 --graph ~/local/dra-to-publish/HI_2020_graph.json

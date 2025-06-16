@@ -11,18 +11,18 @@ TO THE TAGGED ASSIGNMENT-FORMAT JSONL
 
 For example:
 
-$ scripts/from_json.py \
+$ scripts/formats/from_json.py \
 --input testdata/plans/NC_congress_plans.legacy.json \
 --output temp/TEST_plans.jsonl
 
 -or-
 
-$ scripts/from_json.py \
+$ scripts/formats/from_json.py \
 --input testdata/plans/NC_congress_plans.legacy.json
 
 For documentation, type:
 
-$ scripts/from_json.py -h
+$ scripts/formats/from_json.py -h
 
 """
 

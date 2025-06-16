@@ -5,19 +5,19 @@ CREATE A TAGGED ASSIGNMENT-FORMAT JSONL FROM A LIST OF PRECINCT-ASSIGNMENT FILES
 
 NOTE - This script assumes that all the CSV files are for the same state and plan type.
 
-$ scripts/from_csvs.py \
+$ scripts/formats/from_csvs.py \
 --files testdata/plans/csvs/NC_congress.001.csv \
 --output temp/TEST_plans.jsonl
 
 -or-
 
-$ scripts/from_csvs.py \
+$ scripts/formats/from_csvs.py \
 --files testdata/plans/csvs/NC_congress.*.csv \
 --output temp/TEST_plans.jsonl
 
 For documentation, type:
 
-$ scripts/from_csvs.py -h
+$ scripts/formats/from_csvs.py -h
 
 """
 
