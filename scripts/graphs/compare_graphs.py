@@ -9,7 +9,7 @@ $ scripts/graphs/compare_graphs.py \
 
 """
 
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Set
 
 import os
 from itertools import combinations
@@ -27,8 +27,8 @@ def main() -> None:
     for dir1, dir2 in combos:
         print(f"Comparing graphs in {dir1} and {dir2}.")
 
-        diff_geoids: List[str] = list()
-        diff_connections: List[str] = list()
+        diff_geoids: List[Tuple[str, Set[str]]] = list()
+        diff_connections: List[Tuple[str, str, Set[str]]] = list()
         bad_graphs: List[Tuple[str, str]] = list()
 
         for xx, _ in DISTRICTS_BY_STATE.items():
@@ -47,29 +47,36 @@ def main() -> None:
                 bad_graphs.append((xx, graph_dir))
                 continue
 
-            if set(graph1.keys()) != set(graph2.keys()):
-                diff_geoids.append(xx)
+            nodes1: Set[str] = set(graph1.keys())
+            nodes2: Set[str] = set(graph2.keys())
+            if nodes1 != nodes2:
+                diff_geoids.append((xx, nodes1 ^ nodes2))
                 continue
 
             for geoid in graph1.keys():
-                if (
-                    set(graph1[geoid]) != set(graph2[geoid])
-                    and xx not in diff_connections
-                ):
-                    diff_connections.append((xx))
+                edges1: Set[str] = set(graph1[geoid])
+                edges2: Set[str] = set(graph2[geoid])
+                if edges1 != edges2:
+                    diff_connections.append((xx, geoid, edges1 ^ edges2))
 
         if diff_geoids:
-            print(f"These graphs differ in some geoids: {diff_geoids}.")
+            print(f"These graphs differ in some geoids:")
+            for diff in diff_geoids:
+                print(f"  {diff}")
         else:
             print("These graphs have the same geoids.")
 
         if diff_connections:
-            print(f"These graphs differ in some connections: {diff_connections}.")
+            print(f"These graphs differ in some connections:")
+            for diff in diff_connections:
+                print(f"  {diff}")
         else:
             print("These graphs have the same connections.")
 
         if bad_graphs:
-            print(f"These graphs could not be loaded: {bad_graphs}.")
+            print(f"These graphs could not be loaded:")
+            for diff in bad_graphs:
+                print(f"  {diff}")
         else:
             print("All graphs loaded successfully.")
         print()
