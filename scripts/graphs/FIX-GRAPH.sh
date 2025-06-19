@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CYCLE=2020
-GRAPH_PATH=~/local/adjacency-graphs
+GRAPH_PATH=/path/to/adjacency-graphs
 
 
 # Check if state code argument is provided
