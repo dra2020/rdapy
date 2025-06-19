@@ -87,25 +87,43 @@ Finally, test that the automated tests run:
 pytest
 ```
 
-Then test that the command-line interface works:
+Then test that the command-line interface works. 
+First, unzip a sample GeoJSON and graph package:
+
+```bash
+scripts/score/UNPACK.sh \
+--input testdata/data/Geojson_NC.v06.zip \
+--output /dir/for/unzipped/files
+```
+
+Replace `/dir/for/unzipped/files` with the directory where you want the unzipped files to go.
+The directory does not have to exist.
+The root directory can be `/tmp`.
+The output directory will contain four files:
+- A license file
+- A README file
+- A GeoJSON like this `NC_2020_VD_tabblock.vtd.datasets.geojson`, and
+- An adjacency graphy like this `NC_2020_graph.json`
+
+Then score some sample plans:
 
 ```bash
 scripts/score/SCORE.sh \
 --state NC \
 --plan-type congress \
---geojson testdata/data/NC_vtd_datasets.v4.geojson \
---graph testdata/examples/NC_graph.json \
+--geojson /dir/for/unzipped/files/NC_2020_VD_tabblock.vtd.datasets.geojson \
+--graph /dir/for/unzipped/files/NC_2020_graph.json \
 --precomputed testdata/examples/NC_congress_precomputed.json \
 --plans testdata/plans/NC_congress_plans.tagged.jsonl \
 --scores /path/to/TEST_scores.csv \
 --by-district /path/to/TEST_by-district.jsonl
 ```
 
-Replace `/path/to` with where you want the output files to go.
+Replace `/path/to` with where you want the scores CSV and by-district JSONL aggregates files to go.
 
 ## Development
 
-There is a `launch.json` for VS Code debugging in the `docs` directory.
+There is a sample `launch.json` for VS Code debugging in the `docs` directory.
 
 ## Testing
 
