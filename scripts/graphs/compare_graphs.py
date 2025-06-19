@@ -3,9 +3,7 @@
 """
 A UTILITY SCRIPT TO COMPARE SETS OF ADJACENCY GRAPHS
 
-$ scripts/graphs/compare_graphs.py \
---one  ~/local/adjacency-graphs \
---two ~/local/dra-to-publish
+$ scripts/graphs/compare_graphs.py
 
 """
 
