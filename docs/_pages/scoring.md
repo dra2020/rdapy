@@ -14,7 +14,17 @@ The data & shapes used by this scoring toolchain are the GeoJSON and adjacency g
 published by [Dave's Redistricting](https://davesredistricting.org/) (DRA)
 in the [dra2020/vtd_data](https://github.com/dra2020/vtd_data) GitHub repository.
 The specifics of that format are described there.
-The frontend data-processing scripts here depend on that custom GeoJSON format.
+The front-end data-processing scripts here depend on that custom GeoJSON format.
+
+To get that data, clone the `dra2020/vtd_data` GitHub repository:
+
+```bash
+cd /path/to/your/dev/root
+git clone https://github.com/dra2020/vtd_data
+```
+
+We may add support for downloading individual state GeoJSON files on demand and temporarily,
+but right now you have to download the entire repository.
 
 ### Scores (Metrics)
 
