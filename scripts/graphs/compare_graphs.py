@@ -23,6 +23,7 @@ def main() -> None:
     graph_dirs: List[str] = ["vtd_data", "dra_data", "adjacency-graphs"]
     combos: List[tuple] = list(combinations(graph_dirs, 2))
 
+    print()
     for dir1, dir2 in combos:
         print(f"Comparing graphs in {dir1} and {dir2}.")
 
@@ -37,6 +38,8 @@ def main() -> None:
 
                 graph_path = path_to_graph(dir2, xx)
                 graph2: Dict[str, List[str]] = load_graph(graph_path)
+
+                pass
 
             except Exception as e:
                 bad_graphs.append(xx)
@@ -85,7 +88,7 @@ def path_to_graph(dir: str, xx: str) -> str:
 
     if dir == "dra_data":
         graph_path = os.path.expanduser(
-            f"~/local/dra-data/data/{xx}/2020_VD/contiguity_graph.json"
+            f"~/local/dra-data/data/{xx}/2020_VD/contiguity.json"
         )
         return graph_path
 
