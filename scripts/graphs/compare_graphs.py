@@ -9,7 +9,7 @@ $ scripts/graphs/compare_graphs.py \
 
 """
 
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 import os
 from itertools import combinations
@@ -29,20 +29,22 @@ def main() -> None:
 
         diff_geoids: List[str] = list()
         diff_connections: List[str] = list()
-        bad_graphs: List[str] = list()
+        bad_graphs: List[Tuple[str, str]] = list()
 
         for xx, _ in DISTRICTS_BY_STATE.items():
             try:
                 graph_path = path_to_graph(dir1, xx)
+                graph_dir = dir1
                 graph1: Dict[str, List[str]] = load_graph(graph_path)
 
                 graph_path = path_to_graph(dir2, xx)
+                graph_dir = dir2
                 graph2: Dict[str, List[str]] = load_graph(graph_path)
 
                 pass
 
             except Exception as e:
-                bad_graphs.append(xx)
+                bad_graphs.append((xx, graph_dir))
                 continue
 
             if set(graph1.keys()) != set(graph2.keys()):
