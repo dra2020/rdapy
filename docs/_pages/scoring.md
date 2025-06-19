@@ -10,7 +10,9 @@ These scripts are in the `scripts` directory.
 
 ### Input Data
 
-The data & shapes used by this scoring toolchain are [Dave's Redistricting](https://davesredistricting.org/) (DRA) [GeoJSON files](TODO).
+The data & shapes used by this scoring toolchain are the GeoJSON and adjacency graph files
+published by [Dave's Redistricting](https://davesredistricting.org/) (DRA)
+in the [dra2020/vtd_data](https://github.com/dra2020/vtd_data) GitHub repository.
 The specifics of that format are described there.
 The frontend data-processing scripts here depend on that custom GeoJSON format.
 
