@@ -88,10 +88,10 @@ pytest
 ```
 
 Then test that the command-line interface works. 
-First, unzip a sample GeoJSON and graph package:
+First, unzip the sample GeoJSON and graph package:
 
 ```bash
-scripts/score/UNPACK.sh \
+scripts/UNZIP-GEOJSON.sh \
 --input testdata/data/Geojson_NC.v06.zip \
 --output /dir/for/unzipped/files
 ```
