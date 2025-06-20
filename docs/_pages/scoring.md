@@ -16,15 +16,42 @@ in the [dra2020/vtd_data](https://github.com/dra2020/vtd_data) GitHub repository
 The specifics of that format are described there.
 The front-end data-processing scripts here depend on that custom GeoJSON format.
 
-To get that data, clone the `dra2020/vtd_data` GitHub repository:
+You can use this data in two different ways.
+One is to clone the `dra2020/vtd_data` GitHub repository:
 
 ```bash
 cd /path/to/your/dev/root
 git clone https://github.com/dra2020/vtd_data
 ```
 
-We may add support for downloading individual state GeoJSON files on demand and temporarily,
-but right now you have to download the entire repository.
+This copies all the data in the repository to your local machine.
+
+Another way to use this data is to download the data for a state temporarily:
+
+```bash
+scripts/GET-GEOJSON.sh \
+--state NC \
+--output /tmp/NC_Geojson.zip \
+--version v06
+```
+
+That example shows downloading the v06 NC GeoJSON file and adjacency graph to a temporary file in `/tmp`.
+From there, you can either manually unzip or use the `UNZIP-GEOJSON.sh` script.
+This example show unzipping the downloaded file to a directory in `/tmp`:
+
+```bash
+scripts/UNZIP-GEOJSON.sh \
+--input /tmp/NC_Geojson.zip \
+--output /tmp/NC
+```
+
+That directory will contain four files:
+- A license file
+- A README file
+- A GeoJSON like this `NC_2020_VD_tabblock.vtd.datasets.geojson`, and
+- An adjacency graphy like this `NC_2020_graph.json`
+
+which you can use as input to the scoring scripts.
 
 ### Scores (Metrics)
 
