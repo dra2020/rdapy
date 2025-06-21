@@ -4,9 +4,10 @@
 TEST BIAS METRICS
 """
 
+from math import atan
 
-from rdapy.partisan import *
-from rdapy.utils import *
+from rdapy.partisan import is_sweep, calc_efficiency_gap, radians_to_degrees
+from rdapy.utils import approx_equal, EPSILON
 
 
 class TestBiasMetrics:
