@@ -172,9 +172,13 @@ def parse_args() -> Namespace:
         type=str,
         default="V_20_CVAP",
     )
+
+    def split_elections(s):
+        return s.split(",")
+
     parser.add_argument(
         "--elections",
-        type=lambda s: s.split(","),
+        type=split_elections,
         help="Comma-separated list of election datasets to use",
         default=["E_16-20_COMP"],  # Use `__all__` to get all elections
     )
