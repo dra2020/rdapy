@@ -9,21 +9,7 @@ SCORE PLANS
 
 Usage:
 
-cat testdata/examples/NC_congress_aggs.100.v3.jsonl \
-| scripts/score/score.py \
---state NC \
---plan-type congress \
---data testdata/examples/NC_input_data.v3.jsonl \
---graph testdata/examples/NC_graph.json > temp/DEBUG_scores.jsonl
-
-cat testdata/examples/NC_congress_aggs.100.v4.jsonl \
-| scripts/score/score.py \
---state NC \
---plan-type congress \
---data testdata/examples/NC_input_data.v4.jsonl \
---graph testdata/examples/NC_graph.json > temp/DEBUG_scores.jsonl
-
-cat testdata/examples/NC_congress_aggs.100.v5.jsonl \
+cat testdata/examples/NC_congress_aggs.100.jsonl \
 | scripts/score/score.py \
 --state NC \
 --plan-type congress \
