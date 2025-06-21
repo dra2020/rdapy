@@ -5,7 +5,6 @@ TEST COMPACTNESS
 """
 
 from rdapy import *
-from testutils import *
 
 
 INDEX: int = 0

@@ -22,7 +22,6 @@ from shapely.geometry import (
 )
 
 from rdapy import *
-from testutils import *
 
 
 def time_function(func) -> Callable[..., Any]:

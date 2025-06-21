@@ -5,7 +5,6 @@ Sample compactness analytics
 """
 
 from rdapy import *
-from testutils import *
 
 # Load data
 

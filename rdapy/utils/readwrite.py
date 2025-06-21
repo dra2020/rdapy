@@ -4,10 +4,12 @@
 READ/WRITE ROUTINES
 """
 
-import os
-from csv import DictReader, DictWriter
-import json
 from typing import Any, Optional
+
+import os, json, csv
+from csv import DictReader, DictWriter
+from shapely.geometry import shape
+import fiona
 
 
 ### FILE NAMES & PATHS ###
@@ -118,6 +120,48 @@ def write_json(rel_path, data) -> None:
             json.dump(data, f, ensure_ascii=False, indent=4)
     except:
         raise Exception("Exception writing JSON.")
+
+
+### SHAPES ###
+
+
+def load_features(samples_csv):
+    # Initialize a lists of samples & predictions
+    samples = []
+    predictions = []
+
+    with open(samples_csv) as f_input:
+        csv_file = csv.DictReader(f_input)
+
+        # Number of features
+        n = 7
+
+        # Process each row in the .csv file
+        for row in csv_file:
+            values = list(row.values())
+
+            sample_id = int(values[0])
+
+            sample = [float(x) for x in values[1 : (n + 1)]]
+            samples.append((sample_id, sample))
+
+            prediction = float(values[n + 1])
+            predictions.append((sample_id, prediction))
+
+    return samples, predictions
+
+
+def load_shapes(shp_file: str, id: str = "OBJECTID"):
+    shapes_by_id = []
+    with fiona.Env():
+        with fiona.open(shp_file) as source:
+            meta = source.meta
+            for item in source:
+                obj_id = item["properties"][id]
+                shp = shape(item["geometry"])
+                shapes_by_id.append((obj_id, shp))
+
+    return shapes_by_id, meta
 
 
 ### END ###

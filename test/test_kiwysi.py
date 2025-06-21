@@ -7,8 +7,6 @@ TEST KIWYSI COMPACTNESS MODEL
 from pytest import approx
 
 from rdapy import *
-from testutils import *
-
 
 INDEX: int = 0
 VALUE: int = 1
