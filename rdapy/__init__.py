@@ -6,13 +6,21 @@ from .base import (
     OUT_OF_STATE_THRESHOLD,
     DatasetKey,
     Aggregates,
+    #
+    read_csv,
+    read_json,
+    write_csv,
+    write_json,
+    load_features,
+    load_shapes,
+    index_shapes,
+    abstract_data,
+    abstract_shape,
+    #
     approx_equal,
     vector_approx_equal,
     matrix_approx_equal,
-    read_csv,
-    read_json,
-    load_features,
-    load_shapes,
+    #
     get_dataset,
     get_datasets,
     get_fields,
@@ -27,10 +35,12 @@ from .compactness import (
     calc_polsby,
     calc_hull,
     calc_schwartzberg,
+    #
     featureize_shape,
     score_features,
     kiwysi_rank_shape,
     trim_kiwysi_rank,
+    #
     make_circle,
     reock_formula,
     polsby_formula,
@@ -56,23 +66,28 @@ from .minority import (
 
 from .splitting import (
     calc_county_district_splitting,
+    #
     split_score,
+    county_totals,
+    district_totals,
+    #
     calc_county_fractions,
     calc_county_weights,
     county_split_score,
     county_splitting,
     calc_county_splitting,
+    #
     calc_district_fractions,
     calc_district_weights,
     district_split_score,
     district_splitting,
     calc_district_splitting,
-    reduce_county_splits,
-    reduce_district_splits,
-    county_totals,
-    district_totals,
+    #
     calc_county_splitting_reduced,
     calc_district_splitting_reduced,
+    reduce_county_splits,
+    reduce_district_splits,
+    #
     calc_coi_splitting,
     uncertainty_of_membership,
     effective_splits,
@@ -120,6 +135,7 @@ from .rate import (
     rate_splitting,
 )
 
+# TODO -- Organize this
 from .score import (
     aggregate_districts,
     aggregate_plans,
