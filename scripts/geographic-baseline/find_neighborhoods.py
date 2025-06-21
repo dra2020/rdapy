@@ -11,7 +11,7 @@ For example:
 $ scripts/geographic-baseline/find_neighborhoods.py \
 --state NC \
 --plan-type congress \
---data testdata/examples/NC_input_data.v4.jsonl \
+--data testdata/examples/NC_input_data.jsonl \
 --graph testdata/examples/NC_graph.json \
 > temp/DEBUG_NC_congress_neighborhoods.jsonl
 

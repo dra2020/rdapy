@@ -8,7 +8,7 @@ For example:
 $ scripts/geographic-baseline/once.py \
 --state NC \
 --plan-type congress \
---data testdata/examples/NC_input_data.v4.jsonl \
+--data testdata/examples/NC_input_data.jsonl \
 < temp/DEBUG_NC_congress_neighborhoods.jsonl \
 > temp/DEBUG_NC_congress.json
 

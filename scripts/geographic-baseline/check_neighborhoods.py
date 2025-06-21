@@ -6,7 +6,7 @@ EXPERIMENT: VERIFY THAT THE "NEIGHBORHOOD" FOR EACH PRECINCT ROUNDTRIPS
 For example:
 
 $ scripts/geographic-baseline/check_neighborhoods.py \
---data testdata/examples/NC_input_data.v4.jsonl \
+--data testdata/examples/NC_input_data.jsonl \
 < temp/DEBUG_NC_congress_neighborhoods.jsonl
 
 """
