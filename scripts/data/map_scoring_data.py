@@ -4,11 +4,11 @@
 MAP SCORING DATA TO TO A GIVEN GEOJSON FILE
 
 $ scripts/data/map_scoring_data.py \
---geojson testdata/data/NC_vtd_datasets.v4.geojson \
+--geojson testdata/examples/NC_vtd_datasets.v4.geojson \
 --data-map temp/DEBUG_data_map.json
 
 $ scripts/data/map_scoring_data.py \
---geojson testdata/data/NC_vtd_datasets.v4.geojson \
+--geojson testdata/examples/NC_vtd_datasets.v4.geojson \
 --data-map testdata/examples/NC_data_map.v4.json
 
 NOTE -- The default datasets are for 2020 census, VAP, and CVAP data,

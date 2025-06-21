@@ -107,7 +107,7 @@ where:
 *   The state is a two-character state code.
 *   The `plan-type` is `congress`, 'upper`, or `lower`, for upper and lower state house.
 *   The `geojson` is a DRA precinct GeoJSON file with data coded by dataset.
-    An example is provided in `testdata/data/NC_vtd_datasets.geojson`.
+    An example is provided in `testdata/examples/NC_vtd_datasets.geojson`.
 *   The `graph` is a JSON file that contains the node/list of neighbors adjacency graph of the precincts.
     An example is provided in `testdata/examples/NC_graph.json`.
 *   The `plans` is a JSONL file that contains the ensemble of plans to be scored.

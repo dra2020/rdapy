@@ -32,7 +32,7 @@
     "username": "alecramsay",
     "verbose": false,
     "version": 4,
-    "source": "testdata/data",
+    "source": "testdata/examples",
     "path": "NC_vtd_datasets.v4.geojson",
     "geoid": "id",
     "census": {

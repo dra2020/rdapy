@@ -4,22 +4,10 @@
 EXTRACT DATA & SHAPES FROM A GEOJSON FILE
 
 $ scripts/data/extract_data.py \
---geojson testdata/data/NC_vtd_datasets.v3.geojson \
---data-map testdata/examples/NC_data_map.v3.json \
+--geojson testdata/examples/NC_vtd_datasets.geojson \
+--data-map testdata/examples/NC_data_map.json \
 --graph testdata/examples/NC_graph.json \
---data temp/DEBUG_input_data.jsonl
-
-$ scripts/data/extract_data.py \
---geojson testdata/data/NC_vtd_datasets.v4.geojson \
---data-map testdata/examples/NC_data_map.v4.json \
---graph testdata/examples/NC_graph.json \
---data temp/DEBUG_input_data.jsonl
-
-$ scripts/data/extract_data.py \
---geojson testdata/data/NC_vtd_datasets.v4.geojson \
---data-map testdata/examples/NC_data_map.v4.json \
---graph testdata/examples/NC_graph.json \
---data testdata/examples/NC_input_data.v4.jsonl
+--data testdata/examples/NC_input_data.jsonl
 
 """
 

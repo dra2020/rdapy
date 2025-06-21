@@ -92,7 +92,7 @@ First, unzip the sample GeoJSON and graph package:
 
 ```bash
 scripts/UNZIP-GEOJSON.sh \
---input testdata/examples/Geojson_NC.v06.zip \
+--input testdata/examples/Geojson_NC.zip \
 --output /dir/for/unzipped/files
 ```
 
