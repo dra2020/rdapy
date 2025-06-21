@@ -290,9 +290,7 @@ class TestCountyDistrictSplitting:
         assert matrix_approx_equal(reduce_district_splits(splits, cT), rD, places=4)
 
     def test_AZ_splitting(self) -> None:
-        sample: dict = read_json(
-            "testdata/splitting/samples/splitting-AZ-benchmark.json"
-        )
+        sample: dict = read_json("testdata/splitting/splitting-AZ-benchmark.json")
         CxD: list[list[float]] = sample["countyByDistrict"]
 
         # County & district totals

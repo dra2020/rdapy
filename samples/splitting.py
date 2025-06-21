@@ -9,7 +9,7 @@ from testutils import *
 
 # Load data
 
-sample_path: str = f"testdata/splitting/samples/splitting-AZ-benchmark.json"
+sample_path: str = f"testdata/splitting/splitting-AZ-benchmark.json"
 sample: dict = read_json(sample_path)
 
 CxD: list[list[float]] = sample["countyByDistrict"]
