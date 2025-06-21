@@ -16,9 +16,6 @@ from rdapy import (
     calc_partisan_metrics,
 )
 
-# TODO
-# from rdapy.partisan import EPSILON
-
 
 class TestPartisanMethod:
     def test_seat_probabilities(self) -> None:
