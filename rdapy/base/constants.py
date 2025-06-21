@@ -1,5 +1,5 @@
 """
-CONSTANTS - TODO
+CONSTANTS
 """
 
 EPSILON: float = 1 / (10**6)
