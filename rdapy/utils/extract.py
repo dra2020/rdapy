@@ -14,7 +14,8 @@ from shapely.geometry import (
 
 from ..graph import OUT_OF_STATE
 
-EPSILON: float = 1.0e-12
+# TODO - Consolidate this into constants.py
+OUT_OF_STATE_THRESHOLD: float = 1.0e-12
 
 
 def index_shapes(gdf: GeoDataFrame, geoid_field: str = "id") -> Dict[
@@ -137,7 +138,7 @@ def abstract_shape(
         total_shared_border += shared_border
 
     remaining: float = perimeter - total_shared_border
-    if remaining > EPSILON:
+    if remaining > OUT_OF_STATE_THRESHOLD:
         arcs[OUT_OF_STATE] = remaining
 
     ch = shp.convex_hull

@@ -7,15 +7,15 @@ TEST BIAS METRICS
 from math import atan
 
 from rdapy.partisan import is_sweep, calc_efficiency_gap, radians_to_degrees
-from rdapy.utils import approx_equal, EPSILON
+from rdapy.utils import approx_equal, OUT_OF_STATE_THRESHOLD
 
 
 class TestBiasMetrics:
     def test_sweeps(self) -> None:
         assert is_sweep(1.0, 10)
-        assert is_sweep(10 - (1 / 10) + EPSILON, 10)
+        assert is_sweep(10 - (1 / 10) + OUT_OF_STATE_THRESHOLD, 10)
         assert is_sweep(0.0, 10)
-        assert is_sweep((1 / 10 - EPSILON), 10)
+        assert is_sweep((1 / 10 - OUT_OF_STATE_THRESHOLD), 10)
 
     def test_radians_to_degrees(self) -> None:
         assert radians_to_degrees(atan(1)) == 45

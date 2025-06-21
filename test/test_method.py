@@ -5,7 +5,7 @@ TEST PARTISAN METHOD
 """
 
 from rdapy import (
-    EPSILON,
+    OUT_OF_STATE_THRESHOLD,
     approx_equal,
     est_seat_probability,
     est_seats,
@@ -869,12 +869,20 @@ class TestPartisanMethod:
 
         # Split 1–2
 
-        rV = [(0.50 - EPSILON), (0.50 - EPSILON), (0.50 + EPSILON)]
+        rV = [
+            (0.50 - OUT_OF_STATE_THRESHOLD),
+            (0.50 - OUT_OF_STATE_THRESHOLD),
+            (0.50 + OUT_OF_STATE_THRESHOLD),
+        ]
         assert est_fptp_seats(rV) == 1
 
         # Split 2–1
 
-        rV = [(0.50 + EPSILON), (0.50 + EPSILON), (0.50 - EPSILON)]
+        rV = [
+            (0.50 + OUT_OF_STATE_THRESHOLD),
+            (0.50 + OUT_OF_STATE_THRESHOLD),
+            (0.50 - OUT_OF_STATE_THRESHOLD),
+        ]
         assert est_fptp_seats(rV) == 2
 
         # Perfectly balanced 0–3

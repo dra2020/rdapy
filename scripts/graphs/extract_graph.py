@@ -27,10 +27,7 @@ from shapely.geometry import (
 )
 from libpysal.weights import Rook, WSP
 
-from rdapy import is_consistent, is_connected, OUT_OF_STATE
-
-
-EPSILON: float = 1.0e-12
+from rdapy import is_consistent, is_connected, OUT_OF_STATE, OUT_OF_STATE_THRESHOLD
 
 
 def main() -> None:
@@ -165,7 +162,7 @@ def _add_out_of_state_neighbors(
 
             total_shared_border += shared_border
 
-        if (perimeter - total_shared_border) > EPSILON:
+        if (perimeter - total_shared_border) > OUT_OF_STATE_THRESHOLD:
             new_graph[node].append(OUT_OF_STATE)
             new_graph[OUT_OF_STATE].append(node)
 
