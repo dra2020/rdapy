@@ -12,14 +12,7 @@ cat testdata/plans/NC_congress_plans.tagged.jsonl \
 | scripts/score/aggregate.py \
 --state NC \
 --plan-type congress \
---data testdata/examples/NC_input_data.v3.jsonl \
---graph testdata/examples/NC_graph.json > temp/DEBUG_aggs.jsonl
-
-cat testdata/plans/NC_congress_plans.tagged.jsonl \
-| scripts/score/aggregate.py \
---state NC \
---plan-type congress \
---data testdata/examples/NC_input_data.v4.jsonl \
+--data testdata/examples/NC_input_data.jsonl \
 --graph testdata/examples/NC_graph.json > temp/DEBUG_aggs.jsonl
 
 """
