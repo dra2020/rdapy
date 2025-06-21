@@ -5,7 +5,6 @@ UTILITIES for John Nagle's method
 """
 
 import numpy as np
-from typing import Optional
 
 
 def roughly_equal(x: float, y: float, tolerance: float) -> bool:

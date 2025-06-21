@@ -6,8 +6,18 @@ TEST BIAS METRICS
 
 from math import atan
 
-from rdapy.partisan import is_sweep, calc_efficiency_gap, radians_to_degrees
-from rdapy.utils import approx_equal, OUT_OF_STATE_THRESHOLD
+from rdapy import (
+    calc_efficiency_gap,
+    approx_equal,
+    OUT_OF_STATE_THRESHOLD,
+)
+from rdapy.partisan.bias import (
+    is_sweep,
+    radians_to_degrees,
+)
+
+# from rdapy.partisan.bias import is_sweep, calc_efficiency_gap, radians_to_degrees
+# from rdapy.utils import approx_equal, OUT_OF_STATE_THRESHOLD
 
 
 class TestBiasMetrics:

@@ -4,6 +4,7 @@ GEOGRAPHIC "NEIGHBORHOODS" A LA JON EGUIA & JEFF BARTON
 
 from typing import Any, List, Dict, Tuple, Set, NamedTuple, Generator
 
+# TODO - Rationalize these
 from ...partisan import est_seat_probability
 from ...graph import is_connected, OUT_OF_STATE
 from ...utils import approx_equal, DistanceLedger

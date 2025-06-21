@@ -11,9 +11,8 @@ from rdapy import (
     approx_equal,
     read_json,
     DEMOGRAPHICS,
+    EPSILON,
 )
-
-EPSILON: float = 1 / 10**6
 
 
 class TestMinority:

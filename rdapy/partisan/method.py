@@ -20,9 +20,7 @@ Seats-votes curves:
 * Infer geometric seats bias points
 """
 
-from math import erf, sqrt, isclose
-
-from typing import Optional
+from math import erf, sqrt
 
 from .utils import *
 

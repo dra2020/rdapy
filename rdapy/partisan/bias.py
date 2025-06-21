@@ -9,7 +9,7 @@ Metrics:
 
 * PR    = Disproportionality
 * EG    = Efficiency gap as a fraction
-* gamma = Gamma 
+* gamma = Gamma
 
 These 4 depend on the points of an inferred seats-votes curve:
 * BS_50 = Seat bias as a fraction of N
@@ -19,7 +19,7 @@ These 4 depend on the points of an inferred seats-votes curve:
 
 * decl  = Declination
 * MM    = Mean – median difference using statewide Vf
-* MM'   = Mean – median difference using average district v 
+* MM'   = Mean – median difference using average district v
 * TO    = Turnout bias
 * LO    = Lopsided outcomes
 
@@ -34,7 +34,7 @@ from typing import Optional
 
 from .method import est_seat_probability, est_seats, infer_geometric_seats_bias_points
 from .utils import *
-from .constants import *
+from ..constants import EPSILON
 
 
 ### BASIC BIAS ###

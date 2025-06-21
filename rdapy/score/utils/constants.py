@@ -1,5 +1,7 @@
 """
 CONSTANTS
+
+TODO - Move these.
 """
 
 from typing import Any, List, Dict
@@ -121,6 +123,6 @@ def is_water_only(geoid):
 
 ### MISCELLANEOUS ###
 
-EPSILON: float = 1 / (10**6)
+# EPSILON: float = 1 / (10**6)
 
 ### END ###

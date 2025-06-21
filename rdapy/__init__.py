@@ -1,5 +1,6 @@
 # rdapy/__init__.py
 
+from .constants import *
 from .utils import *
 
 from .compactness import (

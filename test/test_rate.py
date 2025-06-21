@@ -17,6 +17,7 @@ from rdapy import (
     rate_splitting,
     rate_county_splitting,
     rate_district_splitting,
+    EPSILON,
 )
 from rdapy.rate import (
     Normalizer,
@@ -30,8 +31,6 @@ from rdapy.rate import (
     POLSBY_MAX,
     best_target,
 )
-
-EPSILON: float = 1 / 10**6
 
 
 class TestNormalizer:

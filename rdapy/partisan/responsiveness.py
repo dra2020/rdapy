@@ -18,7 +18,7 @@ from typing import Optional
 
 from .method import est_district_responsiveness
 from .utils import *
-from .constants import *
+from ..constants import EPSILON
 
 
 # COMPETITIVENESS
