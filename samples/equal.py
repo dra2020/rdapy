@@ -5,7 +5,6 @@ Sample population deviation
 """
 
 from rdapy import *
-from testutils import *
 
 # Load data
 

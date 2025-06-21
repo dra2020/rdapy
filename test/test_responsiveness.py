@@ -6,7 +6,6 @@ TEST COMPETITIVENESS & RESPONSIVENESS METRICS
 
 from rdapy import *
 from rdapy.partisan import EPSILON
-from testutils import *
 
 
 class TestResponsivenessMetrics:

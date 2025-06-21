@@ -5,7 +5,6 @@ TEST COI SPLITTING
 """
 
 from rdapy import approx_equal, uncertainty_of_membership, effective_splits
-from testutils import *
 
 
 class TestCOISplitting:

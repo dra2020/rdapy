@@ -6,7 +6,6 @@ TEST PARTISAN METRICS
 
 from rdapy import *
 from rdapy.partisan import key_RV_points
-from testutils import *
 
 
 class TestPartisanMetrics:

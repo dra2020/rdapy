@@ -28,7 +28,6 @@ from rdapy.rate import (
     rate_county_splitting,
     rate_district_splitting,
 )
-from testutils import *
 
 EPSILON: float = 1 / 10**6
 

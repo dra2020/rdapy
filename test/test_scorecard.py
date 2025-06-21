@@ -17,7 +17,6 @@ from rdapy.score.analyze import (
     calc_compactness_metrics,
 )
 from rdapy.score.utils import Precinct, District, GeoIDIndex
-from testutils import *
 
 cycle: str = "2020"
 testdata_dir: str = "testdata/score"

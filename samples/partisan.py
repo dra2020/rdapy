@@ -5,7 +5,6 @@ Sample partisan analytics
 """
 
 from rdapy import *
-from testutils import *
 
 # Load data
 

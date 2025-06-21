@@ -5,7 +5,6 @@ TEST POPULATION DEVIATION
 """
 
 from rdapy import *
-from testutils import *
 
 
 class TestPopulationDeviation:

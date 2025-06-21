@@ -5,7 +5,6 @@ Sample county-districting splitting
 """
 
 from rdapy import *
-from testutils import *
 
 # Load data
 

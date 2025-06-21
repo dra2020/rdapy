@@ -7,7 +7,6 @@ TEST GRAPH FUNCTIONS
 from collections import defaultdict
 
 from rdapy import *
-from testutils import *
 
 
 def check_contiguity(plan_path: str, graph_path: str) -> bool:

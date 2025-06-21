@@ -6,7 +6,6 @@ TEST PARTISAN METHOD
 
 from rdapy import *
 from rdapy.partisan import EPSILON
-from testutils import *
 
 
 class TestPartisanMethod:
