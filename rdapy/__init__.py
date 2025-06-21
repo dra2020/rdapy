@@ -1,16 +1,21 @@
 # rdapy/__init__.py
 
 from .base import (
-    approx_equal,
-    read_csv,
-    read_json,
+    EPSILON,
     OUT_OF_STATE,
     OUT_OF_STATE_THRESHOLD,
     DatasetKey,
+    Aggregates,
+    approx_equal,
+    vector_approx_equal,
+    matrix_approx_equal,
+    read_csv,
+    read_json,
+    load_features,
+    load_shapes,
     get_dataset,
     get_datasets,
     get_fields,
-    Aggregates,
 )
 
 from .compactness import (

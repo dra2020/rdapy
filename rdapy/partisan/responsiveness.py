@@ -16,9 +16,9 @@ Competitiveness & responsiveness metrics:
 
 from typing import Optional
 
+from ..base import EPSILON
 from .method import est_district_responsiveness
-from .utils import *
-from ..constants import EPSILON
+from .utils import lower_bracket, upper_bracket, roughly_equal
 
 
 # COMPETITIVENESS
