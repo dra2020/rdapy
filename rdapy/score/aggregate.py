@@ -6,8 +6,8 @@ from typing import Any, List, Dict, TextIO
 
 import sys, json
 
-from ..graph import OUT_OF_STATE
-from ..utils import (
+from ..base import (
+    OUT_OF_STATE,
     approx_equal,
     Aggregate,
     Aggregates,
@@ -16,6 +16,8 @@ from ..utils import (
     get_datasets,
     get_fields,
 )
+
+# TODO - Consolidate into 'base'
 from .utils import (
     District,
     GeoIDIndex,

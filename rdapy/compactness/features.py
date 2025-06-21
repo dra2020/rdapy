@@ -17,11 +17,10 @@ import math
 import numpy as np
 from shapely.geometry import Polygon, MultiPolygon
 from shapely.ops import transform
-from shapely.ops import unary_union  # Supersedes cascaded_union
+
+# from shapely.ops import unary_union  # Supersedes cascaded_union
 
 from typing import Any, Callable
-
-# from nptyping import NDArray
 
 from .pypoly import *
 

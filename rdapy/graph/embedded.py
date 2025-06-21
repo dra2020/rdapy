@@ -6,7 +6,7 @@ EMBEDDED - Is one district fully embedded w/in another district?
 
 from typing import Any
 
-from .constants import *
+from ..base import OUT_OF_STATE
 
 
 def is_embedded(

@@ -1,8 +1,11 @@
-import math
-import random
+"""
+Smallest enclosing circle -- adapted from "Smallest enclosing disks (balls and ellipsoids)" by EMO WELZL, p.362
+"""
+
 from typing import NamedTuple, Iterator, Callable
 
-# adapted from "Smallest enclosing disks (balls and ellipsoids)" by EMO WELZL, p.362
+import math
+import random
 
 
 class Point(NamedTuple):

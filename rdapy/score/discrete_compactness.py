@@ -9,7 +9,9 @@ import numpy as np
 from scipy.linalg import det
 from collections import defaultdict
 
-from ..graph import OUT_OF_STATE
+from ..base import OUT_OF_STATE
+
+# TODO - Consolidate into 'base'
 from .utils import (
     is_water_only,
     Precinct,

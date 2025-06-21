@@ -19,6 +19,7 @@ setup(
     license="MIT",
     packages=[
         "rdapy",
+        "rdapy.base",
         "rdapy.compactness",
         "rdapy.compactness.pypoly",
         "rdapy.equal",
@@ -27,10 +28,9 @@ setup(
         "rdapy.partisan",
         "rdapy.splitting",
         "rdapy.rate",
-        "rdapy.utils",
         "rdapy.score",
         "rdapy.score.geographic",
-        "rdapy.score.utils",
+        "rdapy.score.utils",  # TODO: Rationalize this
     ],
     install_requires=[
         "Fiona",

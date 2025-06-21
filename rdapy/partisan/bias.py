@@ -26,15 +26,15 @@ These 4 depend on the points of an inferred seats-votes curve:
 By convention, '+' = R bias; '-' = D bias
 """
 
-from math import isclose, pi, atan
+from typing import Optional
+
+import math
 from scipy.interpolate import interp1d
 import statistics
 
-from typing import Optional
-
 from .method import est_seat_probability, est_seats, infer_geometric_seats_bias_points
 from .utils import *
-from ..constants import EPSILON
+from ..base import EPSILON
 
 
 ### BASIC BIAS ###
@@ -107,7 +107,7 @@ def est_seats_bias(sv_curve_pts: list[tuple[float, float]], N: int) -> float:
 
 
 def _d_seats_at_half_share(sv_curve_pts: list[tuple[float, float]]) -> float:
-    close_pts = [pt for pt in sv_curve_pts if isclose(pt[0], 0.5)]
+    close_pts = [pt for pt in sv_curve_pts if math.isclose(pt[0], 0.5)]
     _, d_seats = next(iter(close_pts))
 
     return d_seats
@@ -231,7 +231,7 @@ def is_sweep(Sf: float, n_districts: int) -> bool:
 def radians_to_degrees(radians: float) -> float:
     """Convert radians to degrees"""
 
-    degrees: float = radians * (180 / pi)
+    degrees: float = radians * (180 / math.pi)
 
     return degrees
 
@@ -262,8 +262,8 @@ def calc_declination(Vf_array: list[float]) -> Optional[float]:
         l_tan: float = (Sb - Rb) / (0.5 - Vb)
         r_tan: float = (Ra - Sb) / (Va - 0.5)
 
-        l_angle: float = radians_to_degrees(atan(l_tan))
-        r_angle: float = radians_to_degrees(atan(r_tan))
+        l_angle: float = radians_to_degrees(math.atan(l_tan))
+        r_angle: float = radians_to_degrees(math.atan(r_tan))
         decl = r_angle - l_angle
 
     return decl

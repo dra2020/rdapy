@@ -3,7 +3,7 @@ ROUGH EQUALITY UTILITIES
 """
 
 from pytest import approx
-from typing import Any
+from typing import Any, List
 
 
 def approx_equal(x: float, y: float, places: int = 6) -> bool:
@@ -13,7 +13,7 @@ def approx_equal(x: float, y: float, places: int = 6) -> bool:
 
 
 def vector_approx_equal(
-    actual: list[float | int], expected: list[float | int], places: int = 6
+    actual: List[float | int], expected: List[float | int], places: int = 6
 ) -> bool:
     """Check if two vectors of numbers are approximately equal"""
 
@@ -24,7 +24,7 @@ def vector_approx_equal(
 
 
 def matrix_approx_equal(
-    actual: list[list[float | int]], expected: list[list[float | int]], places: int = 6
+    actual: List[List[float | int]], expected: List[List[float | int]], places: int = 6
 ) -> bool:
     """Check if a 2D matrix of numbers are approximately equal"""
 
@@ -58,7 +58,5 @@ def dict_approx_equal(actual: dict, expected: dict, int_threshold: int = 0) -> b
 
     return True
 
-
-# DON'T LIMIT WHAT GETS EXPORTED.
 
 ### END ###

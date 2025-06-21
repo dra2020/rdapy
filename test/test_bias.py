@@ -16,9 +16,6 @@ from rdapy.partisan.bias import (
     radians_to_degrees,
 )
 
-# from rdapy.partisan.bias import is_sweep, calc_efficiency_gap, radians_to_degrees
-# from rdapy.utils import approx_equal, OUT_OF_STATE_THRESHOLD
-
 
 class TestBiasMetrics:
     def test_sweeps(self) -> None:

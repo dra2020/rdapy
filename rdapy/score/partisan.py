@@ -2,7 +2,7 @@
 ADDITIONAL PARTISAN METRICS -- These are not calculated in DRA proper.
 """
 
-from typing import List, Tuple
+from typing import List
 
 
 def calc_efficiency_gap_wasted_votes(

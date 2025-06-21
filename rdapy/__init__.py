@@ -1,7 +1,17 @@
 # rdapy/__init__.py
 
-from .constants import *
-from .utils import *
+from .base import (
+    approx_equal,
+    read_csv,
+    read_json,
+    OUT_OF_STATE,
+    OUT_OF_STATE_THRESHOLD,
+    DatasetKey,
+    get_dataset,
+    get_datasets,
+    get_fields,
+    Aggregates,
+)
 
 from .compactness import (
     calc_compactness,
@@ -27,7 +37,6 @@ from .graph import (
     is_consistent,
     is_connected,
     is_embedded,
-    OUT_OF_STATE,
     connected_subsets,
     generate_contiguity_mods,
     Connection,
@@ -109,20 +118,15 @@ from .rate import (
 from .score import (
     aggregate_districts,
     aggregate_plans,
-    Aggregates,
     calc_geographic_baseline,
     collect_metadata,
     County,
-    DatasetKey,
     deserialize_bits,
     District,
     DISTRICTS_BY_STATE,
     eval_partisan_lean,
     format_scores,
     GeoIDIndex,
-    get_dataset,
-    get_datasets,
-    get_fields,
     Graph,
     index_data,
     index_geoids,

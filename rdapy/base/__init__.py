@@ -1,9 +1,10 @@
-# rdapy/utils/__init__.py
+# rdapy/base/__init__.py
 
+from .constants import *
 from .readwrite import *
 from .approxequal import *
 from .distance import *
 from .datasets import *
 from .extract import *
 
-name: str = "utils"
+name: str = "base"

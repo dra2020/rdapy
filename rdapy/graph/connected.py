@@ -9,9 +9,7 @@ from typing import Any, List, Dict, Set, Tuple, NamedTuple
 from itertools import combinations
 import networkx as nx
 
-from .constants import OUT_OF_STATE
-
-from ..utils import DistanceLedger
+from ..base import OUT_OF_STATE, DistanceLedger
 
 
 def is_consistent(graph: Dict[str, List[str]]) -> bool:

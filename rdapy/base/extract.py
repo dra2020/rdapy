@@ -12,10 +12,7 @@ from shapely.geometry import (
     Point,
 )
 
-from ..graph import OUT_OF_STATE
-
-# TODO - Consolidate this into constants.py
-OUT_OF_STATE_THRESHOLD: float = 1.0e-12
+from .constants import OUT_OF_STATE, OUT_OF_STATE_THRESHOLD
 
 
 def index_shapes(gdf: GeoDataFrame, geoid_field: str = "id") -> Dict[

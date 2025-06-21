@@ -2,6 +2,5 @@
 
 from .connected import *
 from .embedded import *
-from .constants import *
 
 name = "graph"

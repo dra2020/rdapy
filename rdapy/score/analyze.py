@@ -20,7 +20,7 @@ import sys, json
 # not a use of a `pip install`ed package
 import rdapy as rda
 
-from ..utils import (
+from ..base import (
     get_dataset,
     get_datasets,
     get_fields,
@@ -28,6 +28,8 @@ from ..utils import (
     Aggregates,
     NamedAggregates,
 )
+
+# TODO - Consolidate into 'base'
 from .utils import Precinct, District
 from .partisan import calc_efficiency_gap_wasted_votes, calc_average_margin
 from .majority_minority import calculate_mmd_simple
