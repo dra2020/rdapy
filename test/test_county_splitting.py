@@ -4,7 +4,28 @@
 TEST COUNTY-DISTRICT SPLITTING
 """
 
-from rdapy import *
+from rdapy import (
+    approx_equal,
+    read_json,
+    split_score,
+    calc_county_fractions,
+    matrix_approx_equal,
+    vector_approx_equal,
+    calc_county_weights,
+    county_split_score,
+    calc_district_fractions,
+    calc_district_weights,
+    district_split_score,
+    district_splitting,
+    calc_district_splitting,
+    reduce_county_splits,
+    reduce_district_splits,
+    county_totals,
+    district_totals,
+    calc_county_splitting_reduced,
+    calc_district_splitting_reduced,
+)
+from rdapy.splitting import county_splitting, calc_county_splitting
 
 
 class TestCountyDistrictSplitting:

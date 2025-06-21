@@ -4,7 +4,7 @@
 TEST COMPACTNESS
 """
 
-from rdapy import *
+from rdapy import load_shapes, read_json, approx_equal, calc_compactness
 
 
 INDEX: int = 0
