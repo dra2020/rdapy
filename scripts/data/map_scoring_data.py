@@ -5,7 +5,7 @@ MAP SCORING DATA TO TO A GIVEN GEOJSON FILE
 
 $ scripts/data/map_scoring_data.py \
 --geojson testdata/examples/NC_vtd_datasets.geojson \
---data-map temp/DEBUG_data_map.json
+--data-map temp/TEST_data_map.json
 
 NOTE -- The default datasets are for 2020 census, VAP, and CVAP data,
 and the composite election dataset for 2016-2020 elections.

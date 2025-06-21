@@ -7,7 +7,7 @@ $ scripts/data/extract_data.py \
 --geojson testdata/examples/NC_vtd_datasets.geojson \
 --data-map testdata/examples/NC_data_map.json \
 --graph testdata/examples/NC_graph.json \
---data testdata/examples/NC_input_data.jsonl
+--data temp/TEST_input_data.jsonl
 
 """
 

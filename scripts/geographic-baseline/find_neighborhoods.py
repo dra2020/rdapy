@@ -13,7 +13,7 @@ $ scripts/geographic-baseline/find_neighborhoods.py \
 --plan-type congress \
 --data testdata/examples/NC_input_data.jsonl \
 --graph testdata/examples/NC_graph.json \
-> temp/DEBUG_NC_congress_neighborhoods.jsonl
+> temp/TEST_neighborhoods.jsonl
 
 """
 

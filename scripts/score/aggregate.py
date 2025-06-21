@@ -13,7 +13,7 @@ cat testdata/plans/NC_congress_plans.tagged.jsonl \
 --state NC \
 --plan-type congress \
 --data testdata/examples/NC_input_data.jsonl \
---graph testdata/examples/NC_graph.json > temp/DEBUG_aggs.jsonl
+--graph testdata/examples/NC_graph.json > temp/TEST_aggs.jsonl
 
 """
 

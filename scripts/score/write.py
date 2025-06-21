@@ -12,8 +12,8 @@ Usage:
 cat testdata/examples/NC_congress_scores.100.jsonl \
 | scripts/score/write.py \
 --data testdata/examples/NC_input_data.jsonl \
---scores temp/DEBUG_scores.csv \
---by-district temp/DEBUG_by-district.jsonl
+--scores temp/TEST_scores.csv \
+--by-district temp/TEST_by-district.jsonl
 
 """
 
