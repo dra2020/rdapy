@@ -11,7 +11,7 @@ python setup.py register sdist upload
 
 setup(
     name="rdapy",
-    version="2.3.4",
+    version="3.0.0",
     description="Redistricting analytics in Python",
     url="https://github.com/dra2020/rdapy",
     author="alecramsay",
