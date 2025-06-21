@@ -1,7 +1,7 @@
 {
     "version": 4,
     "source": "testdata/examples",
-    "path": "NC_vtd_datasets.v4.geojson",
+    "path": "NC_vtd_datasets.geojson",
     "geoid": "id",
     "census": {
         "fields": {

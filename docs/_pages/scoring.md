@@ -205,7 +205,7 @@ the aggregates by district. For example:
 
 The first item in each list is a state-level aggregate, and the rest are district-level aggregates for districts 1 to N.
 
-You can see an example in `testdata/examples/NC_congress_aggs.100.v4.jsonl`.
+You can see an example in `testdata/examples/NC_congress_aggs.100.jsonl`.
 
 There are some helper scripts to convert [alternative formats]({{ '/formats' | prepend: site.baseurl }}) 
 into the tagged format that can be ingested by the `aggregate.py` script.
