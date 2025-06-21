@@ -4,8 +4,15 @@
 TEST COMPETITIVENESS & RESPONSIVENESS METRICS
 """
 
-from rdapy import *
-from rdapy.partisan import EPSILON
+from typing import Optional
+
+from rdapy import (
+    count_competitive_districts,
+    approx_equal,
+    est_district_competitiveness,
+    calc_minimal_inverse_responsiveness,
+    EPSILON,
+)
 
 
 class TestResponsivenessMetrics:

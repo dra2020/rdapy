@@ -6,7 +6,7 @@ TEST GRAPH FUNCTIONS
 
 from collections import defaultdict
 
-from rdapy import *
+from rdapy import read_csv, read_json, is_connected, is_embedded
 
 
 def check_contiguity(plan_path: str, graph_path: str) -> bool:

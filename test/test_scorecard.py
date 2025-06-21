@@ -7,16 +7,29 @@ from typing import Any, Dict, List, Generator, List, Tuple, TextIO
 from collections import OrderedDict
 import pandas as pd
 
-from rdapy import *
-from rdapy.score.aggregate import (
+from rdapy import (
     aggregate_districts,
-    arcs_are_symmetric,
-)
-from rdapy.score.analyze import (
+    approx_equal,
+    read_csv,
+    read_json,
+    smart_read,
     score_plan,
-    calc_compactness_metrics,
+    Precinct,
+    District,
+    GeoIDIndex,
+    DatasetKey,
+    PlanCSV,
+    sorted_geoids,
+    collect_metadata,
+    read_record,
+    Aggregates,
+    OUT_OF_STATE,
 )
-from rdapy.score.utils import Precinct, District, GeoIDIndex
+
+# TODO - Simplify these imports, when functions have moved.
+from rdapy.score.aggregate import arcs_are_symmetric
+from rdapy.score.analyze import calc_compactness_metrics
+
 
 cycle: str = "2020"
 testdata_dir: str = "testdata/score"

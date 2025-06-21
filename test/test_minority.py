@@ -4,7 +4,14 @@
 TEST MINORITY OPPORTUNITY
 """
 
-from rdapy import *
+from rdapy import (
+    calc_proportional_districts,
+    est_minority_opportunity,
+    calc_minority_opportunity,
+    approx_equal,
+    read_json,
+    DEMOGRAPHICS,
+)
 
 EPSILON: float = 1 / 10**6
 

@@ -4,8 +4,20 @@
 TEST PARTISAN METHOD
 """
 
-from rdapy import *
-from rdapy.partisan import EPSILON
+from rdapy import (
+    EPSILON,
+    approx_equal,
+    est_seat_probability,
+    est_seats,
+    est_district_responsiveness,
+    est_fptp_seats,
+    read_json,
+    infer_sv_points,
+    calc_partisan_metrics,
+)
+
+# TODO
+# from rdapy.partisan import EPSILON
 
 
 class TestPartisanMethod:

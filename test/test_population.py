@@ -4,7 +4,7 @@
 TEST POPULATION DEVIATION
 """
 
-from rdapy import *
+from rdapy import read_json, approx_equal, calc_population_deviation
 
 
 class TestPopulationDeviation:

@@ -6,7 +6,7 @@ TEST KIWYSI COMPACTNESS MODEL
 
 from pytest import approx
 
-from rdapy import *
+from rdapy import load_features, load_shapes, kiwysi_rank_shape, trim_kiwysi_rank
 
 INDEX: int = 0
 VALUE: int = 1
