@@ -24,6 +24,8 @@ from .base import (
     get_dataset,
     get_datasets,
     get_fields,
+    #
+    DistanceLedger,
 )
 
 from .compactness import (
