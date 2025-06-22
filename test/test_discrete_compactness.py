@@ -6,12 +6,12 @@ NOTE - Despite PyLance warnings, this code is valid and works with pytest.
 
 from typing import Dict
 
-from rdapy import approx_equal
-from rdapy.score.discrete_compactness import (
+from rdapy import (
+    approx_equal,
     calc_cut_score,
     calc_spanning_tree_score,
-    split_graph_by_districts,
-)  # TODO - Update this import, when these functions move.
+    _split_graph_by_districts,
+)
 
 
 def create_10x10_grid_graph():
@@ -169,7 +169,7 @@ class TestScorecard:
         cuts: int = calc_cut_score(plan, graph)  # type: ignore
         assert cuts == 20
 
-        district_graphs = split_graph_by_districts(graph, plan)  # type: ignore
+        district_graphs = _split_graph_by_districts(graph, plan)  # type: ignore
         spanning_tree_score = sum(
             [calc_spanning_tree_score(g) for g in district_graphs.values()]
         )
@@ -282,7 +282,7 @@ class TestScorecard:
         cuts: int = calc_cut_score(plan, graph)  # type: ignore
         assert cuts == 33
 
-        district_graphs = split_graph_by_districts(graph, plan)  # type: ignore
+        district_graphs = _split_graph_by_districts(graph, plan)  # type: ignore
         spanning_tree_score = sum(
             [calc_spanning_tree_score(g) for g in district_graphs.values()]
         )
@@ -395,7 +395,7 @@ class TestScorecard:
         cuts: int = calc_cut_score(plan, graph)  # type: ignore
         assert cuts == 73
 
-        district_graphs = split_graph_by_districts(graph, plan)  # type: ignore
+        district_graphs = _split_graph_by_districts(graph, plan)  # type: ignore
         spanning_tree_score = sum(
             [calc_spanning_tree_score(g) for g in district_graphs.values()]
         )

@@ -31,14 +31,18 @@ from ..base import (
     Precinct,
     District,
 )
-from .partisan import calc_efficiency_gap_wasted_votes, calc_average_margin
-from .majority_minority import calculate_mmd_simple
-from .discrete_compactness import (
+
+# TODO -- Move these calculations into the category functions
+from ..compactness import (
     calc_cut_score,
     calc_spanning_tree_score,
-    split_graph_by_districts,
+    _split_graph_by_districts,
+    calc_energy,
 )
-from .energy import calc_energy
+from ..partisan import calc_efficiency_gap_wasted_votes, calc_average_margin
+from ..minority import calculate_mmd_simple
+
+###
 
 
 def score_plans(
@@ -237,7 +241,7 @@ def score_plan(
         compactness_metrics["cut_score"] = cut_score
 
         if add_spanning_tree_score:
-            district_graphs = split_graph_by_districts(graph, assignments)
+            district_graphs = _split_graph_by_districts(graph, assignments)
             spanning_tree_by_district: List[Dict[str, float]] = [
                 {"spanning_tree_score": calc_spanning_tree_score(g)}
                 for g in district_graphs.values()

@@ -109,30 +109,33 @@ def calculate_mmd_simple(
         cvap_aggs["total_cvap"][1:],
     ):
         # Black majority-minority district
-        if is_single_demo_mmd(black, total):
+        if _is_single_demo_mmd(black, total):
             mmd_counts["mmd_black"] += 1
             continue
 
         # Hispanic majority-minority district
-        if is_single_demo_mmd(hispanic, total):
+        if _is_single_demo_mmd(hispanic, total):
             mmd_counts["mmd_hispanic"] += 1
             continue
 
         # Coalition majority-minority district
-        if is_coalition_mmd([black, hispanic], total):
+        if _is_coalition_mmd([black, hispanic], total):
             mmd_counts["mmd_coalition"] += 1
             continue
 
     return mmd_counts
 
 
-def is_single_demo_mmd(demo_cvap: int, total_cvap: int) -> bool:
+### HELPERS ###
+
+
+def _is_single_demo_mmd(demo_cvap: int, total_cvap: int) -> bool:
     """Check if a district is a single demographic MMD."""
 
     return (demo_cvap / total_cvap) > 0.5
 
 
-def is_coalition_mmd(demo_cvaps: List[int], total_cvap: int) -> bool:
+def _is_coalition_mmd(demo_cvaps: List[int], total_cvap: int) -> bool:
     """
     Check if a district is a coalition MMD:
     1. Each individual race/ethnicity must be <= half total CVAP, and

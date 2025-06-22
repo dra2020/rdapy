@@ -64,7 +64,7 @@ def calc_spanning_tree_score(graph: Graph) -> float:
     See count_spanning_trees() for the simple version that works on small graphs.
     """
 
-    adjacency_matrix, vertices = convert_graph_to_matrix(graph)
+    adjacency_matrix, vertices = _convert_graph_to_matrix(graph)
     degree_matrix = np.diag(np.sum(adjacency_matrix, axis=1))
     laplacian_matrix = degree_matrix - adjacency_matrix
     reduced_laplacian = laplacian_matrix[:-1, :-1]
@@ -80,7 +80,7 @@ def calc_spanning_tree_score(graph: Graph) -> float:
 ### HELPERS ###
 
 
-def remove_out_of_state_border(graph: Graph) -> Dict[str, List[str]]:
+def _remove_out_of_state_border(graph: Graph) -> Dict[str, List[str]]:
     """Remove the OUT_OF_STATE node & neighbors from the graph."""
 
     without_border: Dict[str, List[str]] = {}
@@ -92,7 +92,7 @@ def remove_out_of_state_border(graph: Graph) -> Dict[str, List[str]]:
     return without_border
 
 
-def split_graph_by_districts(
+def _split_graph_by_districts(
     graph: Graph, plan: Dict[Precinct, District]
 ) -> Dict[int | str, Dict[str, List[str]]]:
     """
@@ -105,7 +105,7 @@ def split_graph_by_districts(
     Returns:
     Dictionary mapping district numbers to their subgraphs
     """
-    stripped_graph: Dict[str, List[str]] = remove_out_of_state_border(graph)
+    stripped_graph: Dict[str, List[str]] = _remove_out_of_state_border(graph)
 
     # Validate inputs
     diff = set(stripped_graph.keys()) ^ set(plan.keys())
@@ -135,7 +135,7 @@ def split_graph_by_districts(
     return district_subgraphs
 
 
-def convert_graph_to_matrix(graph: Graph) -> tuple[np.ndarray, list[str]]:
+def _convert_graph_to_matrix(graph: Graph) -> tuple[np.ndarray, list[str]]:
     """
     Convert an adjacency list representation to an adjacency matrix.
 
@@ -162,7 +162,7 @@ def convert_graph_to_matrix(graph: Graph) -> tuple[np.ndarray, list[str]]:
     return adjacency_matrix, vertices
 
 
-def validate_graph(graph: Graph) -> bool:
+def _validate_graph(graph: Graph) -> bool:
     """
     Verify that a graph is valid: undirected and connected.
 

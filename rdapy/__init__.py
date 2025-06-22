@@ -79,6 +79,12 @@ from .compactness import (
     # make_circle,
     reock_formula,
     polsby_formula,
+    #
+    calc_cut_score,
+    calc_spanning_tree_score,
+    _split_graph_by_districts,
+    #
+    calc_energy,
 )
 
 from .equal import calc_population_deviation
@@ -97,6 +103,8 @@ from .minority import (
     est_minority_opportunity,
     calc_minority_opportunity,
     DEMOGRAPHICS,
+    calculate_mmd_with_comparisons,
+    calculate_mmd_simple,
 )
 
 from .splitting import (
@@ -159,6 +167,9 @@ from .partisan import (
     #
     infer_inverse_sv_points,
     infer_sv_points,
+    #
+    calc_efficiency_gap_wasted_votes,
+    calc_average_margin,
 )
 
 from .rate import (

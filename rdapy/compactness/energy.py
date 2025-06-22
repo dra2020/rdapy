@@ -11,7 +11,7 @@ def calc_energy(
 ) -> float:
     """Calculate the 'energy' of a redistricting plan."""
 
-    district_centers: Dict[int, Tuple[float, float]] = get_centroids(
+    district_centers: Dict[int, Tuple[float, float]] = _get_centroids(
         assignments, precinct_data, pop_field
     )
 
@@ -23,18 +23,23 @@ def calc_energy(
         district: int = assignments[geoid]
 
         pop: int = precinct[pop_field]
-        energy += pop * squared_distance(district_centers[district], precinct["center"])
+        energy += pop * _squared_distance(
+            district_centers[district], precinct["center"]
+        )
 
     return energy
 
 
-def squared_distance(a: Tuple[float, float], b: Tuple[float, float]) -> float:
+### HELPERS ###
+
+
+def _squared_distance(a: Tuple[float, float], b: Tuple[float, float]) -> float:
     """Calculate the squared distance between two points expressed as (lon, lat) tuples."""
 
     return (a[1] - b[1]) * (a[1] - b[1]) + (a[0] - b[0]) * (a[0] - b[0])
 
 
-def get_centroids(
+def _get_centroids(
     assignments: Dict[str, int], precinct_data: List[Dict[str, Any]], pop_field: str
 ) -> Dict[int, Tuple[float, float]]:
     """Calculate the centroids of the districts in a redistricting plan, expressed as (lon, lat) tuples."""
