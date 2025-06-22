@@ -23,7 +23,7 @@ from ..base import (
     Graph,
     is_water_only,
 )
-from .smallestenclosingcircle import wl_make_circle
+from ..compactness import wl_make_circle
 
 ### AGGREGATE PLANS ###
 
