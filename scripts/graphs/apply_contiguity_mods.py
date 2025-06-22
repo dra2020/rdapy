@@ -17,7 +17,7 @@ from argparse import ArgumentParser, Namespace
 from typing import List, Dict, Iterable
 import os, sys, json, csv
 
-from rdapy import is_consistent, is_connected, OUT_OF_STATE, load_graph
+from rdapy import is_consistent, is_connected, load_graph
 
 
 def main() -> None:

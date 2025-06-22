@@ -16,7 +16,6 @@ import argparse
 from argparse import ArgumentParser, Namespace
 
 from typing import Any, List, Dict
-import json
 
 from rdapy import load_data, load_graph, sorted_geoids, is_connected, OUT_OF_STATE
 
