@@ -29,8 +29,6 @@ setup(
         "rdapy.splitting",
         "rdapy.rate",
         "rdapy.score",
-        "rdapy.score.geographic",
-        "rdapy.score.utils",  # TODO: Rationalize this
     ],
     install_requires=[
         "Fiona",

@@ -32,9 +32,9 @@ import math
 from scipy.interpolate import interp1d
 import statistics
 
+from ..base import EPSILON
 from .method import est_seat_probability, est_seats, infer_geometric_seats_bias_points
 from .utils import *
-from ..base import EPSILON
 
 
 ### BASIC BIAS ###

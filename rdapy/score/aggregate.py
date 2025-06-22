@@ -15,13 +15,10 @@ from ..base import (
     get_dataset,
     get_datasets,
     get_fields,
-)
-
-# TODO - Consolidate into 'base'
-from .utils import (
-    District,
+    #
     GeoIDIndex,
     ParseGeoID,
+    District,
     County,
     Graph,
     is_water_only,
