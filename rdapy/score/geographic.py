@@ -4,10 +4,9 @@ GEOGRAPHIC "NEIGHBORHOODS" A LA JON EGUIA & JEFF BARTON
 
 from typing import Any, List, Dict, Tuple, Set, NamedTuple, Generator
 
-from ...base import approx_equal, DistanceLedger, OUT_OF_STATE
-from ...graph import is_connected
-from ...partisan import est_seat_probability
-from .packunpack import deserialize_bits, get_bit
+from ..base import approx_equal, DistanceLedger, OUT_OF_STATE, deserialize_bits, get_bit
+from ..graph import is_connected
+from ..partisan import est_seat_probability
 
 
 class Neighbor(NamedTuple):

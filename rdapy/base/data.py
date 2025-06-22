@@ -6,8 +6,7 @@ from typing import Any, Dict, Generator, List, Tuple, TextIO, Set
 
 import os, json
 
-from ...graph import OUT_OF_STATE
-from .constants import COUNTIES_BY_STATE, DISTRICTS_BY_STATE
+from .constants import OUT_OF_STATE, COUNTIES_BY_STATE, DISTRICTS_BY_STATE
 from .types import ParseGeoID
 from .ensemble_io import smart_read, read_record
 
@@ -102,6 +101,16 @@ def sorted_geoids(
     geoids.sort()
 
     return geoids
+
+
+def index_data(input_data: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+    """Index precinct data by geoid."""
+
+    data: Dict[str, Dict[str, Any]] = {
+        precinct["geoid"]: precinct for precinct in input_data
+    }
+
+    return data
 
 
 ### END ###

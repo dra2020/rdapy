@@ -4,12 +4,14 @@
 READ/WRITE ROUTINES
 """
 
-from typing import Any, Optional
+from typing import Any, Optional, Dict
 
 import os, json, csv
 from csv import DictReader, DictWriter
 from shapely.geometry import shape
 import fiona
+
+from .ensemble_io import smart_read
 
 
 ### FILE NAMES & PATHS ###
@@ -162,6 +164,23 @@ def load_shapes(shp_file: str, id: str = "OBJECTID"):
                 shapes_by_id.append((obj_id, shp))
 
     return shapes_by_id, meta
+
+
+### NEIGHBORHOODS ###
+
+
+def load_neighborhoods(nh_path: str) -> Dict[str, Dict[str, Any]]:
+    """Load neighborhoods from a JSONL file."""
+
+    neighborhoods: Dict[str, Dict[str, Any]] = dict()
+    with smart_read(nh_path) as nh_stream:
+        for i, line in enumerate(nh_stream):
+            parsed_line = json.loads(line)
+
+            geoid: str = parsed_line["geoid"]
+            neighborhoods[geoid] = parsed_line.copy()
+
+    return neighborhoods
 
 
 ### END ###
