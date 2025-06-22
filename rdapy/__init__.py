@@ -4,6 +4,9 @@ from .base import (
     EPSILON,
     OUT_OF_STATE,
     OUT_OF_STATE_THRESHOLD,
+    DISTRICTS_BY_STATE,
+    COUNTIES_BY_STATE,
+    is_water_only,
     DatasetKey,
     Aggregates,
     #
@@ -16,6 +19,7 @@ from .base import (
     index_shapes,
     abstract_data,
     abstract_shape,
+    load_neighborhoods,
     #
     approx_equal,
     vector_approx_equal,
@@ -26,34 +30,35 @@ from .base import (
     get_fields,
     #
     DistanceLedger,
-    # TODO - Organize these
-    collect_metadata,
-    County,
-    deserialize_bits,
+    #
+    Precinct,
     District,
-    DISTRICTS_BY_STATE,
-    format_scores,
+    PlanCSV,
     GeoIDIndex,
     Graph,
-    index_data,
-    index_geoids,
-    init_bit_array,
+    County,
+    ParseGeoID,
+    #
     load_data,
     load_graph,
-    load_neighborhoods,
-    MetadataRecord,
-    ParseGeoID,
-    PlanCSV,
-    PlanRecord,
-    Precinct,
-    read_record,
-    reverse_index,
-    serialize_bits,
-    set_bit,
+    collect_metadata,
+    sorted_geoids,
+    index_data,
+    #
     smart_read,
     smart_write,
-    sorted_geoids,
+    format_scores,
     write_record,
+    read_record,
+    MetadataRecord,
+    PlanRecord,
+    #
+    init_bit_array,
+    set_bit,
+    serialize_bits,
+    deserialize_bits,
+    index_geoids,
+    reverse_index,
 )
 
 from .compactness import (
