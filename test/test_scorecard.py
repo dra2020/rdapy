@@ -26,8 +26,7 @@ from rdapy import (
     OUT_OF_STATE,
 )
 
-# TODO - Simplify these imports, when functions have moved.
-from rdapy.score.aggregate import arcs_are_symmetric
+from rdapy.aggregate.aggregate import arcs_are_symmetric
 from rdapy.score.analyze import calc_compactness_metrics
 
 

@@ -19,6 +19,7 @@ setup(
     license="MIT",
     packages=[
         "rdapy",
+        "rdapy.aggregate",
         "rdapy.base",
         "rdapy.compactness",
         "rdapy.compactness.pypoly",

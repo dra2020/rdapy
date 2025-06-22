@@ -189,9 +189,12 @@ from .rate import (
     rate_splitting,
 )
 
-from .score import (
+from .aggregate import (
     aggregate_districts,
     aggregate_plans,
+)
+
+from .score import (
     score_plan,
     score_plans,
 )
