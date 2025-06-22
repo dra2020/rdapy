@@ -76,7 +76,7 @@ from .compactness import (
     kiwysi_rank_shape,
     trim_kiwysi_rank,
     #
-    make_circle,
+    # make_circle,
     reock_formula,
     polsby_formula,
 )

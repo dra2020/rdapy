@@ -19,6 +19,8 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #
 
+# NOTE -- This is only used w/in the 'pypoly' module. There is a faster version used elswhere.
+
 import math
 import random
 
