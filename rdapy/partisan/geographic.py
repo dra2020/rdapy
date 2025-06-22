@@ -15,57 +15,6 @@ class Neighbor(NamedTuple):
     pop: int
 
 
-def nearest_connected_neighbor(
-    node: str,
-    data_by_geoid: Dict[str, Dict[str, Any]],
-    total_pop_field: str,
-    graph: Dict[str, List[str]],
-    *,
-    ledger: DistanceLedger,
-    debug: bool = False,
-) -> Generator[Neighbor, None, None]:
-    """Return the nearest connected neighbors to a precinct in increasing order of distance."""
-
-    yielded: Set[str] = set()
-    queue: List[Neighbor] = [Neighbor(node, 0.0, data_by_geoid[node][total_pop_field])]
-
-    while True:
-        if len(queue) == 0:
-            return
-
-        next: Neighbor = queue.pop()
-
-        yielded.add(next.geoid)
-        assert is_connected(
-            list(yielded), graph
-        ), f"Yields must maintain connectivity: {next.geoid}"
-
-        in_queue: Set[str] = set([n.geoid for n in queue])
-        new_candidates: List[str] = [
-            neighbor
-            for neighbor in graph[next.geoid]
-            if neighbor not in yielded
-            and neighbor not in in_queue
-            and neighbor != OUT_OF_STATE
-        ]
-        for neighbor in new_candidates:
-            queue.append(
-                Neighbor(
-                    neighbor,
-                    ledger.distance_between(
-                        node,
-                        data_by_geoid[node]["center"],
-                        neighbor,
-                        data_by_geoid[neighbor]["center"],
-                    ),
-                    data_by_geoid[neighbor][total_pop_field],
-                )
-            )
-        queue.sort(key=lambda x: x.distance, reverse=True)
-
-        yield next
-
-
 def make_neighborhood(
     geoid: str,
     data_by_geoid: Dict[str, Dict[str, Any]],
@@ -82,7 +31,7 @@ def make_neighborhood(
     neighborhood_pop: int = 0
 
     for i, neighbor in enumerate(
-        nearest_connected_neighbor(
+        _nearest_connected_neighbor(
             geoid, data_by_geoid, total_pop_field, graph, ledger=ledger, debug=debug
         )
     ):
@@ -143,30 +92,6 @@ def unpack_neighborhood(
     return neighborhood
 
 
-def eval_partisan_lean(
-    neighborhood: List[str],
-    data: Dict[str, Dict[str, Any]],
-    dem_votes_field: str,
-    rep_votes_field: str,
-) -> Tuple[float, float, float]:
-    """Calculate the partisan results for a precinct's neighborhood."""
-
-    dem_votes: int = 0
-    tot_votes: int = 0
-    for geoid in neighborhood:
-        dem_votes += data[geoid][dem_votes_field]
-        # NOTE - Two-party votes, not total votes!
-        tot_votes += data[geoid][dem_votes_field] + data[geoid][rep_votes_field]
-
-    Vf: float = dem_votes / tot_votes if tot_votes > 0 else 0.0
-    fractional_seats: float = est_seat_probability(Vf)
-    whole_seats: float = 1.0 if Vf > 0.5 else 0.0
-    if approx_equal(Vf, 0.5):
-        whole_seats = 0.5
-
-    return Vf, fractional_seats, whole_seats
-
-
 def calc_geographic_baseline(
     neighborhoods: List[Dict[str, Any]],
     ndistricts: int,
@@ -193,7 +118,7 @@ def calc_geographic_baseline(
         Vf: float
         fractional_seats: float
         whole_seats: float
-        Vf, fractional_seats, whole_seats = eval_partisan_lean(
+        Vf, fractional_seats, whole_seats = _eval_partisan_lean(
             neighborhood,
             data,
             dem_votes_field,
@@ -205,6 +130,84 @@ def calc_geographic_baseline(
         tot_whole_seats += whole_seats * proportion
 
     return tot_fractional_seats, tot_whole_seats
+
+
+### HELPERS ###
+
+
+def _nearest_connected_neighbor(
+    node: str,
+    data_by_geoid: Dict[str, Dict[str, Any]],
+    total_pop_field: str,
+    graph: Dict[str, List[str]],
+    *,
+    ledger: DistanceLedger,
+    debug: bool = False,
+) -> Generator[Neighbor, None, None]:
+    """Return the nearest connected neighbors to a precinct in increasing order of distance."""
+
+    yielded: Set[str] = set()
+    queue: List[Neighbor] = [Neighbor(node, 0.0, data_by_geoid[node][total_pop_field])]
+
+    while True:
+        if len(queue) == 0:
+            return
+
+        next: Neighbor = queue.pop()
+
+        yielded.add(next.geoid)
+        assert is_connected(
+            list(yielded), graph
+        ), f"Yields must maintain connectivity: {next.geoid}"
+
+        in_queue: Set[str] = set([n.geoid for n in queue])
+        new_candidates: List[str] = [
+            neighbor
+            for neighbor in graph[next.geoid]
+            if neighbor not in yielded
+            and neighbor not in in_queue
+            and neighbor != OUT_OF_STATE
+        ]
+        for neighbor in new_candidates:
+            queue.append(
+                Neighbor(
+                    neighbor,
+                    ledger.distance_between(
+                        node,
+                        data_by_geoid[node]["center"],
+                        neighbor,
+                        data_by_geoid[neighbor]["center"],
+                    ),
+                    data_by_geoid[neighbor][total_pop_field],
+                )
+            )
+        queue.sort(key=lambda x: x.distance, reverse=True)
+
+        yield next
+
+
+def _eval_partisan_lean(
+    neighborhood: List[str],
+    data: Dict[str, Dict[str, Any]],
+    dem_votes_field: str,
+    rep_votes_field: str,
+) -> Tuple[float, float, float]:
+    """Calculate the partisan results for a precinct's neighborhood."""
+
+    dem_votes: int = 0
+    tot_votes: int = 0
+    for geoid in neighborhood:
+        dem_votes += data[geoid][dem_votes_field]
+        # NOTE - Two-party votes, not total votes!
+        tot_votes += data[geoid][dem_votes_field] + data[geoid][rep_votes_field]
+
+    Vf: float = dem_votes / tot_votes if tot_votes > 0 else 0.0
+    fractional_seats: float = est_seat_probability(Vf)
+    whole_seats: float = 1.0 if Vf > 0.5 else 0.0
+    if approx_equal(Vf, 0.5):
+        whole_seats = 0.5
+
+    return Vf, fractional_seats, whole_seats
 
 
 ### END ###

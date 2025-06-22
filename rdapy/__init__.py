@@ -170,6 +170,11 @@ from .partisan import (
     #
     calc_efficiency_gap_wasted_votes,
     calc_average_margin,
+    #
+    Neighbor,
+    make_neighborhood,
+    unpack_neighborhood,
+    calc_geographic_baseline,
 )
 
 from .rate import (
@@ -189,13 +194,6 @@ from .score import (
     aggregate_plans,
     score_plan,
     score_plans,
-    #
-    Neighbor,
-    make_neighborhood,
-    nearest_connected_neighbor,
-    unpack_neighborhood,
-    calc_geographic_baseline,
-    eval_partisan_lean,
 )
 
 
