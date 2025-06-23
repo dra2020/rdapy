@@ -10,7 +10,11 @@ scripts/geographic-baseline/PRECOMPUTE.py \
 --version "v06" \
 --cycle "2020" \
 --neighborhoods ~/local/neighborhoods \
---baselines ~/local/precomputed 
+--baselines ~/local/precomputed \
+--census T_20_CENS \
+--vap V_20_VAP \
+--cvap V_20_CVAP \
+--elections __all__
 
 scripts/geographic-baseline/PRECOMPUTE.py \
 --state NC \
@@ -171,7 +175,7 @@ def main():
 --plan-type {chamber} \\
 --data /tmp/{xx}/{xx}_input_data.jsonl \\
 < {nh_dir}/{xx}_{chamber}_neighborhoods.zip \\
-> {bl_dir}/{xx}_{chamber}_precomputed.json
+> {bl_dir}/{xx}_{chamber}_precomputed.{version}.json
                 """
             )
             os.system(command)
