@@ -5,7 +5,10 @@ REPORT PRE-COMPUTED GEOGRAPHIC BASELINES
 
 For example:
 
-$ scripts/geographic-baseline/report_baselines.py
+$ scripts/geographic-baseline/report_baselines.py \
+--baseline /path/to/baselines \
+--version v06 \
+--cycle 2020
 
 """
 
@@ -15,8 +18,6 @@ from argparse import ArgumentParser, Namespace
 import os, json
 
 from rdapy import DISTRICTS_BY_STATE
-
-baseline_dir: str = "cached/2020_VTD"
 
 
 def main():
@@ -36,7 +37,9 @@ def main():
 
             i += 1
 
-            baseline_path: str = f"{baseline_dir}/{xx}_{chamber}_precomputed.json"
+            baseline_path: str = (
+                f"{args.baselines}/{args.cycle}_VTD/{xx}/{xx}_{chamber}_precomputed.{args.version}.json"
+            )
 
             with open(os.path.expanduser(baseline_path), "r") as f:
                 baselines = json.load(f)["geographic_baseline"]
@@ -56,6 +59,23 @@ def parse_arguments():
 
     parser: ArgumentParser = argparse.ArgumentParser(
         description="Parse command line arguments."
+    )
+
+    parser.add_argument(
+        "--baselines",
+        type=str,
+        help="Directory where the baseline files are",
+    )
+    parser.add_argument(
+        "--version",
+        type=str,
+        help="Version of the GeoJSON data used for the baselines",
+    )
+    parser.add_argument(
+        "--cycle",
+        help="The census cycle to use",
+        type=str,
+        default="2020",
     )
 
     parser.add_argument("--debug", dest="debug", action="store_true", help="Debug mode")

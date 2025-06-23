@@ -7,8 +7,8 @@ For example:
 
 scripts/geographic-baseline/PRECOMPUTE.py \
 --state __all__ \
---version "v06" \
---cycle "2020" \
+--version v06 \
+--cycle 2020 \
 --neighborhoods ~/local/neighborhoods \
 --baselines ~/local/precomputed \
 --census T_20_CENS \
@@ -18,8 +18,8 @@ scripts/geographic-baseline/PRECOMPUTE.py \
 
 scripts/geographic-baseline/PRECOMPUTE.py \
 --state NC \
---version "v06" \
---cycle "2020" \
+--version v06 \
+--cycle 2020 \
 --neighborhoods ~/local/neighborhoods \
 --baselines ~/local/precomputed \
 --census T_20_CENS \
