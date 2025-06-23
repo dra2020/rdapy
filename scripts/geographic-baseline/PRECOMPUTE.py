@@ -1,7 +1,27 @@
 #!/usr/bin/env python3
 
 """
-TODO - PRECOMPUTE BASELINES FOR STATES
+PRECOMPUTE BASELINES FOR SPECIFIED STATES
+
+For example:
+
+scripts/geographic-baseline/PRECOMPUTE.py \
+--state __all__ \
+--version "v06" \
+--cycle "2020" \
+--neighborhoods ~/local/neighborhoods \
+--baselines ~/local/precomputed 
+
+scripts/geographic-baseline/PRECOMPUTE.py \
+--state NC \
+--version "v06" \
+--cycle "2020" \
+--neighborhoods ~/local/neighborhoods \
+--baselines ~/local/precomputed \
+--census T_20_CENS \
+--vap V_20_VAP \
+--cvap V_20_CVAP \
+--elections __all__
 
 """
 
@@ -9,6 +29,8 @@ import argparse
 from argparse import ArgumentParser, Namespace
 
 from typing import List
+
+import os
 
 from rdapy import DISTRICTS_BY_STATE
 
@@ -74,32 +96,39 @@ def main():
         if args.states == ["__all__"]
         else args.states
     )
-    # TODO
-    states = ["NC"]
 
     version: str = "v06"  # args.version
     cycle: str = "2020"  # args.cycle
 
     #
 
+    print()
     for xx in states:
-        # TODO - Parameterize the directories
-        nh_dir: str = f"~/local/neighborhoods/{cycle}_VTD/{xx}"
-        bl_dir: str = f"~/local/precomputed/{cycle}_VTD/{xx}"
+        print(f"Precomputing baselines for {xx} ({cycle}) ...")
+        print()
+        nh_dir: str = f"{args.neighborhoods}/{cycle}_VTD/{xx}"
+        bl_dir: str = f"{args.baselines}/{cycle}_VTD/{xx}"
+
+        # Remove any existing temporary files
+
+        command: str = f"rm /tmp/{xx}_Geojson.zip"
+        os.system(command)
+        command: str = f"rm -rf /tmp/{xx}"
+        os.system(command)
 
         # Download the GeoJSON
 
         command: str = (
             f"scripts/GET-GEOJSON.sh --state {xx} --output /tmp/{xx}_Geojson.zip --version {version}"
         )
-        print(command)
+        os.system(command)
 
         # Unzip it
 
         command: str = (
             f"scripts/UNZIP-GEOJSON.sh --input /tmp/{xx}_Geojson.zip --output /tmp/{xx}"
         )
-        print(command)
+        os.system(command)
 
         # Map the data
 
@@ -114,7 +143,7 @@ def main():
 --version {version}
             """
         )
-        print(command)
+        os.system(command)
 
         # Extract the data
 
@@ -126,7 +155,7 @@ def main():
 --data /tmp/{xx}/{xx}_input_data.jsonl
         """
         )
-        print(command)
+        os.system(command)
 
         for chamber, ndistricts in DISTRICTS_BY_STATE[xx].items():
             if chamber == "congress" and ndistricts == 1:
@@ -145,9 +174,10 @@ def main():
 > {bl_dir}/{xx}_{chamber}_precomputed.json
                 """
             )
-            print(command)
+            os.system(command)
+        print()
 
-    pass
+    pass  # for debugging
 
 
 def split_list(s):
