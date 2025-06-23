@@ -28,9 +28,9 @@ def get_datasets(metadata: Dict[str, Any], dataset_type: str) -> List[DatasetKey
 
     assert dataset_type in metadata
 
-    # # HACK for legacy tests
-    # if "version" not in metadata or metadata["version"] < 2:
-    #     return [get_dataset(metadata, dataset_type)]
+    # HACK for legacy tests
+    if "version" not in metadata or metadata["version"] == "1":
+        return [get_dataset(metadata, dataset_type)]
 
     return metadata[dataset_type]["datasets"]
 
@@ -40,18 +40,14 @@ def get_fields(
 ) -> Dict[str, str]:
     """Return the field mapping for a dataset type."""
 
-    # Field names are prefixed with the dataset name
-    fields: Dict[str, str] = {
-        k: f"{dataset}_{v}" for k, v in metadata[dataset_type]["fields"].items()
-    }
-    # if "version" not in metadata or metadata["version"] < 2:
-    #     # Legacy/v1 field names are fully specified
-    #     fields = metadata[dataset_type]["fields"]
-    # else:
-    #     # v2+ field names are prefixed with the dataset name
-    #     fields = {
-    #         k: f"{dataset}_{v}" for k, v in metadata[dataset_type]["fields"].items()
-    #     }
+    if "version" not in metadata or metadata["version"] == "1":
+        # HACK for legacy tests -- field names are fully specified
+        fields = metadata[dataset_type]["fields"]
+    else:
+        # Field names are prefixed with the dataset name
+        fields = {
+            k: f"{dataset}_{v}" for k, v in metadata[dataset_type]["fields"].items()
+        }
 
     return fields
 
