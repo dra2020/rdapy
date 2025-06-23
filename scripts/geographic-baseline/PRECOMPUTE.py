@@ -84,6 +84,34 @@ def main():
 
         # TODO - Unzip it
 
+        # TODO - Map the data
+
+        """
+        VERSION=v5
+        CENSUS=T_20_CENS
+        VAP=V_20_VAP
+        CVAP=V_20_CVAP
+        ELECTIONS=__all__
+
+        scripts/data/map_scoring_data.py \
+        --geojson "${GEOJSON_PATH}"/_AL_"${CYCLE}"_VD_tabblock.vtd.datasets.geojson \
+        --data-map "${DATA_MAP_PATH}"/AL_data_map."${VERSION}".json \
+        --census $CENSUS \
+        --vap $VAP \
+        --cvap $CVAP \
+        --elections $ELECTIONS
+        """
+
+        # TODO - Extract the data
+
+        """
+        scripts/data/extract_data.py \
+        --geojson "${GEOJSON_PATH}"/_AL_"${CYCLE}"_VD_tabblock.vtd.datasets.geojson \
+        --data-map "${DATA_MAP_PATH}"/AL_data_map."${VERSION}".json \
+        --graph "${GRAPH_PATH}"/AL_"${CYCLE}"_graph.json \
+        --data "${DATA_MAP_PATH}"/AL_input_data."${VERSION}".jsonl
+        """
+
         for chamber, ndistricts in metadata.items():
             if chamber == "congress" and ndistricts == 1:
                 continue
