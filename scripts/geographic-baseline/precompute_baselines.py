@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-DO ONE-TIME CALCULATIONS
+PRECOMPUTE ONE-TIME CALCULATIONS
 
 For example:
 
