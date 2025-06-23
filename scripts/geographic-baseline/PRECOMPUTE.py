@@ -106,7 +106,7 @@ def main():
         command: str = (
             f"""scripts/data/map_scoring_data.py \\
 --geojson /tmp/{xx}/{xx}_{cycle}_VD_tabblock.vtd.datasets.geojson \\
---data-map /tmp/{xx}_data_map.json \\
+--data-map /tmp/{xx}/{xx}_data_map.json \\
 --census {args.census} \\
 --vap {args.vap} \\
 --cvap {args.cvap} \\
@@ -121,9 +121,9 @@ def main():
         command: str = (
             f"""scripts/data/extract_data.py \\
 --geojson /tmp/{xx}/{xx}_{cycle}_VD_tabblock.vtd.datasets.geojson \\
---data-map /tmp/{xx}_data_map.json \\
---graph /tmp/{xx}_{cycle}_graph.json \\
---data /tmp/{xx}_input_data.jsonl
+--data-map /tmp/{xx}/{xx}_data_map.json \\
+--graph /tmp/{xx}/{xx}_{cycle}_graph.json \\
+--data /tmp/{xx}/{xx}_input_data.jsonl
         """
         )
         print(command)
@@ -140,7 +140,7 @@ def main():
                 f"""scripts/geographic-baseline/precompute_baselines.py \\
 --state {xx} \\
 --plan-type {chamber} \\
---data /tmp/{xx}_input_data.jsonl \\
+--data /tmp/{xx}/{xx}_input_data.jsonl \\
 < {nh_dir}/{xx}_{chamber}_neighborhoods.zip \\
 > {bl_dir}/{xx}_{chamber}_precomputed.json
                 """
@@ -211,9 +211,9 @@ def parse_arguments():
 
     parser.add_argument(
         "--elections",
-        type=split_list,
-        help="Comma-separated list of election datasets to use",
-        default=["__all__"],  # Get all elections
+        type=str,
+        help="The election datasets to use",
+        default="__all__",  # Get all elections
     )
 
     parser.add_argument("--debug", dest="debug", action="store_true", help="Debug mode")

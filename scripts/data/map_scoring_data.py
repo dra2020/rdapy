@@ -87,7 +87,7 @@ def make_map(
     elections: List[str],
     dir: str,
     file: str,
-    version: int,
+    version: str,
 ) -> Dict[str, Any]:
     """Make a data map for extracting data & shapes from a geojson file."""
 
@@ -184,9 +184,8 @@ def parse_args() -> Namespace:
     )
     parser.add_argument(
         "--version",
-        help="The version # to use",
-        type=int,
-        default=4,  # DRA's published geojson files
+        help="The GeoJSON version used",
+        type=str,
     )
 
     parser.add_argument(
