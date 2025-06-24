@@ -79,7 +79,7 @@ def calc_partisan_metrics(Vf: float, Vf_array: List[float]) -> dict:
     averageDVf: Optional[float] = sum(_DWins) / len(_DWins) if len(_DWins) > 0 else None
     averageRVf: Optional[float] = sum(_RWins) / len(_RWins) if len(_RWins) > 0 else None
 
-    # TODO - Added metrics
+    average_margin = calc_average_margin(Vf_array)
 
     # Build the JSON to match what is produced by the TypeScript code
 
@@ -98,7 +98,7 @@ def calc_partisan_metrics(Vf: float, Vf_array: List[float]) -> dict:
         "gSym": gSym,
         "gamma": gamma,
         "eG": EG,
-        "eG_FPTP": EG_FPTP,
+        "eGFPTP": EG_FPTP,
         "bSV": BsGf,
         "prop": prop,
         "mMs": mMs,
@@ -115,6 +115,7 @@ def calc_partisan_metrics(Vf: float, Vf_array: List[float]) -> dict:
         "mIR": MIR,
         "rD": rD,
         "rDf": rDf,
+        "averageMargin": average_margin,
     }
 
     results: dict = {

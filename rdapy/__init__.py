@@ -137,14 +137,13 @@ from .splitting import (
 )
 
 from .partisan import (
-    # calc_partisan_metrics,
+    # calc_partisan_metrics, # TODO
     #
     calc_best_seats,
     calc_declination,
     calc_disproportionality,
     calc_disproportionality_from_best,
     calc_efficiency_gap,
-    calc_efficiency_gap_wasted_votes,
     calc_gamma,
     calc_global_symmetry,
     calc_lopsided_outcomes,

@@ -6,12 +6,7 @@ from typing import Any, List, Dict, Tuple, Optional
 
 from ..base import NamedAggregates
 from ..equal import calc_population_deviation
-from ..partisan import (
-    calc_partisan_metrics,
-    calc_average_margin,
-    calc_efficiency_gap_wasted_votes,
-    # calc_efficiency_gap,
-)  # TODO - Rationalize the above imports
+from ..partisan import calc_partisan_metrics, calc_efficiency_gap_wasted_votes
 from ..minority import calc_minority_opportunity
 from ..compactness import reock_formula, polsby_formula
 from ..splitting import (
@@ -73,7 +68,7 @@ def calc_partisan_category(
     partisan_metrics["disproportionality"] = all_results["bias"]["prop"]
 
     partisan_metrics["efficiency_gap"] = all_results["bias"]["eG"]
-    partisan_metrics["efficiency_gap_FPTP"] = all_results["bias"]["eG_FPTP"]
+    partisan_metrics["efficiency_gap_FPTP"] = all_results["bias"]["eGFPTP"]
     # NOTE - This formulate needs actual votes by district, not just the vote shares,
     # so we calculate it here separately.
     partisan_metrics["efficiency_gap_wasted_votes"] = calc_efficiency_gap_wasted_votes(
@@ -99,7 +94,7 @@ def calc_partisan_category(
         "cSimple"
     ]
     partisan_metrics["competitive_districts"] = all_results["responsiveness"]["cD"]
-    partisan_metrics["average_margin"] = calc_average_margin(Vf_array)
+    partisan_metrics["average_margin"] = all_results["responsiveness"]["averageMargin"]
 
     partisan_metrics["responsiveness"] = all_results["responsiveness"]["littleR"]
     partisan_metrics["responsive_districts"] = all_results["responsiveness"]["rD"]
