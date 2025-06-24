@@ -7,33 +7,13 @@ from typing import Any, List, Dict, Tuple, Optional
 from ..base import NamedAggregates
 from ..equal import calc_population_deviation
 from ..partisan import (
+    calc_partisan_metrics,
     calc_average_margin,
-    calc_best_seats,
-    calc_big_R,
-    calc_declination,
-    calc_disproportionality,
-    calc_disproportionality_from_best,
-    calc_efficiency_gap,
     calc_efficiency_gap_wasted_votes,
-    calc_gamma,
-    calc_global_symmetry,
-    calc_lopsided_outcomes,
-    calc_mean_median_difference,
-    calc_minimal_inverse_responsiveness,
-    calc_turnout_bias,
-    count_competitive_districts,
-    est_competitive_districts,
-    est_fptp_seats,
-    est_geometric_seats_bias,
-    est_responsive_districts,
-    est_responsiveness,
-    est_seats,
-    est_seats_bias,
-    est_votes_bias,
-    infer_inverse_sv_points,
-    infer_sv_points,
-    key_RV_points,
+    calc_efficiency_gap,
 )
+
+# TODO - Rationalize the above imports
 from ..minority import calc_minority_opportunity
 from ..compactness import reock_formula, polsby_formula
 from ..splitting import (
@@ -127,117 +107,6 @@ def calc_partisan_category(
     partisan_metrics["overall_responsiveness"] = all_results["responsiveness"]["bigR"]
 
     return partisan_metrics
-
-
-def calc_partisan_metrics(Vf: float, Vf_array: list[float]) -> dict:
-    """Calculate partisan metrics for a set of districts and statewide vote share.
-
-    NOTE - The variable names here match those in the dra2020/dra-analytics TypeScript code.
-    """
-
-    proportional: bool = True  # shift
-
-    N: int = len(Vf_array)
-
-    bestS: int = calc_best_seats(N, Vf)
-    bestSf: float = bestS / N
-
-    fptpS: int = est_fptp_seats(Vf_array)
-
-    estS: float = est_seats(Vf_array)
-    estSf: float = estS / N
-
-    deviation: float = calc_disproportionality_from_best(
-        estSf, bestSf
-    )  # This is the dis-proportionality
-
-    dSVpoints: list[tuple[float, float]] = infer_sv_points(Vf, Vf_array, proportional)
-    rSVpoints: list[tuple[float, float]] = infer_inverse_sv_points(dSVpoints, N)
-
-    TOf: float = calc_turnout_bias(Vf, Vf_array)
-
-    Bs50: float = est_seats_bias(dSVpoints, N)
-    Bs50f: float = Bs50 / N
-    Bv50f: float = est_votes_bias(dSVpoints, N)
-    rvPoints: dict[str, float] = key_RV_points(Vf_array)
-    decl: Optional[float] = calc_declination(Vf_array)
-    gSym: Optional[float] = calc_global_symmetry(dSVpoints, rSVpoints, Bs50f, N)
-
-    EG: float = calc_efficiency_gap(Vf, estSf)
-    BsGf: float = (
-        est_geometric_seats_bias(Vf, dSVpoints, rSVpoints) / N
-    )  # Convert to a fraction [0, 1]
-
-    prop: float = calc_disproportionality(Vf, estSf)
-    mMs: float = calc_mean_median_difference(Vf_array, Vf)
-    mMd: float = calc_mean_median_difference(Vf_array)
-    LO: Optional[float] = calc_lopsided_outcomes(Vf_array)
-
-    # Calculate alternate responsiveness metrics for reference
-    bigR: Optional[float] = calc_big_R(Vf, estSf)
-    littleR: float = est_responsiveness(Vf, dSVpoints, N)
-    MIR: Optional[float] = calc_minimal_inverse_responsiveness(Vf, littleR)
-    rD: float = est_responsive_districts(Vf_array)
-    rDf: float = rD / N
-
-    gamma: Optional[float] = calc_gamma(Vf, estSf, littleR)
-
-    Cn: int = count_competitive_districts(Vf_array)
-    cD: float = est_competitive_districts(Vf_array)
-    cDf: float = cD / N
-
-    _DWins: list[float] = list(filter(lambda x: x > 0.5, Vf_array))
-    _RWins: list[float] = list(
-        filter(lambda x: x <= 0.5, Vf_array)
-    )  # Ties credited to R's
-    averageDVf: Optional[float] = sum(_DWins) / len(_DWins) if len(_DWins) > 0 else None
-    averageRVf: Optional[float] = sum(_RWins) / len(_RWins) if len(_RWins) > 0 else None
-
-    # Build the JSON to match what is produced by the TypeScript code
-
-    bias_measurements: dict = {
-        "bestS": bestS,
-        "bestSf": bestSf,
-        "estS": estS,
-        "estSf": estSf,
-        "deviation": deviation,
-        "tOf": TOf,
-        "fptpS": fptpS,
-        "bS50": Bs50f,
-        "bV50": Bv50f,
-        "decl": decl,
-        "rvPoints": rvPoints,
-        "gSym": gSym,
-        "gamma": gamma,
-        "eG": EG,
-        "bSV": BsGf,
-        "prop": prop,
-        "mMs": mMs,
-        "mMd": mMd,
-        "lO": LO,
-    }
-
-    responsiveness_measurements: dict = {
-        "cSimple": Cn,
-        "cD": cD,
-        "cDf": cDf,
-        "bigR": bigR,
-        "littleR": littleR,
-        "mIR": MIR,
-        "rD": rD,
-        "rDf": rDf,
-    }
-
-    results: dict = {
-        "bias": bias_measurements,
-        "responsiveness": responsiveness_measurements,
-        "dSVpoints": dSVpoints,
-        "rSVpoints": rSVpoints,
-        "averageDVf": averageDVf,
-        "averageRVf": averageRVf,
-    }
-
-    return results
 
 
 ##### MINORITY CATEGORY #####
@@ -339,6 +208,7 @@ def calc_splitting_category(
     splitting_metrics["counties_split"] = counties_split
     splitting_metrics["county_splits"] = county_splits
 
+    # TODO
     # Calculate split scores by district
     # This is redundantly calculating intermediate values that rda.calc_county_district_splitting(CxD) above
     # does, but it's easier to recompute the constituents here than it is to tunnel them from rdapy.

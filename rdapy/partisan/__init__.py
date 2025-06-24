@@ -5,5 +5,6 @@ from .responsiveness import *
 from .method import *
 from .more import *
 from .geographic import *
+from .partisan import *
 
 name = "partisan"
