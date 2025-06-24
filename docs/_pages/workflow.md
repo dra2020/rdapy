@@ -1,5 +1,7 @@
 # Workflow
 
+TODO
+
 ## How & When to Generate Adjacency Graphs
 
 When we get shapes for a new census, we need to generate adjacency graphs.
