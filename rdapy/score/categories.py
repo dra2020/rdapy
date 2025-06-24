@@ -9,13 +9,13 @@ from ..equal import calc_population_deviation
 from ..partisan import calc_partisan_metrics, calc_efficiency_gap_wasted_votes
 from ..minority import calc_minority_opportunity
 from ..compactness import reock_formula, polsby_formula
-from ..splitting import (
+from ..splitting.county import (
     calc_county_district_splitting,
-    calc_district_fractions,
-    county_totals,
-    district_split_score,
-    district_totals,
-    reduce_district_splits,
+    _calc_district_fractions,
+    _county_totals,
+    _district_split_score,
+    _district_totals,
+    _reduce_district_splits,
 )
 
 
@@ -202,14 +202,13 @@ def calc_splitting_category(
     splitting_metrics["counties_split"] = counties_split
     splitting_metrics["county_splits"] = county_splits
 
-    # TODO - Rationalize helper names
     # Calculate split scores by district
     # This is redundantly calculating intermediate values that rda.calc_county_district_splitting(CxD) above
     # does, but it's easier to recompute the constituents here than it is to tunnel them from rdapy.
-    dT: list[float] = district_totals(CxD)
-    cT: list[float] = county_totals(CxD)
-    rD: list[list[float]] = reduce_district_splits(CxD, cT)
-    g: list[list[float]] = calc_district_fractions(rD, dT)
+    dT: list[float] = _district_totals(CxD)
+    cT: list[float] = _county_totals(CxD)
+    rD: list[list[float]] = _reduce_district_splits(CxD, cT)
+    g: list[list[float]] = _calc_district_fractions(rD, dT)
     splitting_by_district: List[float] = _district_split_scores(g)
 
     by_district: Dict[str, List[float]] = {
@@ -230,7 +229,7 @@ def _district_split_scores(g: List[List[float]]) -> List[float]:
     by_district: List[float] = list()
 
     for i in range(numD):
-        split_score: float = district_split_score(i, g)
+        split_score: float = _district_split_score(i, g)
         by_district.append(split_score)
 
     return by_district

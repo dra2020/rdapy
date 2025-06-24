@@ -109,27 +109,7 @@ from .minority import (
 
 from .splitting import (
     calc_county_district_splitting,
-    #
     split_score,
-    county_totals,
-    district_totals,
-    #
-    calc_county_fractions,
-    calc_county_weights,
-    county_split_score,
-    county_splitting,
-    calc_county_splitting,
-    #
-    calc_district_fractions,
-    calc_district_weights,
-    district_split_score,
-    district_splitting,
-    calc_district_splitting,
-    #
-    calc_county_splitting_reduced,
-    calc_district_splitting_reduced,
-    reduce_county_splits,
-    reduce_district_splits,
     #
     calc_coi_splitting,
     uncertainty_of_membership,
