@@ -16,23 +16,28 @@ from typing import Any, List, Dict, Tuple, Optional, TextIO
 
 import sys, json
 
-# TODO -- This is a relative reference w/in the project to avoid a long list of imports,
-# not a use of a `pip install`ed package
-import rdapy as rda
-
 from ..base import (
     get_dataset,
     get_datasets,
     get_fields,
     DatasetKey,
     Aggregates,
-    # NamedAggregates,
-    #
     Precinct,
     District,
 )
+from ..rate import (
+    rate_proportionality,
+    rate_competitiveness,
+    rate_minority_opportunity,
+    rate_reock,
+    rate_polsby,
+    rate_compactness,
+    rate_county_splitting,
+    rate_district_splitting,
+    rate_splitting,
+)
 
-# TODO -- Fold these into the category functions
+##### TODO -- Fold these into the category functions in categories.py #####
 from ..compactness import (
     calc_cut_score,
     calc_spanning_tree_score,
@@ -47,6 +52,8 @@ from .categories import (
     calc_compactness_metrics,
     calc_splitting_metrics,
 )
+
+#####
 
 
 def score_plans(
@@ -327,27 +334,27 @@ def score_plan(
 
 
 def _rate_proportionality(disproportionality: float, Vf: float, Sf: float) -> int:
-    rating: int = rda.rate_proportionality(disproportionality, Vf, Sf)
+    rating: int = rate_proportionality(disproportionality, Vf, Sf)
 
     return rating
 
 
 def _rate_competitiveness(cdf: float) -> int:
-    rating: int = rda.rate_competitiveness(cdf)
+    rating: int = rate_competitiveness(cdf)
 
     return rating
 
 
 def _rate_minority_opportunity(od: float, pod: float, cd: float, pcd: float) -> int:
-    rating: int = rda.rate_minority_opportunity(od, pod, cd, pcd)
+    rating: int = rate_minority_opportunity(od, pod, cd, pcd)
 
     return rating
 
 
 def _rate_compactness(avg_reock: int, avg_polsby: int) -> int:
-    reock_rating: int = rda.rate_reock(avg_reock)
-    polsby_rating: int = rda.rate_polsby(avg_polsby)
-    rating: int = rda.rate_compactness(reock_rating, polsby_rating)
+    reock_rating: int = rate_reock(avg_reock)
+    polsby_rating: int = rate_polsby(avg_polsby)
+    rating: int = rate_compactness(reock_rating, polsby_rating)
 
     return rating
 
@@ -358,13 +365,13 @@ def _rate_splitting(
     n_counties: int,
     n_districts: int,
 ) -> int:
-    county_rating: int = rda.rate_county_splitting(
+    county_rating: int = rate_county_splitting(
         county_splitting, n_counties, n_districts
     )
-    district_rating: int = rda.rate_district_splitting(
+    district_rating: int = rate_district_splitting(
         district_splitting, n_counties, n_districts
     )
-    rating: int = rda.rate_splitting(county_rating, district_rating)
+    rating: int = rate_splitting(county_rating, district_rating)
 
     return rating
 
