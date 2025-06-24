@@ -48,9 +48,9 @@ from ..minority import calculate_mmd_simple
 from .categories import (
     calc_general_category,
     calc_partisan_category,
-    calc_minority_metrics,
-    calc_compactness_metrics,
-    calc_splitting_metrics,
+    calc_minority_category,
+    calc_compactness_category,
+    calc_splitting_category,
 )
 
 #####
@@ -226,7 +226,7 @@ def score_plan(
         # Revised minority ratings that don't click Black VAP % below 37%
 
         alt_minority_metrics: Dict[str, float] = (
-            calc_minority_metrics(  # Was: calc_alt_minority_metrics(
+            calc_minority_category(  # Was: calc_alt_minority_metrics(
                 aggs["vap"][vap_dataset], n_districts, vap_keys
             )
         )
@@ -240,7 +240,7 @@ def score_plan(
         )
 
     if mode in ["all", "compactness"]:
-        compactness_by_district: Dict[str, List[float]] = calc_compactness_metrics(
+        compactness_by_district: Dict[str, List[float]] = calc_compactness_category(
             aggs["shapes"][shapes_dataset], n_districts
         )
         compactness_metrics: Dict[str, float] = {
@@ -279,7 +279,7 @@ def score_plan(
     if mode in ["all", "splitting"]:
         splitting_metrics: Dict[str, float]
         splitting_by_district: Dict[str, List[float]]
-        splitting_metrics, splitting_by_district = calc_splitting_metrics(
+        splitting_metrics, splitting_by_district = calc_splitting_category(
             aggs["census"][census_dataset], n_districts
         )
         scorecard["census"][census_dataset].update(splitting_metrics)

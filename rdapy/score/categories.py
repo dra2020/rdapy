@@ -1,29 +1,49 @@
 """
 CALCULATE CATEGORIES OF SCORES (METRICS)
-
-TODO - Consolidate these
 """
 
 from typing import Any, List, Dict, Tuple, Optional
 
-import sys, json
-
-# TODO -- This is a relative reference w/in the project to avoid a long list of imports,
-# not a use of a `pip install`ed package
-import rdapy as rda
-
 from ..base import NamedAggregates
 from ..equal import calc_population_deviation
-from ..partisan import *  # calc_efficiency_gap_wasted_votes, calc_average_margin
-
-# TODO -- Incorporate these
-# from ..compactness import (
-#     calc_cut_score,
-#     calc_spanning_tree_score,
-#     _split_graph_by_districts,
-#     calc_energy,
-# )
-# from ..minority import calculate_mmd_simple
+from ..partisan import (
+    calc_average_margin,
+    calc_best_seats,
+    calc_big_R,
+    calc_declination,
+    calc_disproportionality,
+    calc_disproportionality_from_best,
+    calc_efficiency_gap,
+    calc_efficiency_gap_wasted_votes,
+    calc_gamma,
+    calc_global_symmetry,
+    calc_lopsided_outcomes,
+    calc_mean_median_difference,
+    calc_minimal_inverse_responsiveness,
+    calc_turnout_bias,
+    count_competitive_districts,
+    est_competitive_districts,
+    est_fptp_seats,
+    est_geometric_seats_bias,
+    est_responsive_districts,
+    est_responsiveness,
+    est_seats,
+    est_seats_bias,
+    est_votes_bias,
+    infer_inverse_sv_points,
+    infer_sv_points,
+    key_RV_points,
+)
+from ..minority import calc_minority_opportunity
+from ..compactness import reock_formula, polsby_formula
+from ..splitting import (
+    calc_county_district_splitting,
+    calc_district_fractions,
+    county_totals,
+    district_split_score,
+    district_totals,
+    reduce_district_splits,
+)
 
 
 def calc_general_category(data: NamedAggregates, n_districts: int) -> Dict[str, Any]:
@@ -38,11 +58,14 @@ def calc_general_category(data: NamedAggregates, n_districts: int) -> Dict[str, 
     min_pop: int = min(pop_by_district)
     target_pop: int = int(total_pop / n_districts)
 
-    deviation: float = rda.calc_population_deviation(max_pop, min_pop, target_pop)
+    deviation: float = calc_population_deviation(max_pop, min_pop, target_pop)
 
     general_metrics["population_deviation"] = deviation
 
     return general_metrics
+
+
+##### TODO - PARTISAN CATEGORY #####
 
 
 def calc_partisan_category(
@@ -75,7 +98,7 @@ def calc_partisan_category(
         d_by_district, r_by_district
     )
     Sf: float = partisan_metrics["fptp_seats"] / n_districts
-    partisan_metrics["efficiency_gap_statewide"] = rda.calc_efficiency_gap(Vf, Sf)
+    partisan_metrics["efficiency_gap_statewide"] = calc_efficiency_gap(Vf, Sf)
     partisan_metrics["efficiency_gap"] = all_results["bias"]["eG"]
 
     partisan_metrics["seats_bias"] = all_results["bias"]["bS50"]
@@ -217,7 +240,10 @@ def calc_partisan_metrics(Vf: float, Vf_array: list[float]) -> dict:
     return results
 
 
-def calc_minority_metrics(
+##### MINORITY CATEGORY #####
+
+
+def calc_minority_category(
     data: NamedAggregates,
     n_districts: int,
     vap_keys: List[str],
@@ -241,14 +267,17 @@ def calc_minority_metrics(
 
         by_district.append(district_demos)
 
-    minority_metrics: Dict[str, float] = rda.calc_minority_opportunity(
+    minority_metrics: Dict[str, float] = calc_minority_opportunity(
         statewide_demos, by_district, clip=False
     )
 
     return minority_metrics
 
 
-def calc_compactness_metrics(
+##### COMPACTNESS CATEGORY #####
+
+
+def calc_compactness_category(
     data: NamedAggregates,  # All aggregates by district
     n_districts: int,
 ) -> Dict[str, List[float]]:
@@ -259,8 +288,8 @@ def calc_compactness_metrics(
     by_district: Dict[str, List[float]] = {"reock": [0.0], "polsby_popper": [0.0]}
 
     for d in range(1, n_districts + 1):
-        reock: float = rda.reock_formula(data["area"][d], data["diameter"][d] / 2)
-        polsby: float = rda.polsby_formula(data["area"][d], data["perimeter"][d])
+        reock: float = reock_formula(data["area"][d], data["diameter"][d] / 2)
+        polsby: float = polsby_formula(data["area"][d], data["perimeter"][d])
         by_district["reock"].append(reock)
         by_district["polsby_popper"].append(polsby)
 
@@ -276,14 +305,17 @@ def calc_compactness_metrics(
     return by_district
 
 
-def calc_splitting_metrics(
+##### SPLITTING CATEGORY #####
+
+
+def calc_splitting_category(
     data: NamedAggregates, n_districts: int
 ) -> Tuple[Dict[str, float], Dict[str, List[float]]]:
     """Calculate county-district splitting metrics."""
 
     CxD: List[List[float]] = data["CxD"]
 
-    all_results: Dict[str, float] = rda.calc_county_district_splitting(CxD)
+    all_results: Dict[str, float] = calc_county_district_splitting(CxD)
 
     splitting_metrics: Dict[str, float] = dict()
     splitting_metrics["county_splitting"] = all_results["county"]
@@ -310,10 +342,10 @@ def calc_splitting_metrics(
     # Calculate split scores by district
     # This is redundantly calculating intermediate values that rda.calc_county_district_splitting(CxD) above
     # does, but it's easier to recompute the constituents here than it is to tunnel them from rdapy.
-    dT: list[float] = rda.district_totals(CxD)
-    cT: list[float] = rda.county_totals(CxD)
-    rD: list[list[float]] = rda.reduce_district_splits(CxD, cT)
-    g: list[list[float]] = rda.calc_district_fractions(rD, dT)
+    dT: list[float] = district_totals(CxD)
+    cT: list[float] = county_totals(CxD)
+    rD: list[list[float]] = reduce_district_splits(CxD, cT)
+    g: list[list[float]] = calc_district_fractions(rD, dT)
     splitting_by_district: List[float] = _district_split_scores(g)
 
     by_district: Dict[str, List[float]] = {
@@ -334,7 +366,7 @@ def _district_split_scores(g: List[List[float]]) -> List[float]:
     by_district: List[float] = list()
 
     for i in range(numD):
-        split_score: float = rda.district_split_score(i, g)
+        split_score: float = district_split_score(i, g)
         by_district.append(split_score)
 
     return by_district

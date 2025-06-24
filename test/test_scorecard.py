@@ -27,7 +27,7 @@ from rdapy import (
 )
 
 from rdapy.aggregate.aggregate import arcs_are_symmetric
-from rdapy.score.analyze import calc_compactness_metrics
+from rdapy.score.analyze import calc_compactness_category
 
 
 cycle: str = "2020"
@@ -167,7 +167,7 @@ class TestScorecard:
 
             #
 
-            actual: Dict[str, List[float]] = calc_compactness_metrics(
+            actual: Dict[str, List[float]] = calc_compactness_category(
                 aggregates, n_districts
             )
 

@@ -200,9 +200,9 @@ from .score import (
     #
     calc_general_category,
     calc_partisan_category,
-    calc_minority_metrics,
-    calc_compactness_metrics,
-    calc_splitting_metrics,
+    calc_minority_category,
+    calc_compactness_category,
+    calc_splitting_category,
 )
 
 
