@@ -5,7 +5,7 @@ PRECOMPUTE BASELINES FOR SPECIFIED STATES
 
 For example:
 
-scripts/geographic-baseline/PRECOMPUTE.py \
+$ scripts/geographic-baseline/PRECOMPUTE.py \
 --states __all__ \
 --version v06 \
 --cycle 2020 \
@@ -16,7 +16,7 @@ scripts/geographic-baseline/PRECOMPUTE.py \
 --cvap V_20_CVAP \
 --elections __all__
 
-scripts/geographic-baseline/PRECOMPUTE.py \
+$ scripts/geographic-baseline/PRECOMPUTE.py \
 --states NC \
 --version v06 \
 --cycle 2020 \

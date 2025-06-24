@@ -5,8 +5,14 @@ EXTRACT ADJACENCY GRAPHYS FOR SPECIFIED STATES
 
 For example:
 
-scripts/graphs/EXTRACT-GRAPHS.py \
+$ scripts/graphs/EXTRACT-GRAPHS.py \
 --states __all__ \
+--version v06 \
+--cycle 2020 \
+--output /path/to/output/directory
+
+$ scripts/graphs/EXTRACT-GRAPHS.py \
+--states NC \
 --version v06 \
 --cycle 2020 \
 --output /path/to/output/directory
