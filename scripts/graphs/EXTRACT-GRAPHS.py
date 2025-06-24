@@ -1,31 +1,15 @@
 #!/usr/bin/env python3
 
 """
-PRECOMPUTE BASELINES FOR SPECIFIED STATES
+EXTRACT ADJACENCY GRAPHYS FOR SPECIFIED STATES
 
 For example:
 
-scripts/geographic-baseline/PRECOMPUTE.py \
+scripts/graphs/EXTRACT-GRAPHS.py \
 --states __all__ \
 --version v06 \
 --cycle 2020 \
---neighborhoods ~/local/neighborhoods \
---baselines ~/local/precomputed \
---census T_20_CENS \
---vap V_20_VAP \
---cvap V_20_CVAP \
---elections __all__
-
-scripts/geographic-baseline/PRECOMPUTE.py \
---states NC \
---version v06 \
---cycle 2020 \
---neighborhoods ~/local/neighborhoods \
---baselines ~/local/precomputed \
---census T_20_CENS \
---vap V_20_VAP \
---cvap V_20_CVAP \
---elections __all__
+--output /path/to/output/directory
 
 """
 
@@ -36,11 +20,9 @@ from typing import List
 
 import os
 
-from rdapy import DISTRICTS_BY_STATE
-
 
 def main():
-    """Precompute geographic baselines for all states & chambers."""
+    """Extract adjacency graphs for specified states."""
 
     args = parse_arguments()
 
@@ -108,10 +90,8 @@ def main():
 
     print()
     for xx in states:
-        print(f"Precomputing baselines for {xx} ({cycle}) ...")
+        print(f"Extracting an adjacency graph for {xx} ({cycle}) ...")
         print()
-        nh_dir: str = f"{args.neighborhoods}/{cycle}_VTD/{xx}"
-        bl_dir: str = f"{args.baselines}/{cycle}_VTD/{xx}"
 
         # Remove any existing temporary files
 
@@ -134,52 +114,16 @@ def main():
         )
         os.system(command)
 
-        # Map the data
+        # Extract the graph
 
         command: str = (
-            f"""scripts/data/map_scoring_data.py \\
+            f"""scripts/graphs/extract_graph.py \\
 --geojson /tmp/{xx}/{xx}_{cycle}_VD_tabblock.vtd.datasets.geojson \\
---data-map /tmp/{xx}/{xx}_data_map.json \\
---census {args.census} \\
---vap {args.vap} \\
---cvap {args.cvap} \\
---elections {args.elections} \\
---version {version}
+--graph {args.output}/{xx}_{cycle}_graph.json \\
+--locations /tmp/{xx}_precinct-locations.json
             """
         )
         os.system(command)
-
-        # Extract the data
-
-        command: str = (
-            f"""scripts/data/extract_data.py \\
---geojson /tmp/{xx}/{xx}_{cycle}_VD_tabblock.vtd.datasets.geojson \\
---data-map /tmp/{xx}/{xx}_data_map.json \\
---graph /tmp/{xx}/{xx}_{cycle}_graph.json \\
---data /tmp/{xx}/{xx}_input_data.jsonl
-        """
-        )
-        os.system(command)
-
-        for chamber, ndistricts in DISTRICTS_BY_STATE[xx].items():
-            if chamber == "congress" and ndistricts == 1:
-                continue
-            if ndistricts is None:
-                continue
-
-            # Precompute the baselines for the state & chamber
-
-            command: str = (
-                f"""scripts/geographic-baseline/precompute_baselines.py \\
---state {xx} \\
---plan-type {chamber} \\
---data /tmp/{xx}/{xx}_input_data.jsonl \\
-< {nh_dir}/{xx}_{chamber}_neighborhoods.zip \\
-> {bl_dir}/{xx}_{chamber}_precomputed.{version}.json
-                """
-            )
-            os.system(command)
-        print()
 
     pass  # for debugging
 
@@ -208,46 +152,15 @@ def parse_arguments():
         help="Version of the GeoJSON data to use",
     )
     parser.add_argument(
-        "--neighborhoods",
-        type=str,
-        help="Directory where input neighborhood files are stored",
-    )
-    parser.add_argument(
-        "--baselines",
-        type=str,
-        help="Directory where output baseline files should be stored",
-    )
-    parser.add_argument(
         "--cycle",
         help="The census cycle to use",
         type=str,
         default="2020",
     )
-
     parser.add_argument(
-        "--census",
-        help="The census dataset to use",
+        "--output",
         type=str,
-        default="T_20_CENS",  # Doesn't matter right now
-    )
-    parser.add_argument(
-        "--vap",
-        help="The VAP dataset to use",
-        type=str,
-        default="V_20_VAP",  # Doesn't matter right now
-    )
-    parser.add_argument(
-        "--cvap",
-        help="The VAP dataset to use",
-        type=str,
-        default="V_20_CVAP",  # Doesn't matter right now
-    )
-
-    parser.add_argument(
-        "--elections",
-        type=str,
-        help="The election datasets to use",
-        default="__all__",  # Get all elections
+        help="The output directory for the adjacency graphs",
     )
 
     parser.add_argument("--debug", dest="debug", action="store_true", help="Debug mode")

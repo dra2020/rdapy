@@ -8,8 +8,10 @@ $ scripts/graphs/extract_graph.py \
 --graph /path/to/output-graph.json \
 --locations /path/to/precinct-locations.json
 
-NOTE - If the graph is not fully connected, the output file will have
+* If the graph is not fully connected, the output file will have
   "_NOT_CONNECTED" appended to the filename.
+* The temporary precinct locations are used to find edges to add
+  to make the graph fully connected.
 """
 
 import argparse
@@ -42,7 +44,7 @@ def main() -> None:
 
     df: DataFrame = DataFrame([f.get("properties", {}) for f in geojson["features"]])
     gdf: GeoDataFrame = GeoDataFrame(df, geometry=[shape(f["geometry"]) for f in geojson["features"]])  # type: ignore
-    adjacency_graph: Dict[str, List[str]] = from_dataframe(gdf)
+    adjacency_graph: Dict[str, List[str]] = _from_dataframe(gdf)
 
     # Check whether the graph is consistent & fully connected
 
@@ -88,7 +90,7 @@ def main() -> None:
 ### HELPERS ###
 
 
-def from_dataframe(df: GeoDataFrame, geoid_field: str = "id") -> Dict[str, List[str]]:
+def _from_dataframe(df: GeoDataFrame, geoid_field: str = "id") -> Dict[str, List[str]]:
     """Extract a rook graph from a DataFrame."""
 
     g: Rook | WSP = Rook.from_dataframe(df, ids=geoid_field)
