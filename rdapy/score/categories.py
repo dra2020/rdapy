@@ -62,7 +62,7 @@ def calc_partisan_category(
 
     partisan_metrics["pr_deviation"] = all_results["bias"]["deviation"]
     partisan_metrics["estimated_seats"] = all_results["bias"]["estS"]
-    partisan_metrics["estimated_seat_pct"] = all_results["bias"]["estSf"]
+    # partisan_metrics["estimated_seat_pct"] = all_results["bias"]["estSf"]
     partisan_metrics["fptp_seats"] = all_results["bias"]["fptpS"]
 
     partisan_metrics["disproportionality"] = all_results["bias"]["prop"]

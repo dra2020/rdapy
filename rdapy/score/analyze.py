@@ -195,7 +195,10 @@ def score_plan(
             partisan_metrics: Dict[str, Optional[float]] = calc_partisan_category(
                 aggs["election"][election_dataset], n_districts, geographic_baselines
             )
-            estimated_seat_pct = partisan_metrics.pop("estimated_seat_pct")
+            # estimated_seat_pct = partisan_metrics.pop("estimated_seat_pct")
+            estimated_seats = partisan_metrics["estimated_seats"]
+            assert estimated_seats is not None
+            estimated_seat_pct: float = estimated_seats / n_districts
             assert estimated_seat_pct is not None
             scorecard["election"][election_dataset].update(partisan_metrics)
 

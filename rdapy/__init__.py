@@ -137,8 +137,6 @@ from .splitting import (
 )
 
 from .partisan import (
-    # calc_partisan_metrics, # TODO
-    #
     calc_best_seats,
     calc_declination,
     calc_disproportionality,

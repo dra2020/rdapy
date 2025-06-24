@@ -9,7 +9,7 @@ from .responsiveness import *
 def calc_partisan_metrics(Vf: float, Vf_array: List[float]) -> dict:
     """Calculate partisan metrics for a set of districts and statewide vote share.
 
-    NOTE - The variable names here match those in the dra2020/dra-analytics TypeScript code.
+    NOTE - The variable names here mostly match those in the dra2020/dra-analytics TypeScript code.
     """
 
     proportional: bool = True  # shift
@@ -83,11 +83,14 @@ def calc_partisan_metrics(Vf: float, Vf_array: List[float]) -> dict:
 
     # Build the JSON to match what is produced by the TypeScript code
 
+    # NOTE - Commented a few things out:
+    # - Redundant/derived values, e.g., divide something by # of districts
+    # - Unused metrics
     bias_measurements: dict = {
         "bestS": bestS,
-        "bestSf": bestSf,
+        # "bestSf": bestSf,
         "estS": estS,
-        "estSf": estSf,
+        # "estSf": estSf,
         "deviation": deviation,
         "tOf": TOf,
         "fptpS": fptpS,
@@ -95,8 +98,8 @@ def calc_partisan_metrics(Vf: float, Vf_array: List[float]) -> dict:
         "bV50": Bv50f,
         "decl": decl,
         "rvPoints": rvPoints,
-        "gSym": gSym,
-        "gamma": gamma,
+        # "gSym": gSym,
+        # "gamma": gamma,
         "eG": EG,
         "eGFPTP": EG_FPTP,
         "bSV": BsGf,
@@ -109,7 +112,7 @@ def calc_partisan_metrics(Vf: float, Vf_array: List[float]) -> dict:
     responsiveness_measurements: dict = {
         "cSimple": Cn,
         "cD": cD,
-        "cDf": cDf,
+        # "cDf": cDf,
         "bigR": bigR,
         "littleR": littleR,
         "mIR": MIR,
