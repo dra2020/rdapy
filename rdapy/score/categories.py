@@ -11,9 +11,7 @@ from ..partisan import (
     calc_average_margin,
     calc_efficiency_gap_wasted_votes,
     calc_efficiency_gap,
-)
-
-# TODO - Rationalize the above imports
+)  # TODO - Rationalize the above imports
 from ..minority import calc_minority_opportunity
 from ..compactness import reock_formula, polsby_formula
 from ..splitting import (
@@ -208,7 +206,7 @@ def calc_splitting_category(
     splitting_metrics["counties_split"] = counties_split
     splitting_metrics["county_splits"] = county_splits
 
-    # TODO
+    # TODO - Rationalize helper names
     # Calculate split scores by district
     # This is redundantly calculating intermediate values that rda.calc_county_district_splitting(CxD) above
     # does, but it's easier to recompute the constituents here than it is to tunnel them from rdapy.
