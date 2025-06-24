@@ -2,7 +2,9 @@
 
 ## How & When to Generate Adjacency Graphs
 
-TODO
+- scripts/graphs/EXTRACT-GRAPHS.py
+- scripts/graphs/FIX-GRAPH.py <= edit
+- scripts/graphs/FIX-GRAPHS.py
 
 ## How & When to Extract Data
 

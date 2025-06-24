@@ -126,7 +126,7 @@ def main():
             f"""scripts/graphs/extract_graph.py \\
 --geojson /tmp/{xx}/{xx}_{cycle}_VD_tabblock.vtd.datasets.geojson \\
 --graph {args.output}/{xx}_{cycle}_graph.json \\
---locations /tmp/{xx}_precinct-locations.json
+--locations /tmp/{xx}_precinct_locations.json
             """
         )
         os.system(command)
