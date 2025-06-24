@@ -144,6 +144,7 @@ from .partisan import (
     calc_disproportionality,
     calc_disproportionality_from_best,
     calc_efficiency_gap,
+    calc_efficiency_gap_wasted_votes,
     calc_gamma,
     calc_global_symmetry,
     calc_lopsided_outcomes,

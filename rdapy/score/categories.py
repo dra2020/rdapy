@@ -10,7 +10,7 @@ from ..partisan import (
     calc_partisan_metrics,
     calc_average_margin,
     calc_efficiency_gap_wasted_votes,
-    calc_efficiency_gap,
+    # calc_efficiency_gap,
 )  # TODO - Rationalize the above imports
 from ..minority import calc_minority_opportunity
 from ..compactness import reock_formula, polsby_formula
@@ -72,12 +72,13 @@ def calc_partisan_category(
 
     partisan_metrics["disproportionality"] = all_results["bias"]["prop"]
 
+    partisan_metrics["efficiency_gap"] = all_results["bias"]["eG"]
+    partisan_metrics["efficiency_gap_FPTP"] = all_results["bias"]["eG_FPTP"]
+    # NOTE - This formulate needs actual votes by district, not just the vote shares,
+    # so we calculate it here separately.
     partisan_metrics["efficiency_gap_wasted_votes"] = calc_efficiency_gap_wasted_votes(
         d_by_district, r_by_district
     )
-    Sf: float = partisan_metrics["fptp_seats"] / n_districts
-    partisan_metrics["efficiency_gap_statewide"] = calc_efficiency_gap(Vf, Sf)
-    partisan_metrics["efficiency_gap"] = all_results["bias"]["eG"]
 
     partisan_metrics["seats_bias"] = all_results["bias"]["bS50"]
     partisan_metrics["votes_bias"] = all_results["bias"]["bV50"]
