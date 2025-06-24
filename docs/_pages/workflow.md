@@ -2,20 +2,38 @@
 
 ## How & When to Generate Adjacency Graphs
 
-- scripts/graphs/EXTRACT-GRAPHS.py
-- scripts/graphs/FIX-GRAPH.py <= edit
-- scripts/graphs/FIX-GRAPHS.py
+When we get shapes for a new census, we need to generate adjacency graphs.
+First, create the GeoJSON files that contain the simplified shapes.
+The extract adjacency graphs from those shapes.
 
-## How & When to Extract Data
+```bash
+scripts/graphs/EXTRACT-GRAPHS.py \
+--states __all__ \
+--version v06 \
+--cycle 2020 \
+--output /path/to/output/directory
+```
 
-TODO
+where
 
-## How & When to Find Precinct NeighborhoodsK
+- `version` is the version of the GeoJSON files
+- `cycle` is the census cycle
+- `output` is the directory where the output files will be saved
+
+If the geometry for a state is not fully connected, the output file will have
+"_NOT_CONNECTED" appended to the filename. The precinct locations have been squirreled
+away so they can be used to find edges to add to make the graph fully connected.
+
+For those states, e.g., AK, CA, HI, NY, and RI in the 2020 cycle, edit and run the
+`scripts/graphs/FIX-GRAPHS.py` script to add the missing edges. 
+
+## How & When to Find Precinct Neighborhoods
 
 TODO
 
 ## How & When to Precompute Geographic Baselines
 
 Whenever we add a dataset to the app and update the GeoJSON we publish,
-we should update the geographic baselines for that state. Use the
-`scripts/geographic-baseline/PRECOMPUTE.py` script to do this.
+we should update the geographic baselines for that state, so
+we can calculate geographic advantages for that election.
+Use the `scripts/geographic-baseline/PRECOMPUTE.py` script to do this.
