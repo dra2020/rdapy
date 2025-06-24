@@ -167,10 +167,11 @@ def score_plan(
     }
 
     if mode in ["all", "general"]:
-        deviation: float = calc_general_category(
+        general_metrics: Dict[str, Any] = calc_general_category(
             aggs["census"][census_dataset],
             n_districts,
         )
+        deviation: float = general_metrics.pop("population_deviation")
         scorecard["census"][census_dataset]["population_deviation"] = deviation
 
     if mode in ["all", "partisan"]:

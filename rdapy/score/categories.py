@@ -26,8 +26,10 @@ from ..partisan import *  # calc_efficiency_gap_wasted_votes, calc_average_margi
 # from ..minority import calculate_mmd_simple
 
 
-def calc_general_category(data: NamedAggregates, n_districts: int) -> float:
+def calc_general_category(data: NamedAggregates, n_districts: int) -> Dict[str, Any]:
     """Calculate general metrics like population deviation."""
+
+    general_metrics: Dict[str, Any] = dict()
 
     pop_by_district: List[int] = data["pop_by_district"][1:]
     total_pop: int = data["pop_by_district"][0]
@@ -38,7 +40,9 @@ def calc_general_category(data: NamedAggregates, n_districts: int) -> float:
 
     deviation: float = rda.calc_population_deviation(max_pop, min_pop, target_pop)
 
-    return deviation  # TODO - Make this a dict
+    general_metrics["population_deviation"] = deviation
+
+    return general_metrics
 
 
 def calc_partisan_category(
