@@ -9,6 +9,7 @@ $ scripts/geographic-baseline/check_neighborhoods.py \
 --data testdata/examples/NC_input_data.jsonl \
 < testdata/examples/NC_congress_neighborhoods.jsonl
 
+NOTE - This script now needs a wrapper to produce the `--data` file from a GeoJSON file.
 """
 
 import argparse

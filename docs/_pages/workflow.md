@@ -29,7 +29,20 @@ For those states, e.g., AK, CA, HI, NY, and RI in the 2020 cycle, edit and run t
 
 ## How & When to Find Precinct Neighborhoods
 
-TODO
+When we get a new census, we also need to find precinct "neighborhoods" 
+for Jon Eguia & Jeff Barton's geographic advantage metric.
+It's an expensive operation, so persist the results somewhere for subsequent (re)use.
+
+```bash
+scripts/geographic-baseline/NEIGHBORHOODS.py \
+--version v06 \
+--cycle 2020 \
+--census T_20_CENS \
+--neighborhoods /path/to/neighborhoods
+```
+
+where `version` and `cycle` are the same as above, and 
+`census` is the name of the new census dataset.
 
 ## How & When to Precompute Geographic Baselines
 
