@@ -15,9 +15,9 @@ from rdapy import (
     est_votes_bias,
     est_fptp_seats,
     calc_efficiency_gap,
-    calc_partisan_metrics,
 )
 from rdapy.partisan import key_RV_points
+from rdapy.score.categories import calc_partisan_metrics  # TODO
 
 
 class TestPartisanMetrics:

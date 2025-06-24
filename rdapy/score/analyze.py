@@ -41,8 +41,8 @@ from ..compactness import (
 )
 from ..minority import calculate_mmd_simple
 from .categories import (
-    calc_population_deviation,
-    calc_partisan_metrics,
+    calc_general_category,
+    calc_partisan_category,
     calc_minority_metrics,
     calc_compactness_metrics,
     calc_splitting_metrics,
@@ -167,7 +167,7 @@ def score_plan(
     }
 
     if mode in ["all", "general"]:
-        deviation: float = calc_population_deviation(
+        deviation: float = calc_general_category(
             aggs["census"][census_dataset],
             n_districts,
         )
@@ -184,7 +184,7 @@ def score_plan(
                 geographic_baselines = precomputed["geographic_baseline"][
                     election_dataset
                 ]
-            partisan_metrics: Dict[str, Optional[float]] = calc_partisan_metrics(
+            partisan_metrics: Dict[str, Optional[float]] = calc_partisan_category(
                 aggs["election"][election_dataset], n_districts, geographic_baselines
             )
             estimated_seat_pct = partisan_metrics.pop("estimated_seat_pct")

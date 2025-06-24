@@ -137,7 +137,7 @@ from .splitting import (
 )
 
 from .partisan import (
-    calc_partisan_metrics,
+    # calc_partisan_metrics,
     #
     calc_best_seats,
     calc_declination,
@@ -197,6 +197,12 @@ from .aggregate import (
 from .score import (
     score_plan,
     score_plans,
+    #
+    calc_general_category,
+    calc_partisan_category,
+    calc_minority_metrics,
+    calc_compactness_metrics,
+    calc_splitting_metrics,
 )
 
 

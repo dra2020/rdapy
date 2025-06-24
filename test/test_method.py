@@ -13,8 +13,8 @@ from rdapy import (
     est_fptp_seats,
     read_json,
     infer_sv_points,
-    calc_partisan_metrics,
 )
+from rdapy.score.categories import calc_partisan_metrics  # TODO
 
 
 class TestPartisanMethod:
