@@ -67,7 +67,7 @@ def est_minority_opportunity(
     return oppty
 
 
-def calc_minority_opportunity(
+def calc_minority_metrics(
     statewide_demos: dict[str, float],
     demos_by_district: list[dict[str, float]],
     clip: bool = True,

@@ -10,7 +10,9 @@ from .features import *
 from .kiwysi import *
 
 
-def calc_compactness(shapes: list[Polygon | MultiPolygon], kiwysi: bool = True) -> dict:
+def calc_compactness_matrics(
+    shapes: list[Polygon | MultiPolygon], kiwysi: bool = True
+) -> dict:
     """Compute Reock, Polsby-Popper, and KIWYSI compactness for a set of districts and by district.
 
     NOTE - Most of the runtime cost of these compactness calculations is for the KIWYSI calculation,

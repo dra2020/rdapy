@@ -7,10 +7,10 @@ from typing import Any, List, Dict, Tuple, Optional
 from ..base import NamedAggregates
 from ..equal import calc_population_deviation
 from ..partisan import calc_partisan_metrics, calc_efficiency_gap_wasted_votes
-from ..minority import calc_minority_opportunity
+from ..minority import calc_minority_metrics
 from ..compactness import reock_formula, polsby_formula
 from ..splitting.county import (
-    calc_county_district_splitting,
+    calc_splitting_metrics,
     _calc_district_fractions,
     _county_totals,
     _district_split_score,
@@ -130,7 +130,7 @@ def calc_minority_category(
 
         by_district.append(district_demos)
 
-    minority_metrics: Dict[str, float] = calc_minority_opportunity(
+    minority_metrics: Dict[str, float] = calc_minority_metrics(
         statewide_demos, by_district, clip=False
     )
 
@@ -178,7 +178,7 @@ def calc_splitting_category(
 
     CxD: List[List[float]] = data["CxD"]
 
-    all_results: Dict[str, float] = calc_county_district_splitting(CxD)
+    all_results: Dict[str, float] = calc_splitting_metrics(CxD)
 
     splitting_metrics: Dict[str, float] = dict()
     splitting_metrics["county_splitting"] = all_results["county"]

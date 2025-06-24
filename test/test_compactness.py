@@ -4,7 +4,7 @@
 TEST COMPACTNESS
 """
 
-from rdapy import load_shapes, read_json, approx_equal, calc_compactness
+from rdapy import load_shapes, read_json, approx_equal, calc_compactness_matrics
 
 
 INDEX: int = 0
@@ -22,7 +22,7 @@ class TestCompactness:
         expected_path = "testdata/compactness/NC-116th-Congressional/expected.json"
         expected = read_json(expected_path)
 
-        actual: dict = calc_compactness(shapes)
+        actual: dict = calc_compactness_matrics(shapes)
 
         assert approx_equal(actual["avgReock"], expected["avgReock"], places=2)
         assert approx_equal(actual["avgPolsby"], expected["avgPolsby"], places=2)

@@ -62,7 +62,7 @@ from .base import (
 )
 
 from .compactness import (
-    calc_compactness,
+    calc_compactness_matrics,
     calc_sym_x,
     calc_sym_y,
     calc_reock,
@@ -101,14 +101,14 @@ from .graph import (
 from .minority import (
     calc_proportional_districts,
     est_minority_opportunity,
-    calc_minority_opportunity,
+    calc_minority_metrics,
     DEMOGRAPHICS,
     calculate_mmd_with_comparisons,
     calculate_mmd_simple,
 )
 
 from .splitting import (
-    calc_county_district_splitting,
+    calc_splitting_metrics,
     split_score,
     #
     calc_coi_splitting,

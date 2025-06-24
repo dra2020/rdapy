@@ -15,7 +15,7 @@ CxD: list[list[float]] = sample["countyByDistrict"]
 
 # Calculate metrics
 
-results: dict = calc_county_district_splitting(CxD)
+results: dict = calc_splitting_metrics(CxD)
 
 # Print the results
 

@@ -7,7 +7,7 @@ TEST MINORITY OPPORTUNITY
 from rdapy import (
     calc_proportional_districts,
     est_minority_opportunity,
-    calc_minority_opportunity,
+    calc_minority_metrics,
     approx_equal,
     read_json,
     DEMOGRAPHICS,
@@ -77,7 +77,7 @@ class TestMinority:
 
         # Estimate opportunity & coalition districts', () =>
         demos_by_district: list[dict[str, float]] = p["demographics"]["byDistrict"]
-        ms: dict = calc_minority_opportunity(statewide_demos, demos_by_district)
+        ms: dict = calc_minority_metrics(statewide_demos, demos_by_district)
         assert approx_equal(ms["opportunity_districts"], 12.56, 2)
         assert approx_equal(ms["proportional_opportunities"], 18)
         assert approx_equal(ms["coalition_districts"], 22.92, 2)

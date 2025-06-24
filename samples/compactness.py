@@ -14,7 +14,7 @@ shapes = [item[1] for item in shapes]  # discard the id
 
 # Calculate metrics
 
-results: dict = calc_compactness(shapes)
+results: dict = calc_compactness_matrics(shapes)
 
 # Print the results
 

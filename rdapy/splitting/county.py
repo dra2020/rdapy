@@ -8,7 +8,7 @@ import math
 import copy
 
 
-def calc_county_district_splitting(CxD: list[list[float]]) -> dict:
+def calc_splitting_metrics(CxD: list[list[float]]) -> dict:
     """Calculate the county & district splitting scores for a plan."""
 
     dT: list[float] = _district_totals(CxD)

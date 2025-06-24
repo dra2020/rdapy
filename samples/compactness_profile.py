@@ -43,7 +43,7 @@ def time_function(func) -> Callable[..., Any]:
 
 @time_function
 def timed_compactness(shapes: list, kiwysi: bool = True) -> dict:
-    return calc_compactness(shapes, kiwysi)
+    return calc_compactness_matrics(shapes, kiwysi)
 
 
 @time_function
