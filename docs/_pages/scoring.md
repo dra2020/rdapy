@@ -135,23 +135,24 @@ by breaking the overall process down into pieces and running them in parallel.
 
 ### Component Scripts
 
-TODO - HERE
-
 If you want more fine-grained control over the scoring process,
-you can use these component scripts directly.
+you can use the constituent  component scripts directly.
 
 #### Mapping Scoring Data to a DRA GeoJSON
 
 This script maps the data needed for scoring plans to the data in a DRA GeoJSON file.
-The specific datasets used can be specified as optional arguments.
-The default datasets are the 2020 census, VAP, and CVAP data,
-and the composite election dataset for 2016-2020 elections.
 
 ```bash
-scripts/map_scoring_data.py \
+scripts/data/map_scoring_data.py \
 --geojson path/to/DRA.geojson \
 --data-map path/to/data_map.json
 ```
+
+The specific datasets used can be specified as optional arguments.
+The default datasets are the 2020 census, VAP, and CVAP data,
+and the composite election dataset for 2016-2020 elections.
+By default, composite elections are *not* expanded to include the constituent elections,
+but you expand composite elections with the `--expand-composites` option.
 
 #### Extracting Data from a DRA GeoJSON
 
@@ -159,7 +160,7 @@ This script extracts data from a DRA GeoJSON file and writes it to a JSONL file,
 using the data map to determine what data to extract.
 
 ```bash
-scripts/extract_data.py \
+scripts/data/extract_data.py \
 --geojson path/to/DRA.geojson \
 --data-map path/to/data_map.json \
 --graph path/to/adjacency_graph.json \
@@ -173,20 +174,20 @@ and writes the plan and the aggregates to STDOUT.
 
 ```bash
 cat path/to/plans.jsonl \
-| scripts/aggregate.py \
+| scripts/score/aggregate.py \
 --state xx \
 --plan-type congress \
 --data path/to/input_data.jsonl \
 --graph path/to/adjacency_graph.json > path/to/plans_plus_aggregates.jsonl
 ```
 
-This script reads plans as JSONL from the input stream.
+It reads plans as JSONL from the input stream.
 Each plan can be a simple dictionary of geoid:district assignments, or
 a tagged format with the `"_tag_"` tag equal to `"plan"` and the `"plan"` key containing the geoid:district pairs.
 Examples of these formats can be found in `testdata/plans/` in `NC_congress_plans.naked.jsonl` and `NC_congress_plans.tagged.jsonl`, respectively.
 
 If the JSON records are in tagged format, metadata records are passed through unchanged, 
-as are any other records.
+as are any other non-plan records.
 
 In addition to any records simply passed through, the output stream contains a record for each plan with
 the geoid:district assignments in the `"plan"` key and the district-level aggregates in the `"aggregates"` key. 
@@ -196,7 +197,8 @@ the aggregates by district. For example:
 
 `{"election": {"E_16-20_COMP": {"dem_by_district": [...] ...} ...}`.
 
-The first item in each list is a state-level aggregate, and the rest are district-level aggregates for districts 1 to N.
+The first item in each list of values is a state-level aggregate, and 
+the rest are district-level aggregates for districts 1 to N.
 
 You can see an example in `testdata/examples/NC_congress_aggs.100.jsonl`.
 
@@ -211,7 +213,7 @@ the district-level aggregates.
 
 ```bash
 cat path/to/plans_plus_aggregates.jsonl \
-| scripts/score.py \
+| scripts/score/score.py \
 --state xx \
 --plan-type congress \
 --data path/to/input_data.jsonl \
@@ -219,9 +221,7 @@ cat path/to/plans_plus_aggregates.jsonl \
 ```
 
 Analogous to the `aggregate.py` script output, scoring writes plan-level scores in a hierarchical JSONL format:
-the type of dataset (census, vap, cvap, election, shape), 
-the dataset key, and
-the metric name and value.
+the type of dataset (census, vap, cvap, election, shape), the dataset key, and the metric name and value.
 For example:
 
 `{"election": {"E_16-20_COMP": {"estimated_vote_pct": 0.4943, ...} ...} ...}`.
@@ -239,7 +239,10 @@ cat path/to/scores_plus_aggregates.jsonl \
 --by-district path/to/by-district.jsonl
 ```
 
-To keep the plan-level scores a simple CSV, this script "flattens" the hierarchical JSONL format
-making field names by combining the dataset keys and metric names with a period, e.g., `E_16-20_COMP.estimated_seats`.
+To keep the plan-level scores a simple CSV, this script "flattens" the hierarchical JSONL format into a CSV file.
+By default, the field names are simply the name of the metrics. However, if you specify the `--prefixes` option
+or there are multiple election datasets scored, this script prefixes the metric names with the dataset key,
+e.g., `E_16-20_COMP.estimated_seats`.
+
 If you want output in a different format, you can process the output of the `score.py` script 
 with a different script-let or directly, e.g., using `jq`.
