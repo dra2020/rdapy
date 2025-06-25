@@ -36,12 +36,8 @@ from ..rate import (
     rate_district_splitting,
     rate_splitting,
 )
-
-##### TODO -- Fold these into the category functions in categories.py #####
 from ..compactness import (
     calc_cut_score,
-    calc_spanning_tree_score,
-    _split_graph_by_districts,
     calc_energy,
 )
 from ..minority import calculate_mmd_simple
@@ -142,7 +138,6 @@ def score_plan(
     precomputed: Dict[str, Any],
     #
     mmd_scoring: bool = True,  # If False, don't do MMD scoring for backwards compatibility w/ tests.
-    add_spanning_tree_score: bool = False,  # Too expensive for scoring plans in bulk.
 ) -> Tuple[Dict[str, Any], Aggregates]:
     """Score a plan."""
 
@@ -255,16 +250,17 @@ def score_plan(
         cut_score: int = calc_cut_score(assignments, graph)
         compactness_metrics["cut_score"] = cut_score
 
-        if add_spanning_tree_score:
-            district_graphs = _split_graph_by_districts(graph, assignments)
-            spanning_tree_by_district: List[Dict[str, float]] = [
-                {"spanning_tree_score": calc_spanning_tree_score(g)}
-                for g in district_graphs.values()
-            ]
-            spanning_tree_score: float = sum(
-                d["spanning_tree_score"] for d in spanning_tree_by_district
-            )
-            compactness_metrics["spanning_tree_score"] = spanning_tree_score
+        # NOTE - Too expensive for scoring plans in bulk.
+        # if add_spanning_tree_score:
+        #     district_graphs = _split_graph_by_districts(graph, assignments)
+        #     spanning_tree_by_district: List[Dict[str, float]] = [
+        #         {"spanning_tree_score": calc_spanning_tree_score(g)}
+        #         for g in district_graphs.values()
+        #     ]
+        #     spanning_tree_score: float = sum(
+        #         d["spanning_tree_score"] for d in spanning_tree_by_district
+        #     )
+        #     compactness_metrics["spanning_tree_score"] = spanning_tree_score
 
         # Population compactness
         census_dataset: DatasetKey = get_dataset(data_map, "census")
