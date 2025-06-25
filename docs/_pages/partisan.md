@@ -35,9 +35,7 @@ results: dict = {
 
 bias_measurements: dict = {
     "bestS": bestS,
-    "bestSf": bestSf,
     "estS": estS,
-    "estSf": estSf,
     "deviation": deviation,
     "tOf": TOf,
     "fptpS": fptpS,
@@ -45,9 +43,8 @@ bias_measurements: dict = {
     "bV50": Bv50f,
     "decl": decl,
     "rvPoints": rvPoints,
-    "gSym": gSym,
-    "gamma": gamma,
     "eG": EG,
+    "eGFPTP": EG_FPTP,
     "bSV": BsGf,
     "prop": prop,
     "mMs": mMs,
@@ -58,12 +55,12 @@ bias_measurements: dict = {
 responsiveness_measurements: dict = {
     "cSimple": Cn,
     "cD": cD,
-    "cDf": cDf,
     "bigR": bigR,
     "littleR": littleR,
     "mIR": MIR,
     "rD": rD,
     "rDf": rDf,
+    "averageMargin": average_margin,
 }
 ```
 
@@ -96,6 +93,10 @@ def calc_disproportionality(Vf: float, Sf: float) -> float:
 
 ```python
 def calc_efficiency_gap(Vf: float, Sf: float) -> float:
+```
+
+```python
+def calc_efficiency_gap_wasted_votes(dem_votes_by_district: List[int], rep_votes_by_district: List[int]) -> float
 ```
 
 ```python
@@ -180,6 +181,10 @@ def calc_minimal_inverse_responsiveness(Vf: float, r: float) -> Optional[float]:
 
 ```python
 def est_responsive_districts(Vf_array: list[float]) -> float:
+```
+
+```python
+def calc_average_margin(Vf_array: List[float]) -> float:
 ```
 
 ### Nagle's Method
