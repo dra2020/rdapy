@@ -121,6 +121,8 @@ where:
     The plans can be simple dictionaries of geoid:district assignments, or
     they can be 'tagged' plan records.
     An example of this is provided in `testdata/plans/NC_congress_plans.tagged.jsonl`.
+*   The optional `precomputed` argument is a JSON file that contains pre-computed geographic baselines for
+    states and chambers (plan types). If provided, scoring includes the geographic advantage measure.
 
 The script writes a set of plan-level scores to a CSV file
 a set of by-district measures to a JSONL file, and 

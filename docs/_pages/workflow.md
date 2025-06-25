@@ -4,13 +4,17 @@ title: Workflow
 permalink: workflow/
 ---
 
-TODO
+This is a DRA-private page that describes some potential workflows.
 
 ## How & When to Generate Adjacency Graphs
 
 When we get shapes for a new census, we need to generate adjacency graphs.
-First, create the GeoJSON files that contain the simplified shapes.
-The extract adjacency graphs from those shapes.
+
+Given a GeoJSON files that contain the simplified shapes, the scripts below can 
+be used to do that and make sure that the shapes are fully connected. However,
+we use a node script (`census.js`) to generate the adjacency graphs for the app.
+
+This script extracts adjacency graphs from the GeoJSONs:
 
 ```bash
 scripts/graphs/EXTRACT-GRAPHS.py \
@@ -35,8 +39,8 @@ For those states, e.g., AK, CA, HI, NY, and RI in the 2020 cycle, edit and run t
 
 ## How & When to Find Precinct Neighborhoods
 
-When we get a new census, we need to two things so we can calculate Jon Eguia & Jeff Barton's 
-geographic advantage metric. 
+Assuming we add Jon Eguia & Jeff Barton's new geographic advantage metric to the app,
+when we get a new census we need to two things to support it. 
 One is find precinct "neighborhoods" for each state and chamber combination.
 These only need to be found once per census cycle as neighborhods only depend on total population and precinct adjacency.
 
@@ -95,3 +99,4 @@ scripts/geographic-baseline/report_baselines.py
 ```
 
 Once geographic baselines are computed, you can use them in scoring.
+In the app, we'd need to figure out how to plumb the baselines through into `dra-analytics`.
