@@ -10,6 +10,15 @@ $ scripts/data/map_scoring_data.py \
 NOTE -- The default datasets are for 2020 census, VAP, and CVAP data,
 and the composite election dataset for 2016-2020 elections.
 
+$ scripts/data/map_scoring_data.py \
+--geojson testdata/examples/NC_vtd_datasets.geojson \
+--census T_20_CENS \
+--vap V_20_VAP \
+--cvap V_20_CVAP \
+--elections E_16-20_COMP \
+--data-map temp/TEST_data_map.json \
+--expand-composites
+
 """
 
 import argparse
@@ -54,7 +63,7 @@ def main() -> None:
         implied_elections = [e for e in datasets.keys() if e.startswith("E_")]
     else:  # Grab the specified elections & their constituent elections
         for e in input_elections:
-            if "members" in datasets[e]:
+            if "members" in datasets[e] and args.expand_composites:
                 for k, v in datasets[e]["members"].items():
                     if v in datasets:
                         implied_elections.append(v)
@@ -186,6 +195,14 @@ def parse_args() -> Namespace:
         "--version",
         help="The GeoJSON version used",
         type=str,
+    )
+
+    parser.add_argument(
+        "-x",
+        "--expand-composites",
+        dest="expand_composites",
+        action="store_true",
+        help="Expand composites mode",
     )
 
     parser.add_argument(
