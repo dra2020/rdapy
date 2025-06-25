@@ -65,7 +65,9 @@ def main() -> None:
                     # Write scores to a CSV file
 
                     scores: Dict[str, Any] = {"name": record["name"]}
-                    scores.update(flatten_scores(record["scores"], prefix=args.prefix))
+                    scores.update(
+                        flatten_scores(record["scores"], prefixes=args.prefixes)
+                    )
 
                     if i == 0:
                         cols: List[str] = list(scores.keys())
@@ -89,7 +91,7 @@ def main() -> None:
     pass  # for debugging
 
 
-def flatten_scores(scores: Dict[str, Any], *, prefix: bool) -> Dict[str, Any]:
+def flatten_scores(scores: Dict[str, Any], *, prefixes: bool) -> Dict[str, Any]:
     """
     Convert a scores JSONL record that has dataset types, datasets, and metrics & values
     into a flat dictionary with dataset.metric:value key:value pairs.
@@ -101,7 +103,7 @@ def flatten_scores(scores: Dict[str, Any], *, prefix: bool) -> Dict[str, Any]:
     flattened: Dict[str, Any] = {}
 
     for dataset_type in scores:
-        prefix_mode: bool = prefix or len(scores[dataset_type]) > 1
+        prefix_mode: bool = prefixes or len(scores[dataset_type]) > 1
         for dataset in scores[dataset_type]:
             for metric in scores[dataset_type][dataset]:
                 qualified_key = f"{dataset}.{metric}" if prefix_mode else f"{metric}"
@@ -140,7 +142,10 @@ def parse_args():
     )
 
     parser.add_argument(
-        "--prefix", dest="prefix", action="store_true", help="Prefix mode"
+        "--prefixes",
+        dest="prefixes",
+        action="store_true",
+        help="Prefix metrics with dataset name",
     )
 
     parser.add_argument(
