@@ -7,7 +7,7 @@ permalink: minority/
 You can estimate the opportunity for minority representation.
 
 ```python
-def calc_minority_opportunity(
+def calc_minority_metrics(
     statewide_demos: dict[str, float], demos_by_district: list[dict[str, float]]
 ) -> dict[str, float]:
 ```

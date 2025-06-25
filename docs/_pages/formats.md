@@ -54,5 +54,5 @@ For example, this keeps every 100th canonical record:
 cat testdata/plans/canonical/NC_congress_plans.canonical.jsonl \
 | scripts/canonical_to_assignments.py \
 --graph testdata/plans/canonical/NC_congress_recom_graph.seeded.json \
-| scripts/SAMPLE.sh -k 100
+| scripts/throughput/SAMPLE.sh -k 100
 ```
