@@ -11,7 +11,7 @@ MODE="all"
 CENSUS="T_20_CENS"
 VAP="V_20_VAP"
 CVAP="V_20_CVAP"
-ELECTION="E_16-20_COMP"
+ELECTIONS="E_16-20_COMP"
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -65,7 +65,7 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     --elections)
-      ELECTION="$2"
+      ELECTIONS="$2"
       shift 2
       ;;
     *)
@@ -119,7 +119,7 @@ scripts/data/map_scoring_data.py \
 --census "$CENSUS" \
 --vap "$VAP" \
 --cvap "$CVAP" \
---elections "$ELECTION"
+--elections "$ELECTIONS"
 
 scripts/data/extract_data.py \
 --geojson "$GEOJSON" \

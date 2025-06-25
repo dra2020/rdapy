@@ -87,6 +87,8 @@ Finally, test that the automated tests run:
 pytest
 ```
 
+TODO - Revise this
+
 Then test that the command-line interface works. 
 First, unzip the sample GeoJSON and graph package:
 

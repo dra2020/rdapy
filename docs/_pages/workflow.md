@@ -1,4 +1,8 @@
-# Workflow
+---
+layout: page
+title: Workflow
+permalink: workflow/
+---
 
 TODO
 
