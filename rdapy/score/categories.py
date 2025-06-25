@@ -38,7 +38,7 @@ def calc_general_category(data: NamedAggregates, n_districts: int) -> Dict[str, 
     return general_metrics
 
 
-##### TODO - PARTISAN CATEGORY #####
+##### PARTISAN CATEGORY #####
 
 
 def calc_partisan_category(
@@ -46,59 +46,65 @@ def calc_partisan_category(
 ) -> Dict[str, Optional[float]]:
     """Calulate partisan metrics."""
 
+    # Get data for metrics
+
     total_d_votes: int = data["dem_by_district"][0]
     total_votes: int = data["tot_by_district"][0]
     d_by_district: List[int] = data["dem_by_district"][1:]
     tot_by_district: List[int] = data["tot_by_district"][1:]
     r_by_district: List[int] = [t - r for t, r in zip(tot_by_district, d_by_district)]
 
-    partisan_metrics: Dict[str, Optional[float]] = dict()
-
     Vf: float = total_d_votes / total_votes
     Vf_array: List[float] = [d / tot for d, tot in zip(d_by_district, tot_by_district)]
-    partisan_metrics["estimated_vote_pct"] = Vf
 
     all_results: dict = calc_partisan_metrics(Vf, Vf_array)
 
-    partisan_metrics["pr_deviation"] = all_results["bias"]["deviation"]
-    partisan_metrics["estimated_seats"] = all_results["bias"]["estS"]
-    # partisan_metrics["estimated_seat_pct"] = all_results["bias"]["estSf"]
-    partisan_metrics["fptp_seats"] = all_results["bias"]["fptpS"]
+    # Flatten the partisan scorecard & rename metrics
 
-    partisan_metrics["disproportionality"] = all_results["bias"]["prop"]
+    METRIC_MAPPING = {
+        # Bias metrics
+        "pr_deviation": ("bias", "deviation"),
+        "estimated_seats": ("bias", "estS"),
+        "fptp_seats": ("bias", "fptpS"),
+        "disproportionality": ("bias", "prop"),
+        "efficiency_gap": ("bias", "eG"),
+        "efficiency_gap_FPTP": ("bias", "eGFPTP"),
+        "seats_bias": ("bias", "bS50"),
+        "votes_bias": ("bias", "bV50"),
+        "geometric_seats_bias": ("bias", "bSV"),
+        "declination": ("bias", "decl"),
+        "mean_median_statewide": ("bias", "mMs"),
+        "mean_median_average_district": ("bias", "mMd"),
+        "turnout_bias": ("bias", "tOf"),
+        "lopsided_outcomes": ("bias", "lO"),
+        # Responsiveness metrics
+        "competitive_district_count": ("responsiveness", "cSimple"),
+        "competitive_districts": ("responsiveness", "cD"),
+        "average_margin": ("responsiveness", "averageMargin"),
+        "responsiveness": ("responsiveness", "littleR"),
+        "responsive_districts": ("responsiveness", "rD"),
+        "overall_responsiveness": ("responsiveness", "bigR"),
+    }
 
-    partisan_metrics["efficiency_gap"] = all_results["bias"]["eG"]
-    partisan_metrics["efficiency_gap_FPTP"] = all_results["bias"]["eGFPTP"]
+    partisan_metrics: Dict[str, Optional[float]] = {
+        key: all_results[category][metric_key]
+        for key, (category, metric_key) in METRIC_MAPPING.items()
+    }
+
+    # Add a few more metrics
+
+    partisan_metrics["estimated_vote_pct"] = Vf
+
     # NOTE - This formulate needs actual votes by district, not just the vote shares,
     # so we calculate it here separately.
     partisan_metrics["efficiency_gap_wasted_votes"] = calc_efficiency_gap_wasted_votes(
         d_by_district, r_by_district
     )
 
-    partisan_metrics["seats_bias"] = all_results["bias"]["bS50"]
-    partisan_metrics["votes_bias"] = all_results["bias"]["bV50"]
-    partisan_metrics["geometric_seats_bias"] = all_results["bias"]["bSV"]
-
-    partisan_metrics["declination"] = all_results["bias"]["decl"]
-    partisan_metrics["mean_median_statewide"] = all_results["bias"]["mMs"]
-    partisan_metrics["mean_median_average_district"] = all_results["bias"]["mMd"]
-    partisan_metrics["turnout_bias"] = all_results["bias"]["tOf"]
-    partisan_metrics["lopsided_outcomes"] = all_results["bias"]["lO"]
-
     if geographic_baselines and "whole_seats" in geographic_baselines:
         partisan_metrics["geographic_advantage"] = (
             partisan_metrics["estimated_seats"] - geographic_baselines["whole_seats"]
         )
-
-    partisan_metrics["competitive_district_count"] = all_results["responsiveness"][
-        "cSimple"
-    ]
-    partisan_metrics["competitive_districts"] = all_results["responsiveness"]["cD"]
-    partisan_metrics["average_margin"] = all_results["responsiveness"]["averageMargin"]
-
-    partisan_metrics["responsiveness"] = all_results["responsiveness"]["littleR"]
-    partisan_metrics["responsive_districts"] = all_results["responsiveness"]["rD"]
-    partisan_metrics["overall_responsiveness"] = all_results["responsiveness"]["bigR"]
 
     return partisan_metrics
 
