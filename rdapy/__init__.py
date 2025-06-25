@@ -62,7 +62,7 @@ from .base import (
 )
 
 from .compactness import (
-    calc_compactness_matrics,
+    calc_compactness_metrics,
     calc_sym_x,
     calc_sym_y,
     calc_reock,

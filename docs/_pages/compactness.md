@@ -12,7 +12,7 @@ compactness for a single district (shape) including "know it when you see it" (K
 To compute average Reock, Polsby-Popper, and KIWYSI compactness for a set of districts (shapes) and by district:
 
 ```python
-def calc_compactness(shapes: list[Polygon | MultiPolygon]) -> dict:
+def calc_compactness_metrics(shapes: list[Polygon | MultiPolygon]) -> dict:
 ```
 
 "shapes" are shapely Polygons or MultiPolygons:
