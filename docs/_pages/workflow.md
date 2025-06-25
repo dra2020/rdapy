@@ -35,9 +35,10 @@ For those states, e.g., AK, CA, HI, NY, and RI in the 2020 cycle, edit and run t
 
 ## How & When to Find Precinct Neighborhoods
 
-When we get a new census, we also need to find precinct "neighborhoods" 
-for Jon Eguia & Jeff Barton's geographic advantage metric.
-It's an expensive operation, so persist the results somewhere for subsequent (re)use.
+When we get a new census, we need to two things so we can calculate Jon Eguia & Jeff Barton's 
+geographic advantage metric. 
+One is find precinct "neighborhoods" for each state and chamber combination.
+These only need to be found once per census cycle as neighborhods only depend on total population and precinct adjacency.
 
 ```bash
 scripts/geographic-baseline/NEIGHBORHOODS.py \
@@ -50,9 +51,47 @@ scripts/geographic-baseline/NEIGHBORHOODS.py \
 where `version` and `cycle` are the same as above, and 
 `census` is the name of the new census dataset.
 
+This is a *very* long-running script--it takes nearly 10 hours on an M4 MacBook!--so the resulting files should be saved.
+Moreover, because they are quite large, neighborhoods are stored in a highly compressed and then zip'd format.
+
 ## How & When to Precompute Geographic Baselines
 
-Whenever we add a dataset to the app and update the GeoJSON we publish,
-we should update the geographic baselines for that state, so
-we can calculate geographic advantages for that election.
-Use the `scripts/geographic-baseline/PRECOMPUTE.py` script to do this.
+Once we have determined precinct neighborhoods for the census cycle, the other thing we need to do
+is calculate geographic baselines for each state and chamber combination.
+
+```bash
+scripts/geographic-baseline/PRECOMPUTE.py \
+--states __all__ \
+--version v06 \
+--cycle 2020 \
+--neighborhoods /path/to/neighborhoods \
+--baselines /path/to/precomputed-baselines \
+--elections __all__
+```
+
+where `version` and `cycle` are the same as above.
+
+The geographic baselines for a state then need to be updated every time a new election is available for that state.
+
+```bash
+scripts/geographic-baseline/PRECOMPUTE.py \
+--states NC \
+--version v06 \
+--cycle 2020 \
+--neighborhoods /path/to/neighborhoods \
+--baselines /path/to/precomputed-baselines \
+--elections __all__
+```
+
+These files should again be saved.
+
+Right now, the only thing we precompute is geographic baselines.
+Other one-time preprocessing could, however, be added to this script in the future.
+
+You can produce a report of the geographic baselines, using this script.
+
+```bash
+scripts/geographic-baseline/report_baselines.py
+```
+
+Once geographic baselines are computed, you can use them in scoring.

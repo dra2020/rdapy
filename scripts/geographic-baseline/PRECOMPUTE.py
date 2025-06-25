@@ -9,22 +9,16 @@ $ scripts/geographic-baseline/PRECOMPUTE.py \
 --states __all__ \
 --version v06 \
 --cycle 2020 \
---neighborhoods ~/local/neighborhoods \
---baselines ~/local/precomputed \
---census T_20_CENS \
---vap V_20_VAP \
---cvap V_20_CVAP \
+--neighborhoods /path/to/neighborhoods \
+--baselines /path/to/precomputed-baselines \
 --elections __all__
 
 $ scripts/geographic-baseline/PRECOMPUTE.py \
 --states NC \
 --version v06 \
 --cycle 2020 \
---neighborhoods ~/local/neighborhoods \
---baselines ~/local/precomputed \
---census T_20_CENS \
---vap V_20_VAP \
---cvap V_20_CVAP \
+--neighborhoods /path/to/neighborhoods \
+--baselines /path/to/precomputed-baselines \
 --elections __all__
 
 """
