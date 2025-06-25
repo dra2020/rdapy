@@ -11,7 +11,7 @@ You can calculate county-district splitting metrics, as well as community of int
 To calculate the county & district splitting scores for a plan:
 
 ```python
-def calc_county_district_splitting(CxD: list[list[float]]) -> dict:
+def calc_splitting_metrics(CxD: list[list[float]]) -> dict:
 ```
 
 where "CxD" is are county totals (columns) by district (rows), i.e.,
