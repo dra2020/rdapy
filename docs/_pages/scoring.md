@@ -25,8 +25,10 @@ git clone https://github.com/dra2020/vtd_data
 ```
 
 This copies all the data in the repository to your local machine.
+This repository is quite large, so you may want to use the alternative method below.
 
-Another way to use this data is to download the data for a state temporarily:
+Another way to use this data is to download the data for a state temporarily as you need it.
+For example:
 
 ```bash
 scripts/GET-GEOJSON.sh \
@@ -35,9 +37,9 @@ scripts/GET-GEOJSON.sh \
 --version v06
 ```
 
-That example shows downloading the v06 NC GeoJSON file and adjacency graph to a temporary file in `/tmp`.
+This downloads the v06 NC GeoJSON file and adjacency graph to a temporary file in `/tmp`.
 From there, you can either manually unzip or use the `UNZIP-GEOJSON.sh` script.
-This example show unzipping the downloaded file to a directory in `/tmp`:
+For example:
 
 ```bash
 scripts/UNZIP-GEOJSON.sh \
@@ -45,7 +47,9 @@ scripts/UNZIP-GEOJSON.sh \
 --output /tmp/NC
 ```
 
-That directory will contain four files:
+This example unzips the downloaded file to a directory in `/tmp`.
+
+Either way, the unzipped GeoJSON directory will contain four files:
 - A license file
 - A README file
 - A GeoJSON like this `NC_2020_VD_tabblock.vtd.datasets.geojson`, and
@@ -72,7 +76,7 @@ A few are not included for various reasons:
 The scores here also include several metrics not yet in the DRA app, including:
 
 *   In the proportionality/partisan category, there are two efficiency gap variations: 
-    `efficiency_gap_wasted_votes` and `efficiency_gap_statewide` 
+    `efficiency_gap_wasted_votes` and `efficiency_gap_FPTP` 
     to complement the statewide fractional seats version in DRA.
 *   In the competitiveness category, there is a simple count of the number of districts in the 0.45-0.55 range,
     `competitive_district_count`, and the average margin of victor, `average_margin`.
@@ -86,34 +90,37 @@ The scores here also include several metrics not yet in the DRA app, including:
 
 ### SCORE.sh
 
-This example bash script shows how to take an ensemble of plans, a DRA geojson file, and an adjacency graph, and 
-generate a CSV file of scores and a JSONL file of by-district measures.
-It uses 2020 census, VAP, and CVAP data from geojson, as well as the 2016-2020 election composite.
-Only one election is scored at this time.
+Continuing the example above, you can score an ensemble of plans which
+generates a CSV file of scores and a JSONL file of by-district measures.
+For example:
 
 ```bash
 scripts/score/SCORE.sh \
---state xx \
+--state NC \
 --plan-type congress \
---geojson path/to/DRA.geojson \
---graph path/to/adjacency_graph.json \
---plans path/to/plans.jsonl \
+--geojson /tmp/NC/NC_2020_VD_tabblock.vtd.datasets.geojson \
+--census T_20_CENS \
+--vap V_20_VAP \
+--cvap V_20_CVAP \
+--elections E_16-20_COMP \
+--graph /tmp/NC/NC_2020_graph.json \
+--plans testdata/plans/NC_congress_plans.tagged.jsonl \
 --scores path/to/scores.csv \
 --by-district path/to/by-district.jsonl
 ```
 
 where:
 
-*   The state is a two-character state code.
+*   The `state` is a two-character state code.
 *   The `plan-type` is `congress`, 'upper`, or `lower`, for upper and lower state house.
 *   The `geojson` is a DRA precinct GeoJSON file with data coded by dataset.
-    An example is provided in `testdata/examples/NC_vtd_datasets.geojson`.
 *   The `graph` is a JSON file that contains the node/list of neighbors adjacency graph of the precincts.
-    An example is provided in `testdata/examples/NC_graph.json`.
+*   The `census`, `vap`, and `cvap` are the dataset keys for the census, VAP, and CVAP datasets in the GeoJSON.
+    The example uses the 2020 census, VAP, and CVAP data from the GeoJSON, as well as the 2016-2020 election composite.
 *   The `plans` is a JSONL file that contains the ensemble of plans to be scored.
     The plans can be simple dictionaries of geoid:district assignments, or
-    they can be tagged 'plan' records in the ensemble format used by `rdatools/rdatools` and `rdatools/rdautils`.
-    An example of the latter is provided in `testdata/plans/NC_congress_plans.tagged.jsonl`.
+    they can be 'tagged' plan records.
+    An example of this is provided in `testdata/plans/NC_congress_plans.tagged.jsonl`.
 
 The script writes a set of plan-level scores to a CSV file
 a set of by-district measures to a JSONL file, and 
@@ -122,30 +129,16 @@ Examples of these files can be found in `testdata/examples/`.
 
 The plan-level scores are described in [Scores (Metrics)]({{ '/scores' | prepend: site.baseurl }}).
 
-*Note: This scripts does not extract an adjacency graph from the GeoJSON.
-It uses a pre-computed adjacency graph from DRA.*
-
 By default, this script calculates all metrics ("scores") for all plans in an input ensemble.
 If your ensembles are very large though, you can [increase scoring throughput]({{ '/throughput' | prepend: site.baseurl }})
 by breaking the overall process down into pieces and running them in parallel.
 
 ### Component Scripts
 
+TODO - HERE
+
 If you want more fine-grained control over the scoring process,
 you can use these component scripts directly.
-
-#### Extracting an Adjacency Graph from a GeoJSON
-
-This script extracts an adjacency graph from a DRA GeoJSON file.
-
-```bash
-scripts/extract_graph.py \
---geojson path/to/DRA.geojson \
---graph path/to/adjacency_graph.json
-```
-
-*Note: This script can read a CSV file that contains more precinct-to-precinct adjacencies to add to the graph,
-"mods" for ["operational contiguity"](https://medium.com/dra-2020/contiguity-20f23ea15969).*
 
 #### Mapping Scoring Data to a DRA GeoJSON
 
