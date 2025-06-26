@@ -87,8 +87,6 @@ Finally, test that the automated tests run:
 pytest
 ```
 
-TODO - Revise this
-
 Then test that the command-line interface works. 
 First, unzip the sample GeoJSON and graph package:
 
@@ -121,7 +119,8 @@ scripts/score/SCORE.sh \
 --by-district /path/to/TEST_by-district.jsonl
 ```
 
-Replace `/path/to` with where you want the scores CSV and by-district JSONL aggregates files to go.
+The `--scores` and `by-district` paths are where you want the scores CSV and 
+by-district JSONL aggregates files to be saved, respectively.
 
 ## Development
 
