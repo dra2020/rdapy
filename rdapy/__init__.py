@@ -30,6 +30,8 @@ from .base import (
     get_fields,
     #
     DistanceLedger,
+    distance_proxy,
+    distance,
     #
     Precinct,
     District,
