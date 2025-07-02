@@ -153,6 +153,7 @@ from .partisan import (
     make_neighborhood,
     unpack_neighborhood,
     calc_geographic_baseline,
+    eval_partisan_lean,
 )
 
 from .rate import (

@@ -118,7 +118,7 @@ def calc_geographic_baseline(
         Vf: float
         fractional_seats: float
         whole_seats: float
-        Vf, fractional_seats, whole_seats = _eval_partisan_lean(
+        Vf, fractional_seats, whole_seats = eval_partisan_lean(
             neighborhood,
             data,
             dem_votes_field,
@@ -130,6 +130,30 @@ def calc_geographic_baseline(
         tot_whole_seats += whole_seats * proportion
 
     return tot_fractional_seats, tot_whole_seats
+
+
+def eval_partisan_lean(
+    neighborhood: List[str],
+    data: Dict[str, Dict[str, Any]],
+    dem_votes_field: str,
+    rep_votes_field: str,
+) -> Tuple[float, float, float]:
+    """Calculate the partisan results for a precinct's neighborhood."""
+
+    dem_votes: int = 0
+    tot_votes: int = 0
+    for geoid in neighborhood:
+        dem_votes += data[geoid][dem_votes_field]
+        # NOTE - Two-party votes, not total votes!
+        tot_votes += data[geoid][dem_votes_field] + data[geoid][rep_votes_field]
+
+    Vf: float = dem_votes / tot_votes if tot_votes > 0 else 0.0
+    fractional_seats: float = est_seat_probability(Vf)
+    whole_seats: float = 1.0 if Vf > 0.5 else 0.0
+    if approx_equal(Vf, 0.5):
+        whole_seats = 0.5
+
+    return Vf, fractional_seats, whole_seats
 
 
 ### HELPERS ###
@@ -184,30 +208,6 @@ def _nearest_connected_neighbor(
         queue.sort(key=lambda x: x.distance, reverse=True)
 
         yield next
-
-
-def _eval_partisan_lean(
-    neighborhood: List[str],
-    data: Dict[str, Dict[str, Any]],
-    dem_votes_field: str,
-    rep_votes_field: str,
-) -> Tuple[float, float, float]:
-    """Calculate the partisan results for a precinct's neighborhood."""
-
-    dem_votes: int = 0
-    tot_votes: int = 0
-    for geoid in neighborhood:
-        dem_votes += data[geoid][dem_votes_field]
-        # NOTE - Two-party votes, not total votes!
-        tot_votes += data[geoid][dem_votes_field] + data[geoid][rep_votes_field]
-
-    Vf: float = dem_votes / tot_votes if tot_votes > 0 else 0.0
-    fractional_seats: float = est_seat_probability(Vf)
-    whole_seats: float = 1.0 if Vf > 0.5 else 0.0
-    if approx_equal(Vf, 0.5):
-        whole_seats = 0.5
-
-    return Vf, fractional_seats, whole_seats
 
 
 ### END ###
