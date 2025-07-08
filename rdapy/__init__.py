@@ -79,6 +79,7 @@ from .compactness import (
     trim_kiwysi_rank,
     #
     # make_circle,
+    wl_make_circle,
     reock_formula,
     polsby_formula,
     #
