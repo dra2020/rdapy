@@ -111,12 +111,12 @@ def parse_arguments():
     parser.add_argument(
         "--input",
         type=str,
-        help="The input stream -- metadata or plan + aggregates",
+        help="The input stream -- metadata or plan + by-district aggregates",
     )
     parser.add_argument(
         "--output",
         type=str,
-        help="The output stream -- metadata or plan + scores",
+        help="The output stream -- metadata or plan + scores + by-district aggregates",
     )
 
     args: Namespace = parser.parse_args()

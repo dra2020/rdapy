@@ -99,7 +99,7 @@ def parse_arguments():
     parser.add_argument(
         "--output",
         type=str,
-        help="The output stream -- metadata or plan + aggregates",
+        help="The output stream -- metadata or plan + by-district aggregates",
     )
 
     args: Namespace = parser.parse_args()

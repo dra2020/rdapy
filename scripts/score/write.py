@@ -122,7 +122,7 @@ def parse_args():
     parser.add_argument(
         "--input",
         type=str,
-        help="The input stream of plans -- metadata or plan",
+        help="The input stream -- metadata or plan + scores + by-district aggregates",
     )
     parser.add_argument(
         "--data",
