@@ -32,7 +32,6 @@ def main() -> None:
 
     args: Namespace = parse_args()
 
-    #
     with open(os.path.expanduser(args.graph), "r") as f:
         graph_data = json.load(f)
     adjacency_graph: Dict[str, List[str]] = {
@@ -41,19 +40,11 @@ def main() -> None:
     with open(os.path.expanduser(args.locations), "r") as f:
         locations_by_geoid: Dict[str, Any] = json.load(f)
 
-    #
-
-    # data_by_geoid: Dict[str, Dict[str, Any]] = index_data(input_data)
-
     geoids: List[str] = list(adjacency_graph.keys())
     geoids.remove(OUT_OF_STATE)
     geoids.sort()
 
-    # Graph is not fully connected.
-
     connections = generate_contiguity_mods(geoids, adjacency_graph, locations_by_geoid)
-
-    # Generate these edges as additional connections ("mods")
 
     for _, _, data in connections:
         print(f"+,{data["geoid1"]},{data["geoid2"]}")
