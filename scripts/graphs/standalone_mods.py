@@ -13,13 +13,13 @@ $ scripts/graphs/generate_contiguity_mods.py \
 import argparse
 from argparse import ArgumentParser, Namespace
 
-from typing import Any, List, Dict
+from typing import Any, List, Dict, Tuple, Set
 
-import os, sys, json
+import os, sys, json, math
+import networkx as nx
 
 
 from rdapy import (
-    is_connected,
     generate_contiguity_mods,
 )
 
@@ -48,10 +48,6 @@ def main() -> None:
     geoids.remove(OUT_OF_STATE)
     geoids.sort()
 
-    if is_connected(geoids, adjacency_graph):
-        print(f"Graph is fully connected.")
-        sys.exit(0)
-
     # Graph is not fully connected.
 
     connections = generate_contiguity_mods(geoids, adjacency_graph, locations_by_geoid)
@@ -64,7 +60,123 @@ def main() -> None:
     pass
 
 
-### HELPERS ###
+def generate_contiguity_mods(
+    geoids: List[str],
+    adjacency_graph: Dict[str, List[str]],
+    locations_by_geoid: Dict[str, Tuple[float, float]],
+) -> List[Tuple[int, int, Dict[str, Any]]]:
+    """Find all the connected subsets of precincts -- "islands" potentially including a mainland"""
+
+    subsets: List[Set[Any]] = connected_subsets(geoids, adjacency_graph)
+
+    # Segregate precincts into coasts and inland areas
+
+    islands: List[Island] = list()
+
+    for i, subset in enumerate(subsets):
+        id: int = i
+        precincts: int = 0
+        coastal: List[str] = list()
+        inland: List[str] = list()
+
+        for geoid in subset:
+            precincts += 1
+
+            if geoid in adjacency_graph[OUT_OF_STATE]:
+                coastal.append(geoid)
+            else:
+                inland.append(geoid)
+
+        islands.append(Island(id, precincts, coastal, inland))
+
+    # Find the shortest distance between each pair of islands
+
+    dl: DistanceLedger = DistanceLedger()
+
+    island_pairs: List[Tuple[int, int]] = list(combinations(range(len(islands)), 2))
+    possible_edges: Dict[Tuple[int, int], List[Connection]] = dict()
+    shortest_edges: Dict[Tuple[int, int], Connection] = dict()
+
+    for pair in island_pairs:
+        possible_edges[pair] = list()
+
+        for c1 in islands[pair[0]].coastal:
+            for c2 in islands[pair[1]].coastal:
+                distance: float = dl.distance_between(
+                    c1,
+                    locations_by_geoid[c1],
+                    c2,
+                    locations_by_geoid[c2],
+                )
+                edge: Connection = Connection(c1, c2, distance)
+                possible_edges[pair].append(edge)
+        possible_edges[pair].sort(key=lambda x: x.distance)
+        shortest_edges[pair] = possible_edges[pair][0]
+
+    # Find the shortest distance paths that fully connect the islands, using a minimum spanning tree
+
+    G = nx.Graph()
+    for i in range(len(islands)):
+        G.add_node(i)
+    for pair in island_pairs:
+        G.add_edge(
+            pair[0],
+            pair[1],
+            weight=shortest_edges[pair].distance,
+            geoid1=shortest_edges[pair].from_geoid,
+            geoid2=shortest_edges[pair].to_geoid,
+        )
+    T = nx.minimum_spanning_tree(G)
+    connections = sorted(T.edges(data=True))
+
+    return connections
+
+
+def distance_proxy(a: Tuple[float, float], b: Tuple[float, float]) -> float:
+    """
+    Calculate a proxy for the distance between two points expressed as (lon, lat) tuples.
+
+    No need for sqrt() since we are only *comparing* distances.
+    """
+
+    lat_squared: float = (a[1] - b[1]) * (a[1] - b[1])
+    lon_squared: float = (a[0] - b[0]) * (a[0] - b[0])
+
+    return lat_squared + lon_squared
+
+
+def distance(a: Tuple[float, float], b: Tuple[float, float]) -> float:
+    """Calculate the distance between two points expressed as (lon, lat) tuples."""
+
+    return math.sqrt((a[1] - b[1]) * (a[1] - b[1]) + (a[0] - b[0]) * (a[0] - b[0]))
+
+
+def make_precinct_pair(precinct1: str, precinct2: str) -> Tuple[str, str]:
+    """Return a pair of precincts in canonical sorted order."""
+
+    return (precinct1, precinct2) if precinct1 < precinct2 else (precinct2, precinct1)
+
+
+class DistanceLedger:
+    """Compute and cache distances between pairs of precincts as needed."""
+
+    def __init__(self):
+        self.distances: Dict[Tuple[str, str], float] = dict()
+
+    def distance_between(
+        self,
+        geoid1: str,
+        center1: Tuple[float, float],
+        geoid2: str,
+        center2: Tuple[float, float],
+    ) -> float:
+        pair: Tuple[str, str] = make_precinct_pair(geoid1, geoid2)
+        if pair in self.distances:
+            return self.distances[pair]
+        else:
+            d: float = distance_proxy(center1, center2)
+            self.distances[pair] = d
+            return d
 
 
 def parse_args() -> Namespace:
