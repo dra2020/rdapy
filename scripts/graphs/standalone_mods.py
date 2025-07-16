@@ -19,12 +19,11 @@ import os, sys, json
 
 
 from rdapy import (
-    OUT_OF_STATE,
     is_connected,
     generate_contiguity_mods,
 )
 
-from rdapy import index_data
+OUT_OF_STATE: str = "OUT_OF_STATE"
 
 
 def main() -> None:
