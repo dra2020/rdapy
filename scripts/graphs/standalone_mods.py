@@ -5,7 +5,7 @@ GENERATE CONTIGUITY MODS TO FULLY CONNECT AN ADJACENCY GRAPH
 
 $ scripts/graphs/generate_contiguity_mods.py \
 --graph /path/to/input-graph.json \
---locations /path/to/precinct-locations.json \
+--geojson /path/to/input.geojson \
 > /path/to/contiguity_mods.csv
 
 """
@@ -62,6 +62,12 @@ def main() -> None:
     geoids.remove(OUT_OF_STATE)
     geoids.sort()
 
+    if is_connected(geoids, adjacency_graph):
+        print(f"Graph is fully connected.")
+        sys.exit(0)
+
+    # Graph is not fully connected.
+
     # Find the minimum spanning tree of the graph, which will connect all the precincts
 
     connections = generate_contiguity_mods(geoids, adjacency_graph, locations_by_geoid)
@@ -75,6 +81,37 @@ def main() -> None:
 
 
 #
+
+
+def is_connected(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
+    """Is a district fully connected?
+    i.e., w/o regard to the virtual state boundary "shapes".
+
+    Kenshi's iterative implementation of the recursive algorithm
+
+    ids - the list of ids for the geographies
+    graph - the connectedness (adjacency) of the geos
+    """
+    visited: Set[Any] = set()
+
+    all_geos: Set[Any] = set(ids)
+    all_geos.discard(OUT_OF_STATE)
+
+    start: str = next(iter(all_geos))
+
+    to_process: List[Any] = [start]
+    while to_process:
+        node: Any = to_process.pop()
+        visited.add(node)
+        neighbors: List[Any] = list(graph[node])
+        if OUT_OF_STATE in neighbors:
+            neighbors.remove(OUT_OF_STATE)
+        neighbors_to_visit: List[Any] = [
+            n for n in neighbors if n in all_geos and n not in visited
+        ]
+        to_process.extend(neighbors_to_visit)
+
+    return len(visited) == len(all_geos)
 
 
 def connected_subsets(ids: List[Any], graph: Dict[str, List[str]]) -> List[Set[Any]]:
