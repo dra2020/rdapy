@@ -2,8 +2,9 @@
 
 """
 GENERATE CONTIGUITY MODS TO FULLY CONNECT AN ADJACENCY GRAPH
+that is NOT fully connected
 
-$ scripts/graphs/generate_contiguity_mods.py \
+$ scripts/graphs/standalone_mods.py \
 --graph /path/to/input-graph.json \
 --geojson /path/to/input.geojson \
 > /path/to/contiguity_mods.csv
