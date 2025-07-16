@@ -13,7 +13,8 @@ $ scripts/graphs/generate_contiguity_mods.py \
 import argparse
 from argparse import ArgumentParser, Namespace
 
-from typing import Any, List, Dict, Tuple, Set
+from typing import Any, List, Dict, Tuple, Set, NamedTuple
+from itertools import combinations
 
 import os, sys, json, math
 import networkx as nx
@@ -58,6 +59,53 @@ def main() -> None:
         print(f"+,{data["geoid1"]},{data["geoid2"]}")
 
     pass
+
+
+#
+
+
+def connected_subsets(ids: List[Any], graph: Dict[str, List[str]]) -> List[Set[Any]]:
+    """Find the connected subsets of a list of ids."""
+
+    remaining_geos: Set[Any] = set(ids)
+    remaining_geos.discard(OUT_OF_STATE)
+
+    subsets: List[Set[Any]] = list()
+
+    while remaining_geos:
+        visited: Set[Any] = set()
+
+        start: str = next(iter(remaining_geos))
+
+        to_process: List[Any] = [start]
+        while to_process:
+            node: Any = to_process.pop()
+            visited.add(node)
+            neighbors: List[Any] = list(graph[node])
+            if OUT_OF_STATE in neighbors:
+                neighbors.remove(OUT_OF_STATE)
+            neighbors_to_visit: List[Any] = [
+                n for n in neighbors if n in remaining_geos and n not in visited
+            ]
+            to_process.extend(neighbors_to_visit)
+
+        subsets.append(visited)
+        remaining_geos -= visited
+
+    return subsets
+
+
+class Island(NamedTuple):
+    id: int
+    precincts: int
+    coastal: List[str]
+    inland: List[str]
+
+
+class Connection(NamedTuple):
+    from_geoid: str
+    to_geoid: str
+    distance: float
 
 
 def generate_contiguity_mods(
@@ -132,6 +180,9 @@ def generate_contiguity_mods(
     return connections
 
 
+#
+
+
 def distance_proxy(a: Tuple[float, float], b: Tuple[float, float]) -> float:
     """
     Calculate a proxy for the distance between two points expressed as (lon, lat) tuples.
@@ -177,6 +228,9 @@ class DistanceLedger:
             d: float = distance_proxy(center1, center2)
             self.distances[pair] = d
             return d
+
+
+#
 
 
 def parse_args() -> Namespace:
