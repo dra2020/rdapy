@@ -32,19 +32,41 @@ def main() -> None:
 
     args: Namespace = parse_args()
 
+    # Load a not-fully-connected adjacency graph
+
     with open(os.path.expanduser(args.graph), "r") as f:
         graph_data = json.load(f)
     adjacency_graph: Dict[str, List[str]] = {
         key: list(value) for key, value in graph_data.items()
     }
-    with open(os.path.expanduser(args.locations), "r") as f:
-        locations_by_geoid: Dict[str, Any] = json.load(f)
+
+    # Extract precinct locations from the GeoJSON file
+
+    with open(args.geojson, "r") as f:
+        geojson: Dict[str, Any] = json.load(f)
+    locations_by_geoid: Dict[str, Any] = dict()
+    geoid_field: str = "id"
+
+    for feature in geojson["features"]:
+        geoid: str = feature["properties"][geoid_field]
+
+        # Use the label coordinates as the "center" of the precinct
+        center: Tuple[float, float] = (
+            feature["properties"]["labelx"],
+            feature["properties"]["labely"],
+        )
+
+        locations_by_geoid[geoid] = center
 
     geoids: List[str] = list(adjacency_graph.keys())
     geoids.remove(OUT_OF_STATE)
     geoids.sort()
 
+    # Find the minimum spanning tree of the graph, which will connect all the precincts
+
     connections = generate_contiguity_mods(geoids, adjacency_graph, locations_by_geoid)
+
+    # Print it out as CSV rows
 
     for _, _, data in connections:
         print(f"+,{data["geoid1"]},{data["geoid2"]}")
@@ -238,8 +260,8 @@ def parse_args() -> Namespace:
         required=True,
     )
     parser.add_argument(
-        "--locations",
-        help="The output JSON file containing preinct locations",
+        "--geojson",
+        help="The GeoJSON file",
         type=str,
         required=True,
     )
