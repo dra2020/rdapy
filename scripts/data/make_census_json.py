@@ -40,14 +40,8 @@ def main() -> None:
     total_pop_field: str = f"{args.dataset}_{args.field}"
     pop_by_geoid: Dict[str, int] = dict()
     for row in input_data:
-        if "_tag_" not in row:
-            continue
-        if row["_tag_"] == "metadata":
-            continue
-        assert row["_tag_"] == "precinct", "Input data must be precincts."
-
-        geoid: str = row["data"]["geoid"]
-        pop: int = row["data"][total_pop_field]
+        geoid: str = row["geoid"]
+        pop: int = row[total_pop_field]
         pop_by_geoid[geoid] = pop
 
     write_json(args.output, pop_by_geoid)
