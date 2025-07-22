@@ -65,22 +65,27 @@ def main() -> None:
     # The two graphs should have the same neighbors (edges) in the same order
 
     same_edges: bool = True
+    same_edge_order: bool = True
     for geoid in graph1.keys():
         edges1: List[str] = list(graph1[geoid])
         edges2: List[str] = list(graph2[geoid])
 
-        diff_neighbors: Set[str] = set(edges1) ^ set(edges2)
-        if diff_neighbors:
-            same_edges = False
-            print(
-                f"  - These graphs have different neighbors for {geoid}: {diff_neighbors}"
-            )
+        if same_edges:
+            diff_neighbors: Set[str] = set(edges1) ^ set(edges2)
+            if diff_neighbors:
+                same_edges = False
+                print(
+                    f"  - These graphs have different neighbors for some geoids (nodes)."
+                )
 
-        if not diff_neighbors and edges1 != edges2:
-            same_edges = False
-            print(f"  - The neighbors for {geoid} are in different orders.")
+        if same_edge_order:
+            if not diff_neighbors and edges1 != edges2:
+                same_edge_order = False
+                print(
+                    f"  - The neighbors for some geoids (nodes) are in different orders."
+                )
 
-    if same_edges:
+    if same_edges and same_edge_order:
         print("  - These graphs have the same neighbors (edges) in the same order.")
 
     print()
