@@ -33,30 +33,56 @@ def main() -> None:
     graph1: Dict[str, List[str]] = load_graph(args.graph1)
     graph2: Dict[str, List[str]] = load_graph(args.graph2)
 
-    # The two graphs should have the same nodes (geoids)
+    print()
+    print("Comparing two adjacency graphs:")
+    print(f"  - {args.graph1}, and")
+    print(f"  - {args.graph2}")
+    print()
 
-    nodes1: Set[str] = set(graph1.keys())
-    nodes2: Set[str] = set(graph2.keys())
+    print("  Comparing geoids (nodes):")
 
-    if nodes1 != nodes2:
-        print()
-        print(f"These graphs differ in geoids: {nodes1 ^ nodes2}")
-        print()
+    # Compare geoids (nodes)
+    # The two graphs should have the same geoids (nodes) in the same order
+
+    nodes1: List[str] = list(graph1.keys())
+    nodes2: List[str] = list(graph2.keys())
+
+    diff_geoids: Set[str] = set(nodes1) ^ set(nodes2)
+    if diff_geoids:
+        print(f"  - These graphs have some different geoids (nodes): {diff_geoids}")
     else:
-        print("These graphs have the same geoids (nodes).")
+        print("  - These graphs have the same geoids (nodes).")
 
-    # The two graphs should have the same neighbors (edges)
+    if not diff_geoids and nodes1 != nodes2:
+        print(f"  - BUT some geoids (nodes) in these graphs are in different orders.")
+    else:
+        print("  - The geoids (nodes) in these graphs are in the same order.")
+    print()
+
+    print("  Comparing neighbors (edges):")
+
+    # Compare neighbors (edges)
+    # The two graphs should have the same neighbors (edges) in the same order
 
     same_edges: bool = True
     for geoid in graph1.keys():
-        edges1: Set[str] = set(graph1[geoid])
-        edges2: Set[str] = set(graph2[geoid])
-        if edges1 != edges2:
+        edges1: List[str] = list(graph1[geoid])
+        edges2: List[str] = list(graph2[geoid])
+
+        diff_neighbors: Set[str] = set(edges1) ^ set(edges2)
+        if diff_neighbors:
             same_edges = False
-            print(f"These graphs differ in neighbors for {geoid}: {edges1 ^ edges2}")
-            print()
+            print(
+                f"  - These graphs have different neighbors for {geoid}: {diff_neighbors}"
+            )
+
+        if not diff_neighbors and edges1 != edges2:
+            same_edges = False
+            print(f"  - The neighbors for {geoid} are in different orders.")
+
     if same_edges:
-        print("These graphs have the same neighbors (edges).")
+        print("  - These graphs have the same neighbors (edges) in the same order.")
+
     print()
 
     pass
