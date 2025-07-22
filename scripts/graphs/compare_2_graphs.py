@@ -49,14 +49,14 @@ def main() -> None:
 
     diff_geoids: Set[str] = set(nodes1) ^ set(nodes2)
     if diff_geoids:
-        print(f"  - These graphs have some different geoids (nodes): {diff_geoids}")
+        print(f"  - These graphs have some different geoids (nodes).")
     else:
         print("  - These graphs have the same geoids (nodes).")
 
     if not diff_geoids and nodes1 != nodes2:
-        print(f"  - BUT some geoids (nodes) in these graphs are in different orders.")
+        print(f"  - But some geoids (nodes) in these graphs are in different orders.")
     else:
-        print("  - The geoids (nodes) in these graphs are in the same order.")
+        print("  - The geoids (nodes) in these graphs are also in the same order.")
     print()
 
     print("  Comparing neighbors (edges):")
@@ -85,9 +85,10 @@ def main() -> None:
                     f"  - The neighbors for some geoids (nodes) are in different orders."
                 )
 
-    if same_edges and same_edge_order:
-        print("  - These graphs have the same neighbors (edges) in the same order.")
-
+    if same_edges:
+        print("  - These graphs have the same neighbors (edges).")
+    if same_edge_order:
+        print("  - The neighbors (edges) in these graphs are also in the same order.")
     print()
 
     pass
