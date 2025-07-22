@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-A UTILITY SCRIPT TO COMPARE TWO ADJACENCY GRAPHS
+THIS IS A UTILITY SCRIPT TO COMPARE TWO ADJACENCY GRAPHS
 
 Graphs are the same, iff:
 - They have the same geoids (nodes)

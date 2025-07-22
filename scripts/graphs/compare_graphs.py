@@ -3,6 +3,8 @@
 """
 A UTILITY SCRIPT TO COMPARE SETS OF ADJACENCY GRAPHS
 
+NOTE - THE SCRIPT compare_2_graphs.py DOES A MORE COMPLETE COMPARISON
+
 $ scripts/graphs/compare_graphs.py
 
 """
