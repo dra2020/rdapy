@@ -87,25 +87,8 @@ Finally, test that the automated tests run:
 pytest
 ```
 
-Then test that the command-line interface works. 
-First, unzip the sample GeoJSON and graph package:
-
-```bash
-scripts/UNZIP-GEOJSON.sh \
---input testdata/examples/Geojson_NC.zip \
---output /dir/for/unzipped/files
-```
-
-Replace `/dir/for/unzipped/files` with the directory where you want the unzipped files to go.
-The directory does not have to exist.
-The root directory can be `/tmp`.
-The output directory will contain four files:
-- A license file
-- A README file
-- A GeoJSON like this `NC_2020_VD_tabblock.vtd.datasets.geojson`, and
-- An adjacency graphy like this `NC_2020_graph.json`
-
-Then score some sample plans:
+Then score some sample plans.
+On a Mac or Linux, use this bash script:
 
 ```bash
 scripts/score/SCORE.sh \
@@ -121,6 +104,23 @@ scripts/score/SCORE.sh \
 
 The `--scores` and `by-district` paths are where you want the scores CSV and 
 by-district JSONL aggregates files to be saved, respectively.
+
+Alternatively or on Windows, use this Python version of the script:
+
+```bash
+scripts/score/SCORE-PYTHON.py \
+--state NC \
+--plan-type congress \
+--geojson /dir/for/unzipped/files/NC_2020_VD_tabblock.vtd.datasets.geojson \
+--graph /dir/for/unzipped/files/NC_2020_graph.json \
+--precomputed testdata/examples/NC_congress_precomputed.json \
+--plans testdata/plans/NC_congress_plans.tagged.jsonl \
+--scores /path/to/TEST_scores.csv \
+--by-district /path/to/TEST_by-district.jsonl
+```
+
+It has the same arguments as the bash script, and will produce the same output files,
+but it is implemented in Python and can be run on Windows.
 
 ## Development
 

@@ -28,7 +28,7 @@ This copies all the data in the repository to your local machine.
 This repository is quite large, so you may want to use the alternative method below.
 
 Another way to use this data is to download the data for a state temporarily as you need it.
-For example:
+For example, on a Mac or Linux:
 
 ```bash
 scripts/GET-GEOJSON.sh \
@@ -56,6 +56,8 @@ Either way, the unzipped GeoJSON directory will contain four files:
 - An adjacency graphy like this `NC_2020_graph.json`
 
 which you can use as input to the scoring scripts.
+
+For Windows, you'll have to convert those bash scripts.
 
 ### Scores (Metrics)
 
@@ -92,7 +94,7 @@ The scores here also include several metrics not yet in the DRA app, including:
 
 Continuing the example above, you can score an ensemble of plans which
 generates a CSV file of scores and a JSONL file of by-district measures.
-For example:
+For example, on Mac or Linux:
 
 ```bash
 scripts/score/SCORE.sh \
@@ -134,6 +136,9 @@ The plan-level scores are described in [Scores (Metrics)]({{ '/scores' | prepend
 By default, this script calculates all metrics ("scores") for all plans in an input ensemble.
 If your ensembles are very large though, you can [increase scoring throughput]({{ '/throughput' | prepend: site.baseurl }})
 by breaking the overall process down into pieces and running them in parallel.
+
+Alternatively or on Windows, use this Python version of the script, `scripts/score/SCORE-PYTHON.py`,
+which takes the same arguments as the bash script and produces the same output files.
 
 ### Component Scripts
 

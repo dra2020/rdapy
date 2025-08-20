@@ -10,9 +10,9 @@
             "cwd": "${workspaceFolder}",
             "args": [
                 "--geojson",
-                "~/local/dra-to-publish/_HI_2020_VD_tabblock.vtd.datasets.geojson",
+                "~/local/dra-to-publish/_PR_2020_VD_tabblock.vtd.datasets.geojson",
                 "--graph",
-                "temp/DEBUG_graph.json"
+                "~/local/adjacency-graphs/PR_2020_graph.json"
             ]
         },
         {
@@ -24,7 +24,7 @@
             "cwd": "${workspaceFolder}",
             "args": [
                 "--geojson",
-                "testdata/examples/NC_vtd_datasets.geojson",
+                "testdata/data/NC_vtd_datasets.v4.geojson",
                 "--data-map",
                 "temp/DEBUG_data_map.json"
                 // "--elections",
@@ -40,13 +40,13 @@
             "cwd": "${workspaceFolder}",
             "args": [
                 "--geojson",
-                "~/local/dra-to-publish/_CA_2020_VD_tabblock.vtd.datasets.geojson",
+                "testdata/data/NC_vtd_datasets.v4.geojson",
                 "--data-map",
-                "~/local/temp-data/CA_data_map.json",
+                "temp/TEST_data_map.json",
                 "--graph",
-                "~/local/dra-to-publish/CA_2020_graph.json",
+                "testdata/examples/NC_graph.json",
                 "--data",
-                "temp/DEBUG_input_data.jsonl"
+                "temp/TEST_input_data.jsonl",
             ]
         },
         {
@@ -78,7 +78,7 @@
                 "--plan-type",
                 "congress",
                 "--data",
-                "testdata/examples/NC_input_data.jsonl",
+                "testdata/examples/NC_input_data.v4.jsonl",
                 "--neighborhoods",
                 "temp/DEBUG_NC_congress_neighborhoods.jsonl"
             ]
@@ -96,13 +96,13 @@
                 "--plan-type",
                 "congress",
                 "--data",
-                "testdata/examples/NC_input_data.jsonl",
+                "~/local/euler/NC_county_input_data.jsonl",
                 "--graph",
-                "testdata/examples/NC_graph.json",
+                "~/local/euler/NC_county_graph.json",
                 "--mode",
-                "all",
+                "compactness",
                 "--input",
-                "testdata/plans/NC_congress_plans.tagged.jsonl",
+                "~/local/euler/NC_county_plans.assignments.jsonl",
                 "--output",
                 "temp/DEBUG_aggs.jsonl"
             ]
@@ -120,13 +120,13 @@
                 "--plan-type",
                 "congress",
                 "--data",
-                "testdata/examples/NC_input_data.jsonl",
+                "~/local/euler/NC_county_input_data.jsonl",
                 "--graph",
-                "testdata/examples/NC_graph.json",
+                "~/local/euler/NC_county_graph.json",
                 "--mode",
-                "all",
+                "compactness",
                 "--input",
-                "testdata/examples/NC_congress_aggs.100.jsonl",
+                "~/local/euler/NC_county_aggs.jsonl",
                 "--output",
                 "temp/DEBUG_scores.jsonl"
             ]
@@ -140,9 +140,9 @@
             "cwd": "${workspaceFolder}",
             "args": [
                 "--input",
-                "testdata/examples/NC_congress_scores.100.jsonl",
+                "testdata/examples/NC_congress_scores.100.v5.jsonl",
                 "--data",
-                "testdata/examples/NC_input_data.jsonl",
+                "testdata/examples/NC_input_data.v4.jsonl",
                 "--scores",
                 "temp/DEBUG_scores.csv",
                 "--by-district",
@@ -162,7 +162,7 @@
                 "--plan-type",
                 "lower",
                 "--data",
-                "~/local/temp-data/ME_input_data.jsonl",
+                "~/local/temp-data/ME_input_data.v4.jsonl",
                 "--graph",
                 "~/local/dra-to-publish/ME_2020_graph.json"
             ]
@@ -177,8 +177,22 @@
             "args": [
                 "--graph",
                 "~/local/dra-to-publish/HI_2020_graph.json",
-                "--data",
-                "~/local/temp-data/HI_input_data.jsonl"
+                "--locations",
+                "/tmp/HI_precinct_locations.json"
+            ]
+        },
+        {
+            "name": "make_census_json.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "--input",
+                "testdata/examples/NC_input_data.jsonl",
+                "--output",
+                "temp/TEST_census.json"
             ]
         }
     ]
