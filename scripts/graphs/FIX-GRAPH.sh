@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
 # Initialize variables
 CYCLE=""
 GRAPH_PATH=""
