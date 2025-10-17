@@ -130,6 +130,23 @@ def _calc_county_weights(county_totals: list[float]) -> list[float]:
     return w
 
 
+def reverse_weight(
+    county_pop: int,
+    ncounties: int,
+    state_pop: int,
+) -> float:
+    """
+    Calculate Don Leake's reverse weights for county splitting.
+
+    "Reverse weighting formula: (S - c)/[(n-1)S], where S is the total population of the state,
+    c is the population of the county, and n is the number of counties."
+    """
+
+    rw: float = (state_pop - county_pop) / ((ncounties - 1) * state_pop)
+
+    return rw
+
+
 def _calc_district_weights(district_totals: list[float]) -> list[float]:
     """Calculate district weights from the district population totals"""
 
