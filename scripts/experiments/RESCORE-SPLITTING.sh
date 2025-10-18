@@ -76,7 +76,7 @@ for CHAMBER in "${CHAMBERS[@]}"; do
 
     ## Re-score the ensemble
 
-    echo "Re-scoring the ensemble ..."
+    echo "Re-scoring the ensemble adding reverse weighted county splitting ..."
 
     scripts/experiments/JUST-SCORE.sh \
     --state "$XX" \
