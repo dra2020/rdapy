@@ -178,13 +178,15 @@ def calc_compactness_category(
 
 
 def calc_splitting_category(
-    data: NamedAggregates, n_districts: int
+    data: NamedAggregates, n_districts: int, reverse_weight: bool = False
 ) -> Tuple[Dict[str, float], Dict[str, List[float]]]:
     """Calculate county-district splitting metrics."""
 
     CxD: List[List[float]] = data["CxD"]
 
-    all_results: Dict[str, float] = calc_splitting_metrics(CxD)
+    all_results: Dict[str, float] = calc_splitting_metrics(
+        CxD, reverse_weight=reverse_weight
+    )
 
     splitting_metrics: Dict[str, float] = dict()
     splitting_metrics["county_splitting"] = all_results["county"]
