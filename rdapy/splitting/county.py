@@ -280,13 +280,16 @@ def _district_splitting(g: List[List[float]], x: List[float]) -> float:
 
 
 def _calc_county_splitting_reduced(
-    CxD: List[List[float]], district_totals: List[float], county_totals: List[float]
+    CxD: List[List[float]],
+    district_totals: List[float],
+    county_totals: List[float],
+    reverse_weight: bool = False,
 ) -> float:
     """Calculate the reduced county splitting score for a plan."""
 
     rC: List[List[float]] = _reduce_county_splits(CxD, district_totals)
     f: List[List[float]] = _calc_county_fractions(rC, county_totals)
-    w: List[float] = _calc_county_weights(county_totals)
+    w: List[float] = _calc_county_weights(county_totals, reverse_weight=reverse_weight)
 
     rawSqEnt_DC: float = _county_splitting(f, w)
 
