@@ -13,6 +13,32 @@ scripts/UNZIP-GEOJSON.sh \
 --input /tmp/"${XX}"/"${XX}"_Geojson.zip \
 --output /tmp/"${XX}"
 
+GEOJSON=/tmp/${XX}/${XX}_2020_VD_tabblock.vtd.datasets.geojson
+GRAPH=/tmp/${XX}/${XX}_2020_graph.json
+CENSUS="T_20_CENS"
+VAP="V_20_VAP"
+CVAP="V_20_CVAP"
+ELECTIONS="E_16-20_COMP"
+
+# Extract the data for scoring
+
+DATA_MAP=$(mktemp /tmp/"${XX}"/data-map.XXXXXX)
+INPUT_DATA=$(mktemp /tmp/"${XX}"/data.XXXXXX)
+
+scripts/data/map_scoring_data.py \
+--geojson "$GEOJSON" \
+--census "$CENSUS" \
+--vap "$VAP" \
+--cvap "$CVAP" \
+--elections "$ELECTIONS" \
+--data-map "$DATA_MAP"
+
+scripts/data/extract_data.py \
+--geojson "$GEOJSON" \
+--data-map "$DATA_MAP" \
+--graph "$GRAPH" \
+--data "$INPUT_DATA"
+
 # For each chamber, unzip the ensemble file, convert the R75 ensemble.xz to assignment format, and re-score it
 
 echo ""
@@ -25,7 +51,7 @@ for CHAMBER in "${CHAMBERS[@]}"; do
     ENSEMBLE_ZIP=~/local/beta-ensembles/zipped/${XX}_${CHAMBER}.zip
     UNZIP_DIR=/tmp/${XX}
 
-    scripts/special/UNZIP-ENSEMBLE.sh --input "$ENSEMBLE_ZIP" --output "$UNZIP_DIR"
+    scripts/experiments/UNZIP-ENSEMBLE.sh --input "$ENSEMBLE_ZIP" --output "$UNZIP_DIR"
 
     ## Convert the xz-compressed format to assignment format
 
