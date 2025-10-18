@@ -28,7 +28,7 @@ from rdapy.splitting.county import (
     _district_totals,
     _reduce_county_splits,
     _reduce_district_splits,
-    reverse_weight,
+    _reverse_weight,
 )
 
 
@@ -725,15 +725,15 @@ class TestReverseWeight:
         """
 
         # C1
-        rw: float = reverse_weight(4, 3, 9)
+        rw: float = _reverse_weight(4, 3, 9)
         assert approx_equal(rw, 5 / 18, places=4)
 
         # C2
-        rw: float = reverse_weight(2, 3, 9)
+        rw: float = _reverse_weight(2, 3, 9)
         assert approx_equal(rw, 7 / 18, places=4)
 
         # C3
-        rw: float = reverse_weight(3, 3, 9)
+        rw: float = _reverse_weight(3, 3, 9)
         assert approx_equal(rw, 6 / 18, places=4)
 
 

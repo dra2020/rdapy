@@ -130,7 +130,21 @@ def _calc_county_weights(county_totals: list[float]) -> list[float]:
     return w
 
 
-def reverse_weight(
+def _population_weight(
+    county_pop: int,
+    ncounties: int,
+    state_pop: int,
+) -> float:
+    """
+    Weight counties by population.
+    """
+
+    w: float = county_pop / state_pop
+
+    return w
+
+
+def _reverse_weight(
     county_pop: int,
     ncounties: int,
     state_pop: int,
