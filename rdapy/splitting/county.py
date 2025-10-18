@@ -4,15 +4,17 @@
 COUNTY-DISTRICT SPLITTING -- building on Moon Duchin's work
 """
 
+from typing import List
+
 import math
 import copy
 
 
-def calc_splitting_metrics(CxD: list[list[float]]) -> dict:
+def calc_splitting_metrics(CxD: List[List[float]]) -> dict:
     """Calculate the county & district splitting scores for a plan."""
 
-    dT: list[float] = _district_totals(CxD)
-    cT: list[float] = _county_totals(CxD)
+    dT: List[float] = _district_totals(CxD)
+    cT: List[float] = _county_totals(CxD)
     county: float = _calc_county_splitting_reduced(CxD, dT, cT)
     district: float = _calc_district_splitting_reduced(CxD, dT, cT)
 
@@ -21,7 +23,7 @@ def calc_splitting_metrics(CxD: list[list[float]]) -> dict:
     return out
 
 
-def split_score(split: list[float]) -> float:
+def split_score(split: List[float]) -> float:
     """Moon Duchin's raw split score"""
 
     if len(split) > 0:
@@ -37,13 +39,16 @@ def split_score(split: list[float]) -> float:
 # dissaggregation & re-aggregation. Hence, comparisons need to approximate
 # equality.
 
+# NOTE - Not sure why populations are floats instead of ints, but there must have
+# been some instance in which the data were fractional.
 
-def _county_totals(CxD: list[list[float]]) -> list[float]:
+
+def _county_totals(CxD: List[List[float]]) -> List[float]:
     """Total population of each county (column) in the CxD matrix"""
 
     nC: int = len(CxD[0])
     nD: int = len(CxD)
-    totals: list[float] = [0.0] * nC
+    totals: List[float] = [0.0] * nC
 
     for j in range(nC):
         for i in range(nD):
@@ -52,12 +57,12 @@ def _county_totals(CxD: list[list[float]]) -> list[float]:
     return totals
 
 
-def _district_totals(CxD: list[list[float]]) -> list[float]:
+def _district_totals(CxD: List[List[float]]) -> List[float]:
     """Total population of each district (row) in the CxD matrix"""
 
     nC: int = len(CxD[0])
     nD: int = len(CxD)
-    totals: list[float] = [0.0] * nD
+    totals: List[float] = [0.0] * nD
 
     for j in range(nC):
         for i in range(nD):
@@ -67,14 +72,14 @@ def _district_totals(CxD: list[list[float]]) -> list[float]:
 
 
 def _reduce_county_splits(
-    CxD: list[list[float]], dTotals: list[float]
-) -> list[list[float]]:
+    CxD: List[List[float]], dTotals: List[float]
+) -> List[List[float]]:
     """Consolidate *whole districts* (w/in one county) UP into dummy district 0, county by county."""
 
     # Create the reduced template
-    CxDreducedC: list[list[float]] = copy.deepcopy(CxD)
+    CxDreducedC: List[List[float]] = copy.deepcopy(CxD)
     nC: int = len(CxDreducedC[0])
-    vRow: list[float] = [0.0] * nC
+    vRow: List[float] = [0.0] * nC
     CxDreducedC.insert(0, vRow)
     nD: int = len(CxDreducedC)
 
@@ -92,12 +97,12 @@ def _reduce_county_splits(
 
 
 def _reduce_district_splits(
-    CxD: list[list[float]], cTotals: list[float]
-) -> list[list[float]]:
+    CxD: List[List[float]], cTotals: List[float]
+) -> List[List[float]]:
     """Consolidate *whole counties* (w/in one district) LEFT into the dummy county 0, district by district."""
 
     # Create the reduced template
-    CxDreducedD: list[list[float]] = copy.deepcopy(CxD)
+    CxDreducedD: List[List[float]] = copy.deepcopy(CxD)
     for row in CxDreducedD:
         row.insert(0, 0.0)
     nC: int = len(CxDreducedD[0])
@@ -116,24 +121,27 @@ def _reduce_district_splits(
     return CxDreducedD
 
 
-def _calc_county_weights(county_totals: list[float]) -> list[float]:
+def _calc_county_weights(
+    county_totals: List[float], reverse_weight: bool = False
+) -> List[float]:
     """Calculate county weights from the county population totals"""
 
     nC: int = len(county_totals)
     cTotal: float = sum(county_totals)
 
-    w: list[float] = [0.0] * nC
+    w: List[float] = [0.0] * nC
+    weight_fn = _reverse_weight if reverse_weight else _population_weight
 
     for j in range(nC):
-        w[j] = county_totals[j] / cTotal
+        w[j] = weight_fn(county_totals[j], nC, cTotal)
 
     return w
 
 
 def _population_weight(
-    county_pop: int,
+    county_pop: float,
     ncounties: int,
-    state_pop: int,
+    state_pop: float,
 ) -> float:
     """
     Weight counties by population.
@@ -145,9 +153,9 @@ def _population_weight(
 
 
 def _reverse_weight(
-    county_pop: int,
+    county_pop: float,
     ncounties: int,
-    state_pop: int,
+    state_pop: float,
 ) -> float:
     """
     Calculate Don Leake's reverse weights for county splitting.
@@ -161,13 +169,13 @@ def _reverse_weight(
     return rw
 
 
-def _calc_district_weights(district_totals: list[float]) -> list[float]:
+def _calc_district_weights(district_totals: List[float]) -> List[float]:
     """Calculate district weights from the district population totals"""
 
     nD: int = len(district_totals)
     dTotal: float = sum(district_totals)
 
-    x: list[float] = [0.0] * nD
+    x: List[float] = [0.0] * nD
 
     for i in range(nD):
         x[i] = district_totals[i] / dTotal
@@ -176,14 +184,14 @@ def _calc_district_weights(district_totals: list[float]) -> list[float]:
 
 
 def _calc_county_fractions(
-    CxD: list[list[float]], county_totals: list[float]
-) -> list[list[float]]:
+    CxD: List[List[float]], county_totals: List[float]
+) -> List[List[float]]:
     """Calculate county fractions from the county-district splits and the county population totals"""
 
     nD: int = len(CxD)
     nC: int = len(CxD[0])
 
-    f: list[list[float]] = [[0.0] * nC for d in range(nD)]
+    f: List[List[float]] = [[0.0] * nC for d in range(nD)]
 
     for j in range(nC):
         for i in range(nD):
@@ -196,14 +204,14 @@ def _calc_county_fractions(
 
 
 def _calc_district_fractions(
-    CxD: list[list[float]], district_totals: list[float]
-) -> list[list[float]]:
+    CxD: List[List[float]], district_totals: List[float]
+) -> List[List[float]]:
     """Calculate district fractions from the county-district splits and the district population totals"""
 
     nD: int = len(CxD)
     nC: int = len(CxD[0])
 
-    g: list[list[float]] = [[0.0] * nC for d in range(nD)]
+    g: List[List[float]] = [[0.0] * nC for d in range(nD)]
 
     for j in range(nC):
         for i in range(nD):
@@ -215,11 +223,11 @@ def _calc_district_fractions(
     return g
 
 
-def _county_split_score(j: int, f: list[list[float]]) -> float:
+def _county_split_score(j: int, f: List[List[float]]) -> float:
     """For all districts in a county, sum the split score."""
 
     numD: int = len(f)
-    splits: list[float] = []
+    splits: List[float] = []
 
     for i in range(numD):
         splits.append(f[i][j])
@@ -229,11 +237,11 @@ def _county_split_score(j: int, f: list[list[float]]) -> float:
     return score
 
 
-def _district_split_score(i: int, g: list[list[float]]) -> float:
+def _district_split_score(i: int, g: List[List[float]]) -> float:
     """For all counties in a district, sum the split score."""
 
     numC: int = len(g[0])
-    splits: list[float] = []
+    splits: List[float] = []
 
     for j in range(numC):
         splits.append(g[i][j])
@@ -243,7 +251,7 @@ def _district_split_score(i: int, g: list[list[float]]) -> float:
     return score
 
 
-def _county_splitting(f: list[list[float]], w: list[float]) -> float:
+def _county_splitting(f: List[List[float]], w: List[float]) -> float:
     """For all counties, sum the weighted county splits."""
 
     numC: int = len(f[0])
@@ -257,7 +265,7 @@ def _county_splitting(f: list[list[float]], w: list[float]) -> float:
     return e
 
 
-def _district_splitting(g: list[list[float]], x: list[float]) -> float:
+def _district_splitting(g: List[List[float]], x: List[float]) -> float:
     """For all districts, sum the weighted district splits."""
 
     numD: int = len(g)
@@ -272,13 +280,13 @@ def _district_splitting(g: list[list[float]], x: list[float]) -> float:
 
 
 def _calc_county_splitting_reduced(
-    CxD: list[list[float]], district_totals: list[float], county_totals: list[float]
+    CxD: List[List[float]], district_totals: List[float], county_totals: List[float]
 ) -> float:
     """Calculate the reduced county splitting score for a plan."""
 
-    rC: list[list[float]] = _reduce_county_splits(CxD, district_totals)
-    f: list[list[float]] = _calc_county_fractions(rC, county_totals)
-    w: list[float] = _calc_county_weights(county_totals)
+    rC: List[List[float]] = _reduce_county_splits(CxD, district_totals)
+    f: List[List[float]] = _calc_county_fractions(rC, county_totals)
+    w: List[float] = _calc_county_weights(county_totals)
 
     rawSqEnt_DC: float = _county_splitting(f, w)
 
@@ -286,15 +294,15 @@ def _calc_county_splitting_reduced(
 
 
 def _calc_county_splitting(
-    CxD: list[list[float]], district_totals: list[float], county_totals: list[float]
+    CxD: List[List[float]], district_totals: List[float], county_totals: List[float]
 ) -> float:
     """Calculate the county splitting score for a plan.
 
     *FOR TESTING*
     """
 
-    f: list[list[float]] = _calc_county_fractions(CxD, county_totals)
-    w: list[float] = _calc_county_weights(county_totals)
+    f: List[List[float]] = _calc_county_fractions(CxD, county_totals)
+    w: List[float] = _calc_county_weights(county_totals)
 
     SqEnt_DC: float = _county_splitting(f, w)
 
@@ -302,13 +310,13 @@ def _calc_county_splitting(
 
 
 def _calc_district_splitting_reduced(
-    CxD: list[list[float]], district_totals: list[float], county_totals: list[float]
+    CxD: List[List[float]], district_totals: List[float], county_totals: List[float]
 ) -> float:
     """Calculate the reduced district splitting score for a plan."""
 
-    rD: list[list[float]] = _reduce_district_splits(CxD, county_totals)
-    g: list[list[float]] = _calc_district_fractions(rD, district_totals)
-    x: list[float] = _calc_district_weights(district_totals)
+    rD: List[List[float]] = _reduce_district_splits(CxD, county_totals)
+    g: List[List[float]] = _calc_district_fractions(rD, district_totals)
+    x: List[float] = _calc_district_weights(district_totals)
 
     rawSqEnt_CD: float = _district_splitting(g, x)
 
@@ -316,15 +324,15 @@ def _calc_district_splitting_reduced(
 
 
 def _calc_district_splitting(
-    CxD: list[list[float]], district_totals: list[float], county_totals: list[float]
+    CxD: List[List[float]], district_totals: List[float], county_totals: List[float]
 ) -> float:
     """Calculate the district splitting score for a plan.
 
     *FOR TESTING*
     """
 
-    g: list[list[float]] = _calc_district_fractions(CxD, district_totals)
-    x: list[float] = _calc_district_weights(district_totals)
+    g: List[List[float]] = _calc_district_fractions(CxD, district_totals)
+    x: List[float] = _calc_district_weights(district_totals)
 
     SqEnt_CD: float = _district_splitting(g, x)
 
