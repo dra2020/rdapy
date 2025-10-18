@@ -10,12 +10,16 @@ import math
 import copy
 
 
-def calc_splitting_metrics(CxD: List[List[float]]) -> dict:
+def calc_splitting_metrics(
+    CxD: List[List[float]], reverse_weight: bool = False
+) -> dict:
     """Calculate the county & district splitting scores for a plan."""
 
     dT: List[float] = _district_totals(CxD)
     cT: List[float] = _county_totals(CxD)
-    county: float = _calc_county_splitting_reduced(CxD, dT, cT)
+    county: float = _calc_county_splitting_reduced(
+        CxD, dT, cT, reverse_weight=reverse_weight
+    )
     district: float = _calc_district_splitting_reduced(CxD, dT, cT)
 
     out: dict = {"county": county, "district": district}
