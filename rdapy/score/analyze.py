@@ -62,6 +62,7 @@ def score_plans(
     *,
     mode: str,
     precomputed: Dict[str, Any],
+    reverse_weight_splitting: bool = False,
 ) -> None:
     """
     Read plans & district aggregates as JSONL from the input stream.
@@ -154,6 +155,8 @@ def score_plan(
     n_districts: int = metadata["D"]
     n_counties: int = metadata["C"]
 
+    # This assumes that the data map specifies datasets for each type ...
+
     census_dataset: DatasetKey = get_dataset(data_map, "census")
     vap_dataset: DatasetKey = get_dataset(data_map, "vap")
     cvap_dataset: DatasetKey = get_dataset(data_map, "cvap")
@@ -167,6 +170,21 @@ def score_plan(
         "election": {e: {} for e in election_datasets},
         "shapes": {shapes_dataset: {}},
     }
+
+    # ... but limit the scorecard to just the needed dataset types.
+
+    if mode not in ["all", "general", "splitting"]:
+        scorecard.pop("census", None)
+
+    if mode not in ["all", "minority"]:
+        scorecard.pop("vap", None)
+        scorecard.pop("cvap", None)
+
+    if mode not in ["all", "partisan"]:
+        scorecard.pop("election", None)
+
+    if mode not in ["all", "compactness"]:
+        scorecard.pop("shapes", None)
 
     if mode in ["all", "general"]:
         general_metrics: Dict[str, Any] = calc_general_category(
