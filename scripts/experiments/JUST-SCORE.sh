@@ -64,6 +64,7 @@ scripts/score/score.py \
 --data "$INPUT_DATA" \
 --graph "$GRAPH" \
 --mode splitting \
+--reverse-weight-splitting \
 |
 scripts/score/write.py \
 --data "$INPUT_DATA" \
