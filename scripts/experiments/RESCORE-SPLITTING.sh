@@ -61,19 +61,29 @@ for CHAMBER in "${CHAMBERS[@]}"; do
         THRESHOLD="05"
     fi
 
-    echo "Converting it to assignment format ..."
+    echo "Converting plans to assignment format ..."
+
     ENSEMBLE_DIR=${XX}_${CHAMBER}_T0.${THRESHOLD}_S0.75_R0_Vcut-edges-region-aware
     ENSEMBLE_XZ=${XX}_${CHAMBER}_T0.${THRESHOLD}_S0.75_R0_Vcut-edges-region-aware_ensemble
     XZ_COMPRESSED=/tmp/${XX}/${XX}_${CHAMBER}/${ENSEMBLE_DIR}/${ENSEMBLE_XZ}.jsonl.xz
-    ASSIGNMENT=/tmp/${XX}/${XX}_${CHAMBER}_R75_plans.jsonl
+    PLANS=/tmp/${XX}/${XX}_${CHAMBER}_R75_plans.jsonl
+    SCORES=/tmp/${XX}/${XX}_${CHAMBER}_R75_scores.csv
 
     xz --decompress --stdout "$XZ_COMPRESSED" | bin/distill \
         --from compress \
         --to assignment \
-        --output "$ASSIGNMENT"
+        --output "$PLANS"
 
     ## Re-score the ensemble
 
-    echo "TODO -- Re-scoring the ensemble ..."
+    echo "Re-scoring the ensemble ..."
+
+    scripts/experiments/JUST-SCORE.sh \
+    --state "$XX" \
+    --plan-type "$CHAMBER" \
+    --data "$INPUT_DATA" \
+    --graph "$GRAPH" \
+    --plans "$PLANS" \
+    --scores "$SCORES"
 
 done
