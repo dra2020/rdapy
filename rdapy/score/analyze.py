@@ -101,6 +101,7 @@ def score_plans(
                     data_map=data_map,
                     mode=mode,
                     precomputed=precomputed,
+                    reverse_weight_splitting=reverse_weight_splitting,
                 )
 
                 scores_with_aggs: Dict[str, Any] = {
@@ -139,6 +140,7 @@ def score_plan(
     precomputed: Dict[str, Any],
     #
     mmd_scoring: bool = True,  # If False, don't do MMD scoring for backwards compatibility w/ tests.
+    reverse_weight_splitting: bool = False,
 ) -> Tuple[Dict[str, Any], Aggregates]:
     """Score a plan."""
 
@@ -306,6 +308,29 @@ def score_plan(
             n_counties,
             n_districts,
         )
+
+        # 10-18-25 -- Added reverse-weighted splitting metrics
+
+        if reverse_weight_splitting:
+            temp: Dict[str, float]
+            temp, _ = calc_splitting_category(
+                aggs["census"][census_dataset],
+                n_districts,
+                reverse_weight=reverse_weight_splitting,
+            )
+            reverse_weighted_splitting_metrics: Dict[str, float] = {
+                "county_splitting_reverse": temp["county_splitting"],
+                # "district_splitting_reverse": temp["district_splitting"], # Same as normal
+            }
+            scorecard["census"][census_dataset].update(
+                reverse_weighted_splitting_metrics
+            )
+            scorecard["census"][census_dataset]["splitting_reverse"] = _rate_splitting(
+                scorecard["census"][census_dataset]["county_splitting_reverse"],
+                scorecard["census"][census_dataset]["district_splitting"],
+                n_counties,
+                n_districts,
+            )
 
     # Combine the by-district metrics
     new_aggs: Aggregates = aggs.copy()
