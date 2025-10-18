@@ -718,7 +718,11 @@ class TestCountyDistrictSplitting:
 
 class TestReverseWeight:
     def test_reverse_weight(self) -> None:
-        """Test reverse weight calculation"""
+        """
+        Test reverse weight calculation
+
+        Examples from Don Leake's 3 x 3 spreadsheet
+        """
 
         # C1
         rw: float = reverse_weight(4, 3, 9)

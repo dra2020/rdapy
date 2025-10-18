@@ -1,0 +1,8 @@
+* For the state:
+  - Get the geojson, and
+  - Unzip it
+  
+* For each chamber:
+  - Unzip the zip file
+  - Convert the R75 ensemble.xz to assignment format
+  - Score it
