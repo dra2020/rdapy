@@ -65,6 +65,7 @@ def main():
                 metadata,
                 mode=args.mode,
                 precomputed=precomputed,
+                reverse_weight_splitting=args.reverse_weight_splitting,
             )
 
 
@@ -117,6 +118,14 @@ def parse_arguments():
         "--output",
         type=str,
         help="The output stream -- metadata or plan + scores + by-district aggregates",
+    )
+
+    parser.add_argument(
+        "-r",
+        "--reverse-weight-splitting",
+        dest="reverse_weight_splitting",
+        action="store_true",
+        help="Enable reverse weight splitting",
     )
 
     args: Namespace = parser.parse_args()
