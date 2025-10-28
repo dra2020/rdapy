@@ -396,6 +396,7 @@ def aggregate_shapes_by_district(
 ### SHAPE AGGREGATION HELPERS ###
 
 
+# TODO - Export this for external use.
 def border_length(
     geoid: str,
     district: int,
@@ -422,6 +423,7 @@ def border_length(
     return arc_length
 
 
+# TODO - Export this for external use.
 def exterior(
     geoid: str,
     district: int,
