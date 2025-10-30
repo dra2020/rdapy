@@ -8,6 +8,7 @@ from .base import (
     COUNTIES_BY_STATE,
     is_water_only,
     DatasetKey,
+    DatasetType,
     Aggregates,
     #
     read_csv,
