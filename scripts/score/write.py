@@ -32,6 +32,7 @@ from rdapy import (
     smart_write,
     format_scores,
     write_record,
+    DatasetType,
 )
 
 
@@ -96,13 +97,18 @@ def flatten_scores(scores: Dict[str, Any], *, prefixes: bool) -> Dict[str, Any]:
     Convert a scores JSONL record that has dataset types, datasets, and metrics & values
     into a flat dictionary with dataset.metric:value key:value pairs.
 
+    Sequence the scores by type of dataset in a preferred order.
+
     Use a 'dataset' prefix if `prefix` is True -or- there are multiple datasets
     for the dataset type; otherwise use just the metric name.
     """
 
     flattened: Dict[str, Any] = {}
 
-    for dataset_type in scores:
+    for dataset_type in ["election", "vap", "cvap", "shapes", "census"]:
+        assert dataset_type in DatasetType.__args__
+        if dataset_type not in scores:
+            continue
         prefix_mode: bool = prefixes or len(scores[dataset_type]) > 1
         for dataset in scores[dataset_type]:
             for metric in scores[dataset_type][dataset]:
