@@ -160,6 +160,7 @@ from .partisan import (
     eval_partisan_lean,
     #
     calc_gallagher_index,
+    calc_electability_index,
 )
 
 from .rate import (
