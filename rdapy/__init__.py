@@ -183,6 +183,8 @@ from .aggregate import (
 from .score import (
     score_plan,
     score_plans,
+    score_mmd_plan,
+    score_mmd_plans,
     #
     calc_general_category,
     calc_partisan_category,
