@@ -158,6 +158,8 @@ from .partisan import (
     unpack_neighborhood,
     calc_geographic_baseline,
     eval_partisan_lean,
+    #
+    calc_gallagher_index,
 )
 
 from .rate import (

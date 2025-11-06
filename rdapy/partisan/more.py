@@ -44,4 +44,24 @@ def calc_average_margin(Vf_array: List[float]) -> float:
     return margin
 
 
+def calc_gallagher_index(Vf_array: List[float], Sf_array: List[float]) -> float:
+    """
+    Calculate the Gallagher Index.
+    https://en.wikipedia.org/wiki/Gallagher_index
+
+    Vf_array: List of vote shares for parties.
+    Sf_array: List of seat shares for parties.
+    """
+
+    assert len(Vf_array) == len(Sf_array)
+
+    sum_squared_diff: float = sum(
+        [(Sf - Vf) ** 2 for Vf, Sf in zip(Vf_array, Sf_array)]
+    )
+
+    GI: float = (0.5 * sum_squared_diff) ** 0.5
+
+    return GI
+
+
 ### END ###
