@@ -52,7 +52,7 @@ def calc_gallagher_index(Vf_array: List[float], Sf_array: List[float]) -> float:
     Vf_array: List of vote shares for parties.
     Sf_array: List of seat shares for parties.
 
-    TODO - Splice this into the pipeline.
+    NOTE - These values are [0-1] fractions. Multiply by 100, if you want percentages.
     """
 
     assert len(Vf_array) == len(Sf_array)

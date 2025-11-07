@@ -93,15 +93,16 @@ def parse_arguments():
         default="testdata/examples/NC_graph.json",  # TODO
         help="Path to graph file",
     )
+
+    # For MMD experiments
     parser.add_argument(
-        "--districts",
+        "--districts-override",
         type=int,
-        default=2,
-        dest="n_districts",
-        help="Number of MMD districts",
+        dest="districts_override",
+        help="Number of districts to use for aggregation (overrides metadata)",
     )
     parser.add_argument(
-        "--magnitude",
+        "--district-magnitude",
         type=int,
         default=4,
         dest="district_magnitude",
@@ -117,14 +118,6 @@ def parse_arguments():
         "--output",
         type=str,
         help="The output stream -- metadata or plan + scores + by-district aggregates",
-    )
-
-    # For MMD experiments
-    parser.add_argument(
-        "--districts-override",
-        type=int,
-        dest="districts_override",
-        help="Number of districts to use for aggregation (overrides metadata)",
     )
 
     args: Namespace = parser.parse_args()

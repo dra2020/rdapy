@@ -64,7 +64,11 @@ def extract_counties(geoids: List[str]) -> List[str]:
 
 
 def collect_metadata(
-    xx: str, plan_type: str, geoids: List[str], *, districts_override: Optional[int]
+    xx: str,
+    plan_type: str,
+    geoids: List[str],
+    *,
+    districts_override: Optional[int] = None,
 ) -> Dict[str, Any]:
     """Load scoring-specific metadata for a state."""
 
