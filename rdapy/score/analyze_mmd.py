@@ -14,8 +14,11 @@ from ..base import (
     Aggregates,
     Precinct,
     District,
+    NamedAggregates,
 )
 from .categories import calc_general_category
+from ..minority import DEMOGRAPHICS
+from ..partisan import calc_electability_index, calc_gallagher_index
 
 #####
 
@@ -47,7 +50,7 @@ def score_mmd_plans(
             # Case 1: Has "_tag_" key with value "metadata" - pass it along
 
             if "_tag_" in parsed_line and parsed_line["_tag_"] == "metadata":
-                print(json.dumps(parsed_line), file=output_stream)
+                # print(json.dumps(parsed_line), file=output_stream)
                 continue
 
             # Case 2: Has "_tag_" key with value "plan"
@@ -58,8 +61,8 @@ def score_mmd_plans(
                 aggs: Aggregates = parsed_line["aggregates"]
 
                 scores: Dict[str, Any]
-                updated_aggs: Aggregates
-                scores, updated_aggs = score_mmd_plan(
+                # updated_aggs: Aggregates
+                scores, _ = score_mmd_plan(
                     assignments,
                     aggs,
                     data=input_data,
@@ -70,14 +73,14 @@ def score_mmd_plans(
                     district_magnitude=district_magnitude,
                 )
 
-                scores_with_aggs: Dict[str, Any] = {
+                tagged_scores: Dict[str, Any] = {
                     "_tag_": "scores",
                     "name": name,
                     "scores": scores,
-                    "aggregates": updated_aggs,
+                    # "aggregates": updated_aggs,
                 }
 
-                print(json.dumps(scores_with_aggs), file=output_stream)
+                print(json.dumps(tagged_scores), file=output_stream)
                 continue
 
             # Case 3: Something else - skip the line, e.g., adjacency graph, etc.
@@ -109,9 +112,14 @@ def score_mmd_plan(
     This is a quick & dirty routine for scoring a MMD plan, using homogenous-sized MMDs.
     """
 
+    precision: int = 4
+
     census_dataset: DatasetKey = get_dataset(data_map, "census")
     # vap_dataset: DatasetKey = get_dataset(data_map, "vap")
     cvap_dataset: DatasetKey = get_dataset(data_map, "cvap")
+
+    # vap_keys: List[str] = list(get_fields(data_map, "vap", vap_dataset).keys())
+    cvap_keys: List[str] = list(get_fields(data_map, "cvap", cvap_dataset).keys())
 
     scorecard: Dict[str, Any] = {
         "census": {census_dataset: {}},
@@ -126,25 +134,51 @@ def score_mmd_plan(
         n_districts,
     )
     deviation: float = general_metrics.pop("population_deviation")
-    scorecard["census"][census_dataset]["population_deviation"] = deviation
+    scorecard["census"][census_dataset]["population_deviation"] = round(
+        deviation, precision
+    )
 
-    # TODO - Electability index
+    # Electability index
 
-    # Trim the floating point numbers
+    EI_by_district: List[Dict[str, float]] = calc_electability_indexes(
+        aggs["cvap"][cvap_dataset], cvap_keys, n_districts, district_magnitude
+    )
+    scorecard["cvap"][cvap_dataset]["EI"] = EI_by_district
+
+    dummy_aggs: Aggregates = dict()
+
+    return scorecard, dummy_aggs
+
+
+def calc_electability_indexes(
+    data: NamedAggregates,
+    cvap_keys: List[str],
+    n_districts: int,
+    district_magnitude: int,
+) -> List[Dict[str, float]]:
+    """
+    Calculate electability indexes for a MMD plan.
+
+    The result is a list of dictionaries, one per district, where the keys of the dictionaries are
+    the electability indexes for each demographic group.
+    """
+
     precision: int = 4
-    int_metrics: List[str] = []
 
-    for type_, datasets_ in scorecard.items():
-        for dataset_, metrics in datasets_.items():
-            for metric_, value_ in metrics.items():
-                if value_ is None:
-                    continue
-                if metric_ not in int_metrics:
-                    scorecard[type_][dataset_][metric_] = round(value_, precision)
+    by_district: List[Dict[str, float]] = list()
+    for i in range(n_districts):
+        district_EIs: Dict[str, float] = dict()
+        total_cvap: float = data[cvap_keys[0]][0]
 
-    new_aggs: Aggregates = aggs.copy()
+        for demo in cvap_keys[2:]:  # Skip total and white CVAP
+            simple_demo: str = demo.split("_")[0].lower()
+            Vf: float = data[demo][i + 1] / total_cvap
+            EI: float = calc_electability_index(Vf, district_magnitude)
+            district_EIs[simple_demo] = round(EI, precision)
 
-    return scorecard, new_aggs
+        by_district.append(district_EIs)
+
+    return by_district
 
 
 ### END ###

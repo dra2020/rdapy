@@ -2,7 +2,7 @@
 INPUT DATA
 """
 
-from typing import Any, Dict, Generator, List, Tuple, TextIO, Set
+from typing import Any, Dict, Generator, List, Tuple, TextIO, Set, Optional
 
 import os, json
 
@@ -63,7 +63,9 @@ def extract_counties(geoids: List[str]) -> List[str]:
     return list(counties)
 
 
-def collect_metadata(xx: str, plan_type: str, geoids: List[str]) -> Dict[str, Any]:
+def collect_metadata(
+    xx: str, plan_type: str, geoids: List[str], *, districts_override: Optional[int]
+) -> Dict[str, Any]:
     """Load scoring-specific metadata for a state."""
 
     ### INFER COUNTY FIPS CODES ###
@@ -73,7 +75,11 @@ def collect_metadata(xx: str, plan_type: str, geoids: List[str]) -> Dict[str, An
     ### GATHER METADATA ###
 
     C: int = COUNTIES_BY_STATE[xx]
-    D: int = DISTRICTS_BY_STATE[xx][plan_type]
+    D: int = (
+        DISTRICTS_BY_STATE[xx][plan_type]
+        if districts_override is None
+        else districts_override
+    )
 
     county_to_index: Dict[str, int] = {county: i for i, county in enumerate(counties)}
 

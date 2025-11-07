@@ -44,7 +44,9 @@ def main():
     adjacency_graph: Dict[str, List[str]] = load_graph(args.graph)
 
     geoids: List[str] = sorted_geoids(input_data)
-    metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
+    metadata: Dict[str, Any] = collect_metadata(
+        args.state, args.plan_type, geoids, districts_override=args.districts_override
+    )
 
     with smart_read(args.input) as input_stream:
         with smart_write(args.output) as output_stream:
@@ -100,6 +102,14 @@ def parse_arguments():
         "--output",
         type=str,
         help="The output stream -- metadata or plan + by-district aggregates",
+    )
+
+    # For MMD experiments
+    parser.add_argument(
+        "--districts-override",
+        type=int,
+        dest="districts_override",
+        help="Number of districts to use for aggregation (overrides metadata)",
     )
 
     args: Namespace = parser.parse_args()
