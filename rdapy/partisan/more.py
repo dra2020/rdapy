@@ -44,4 +44,45 @@ def calc_average_margin(Vf_array: List[float]) -> float:
     return margin
 
 
+def calc_gallagher_index(Vf_array: List[float], Sf_array: List[float]) -> float:
+    """
+    Calculate the Gallagher Index.
+    https://en.wikipedia.org/wiki/Gallagher_index
+
+    Vf_array: List of vote shares for parties.
+    Sf_array: List of seat shares for parties.
+
+    NOTE - These values are [0-1] fractions. Multiply by 100, if you want percentages.
+    """
+
+    assert len(Vf_array) == len(Sf_array)
+
+    sum_squared_diff: float = sum(
+        [(Sf - Vf) ** 2 for Vf, Sf in zip(Vf_array, Sf_array)]
+    )
+
+    GI: float = (0.5 * sum_squared_diff) ** 0.5
+
+    return GI
+
+
+def calc_electability_index(Vf: float, district_magnitude: int) -> float:
+    """
+    The Electability Index for a given vote share and district magnitude
+    is the vote share divided by the threshold of exclusion.
+
+    Vf: Vote share (between 0 and 1)
+    district_magnitude: Number of seats in the district
+    """
+
+    assert Vf >= 0 and Vf <= 1
+    assert district_magnitude > 0
+
+    threshold: float = 1 / (district_magnitude + 1)
+
+    EI: float = Vf / threshold
+
+    return EI
+
+
 ### END ###

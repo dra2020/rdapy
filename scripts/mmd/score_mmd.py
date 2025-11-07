@@ -1,19 +1,22 @@
 #!/usr/bin/env python3
 
 """
-AGGREGATE DATA & SHAPES BY DISTRICT FOR PLANS
-- Take in a stream of plans (JSONL)
-- Aggregate data by district
-- Write out a stream of plans with by-district aggregates (JSONL)
+SCORE MMD PLANS
+- Take in a stream of plans & by-district aggregates (JSONL)
+- Score each plan
+- Write out a stream of scores along with by-district aggregates (JSONL)
+
 
 Usage:
 
-cat testdata/plans/NC_congress_plans.tagged.jsonl \
-| scripts/score/aggregate.py \
+cat testdata/examples/NC_congress_aggs.100.jsonl \
+| scripts/mmd/score_mmd.py \
 --state NC \
 --plan-type congress \
 --data testdata/examples/NC_input_data.jsonl \
---graph testdata/examples/NC_graph.json > temp/TEST_aggs.jsonl
+--graph testdata/examples/NC_graph.json > temp/TEST_scores.jsonl \
+--districts 2 \
+--magnitude 4
 
 """
 
@@ -29,7 +32,7 @@ from rdapy import (
     sorted_geoids,
     smart_read,
     smart_write,
-    aggregate_plans,
+    score_mmd_plans,
 )
 
 
@@ -50,14 +53,15 @@ def main():
 
     with smart_read(args.input) as input_stream:
         with smart_write(args.output) as output_stream:
-            aggregate_plans(
+            score_mmd_plans(
                 input_stream,
                 output_stream,
                 input_data,
                 data_map,
                 adjacency_graph,
                 metadata,
-                args.mode,
+                n_districts=args.districts_override,  # args.n_districts,
+                district_magnitude=args.district_magnitude,
             )
 
 
@@ -68,40 +72,26 @@ def parse_arguments():
         description="Parse command line arguments."
     )
 
-    parser.add_argument("--state", type=str, help="State abbreviation")
+    parser.add_argument("--state", type=str, default="LA", help="State abbreviation")
     parser.add_argument(
         "--plan-type",
         type=str,
         dest="plan_type",
+        default="lower",
         help="Plan type (e.g., congress)",
     )
 
     parser.add_argument(
         "--data",
         type=str,
+        default="testdata/examples/NC_input_data.jsonl",  # TODO
         help="Path to input data file",
     )
     parser.add_argument(
         "--graph",
         type=str,
+        default="testdata/examples/NC_graph.json",  # TODO
         help="Path to graph file",
-    )
-    parser.add_argument(
-        "--mode",
-        choices=["all", "general", "partisan", "minority", "compactness", "splitting"],
-        default="all",
-        help="Processing mode to use (default: normal)",
-    )
-
-    parser.add_argument(
-        "--input",
-        type=str,
-        help="The input stream of plans -- metadata or plan",
-    )
-    parser.add_argument(
-        "--output",
-        type=str,
-        help="The output stream -- metadata or plan + by-district aggregates",
     )
 
     # For MMD experiments
@@ -110,6 +100,24 @@ def parse_arguments():
         type=int,
         dest="districts_override",
         help="Number of districts to use for aggregation (overrides metadata)",
+    )
+    parser.add_argument(
+        "--district-magnitude",
+        type=int,
+        default=4,
+        dest="district_magnitude",
+        help="Number of seats per district",
+    )
+
+    parser.add_argument(
+        "--input",
+        type=str,
+        help="The input stream -- metadata or plan + by-district aggregates",
+    )
+    parser.add_argument(
+        "--output",
+        type=str,
+        help="The output stream -- metadata or plan + scores + by-district aggregates",
     )
 
     args: Namespace = parser.parse_args()
