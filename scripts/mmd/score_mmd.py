@@ -84,13 +84,13 @@ def parse_arguments():
     parser.add_argument(
         "--data",
         type=str,
-        default="testdata/examples/NC_input_data.jsonl",  # TODO
+        default="testdata/examples/NC_input_data.jsonl",
         help="Path to input data file",
     )
     parser.add_argument(
         "--graph",
         type=str,
-        default="testdata/examples/NC_graph.json",  # TODO
+        default="testdata/examples/NC_graph.json",
         help="Path to graph file",
     )
 
