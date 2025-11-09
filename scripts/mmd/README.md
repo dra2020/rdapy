@@ -1,7 +1,23 @@
 # Multi-Member District (MMD) Scoring
 
-The scripts in this directory and the support code they use in the `rdapy` package are part of an experiment to
-figure out how to score multi-member districting plans with respect to the opportunity for minority representation. 
+The scripts in this directory and the support code they use in the `rdapy` package are part of toolchain
+for exploring the implications for multi-member districts (MMDs) with respect to minority representation.
 This is a work in progress.
 
+The code here leverages the production district aggregation code with only slight modifications allowing you
+to experiment with different numbers of districts and different, homogeneous district magnitudes.
+
+By default, official CVAP data is used to characterize the opportunities for different minority groups to elect
+candidates of their choices in multi-member districts.
+That official data can be transformed into alternative datasets that have the same format--the same nominal demographic
+labels--but the values of which reflect assumptions based on modeling of group cohesion/fragmentation, crossover voting, 
+and turnout.
+In other words, the demographic labels in the transformed data--e.g., "Black", "Hispanic", etc.--represent repurposable 
+groups of voters who will vote as a bloc and potentially elect candidates of their choice.
+
 Note: "MMD" here refers to multi-member districts, not to be confused with majority-minority districts.
+
+This experiment really highlights that, when it comes to analytics, there are two distinct systems:
+
+* Two-party, single-member districts (SMDs) with first-past-the-post (FPTP) voting.
+* More parties with multi-member districts (MMDs) and (some form of) proportional representation (PR) voting.
