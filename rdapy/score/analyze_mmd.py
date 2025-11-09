@@ -75,8 +75,8 @@ def score_mmd_plans(
                 aggs: Aggregates = parsed_line["aggregates"]
 
                 scores: Dict[str, Any]
-                # updated_aggs: Aggregates
-                scores, _ = score_mmd_plan(
+                updated_aggs: Aggregates
+                scores, updated_aggs = score_mmd_plan(
                     assignments,
                     aggs,
                     data=input_data,
@@ -91,7 +91,7 @@ def score_mmd_plans(
                     "_tag_": "scores",
                     "name": name,
                     "scores": scores,
-                    # "aggregates": updated_aggs,
+                    "aggregates": updated_aggs,
                 }
 
                 print(json.dumps(tagged_scores), file=output_stream)

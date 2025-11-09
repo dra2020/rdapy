@@ -5,6 +5,7 @@ GEOJSON=""
 GRAPH=""
 PLANS=""
 SCORES=""
+BY_DISTRICT=""
 MODE="all"
 CENSUS="T_20_CENS"
 VAP="V_20_VAP"
@@ -39,6 +40,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --scores)
       SCORES="$2"
+      shift 2
+      ;;
+    --by-district)
+      BY_DISTRICT="$2"
       shift 2
       ;;
     --census)
@@ -77,7 +82,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Check if all required arguments are provided
-if [[ -z "$STATE" || -z "$PLAN_TYPE" || -z "$GEOJSON" || -z "$GRAPH" || -z "$PLANS" || -z "$SCORES" || -z "$DISTRICTS_OVERRIDE" || -z "$DISTRICT_MAGNITUDE" ]]; then
+if [[ -z "$STATE" || -z "$PLAN_TYPE" || -z "$GEOJSON" || -z "$GRAPH" || -z "$PLANS" || -z "$SCORES" || -z "$BY_DISTRICT"|| -z "$DISTRICTS_OVERRIDE" || -z "$DISTRICT_MAGNITUDE" ]]; then
   echo "Error: Missing required arguments"
   exit 1
 fi
@@ -116,7 +121,11 @@ scripts/mmd/score_mmd.py \
 --graph "$GRAPH" \
 --districts-override "$DISTRICTS_OVERRIDE" \
 --district-magnitude "$DISTRICT_MAGNITUDE" \
-> "$SCORES"
+|
+scripts/score/write.py \
+--data "$temp_data" \
+--scores "$SCORES" \
+--by-district "$BY_DISTRICT"
 
 echo
 echo "Done!"
