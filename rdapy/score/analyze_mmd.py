@@ -45,7 +45,7 @@ def score_mmd_plans(
     adjacency_graph: Dict[str, List[str]],
     metadata: Dict[str, Any],
     *,
-    n_districts: int,
+    districts_override: int,
     district_magnitude: int,
 ) -> None:
     """
@@ -83,7 +83,7 @@ def score_mmd_plans(
                     graph=adjacency_graph,
                     metadata=metadata,
                     data_map=data_map,
-                    districts_override=n_districts,
+                    districts_override=districts_override,
                     district_magnitude=district_magnitude,
                 )
 
@@ -121,11 +121,12 @@ def score_mmd_plan(
     #
     mode: str = "all",  # Or one of "general", "partisan", "minority", "compactness", "splitting"
     #
-    districts_override: Optional[int] = None,
-    district_magnitude: int,
+    districts_override: Optional[int] = None,  # MMD HACK
+    district_magnitude: int,  # MMD HACK
 ) -> Tuple[Dict[str, Any], Aggregates]:
     """
-    This is a quick & dirty routine for scoring a MMD plan, using homogenous-sized MMDs.
+    This is a quick & dirty HACK for scoring a MMD plan, using homogenous-sized MMDs.
+    A cut down clone of score_plan() in analyze.py with MMD-specific metrics added.
     """
 
     # Pulled 'extended' scoring out separately
@@ -195,11 +196,13 @@ def score_mmd_plan(
         # vap_keys: List[str] = list(get_fields(data_map, "vap", vap_dataset).keys())
         cvap_keys: List[str] = list(get_fields(data_map, "cvap", cvap_dataset).keys())
 
+        district_magnitudes: List[int] = [district_magnitude] * n_districts
+
         EI_by_district: List[Dict[str, float]] = calc_electability_indexes(
             aggs["cvap"][cvap_dataset],
             cvap_keys,
             n_districts,
-            district_magnitude,
+            district_magnitudes,
         )
         demos: List[str] = list(EI_by_district[0].keys())
         EI_summaries: Dict[str, int] = defaultdict(int)
@@ -317,7 +320,7 @@ def calc_electability_indexes(
     data: NamedAggregates,
     cvap_keys: List[str],
     n_districts: int,
-    district_magnitude: int,
+    district_magnitudes: List[int],
 ) -> List[Dict[str, float]]:
     """
     Calculate electability indexes for a MMD plan.
@@ -336,7 +339,7 @@ def calc_electability_indexes(
         for demo in cvap_keys[1:]:  # Skip total CVAP; include white CVAP
             simple_demo: str = demo.split("_")[0].lower()
             Vf: float = data[demo][i + 1] / total_cvap
-            EI: float = calc_electability_index(Vf, district_magnitude)
+            EI: float = calc_electability_index(Vf, district_magnitudes[i])
             district_EIs[simple_demo] = round(EI, precision)
 
         by_district.append(district_EIs)

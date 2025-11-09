@@ -60,7 +60,7 @@ def main():
                 data_map,
                 adjacency_graph,
                 metadata,
-                n_districts=args.districts_override,  # args.n_districts,
+                districts_override=args.districts_override,  # args.n_districts,
                 district_magnitude=args.district_magnitude,
             )
 

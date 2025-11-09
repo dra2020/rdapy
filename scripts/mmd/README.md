@@ -21,24 +21,3 @@ This experiment really highlights that, when it comes to analytics, there are tw
 
 * Two-party, single-member districts (SMDs) with first-past-the-post (FPTP) voting.
 * More parties with multi-member districts (MMDs) and (some form of) proportional representation (PR) voting.
-
-## TODO
-
-[x] Add 'white' demographic to EI scoring.
-[x] Move summarization to scoring. Delete separate script.
-[x] Add statewide demographic percentages.
-[x] Add Gallagher index to scores.
-
-[x] Prune by-districts coming in.
-[x] Add by-district E-I scores to aggs
-[x] Summaries to scores.
-
-[x] Backport compactness and splitting metrics into MMD scoring.
-
-[ ] Leverage write.py to write scores.csv and by_districts.jsonl.
-
-[ ] Add a district magnitude array to foreshadow heterogeneous magnitudes.
-
-
-[ ] Rename args?
-[ ] Draw diagram. 
