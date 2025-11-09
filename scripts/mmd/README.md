@@ -25,15 +25,15 @@ This experiment really highlights that, when it comes to analytics, there are tw
 ## TODO
 
 [x] Add 'white' demographic to EI scoring.
-[ ] Move summarization to scoring. Delete separate script.
-[ ] Add statewide demographic percentages.
-[ ] Add Gallagher index to scores.
+[x] Move summarization to scoring. Delete separate script.
+[x] Add statewide demographic percentages.
+[x] Add Gallagher index to scores.
 
 [x] Prune by-districts coming in.
 [x] Add by-district E-I scores to aggs
-[ ] Summaries to scores.
+[x] Summaries to scores.
 
-[ ] Backport compactness and splitting metrics into MMD scoring.
+[x] Backport compactness and splitting metrics into MMD scoring.
 
 [ ] Leverage write.py to write scores.csv and by_districts.jsonl.
 
