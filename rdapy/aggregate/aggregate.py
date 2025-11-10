@@ -503,7 +503,7 @@ def aggregate_shapes_by_district(
     by_district, by_district_temp = _setup_shape_aggregates(n_districts)
     # endregion
 
-    # Aggregate the shape properties
+    # Aggregate the shape properties for each precinct
 
     for precinct in data:
         # region - Validate precinct & get basic info
@@ -519,25 +519,20 @@ def aggregate_shapes_by_district(
         district: int = geoid_index[geoid]
         # endregion
 
-        by_district["area"][district] += precinct["area"]
-        by_district["area"][0] += precinct["area"]
-        by_district["perimeter"][district] += border_length(
-            geoid, district, geoid_index, data_by_geoid, graph
-        )
-        by_district_temp["exterior"][district].extend(
-            exterior(geoid, district, geoid_index, data_by_geoid, graph)
+        _aggregate_shape_data(
+            geoid,
+            district,
+            precinct,
+            geoid_index,
+            data_by_geoid,
+            graph,
+            by_district,
+            by_district_temp,
         )
 
     # Calculate district diameters
 
-    for i, ext in enumerate(by_district_temp["exterior"]):
-        if i == 0:
-            continue  # Skip the state total
-
-        _, _, r = wl_make_circle(ext)
-        diameter: float = 2 * r
-
-        by_district["diameter"][i] = diameter
+    _calc_district_diameter(by_district, by_district_temp)
 
     # Compose the aggregates bound to the dataset keys
 
@@ -566,6 +561,44 @@ def _setup_shape_aggregates(
     }
 
     return by_district, by_district_temp
+
+
+def _aggregate_shape_data(
+    geoid: str,
+    district: int,
+    precinct: Dict[str, Any],
+    geoid_index: GeoIDIndex,
+    data_by_geoid: Dict[str, Any],
+    graph: Dict[str, List[str]],
+    by_district: Dict[str, List[float]],  # NOTE - updated
+    by_district_temp: Dict[str, List[Any]],  # NOTE - updated
+) -> None:
+    """Aggregate shape data helper."""
+
+    by_district["area"][district] += precinct["area"]
+    by_district["area"][0] += precinct["area"]
+    by_district["perimeter"][district] += border_length(
+        geoid, district, geoid_index, data_by_geoid, graph
+    )
+    by_district_temp["exterior"][district].extend(
+        exterior(geoid, district, geoid_index, data_by_geoid, graph)
+    )
+
+
+def _calc_district_diameter(
+    by_district: Dict[str, List[float]],  # NOTE - updated
+    by_district_temp: Dict[str, List[Any]],
+) -> None:
+    """Calculate district diameters helper."""
+
+    for i, ext in enumerate(by_district_temp["exterior"]):
+        if i == 0:
+            continue  # Skip the state total
+
+        _, _, r = wl_make_circle(ext)
+        diameter: float = 2 * r
+
+        by_district["diameter"][i] = diameter
 
 
 def border_length(
