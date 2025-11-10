@@ -189,6 +189,7 @@ def aggregate_data_by_district(
 
     assert which != "compactness"
 
+    # region - Get the dataset keys
     census_dataset: DatasetKey
     vap_dataset: DatasetKey
     cvap_dataset: DatasetKey
@@ -196,8 +197,9 @@ def aggregate_data_by_district(
     census_dataset, vap_dataset, cvap_dataset, election_datasets = get_dataset_keys(
         data_metadata
     )
+    # endregion
 
-    # Set up the aggregates
+    # region -- Set up the aggregates
 
     pop_by_district: Aggregate
     dem_by_district: Dict[str, Aggregate]
@@ -212,7 +214,7 @@ def aggregate_data_by_district(
         vaps_by_district,
         cvaps_by_district,
         CxD,
-    ) = setup_aggregates_by_district(
+    ) = _setup_aggregates_by_district(
         n_districts,
         n_counties,
         election_datasets,
@@ -220,6 +222,7 @@ def aggregate_data_by_district(
         cvap_dataset,
         data_metadata,
     )
+    # endregion
 
     # Aggregate the data
 
@@ -235,37 +238,25 @@ def aggregate_data_by_district(
                 raise ValueError(f"Populated geoid ({geoid}) not in the plan!")
         district: int = geoid_index[geoid]
 
+        # region -- Aggregate 'general' mode
         if which in ["all", "general"]:
             pop_by_district[district] += pop
             pop_by_district[0] += pop
+        # endregion
 
+        # region -- Aggregate 'partisan' mode
         if which in ["all", "partisan"]:
             for election_dataset in election_datasets:
-                dem: int = int(
-                    precinct[
-                        get_fields(data_metadata, "election", election_dataset)[
-                            "dem_votes"
-                        ]
-                    ]
+                _aggregate_partisan_data(
+                    geoid,
+                    district,
+                    precinct,
+                    election_dataset,
+                    data_metadata,
+                    dem_by_district,
+                    tot_by_district,
                 )
-                # NOTE - The two-party total, not the total votes!
-                tot: int = int(
-                    precinct[
-                        get_fields(data_metadata, "election", election_dataset)[
-                            "dem_votes"
-                        ]
-                    ]
-                ) + int(
-                    precinct[
-                        get_fields(data_metadata, "election", election_dataset)[
-                            "rep_votes"
-                        ]
-                    ]
-                )
-                dem_by_district[election_dataset][district] += dem
-                dem_by_district[election_dataset][0] += dem
-                tot_by_district[election_dataset][district] += tot
-                tot_by_district[election_dataset][0] += tot
+        # endregion
 
         if which in ["all", "minority"]:
             # for dem's' in vap & cvap fields:
@@ -327,7 +318,7 @@ def aggregate_data_by_district(
 ### DATA AGGREGATION HELPERS ###
 
 
-def setup_aggregates_by_district(
+def _setup_aggregates_by_district(
     n_districts: int,
     n_counties: int,
     election_datasets: List[DatasetKey],
@@ -371,6 +362,35 @@ def setup_aggregates_by_district(
         cvaps_by_district,
         CxD,
     )
+
+
+def _aggregate_partisan_data(
+    geoid: str,
+    district: int,
+    precinct: Dict[str, Any],
+    election_dataset: DatasetKey,
+    data_metadata: Dict[str, Any],
+    dem_by_district: Dict[str, Aggregate],  # NOTE - updated
+    tot_by_district: Dict[str, Aggregate],  # NOTE - updated
+) -> None:
+    """Aggregate partisan data helper."""
+
+    dem: int = int(
+        precinct[get_fields(data_metadata, "election", election_dataset)["dem_votes"]]
+    )
+    # NOTE - The two-party total, not the total votes!
+    tot: int = int(
+        precinct[get_fields(data_metadata, "election", election_dataset)["dem_votes"]]
+    ) + int(
+        precinct[get_fields(data_metadata, "election", election_dataset)["rep_votes"]]
+    )
+    dem_by_district[election_dataset][district] += dem
+    dem_by_district[election_dataset][0] += dem
+    tot_by_district[election_dataset][district] += tot
+    tot_by_district[election_dataset][0] += tot
+
+
+### SHAPE AGGREGATION ###
 
 
 def aggregate_shapes_by_district(
