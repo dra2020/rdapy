@@ -14,6 +14,7 @@ from ..base import (
     DatasetKey,
     get_dataset,
     get_datasets,
+    get_dataset_keys,
     get_fields,
     #
     GeoIDIndex,
@@ -188,6 +189,13 @@ def aggregate_data_by_district(
 
     assert which != "compactness"
 
+    # census_dataset: DatasetKey
+    # vap_dataset: DatasetKey
+    # cvap_dataset: DatasetKey
+    # election_datasets: List[DatasetKey]
+    # census_dataset, vap_dataset, cvap_dataset, election_datasets = get_dataset_keys(
+    #     data_metadata
+    # )
     census_dataset: DatasetKey = get_dataset(data_metadata, "census")
     vap_dataset: DatasetKey = get_dataset(data_metadata, "vap")
     cvap_dataset: DatasetKey = get_dataset(data_metadata, "cvap")
