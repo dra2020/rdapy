@@ -238,14 +238,11 @@ def aggregate_data_by_district(
                 raise ValueError(f"Populated geoid ({geoid}) not in the plan!")
         district: int = geoid_index[geoid]
 
-        # region -- Aggregate 'general' mode
-        if which in ["all", "general"]:
+        if which in ["all", "general"]:  # 'general' mode
             pop_by_district[district] += pop
             pop_by_district[0] += pop
-        # endregion
 
-        # region -- Aggregate 'partisan' mode
-        if which in ["all", "partisan"]:
+        if which in ["all", "partisan"]:  # 'partisan' mode
             for election_dataset in election_datasets:
                 _aggregate_partisan_data(
                     geoid,
@@ -256,22 +253,31 @@ def aggregate_data_by_district(
                     dem_by_district,
                     tot_by_district,
                 )
-        # endregion
 
-        if which in ["all", "minority"]:
-            # for dem's' in vap & cvap fields:
-            for demo, field in get_fields(data_metadata, "vap", vap_dataset).items():
-                demo_tot: int = int(precinct[field])
-                vaps_by_district[demo][district] += demo_tot
-                vaps_by_district[demo][0] += demo_tot
+        if which in ["all", "minority"]:  # 'minority' mode
+            _aggregate_minority_data(
+                geoid,
+                district,
+                precinct,
+                vap_dataset,
+                cvap_dataset,
+                data_metadata,
+                vaps_by_district,
+                cvaps_by_district,
+            )
+            # # for dem's' in vap & cvap fields:
+            # for demo, field in get_fields(data_metadata, "vap", vap_dataset).items():
+            #     demo_tot: int = int(precinct[field])
+            #     vaps_by_district[demo][district] += demo_tot
+            #     vaps_by_district[demo][0] += demo_tot
 
-            if cvap_dataset != "N/A":
-                for demo, field in get_fields(
-                    data_metadata, "cvap", cvap_dataset
-                ).items():
-                    demo_tot: int = int(precinct[field])
-                    cvaps_by_district[demo][district] += demo_tot
-                    cvaps_by_district[demo][0] += demo_tot
+            # if cvap_dataset != "N/A":
+            #     for demo, field in get_fields(
+            #         data_metadata, "cvap", cvap_dataset
+            #     ).items():
+            #         demo_tot: int = int(precinct[field])
+            #         cvaps_by_district[demo][district] += demo_tot
+            #         cvaps_by_district[demo][0] += demo_tot
 
         if which in ["all", "splitting"]:
             county: str = ParseGeoID(geoid).county[2:]
@@ -388,6 +394,31 @@ def _aggregate_partisan_data(
     dem_by_district[election_dataset][0] += dem
     tot_by_district[election_dataset][district] += tot
     tot_by_district[election_dataset][0] += tot
+
+
+def _aggregate_minority_data(
+    geoid: str,
+    district: int,
+    precinct: Dict[str, Any],
+    vap_dataset: DatasetKey,
+    cvap_dataset: DatasetKey,
+    data_metadata: Dict[str, Any],
+    vaps_by_district: Dict[str, Aggregate],
+    cvaps_by_district: Dict[str, Aggregate],
+) -> None:
+    """Aggregate minority data helper."""
+
+    # for dem's' in vap & cvap fields:
+    for demo, field in get_fields(data_metadata, "vap", vap_dataset).items():
+        demo_tot: int = int(precinct[field])
+        vaps_by_district[demo][district] += demo_tot
+        vaps_by_district[demo][0] += demo_tot
+
+    if cvap_dataset != "N/A":
+        for demo, field in get_fields(data_metadata, "cvap", cvap_dataset).items():
+            demo_tot: int = int(precinct[field])
+            cvaps_by_district[demo][district] += demo_tot
+            cvaps_by_district[demo][0] += demo_tot
 
 
 ### SHAPE AGGREGATION ###
