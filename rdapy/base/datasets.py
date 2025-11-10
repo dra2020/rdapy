@@ -64,14 +64,15 @@ def dataset_key(datasets: Dict[str, str], dataset_type: str) -> str:
 
 def get_dataset_keys(
     data_metadata: Dict[str, Any],
-) -> Tuple[DatasetKey, DatasetKey, DatasetKey, List[DatasetKey]]:
+) -> Tuple[DatasetKey, DatasetKey, DatasetKey, List[DatasetKey], DatasetKey]:
 
     census_dataset: DatasetKey = get_dataset(data_metadata, "census")
     vap_dataset: DatasetKey = get_dataset(data_metadata, "vap")
     cvap_dataset: DatasetKey = get_dataset(data_metadata, "cvap")
     election_datasets: List[DatasetKey] = get_datasets(data_metadata, "election")
+    shapes_dataset: DatasetKey = get_dataset(data_metadata, "shapes")
 
-    return census_dataset, vap_dataset, cvap_dataset, election_datasets
+    return census_dataset, vap_dataset, cvap_dataset, election_datasets, shapes_dataset
 
 
 ### END ###

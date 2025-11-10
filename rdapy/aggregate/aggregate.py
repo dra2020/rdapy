@@ -107,16 +107,6 @@ def aggregate_plans(
             print(f"Error processing record: {e}", file=sys.stderr)
 
 
-def is_flat_dict(d: Dict[str, Any]) -> bool:
-    """Is a dictionary just key:value pairs that are strings or integers?"""
-
-    for v in d.values():
-        if not (isinstance(v, int) or isinstance(v, str)):
-            return False
-
-    return True
-
-
 ### AGGREGATE THE DATA & SHAPES BY DISTRICT FOR ONE PLAN ###
 
 
@@ -169,6 +159,9 @@ def aggregate_districts(
     return aggs
 
 
+### DATA AGGREGATION ###
+
+
 def aggregate_data_by_district(
     geoid_index: GeoIDIndex,
     data: List[Dict[str, Any]],
@@ -194,13 +187,12 @@ def aggregate_data_by_district(
     vap_dataset: DatasetKey
     cvap_dataset: DatasetKey
     election_datasets: List[DatasetKey]
-    census_dataset, vap_dataset, cvap_dataset, election_datasets = get_dataset_keys(
+    census_dataset, vap_dataset, cvap_dataset, election_datasets, _ = get_dataset_keys(
         data_metadata
     )
     # endregion
 
-    # region -- Set up the aggregates
-
+    # region - Set up the aggregates
     pop_by_district: Aggregate
     dem_by_district: Dict[str, Aggregate]
     tot_by_district: Dict[str, Aggregate]
@@ -214,7 +206,7 @@ def aggregate_data_by_district(
         vaps_by_district,
         cvaps_by_district,
         CxD,
-    ) = _setup_aggregates_by_district(
+    ) = _setup_data_aggregates(
         n_districts,
         n_counties,
         election_datasets,
@@ -227,7 +219,7 @@ def aggregate_data_by_district(
     # Aggregate the data
 
     for precinct in data:
-        # region - Setup
+        # region - Validate precinct & get basic info
         geoid: str = precinct["geoid"]
         pop: int = int(
             precinct[get_fields(data_metadata, "census", census_dataset)["total_pop"]]
@@ -296,37 +288,19 @@ def aggregate_data_by_district(
             # CxD[i][j] += pop
 
     # Compose the aggregates bound to the dataset keys
-
-    aggs: Aggregates = dict()
-    dataset: DatasetKey
-
-    if which in ["all", "general", "splitting"]:
-        aggs["census"] = {census_dataset: {}}
-
-        if which in ["all", "general"]:
-            aggs["census"][census_dataset].update({"pop_by_district": pop_by_district})
-
-        if which in ["all", "splitting"]:
-            aggs["census"][census_dataset].update({"CxD": CxD})
-
-    if which in ["all", "partisan"]:
-        aggs["election"] = {
-            election_dataset: {} for election_dataset in election_datasets
-        }
-        for election_dataset in election_datasets:
-            aggs["election"][election_dataset].update(
-                {
-                    "dem_by_district": dem_by_district[election_dataset],
-                    "tot_by_district": tot_by_district[election_dataset],
-                }
-            )
-
-    if which in ["all", "minority"]:
-        aggs["vap"] = {vap_dataset: {}}
-        aggs["vap"][vap_dataset].update(vaps_by_district)
-        if cvap_dataset != "N/A":
-            aggs["cvap"] = {cvap_dataset: {}}
-            aggs["cvap"][cvap_dataset].update(cvaps_by_district)
+    aggs: Aggregates = _compose_aggregates(
+        which,
+        census_dataset,
+        election_datasets,
+        vap_dataset,
+        cvap_dataset,
+        pop_by_district,
+        dem_by_district,
+        tot_by_district,
+        vaps_by_district,
+        cvaps_by_district,
+        CxD,
+    )
 
     return aggs
 
@@ -334,7 +308,7 @@ def aggregate_data_by_district(
 ### DATA AGGREGATION HELPERS ###
 
 
-def _setup_aggregates_by_district(
+def _setup_data_aggregates(
     n_districts: int,
     n_counties: int,
     election_datasets: List[DatasetKey],
@@ -349,7 +323,7 @@ def _setup_aggregates_by_district(
     Dict[str, Aggregate],
     List[List[float]],
 ]:
-    """Set up the aggregates by district."""
+    """Set up the dataaggregates by district."""
 
     pop_by_district: Aggregate = [0] * (n_districts + 1)
     dem_by_district: Dict[str, Aggregate] = {
@@ -447,6 +421,54 @@ def _aggregate_splitting_data(
     CxD[i][j] += pop
 
 
+def _compose_aggregates(
+    which: str,
+    census_dataset: DatasetKey,
+    election_datasets: List[DatasetKey],
+    vap_dataset: DatasetKey,
+    cvap_dataset: DatasetKey,
+    pop_by_district: Aggregate,
+    dem_by_district: Dict[str, Aggregate],
+    tot_by_district: Dict[str, Aggregate],
+    vaps_by_district: Dict[str, Aggregate],
+    cvaps_by_district: Dict[str, Aggregate],
+    CxD: List[List[float]],
+) -> Aggregates:
+    """Compose the aggregates bound to the dataset keys."""
+
+    aggs: Aggregates = dict()
+
+    if which in ["all", "general", "splitting"]:
+        aggs["census"] = {census_dataset: {}}
+
+        if which in ["all", "general"]:
+            aggs["census"][census_dataset].update({"pop_by_district": pop_by_district})
+
+        if which in ["all", "splitting"]:
+            aggs["census"][census_dataset].update({"CxD": CxD})
+
+    if which in ["all", "partisan"]:
+        aggs["election"] = {
+            election_dataset: {} for election_dataset in election_datasets
+        }
+        for election_dataset in election_datasets:
+            aggs["election"][election_dataset].update(
+                {
+                    "dem_by_district": dem_by_district[election_dataset],
+                    "tot_by_district": tot_by_district[election_dataset],
+                }
+            )
+
+    if which in ["all", "minority"]:
+        aggs["vap"] = {vap_dataset: {}}
+        aggs["vap"][vap_dataset].update(vaps_by_district)
+        if cvap_dataset != "N/A":
+            aggs["cvap"] = {cvap_dataset: {}}
+            aggs["cvap"][cvap_dataset].update(cvaps_by_district)
+
+    return aggs
+
+
 ### SHAPE AGGREGATION ###
 
 
@@ -469,23 +491,22 @@ def aggregate_shapes_by_district(
     if debug:
         arcs_are_symmetric(data_by_geoid)
 
-    shapes_dataset: DatasetKey = get_dataset(data_metadata, "shapes")
-    census_dataset: DatasetKey = get_dataset(data_metadata, "census")
+    # region - Get the dataset keys
+    census_dataset: DatasetKey
+    shapes_dataset: DatasetKey
+    census_dataset, _, _, _, shapes_dataset = get_dataset_keys(data_metadata)
+    # endregion
 
-    # Set up aggregates
-
-    by_district: Dict[str, List[float]] = {
-        "area": [0.0] * (n_districts + 1),
-        "perimeter": [0.0] * (n_districts + 1),
-        "diameter": [0.0] * (n_districts + 1),
-    }  # The 0th element is a total for the state, if applicable
-    by_district_temp: Dict[str, List[Any]] = {
-        "exterior": [[] for _ in range(n_districts + 1)]
-    }
+    # region - Set up the aggregates
+    by_district: Dict[str, List[float]]
+    by_district_temp: Dict[str, List[Any]]
+    by_district, by_district_temp = _setup_shape_aggregates(n_districts)
+    # endregion
 
     # Aggregate the shape properties
 
     for precinct in data:
+        # region - Validate precinct & get basic info
         geoid: str = precinct["geoid"]
         pop: int = int(
             precinct[get_fields(data_metadata, "census", census_dataset)["total_pop"]]
@@ -496,6 +517,7 @@ def aggregate_shapes_by_district(
             else:
                 raise ValueError(f"Populated geoid ({geoid}) not in the plan!")
         district: int = geoid_index[geoid]
+        # endregion
 
         by_district["area"][district] += precinct["area"]
         by_district["area"][0] += precinct["area"]
@@ -527,6 +549,23 @@ def aggregate_shapes_by_district(
 
 
 ### SHAPE AGGREGATION HELPERS ###
+
+
+def _setup_shape_aggregates(
+    n_districts: int,
+) -> Tuple[Dict[str, List[float]], Dict[str, List[Any]]]:
+    """Set up the dataaggregates by district."""
+
+    by_district: Dict[str, List[float]] = {
+        "area": [0.0] * (n_districts + 1),
+        "perimeter": [0.0] * (n_districts + 1),
+        "diameter": [0.0] * (n_districts + 1),
+    }  # The 0th element is a total for the state, if applicable
+    by_district_temp: Dict[str, List[Any]] = {
+        "exterior": [[] for _ in range(n_districts + 1)]
+    }
+
+    return by_district, by_district_temp
 
 
 def border_length(
@@ -602,6 +641,19 @@ def arcs_are_symmetric(data_by_geoid: Dict[str, Any]) -> bool:
         print(f"Total arcs: {narcs}, non-symmetric arcs: {nasymmetric}")
 
     return symmetric
+
+
+### MISC HELPERS ###
+
+
+def is_flat_dict(d: Dict[str, Any]) -> bool:
+    """Is a dictionary just key:value pairs that are strings or integers?"""
+
+    for v in d.values():
+        if not (isinstance(v, int) or isinstance(v, str)):
+            return False
+
+    return True
 
 
 ### END ###
