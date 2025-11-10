@@ -2,7 +2,7 @@
 AGGREGATE DATA BY DISTRICT
 """
 
-from typing import Any, List, Dict, TextIO
+from typing import Any, List, Dict, Tuple, TextIO
 
 import sys, json
 
@@ -196,31 +196,30 @@ def aggregate_data_by_district(
     census_dataset, vap_dataset, cvap_dataset, election_datasets = get_dataset_keys(
         data_metadata
     )
-    # census_dataset: DatasetKey = get_dataset(data_metadata, "census")
-    # vap_dataset: DatasetKey = get_dataset(data_metadata, "vap")
-    # cvap_dataset: DatasetKey = get_dataset(data_metadata, "cvap")
-    # election_datasets: List[DatasetKey] = get_datasets(data_metadata, "election")
 
     # Set up the aggregates
 
-    pop_by_district: Aggregate = [0] * (n_districts + 1)
-    dem_by_district: Dict[str, List[int]] = {
-        e: [0] * (n_districts + 1) for e in election_datasets
-    }
-    tot_by_district: Dict[str, List[int]] = {
-        e: [0] * (n_districts + 1) for e in election_datasets
-    }
-    vaps_by_district: Dict[str, List[int]] = {
-        demo: [0] * (n_districts + 1)
-        for demo in get_fields(data_metadata, "vap", vap_dataset)
-    }
-    cvaps_by_district: Dict[str, List[int]] = dict()
-    if cvap_dataset != "N/A":
-        cvaps_by_district = {
-            demo: [0] * (n_districts + 1)
-            for demo in get_fields(data_metadata, "cvap", cvap_dataset)
-        }
-    CxD: List[List[float]] = [[0.0] * n_counties for _ in range(n_districts)]
+    pop_by_district: Aggregate
+    dem_by_district: Dict[str, List[int]]
+    tot_by_district: Dict[str, List[int]]
+    vaps_by_district: Dict[str, List[int]]
+    cvaps_by_district: Dict[str, List[int]]
+    CxD: List[List[float]]
+    (
+        pop_by_district,
+        dem_by_district,
+        tot_by_district,
+        vaps_by_district,
+        cvaps_by_district,
+        CxD,
+    ) = setup_aggregates_by_district(
+        n_districts,
+        n_counties,
+        election_datasets,
+        vap_dataset,
+        cvap_dataset,
+        data_metadata,
+    )
 
     # Aggregate the data
 
@@ -325,6 +324,55 @@ def aggregate_data_by_district(
     return aggs
 
 
+### DATA AGGREGATION HELPERS ###
+
+
+def setup_aggregates_by_district(
+    n_districts: int,
+    n_counties: int,
+    election_datasets: List[DatasetKey],
+    vap_dataset: DatasetKey,
+    cvap_dataset: DatasetKey,
+    data_metadata: Dict[str, Any],
+) -> Tuple[
+    Aggregate,
+    Dict[str, List[int]],
+    Dict[str, List[int]],
+    Dict[str, List[int]],
+    Dict[str, List[int]],
+    List[List[float]],
+]:
+    """Set up the aggregates by district."""
+
+    pop_by_district: Aggregate = [0] * (n_districts + 1)
+    dem_by_district: Dict[str, List[int]] = {
+        e: [0] * (n_districts + 1) for e in election_datasets
+    }
+    tot_by_district: Dict[str, List[int]] = {
+        e: [0] * (n_districts + 1) for e in election_datasets
+    }
+    vaps_by_district: Dict[str, List[int]] = {
+        demo: [0] * (n_districts + 1)
+        for demo in get_fields(data_metadata, "vap", vap_dataset)
+    }
+    cvaps_by_district: Dict[str, List[int]] = dict()
+    if cvap_dataset != "N/A":
+        cvaps_by_district = {
+            demo: [0] * (n_districts + 1)
+            for demo in get_fields(data_metadata, "cvap", cvap_dataset)
+        }
+    CxD: List[List[float]] = [[0.0] * n_counties for _ in range(n_districts)]
+
+    return (
+        pop_by_district,
+        dem_by_district,
+        tot_by_district,
+        vaps_by_district,
+        cvaps_by_district,
+        CxD,
+    )
+
+
 def aggregate_shapes_by_district(
     geoid_index: GeoIDIndex,
     data: List[Dict[str, Any]],
@@ -404,7 +452,6 @@ def aggregate_shapes_by_district(
 ### SHAPE AGGREGATION HELPERS ###
 
 
-# TODO - Export this for external use.
 def border_length(
     geoid: str,
     district: int,
@@ -431,7 +478,6 @@ def border_length(
     return arc_length
 
 
-# TODO - Export this for external use.
 def exterior(
     geoid: str,
     district: int,

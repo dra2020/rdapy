@@ -8,6 +8,8 @@ from .aggregate import (
     get_dataset,
     get_datasets,
     get_fields,
+    border_length,
+    exterior,
 )
 
 name: str = "aggregate"
