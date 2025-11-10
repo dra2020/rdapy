@@ -336,26 +336,26 @@ def setup_aggregates_by_district(
     data_metadata: Dict[str, Any],
 ) -> Tuple[
     Aggregate,
-    Dict[str, List[int]],
-    Dict[str, List[int]],
-    Dict[str, List[int]],
-    Dict[str, List[int]],
+    Dict[str, Aggregate],
+    Dict[str, Aggregate],
+    Dict[str, Aggregate],
+    Dict[str, Aggregate],
     List[List[float]],
 ]:
     """Set up the aggregates by district."""
 
     pop_by_district: Aggregate = [0] * (n_districts + 1)
-    dem_by_district: Dict[str, List[int]] = {
+    dem_by_district: Dict[str, Aggregate] = {
         e: [0] * (n_districts + 1) for e in election_datasets
     }
-    tot_by_district: Dict[str, List[int]] = {
+    tot_by_district: Dict[str, Aggregate] = {
         e: [0] * (n_districts + 1) for e in election_datasets
     }
-    vaps_by_district: Dict[str, List[int]] = {
+    vaps_by_district: Dict[str, Aggregate] = {
         demo: [0] * (n_districts + 1)
         for demo in get_fields(data_metadata, "vap", vap_dataset)
     }
-    cvaps_by_district: Dict[str, List[int]] = dict()
+    cvaps_by_district: Dict[str, Aggregate] = dict()
     if cvap_dataset != "N/A":
         cvaps_by_district = {
             demo: [0] * (n_districts + 1)
