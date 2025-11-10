@@ -200,10 +200,10 @@ def aggregate_data_by_district(
     # Set up the aggregates
 
     pop_by_district: Aggregate
-    dem_by_district: Dict[str, List[int]]
-    tot_by_district: Dict[str, List[int]]
-    vaps_by_district: Dict[str, List[int]]
-    cvaps_by_district: Dict[str, List[int]]
+    dem_by_district: Dict[str, Aggregate]
+    tot_by_district: Dict[str, Aggregate]
+    vaps_by_district: Dict[str, Aggregate]
+    cvaps_by_district: Dict[str, Aggregate]
     CxD: List[List[float]]
     (
         pop_by_district,
