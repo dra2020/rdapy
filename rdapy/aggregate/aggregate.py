@@ -227,6 +227,7 @@ def aggregate_data_by_district(
     # Aggregate the data
 
     for precinct in data:
+        # region - Setup
         geoid: str = precinct["geoid"]
         pop: int = int(
             precinct[get_fields(data_metadata, "census", census_dataset)["total_pop"]]
@@ -237,6 +238,7 @@ def aggregate_data_by_district(
             else:
                 raise ValueError(f"Populated geoid ({geoid}) not in the plan!")
         district: int = geoid_index[geoid]
+        # endregion
 
         if which in ["all", "general"]:  # 'general' mode
             pop_by_district[district] += pop
@@ -279,11 +281,19 @@ def aggregate_data_by_district(
             #         cvaps_by_district[demo][district] += demo_tot
             #         cvaps_by_district[demo][0] += demo_tot
 
-        if which in ["all", "splitting"]:
-            county: str = ParseGeoID(geoid).county[2:]
-            i: int = district_to_index[district]
-            j: int = county_to_index[county]
-            CxD[i][j] += pop
+        if which in ["all", "splitting"]:  # 'splitting' mode
+            _aggregate_splitting_data(
+                geoid,
+                district,
+                pop,
+                county_to_index,
+                district_to_index,
+                CxD,
+            )
+            # county: str = ParseGeoID(geoid).county[2:]
+            # i: int = district_to_index[district]
+            # j: int = county_to_index[county]
+            # CxD[i][j] += pop
 
     # Compose the aggregates bound to the dataset keys
 
@@ -403,8 +413,8 @@ def _aggregate_minority_data(
     vap_dataset: DatasetKey,
     cvap_dataset: DatasetKey,
     data_metadata: Dict[str, Any],
-    vaps_by_district: Dict[str, Aggregate],
-    cvaps_by_district: Dict[str, Aggregate],
+    vaps_by_district: Dict[str, Aggregate],  # NOTE - updated
+    cvaps_by_district: Dict[str, Aggregate],  # NOTE - updated
 ) -> None:
     """Aggregate minority data helper."""
 
@@ -419,6 +429,22 @@ def _aggregate_minority_data(
             demo_tot: int = int(precinct[field])
             cvaps_by_district[demo][district] += demo_tot
             cvaps_by_district[demo][0] += demo_tot
+
+
+def _aggregate_splitting_data(
+    geoid: str,
+    district: int,
+    pop: int,
+    county_to_index: Dict[County, int],
+    district_to_index: Dict[District, int],
+    CxD: List[List[float]],  # NOTE - updated
+) -> None:
+    """Aggregate splitting data helper."""
+
+    county: str = ParseGeoID(geoid).county[2:]
+    i: int = district_to_index[district]
+    j: int = county_to_index[county]
+    CxD[i][j] += pop
 
 
 ### SHAPE AGGREGATION ###
