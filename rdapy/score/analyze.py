@@ -234,42 +234,18 @@ def score_plan(
             reverse_weight_splitting=reverse_weight_splitting,
         )
 
-    # Combine the by-district metrics
-    new_aggs: Aggregates = aggs.copy()
-    if mode in ["all", "compactness"]:
-        new_aggs["shapes"][shapes_dataset].update(compactness_by_district)
-    if mode in ["all", "splitting"]:
-        new_aggs["census"][census_dataset].update(splitting_by_district)
-        new_aggs["census"][census_dataset].pop("CxD")
+    # Update the by-district aggregates
+    new_aggs: Aggregates = update_aggregates(
+        aggs,
+        mode,
+        shapes_dataset,
+        census_dataset,
+        compactness_by_district,
+        splitting_by_district,
+    )
 
     # Trim the floating point numbers
-    precision: int = 4
-    int_metrics: List[str] = [
-        "pr_seats",
-        "fptp_seats",
-        "proportionality",
-        "competitive_district_count",
-        "competitiveness",
-        "proportional_opportunities",
-        "proportional_coalitions",
-        "mmd_black",
-        "mmd_hispanic",
-        "mmd_coalition",
-        "minority",
-        "cut_score",
-        "spanning_tree_score",
-        "compactness",
-        "counties_split",
-        "county_splits",
-        "splitting",
-    ]
-    for type_, datasets_ in scorecard.items():
-        for dataset_, metrics in datasets_.items():
-            for metric_, value_ in metrics.items():
-                if value_ is None:  # Was: or metric == "by_district":
-                    continue
-                if metric_ not in int_metrics:
-                    scorecard[type_][dataset_][metric_] = round(value_, precision)
+    trim_scores(scorecard)
 
     return scorecard, new_aggs
 
@@ -499,6 +475,63 @@ def score_splitting_mode(
         )
 
     splitting_by_district.update(by_district)
+
+
+def update_aggregates(
+    aggs: Aggregates,
+    mode: str,
+    shapes_dataset: DatasetKey,
+    census_dataset: DatasetKey,
+    compactness_by_district: Dict[str, List[float]],
+    splitting_by_district: Dict[str, List[float]],
+) -> Aggregates:
+    """Update the aggregates with by-district metrics generated during scoring."""
+
+    new_aggs: Aggregates = aggs.copy()
+    if mode in ["all", "compactness"]:
+        new_aggs["shapes"][shapes_dataset].update(compactness_by_district)
+    if mode in ["all", "splitting"]:
+        new_aggs["census"][census_dataset].update(splitting_by_district)
+        new_aggs["census"][census_dataset].pop("CxD")
+
+    return new_aggs
+
+
+def trim_scores(
+    scorecard: Dict[str, Any],  # NOTE - updated
+    *,
+    precision: int = 4,
+) -> Dict[str, Any]:
+    """Trim floating point numbers in the scorecard to the given precision."""
+
+    int_metrics: List[str] = [
+        "pr_seats",
+        "fptp_seats",
+        "proportionality",
+        "competitive_district_count",
+        "competitiveness",
+        "proportional_opportunities",
+        "proportional_coalitions",
+        "mmd_black",
+        "mmd_hispanic",
+        "mmd_coalition",
+        "minority",
+        "cut_score",
+        "spanning_tree_score",
+        "compactness",
+        "counties_split",
+        "county_splits",
+        "splitting",
+    ]
+    for type_, datasets_ in scorecard.items():
+        for dataset_, metrics in datasets_.items():
+            for metric_, value_ in metrics.items():
+                if value_ is None:  # Was: or metric == "by_district":
+                    continue
+                if metric_ not in int_metrics:
+                    scorecard[type_][dataset_][metric_] = round(value_, precision)
+
+    return scorecard
 
 
 ### RATING HELPERS ###
