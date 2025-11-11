@@ -12,6 +12,7 @@ from ..base import (
     get_dataset,
     get_datasets,
     get_fields,
+    get_dataset_keys,
     DatasetKey,
     Aggregates,
     Precinct,
@@ -35,8 +36,11 @@ from .categories import (
 from .analyze import (
     _rate_compactness,
     _rate_splitting,
-    trim_scores,
+    setup_scorecard,
+    score_compactness_mode,
+    score_splitting_mode,
     update_aggregates,
+    trim_scores,
 )  # MMD HACK
 
 #####
@@ -125,6 +129,7 @@ def score_mmd_plan(
     data_map: Dict[str, Any],
     #
     mode: str = "all",  # Or one of "general", "partisan", "minority", "compactness", "splitting"
+    reverse_weight_splitting: bool = False,
     #
     districts_override: Optional[int] = None,  # MMD HACK
     district_magnitude: int,  # MMD HACK
@@ -149,36 +154,29 @@ def score_mmd_plan(
     )  # MMD HACK
     n_counties: int = metadata["C"]
 
-    # This assumes that the data map specifies datasets for each type ...
+    # region - Get the dataset keys
+    census_dataset: DatasetKey
+    vap_dataset: DatasetKey
+    cvap_dataset: DatasetKey
+    election_datasets: List[DatasetKey]
+    shapes_dataset: DatasetKey
+    census_dataset, vap_dataset, cvap_dataset, election_datasets, shapes_dataset = (
+        get_dataset_keys(data_map)
+    )
+    # endregion
 
-    census_dataset: DatasetKey = get_dataset(data_map, "census")
-    vap_dataset: DatasetKey = get_dataset(data_map, "vap")
-    cvap_dataset: DatasetKey = get_dataset(data_map, "cvap")
-    election_datasets: List[DatasetKey] = get_datasets(data_map, "election")
-    shapes_dataset: DatasetKey = get_dataset(data_map, "shapes")
-
-    scorecard: Dict[str, Any] = {
-        "census": {census_dataset: {}},
-        "vap": {vap_dataset: {}},
-        "cvap": {cvap_dataset: {}},
-        "election": {e: {} for e in election_datasets},
-        "shapes": {shapes_dataset: {}},
-    }
-
-    # ... but limit the scorecard to just the needed dataset types.
-
-    if mode not in ["all", "general", "splitting"]:
-        scorecard.pop("census", None)
-
-    if mode not in ["all", "minority"]:
-        scorecard.pop("vap", None)
-        scorecard.pop("cvap", None)
-
-    if mode not in ["all", "partisan"]:
-        scorecard.pop("election", None)
-
-    if mode not in ["all", "compactness"]:
-        scorecard.pop("shapes", None)
+    # region - Set up the scorecard & new by-district aggregates
+    scorecard: Dict[str, Any] = setup_scorecard(
+        census_dataset,
+        vap_dataset,
+        cvap_dataset,
+        election_datasets,
+        shapes_dataset,
+        mode,
+    )
+    compactness_by_district: Dict[str, List[float]] = dict()
+    splitting_by_district: Dict[str, List[float]] = dict()
+    # endregion
 
     if mode in ["all", "general"]:
         general_metrics: Dict[str, Any] = calc_general_category(
@@ -237,44 +235,28 @@ def score_mmd_plan(
 
     ##### END MMD ADDITIONS #####
 
-    if mode in ["all", "compactness"]:
-        compactness_by_district: Dict[str, List[float]] = calc_compactness_category(
-            aggs["shapes"][shapes_dataset], n_districts
-        )
-        compactness_metrics: Dict[str, float] = {
-            "reock": compactness_by_district["reock"][0],
-            "polsby_popper": compactness_by_district["polsby_popper"][0],
-        }
-
-        # Additional discrete compactness metrics
-        cut_score: int = calc_cut_score(assignments, graph)
-        compactness_metrics["cut_score"] = cut_score
-
-        # Population compactness
-        census_dataset: DatasetKey = get_dataset(data_map, "census")
-        pop_field: str = get_fields(data_map, "census", census_dataset)["total_pop"]
-        energy: float = calc_energy(assignments, data, pop_field)  # type: ignore
-        compactness_metrics["population_compactness"] = energy
-
-        scorecard["shapes"][shapes_dataset].update(compactness_metrics)
-
-        scorecard["shapes"][shapes_dataset]["compactness"] = _rate_compactness(
-            scorecard["shapes"][shapes_dataset]["reock"],
-            scorecard["shapes"][shapes_dataset]["polsby_popper"],
-        )
-
-    if mode in ["all", "splitting"]:
-        splitting_metrics: Dict[str, float]
-        splitting_by_district: Dict[str, List[float]]
-        splitting_metrics, splitting_by_district = calc_splitting_category(
-            aggs["census"][census_dataset], n_districts
-        )
-        scorecard["census"][census_dataset].update(splitting_metrics)
-        scorecard["census"][census_dataset]["splitting"] = _rate_splitting(
-            scorecard["census"][census_dataset]["county_splitting"],
-            scorecard["census"][census_dataset]["district_splitting"],
-            n_counties,
+    if mode in ["all", "compactness"]:  # 'compactness' mode
+        score_compactness_mode(
+            aggs,
+            shapes_dataset,
             n_districts,
+            assignments,
+            graph,
+            data,
+            data_map,
+            scorecard,
+            compactness_by_district,
+        )
+
+    if mode in ["all", "splitting"]:  # 'splitting' mode
+        score_splitting_mode(
+            aggs,
+            census_dataset,
+            n_districts,
+            n_counties,
+            scorecard,
+            splitting_by_district,
+            reverse_weight_splitting=reverse_weight_splitting,
         )
 
     # Update the by-district aggregates
