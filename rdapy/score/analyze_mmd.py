@@ -32,7 +32,7 @@ from .categories import (
     calc_compactness_category,
     calc_splitting_category,
 )
-from .analyze import _rate_compactness, _rate_splitting  # MMD HACK
+from .analyze import _rate_compactness, _rate_splitting, trim_scores  # MMD HACK
 
 #####
 
@@ -285,33 +285,7 @@ def score_mmd_plan(
         new_aggs["census"][census_dataset].pop("CxD")
 
     # Trim the floating point numbers
-    precision: int = 4
-    int_metrics: List[str] = [
-        "pr_seats",
-        "fptp_seats",
-        "proportionality",
-        "competitive_district_count",
-        "competitiveness",
-        "proportional_opportunities",
-        "proportional_coalitions",
-        "mmd_black",
-        "mmd_hispanic",
-        "mmd_coalition",
-        "minority",
-        "cut_score",
-        "spanning_tree_score",
-        "compactness",
-        "counties_split",
-        "county_splits",
-        "splitting",
-    ]
-    for type_, datasets_ in scorecard.items():
-        for dataset_, metrics in datasets_.items():
-            for metric_, value_ in metrics.items():
-                if value_ is None:  # Was: or metric == "by_district":
-                    continue
-                if metric_ not in int_metrics:
-                    scorecard[type_][dataset_][metric_] = round(value_, precision)
+    trim_scores(scorecard)
 
     return scorecard, new_aggs
 
