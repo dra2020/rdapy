@@ -259,19 +259,6 @@ def aggregate_data_by_district(
                 vaps_by_district,
                 cvaps_by_district,
             )
-            # # for dem's' in vap & cvap fields:
-            # for demo, field in get_fields(data_metadata, "vap", vap_dataset).items():
-            #     demo_tot: int = int(precinct[field])
-            #     vaps_by_district[demo][district] += demo_tot
-            #     vaps_by_district[demo][0] += demo_tot
-
-            # if cvap_dataset != "N/A":
-            #     for demo, field in get_fields(
-            #         data_metadata, "cvap", cvap_dataset
-            #     ).items():
-            #         demo_tot: int = int(precinct[field])
-            #         cvaps_by_district[demo][district] += demo_tot
-            #         cvaps_by_district[demo][0] += demo_tot
 
         if which in ["all", "splitting"]:  # 'splitting' mode
             _aggregate_splitting_data(
@@ -282,10 +269,6 @@ def aggregate_data_by_district(
                 district_to_index,
                 CxD,
             )
-            # county: str = ParseGeoID(geoid).county[2:]
-            # i: int = district_to_index[district]
-            # j: int = county_to_index[county]
-            # CxD[i][j] += pop
 
     # Compose the aggregates bound to the dataset keys
     aggs: Aggregates = _compose_aggregates(

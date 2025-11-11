@@ -178,7 +178,7 @@ def score_plan(
         mode,
     )
 
-    if mode in ["all", "general"]:  # Score general metrics
+    if mode in ["all", "general"]:  # 'general' mode
         score_general_mode(
             aggs,
             census_dataset,
@@ -186,39 +186,14 @@ def score_plan(
             scorecard,
         )
 
-    if mode in ["all", "partisan"]:
+    if mode in ["all", "partisan"]:  # 'partisan' mode
         for election_dataset in election_datasets:
-            geographic_baselines: Dict[str, Any] = dict()
-            if (
-                precomputed
-                and "geographic_baseline" in precomputed
-                and election_dataset in precomputed["geographic_baseline"]
-            ):
-                geographic_baselines = precomputed["geographic_baseline"][
-                    election_dataset
-                ]
-            partisan_metrics: Dict[str, Optional[float]] = calc_partisan_category(
-                aggs["election"][election_dataset], n_districts, geographic_baselines
-            )
-            # estimated_seat_pct = partisan_metrics.pop("estimated_seat_pct")
-            estimated_seats = partisan_metrics["estimated_seats"]
-            assert estimated_seats is not None
-            estimated_seat_pct: float = estimated_seats / n_districts
-            assert estimated_seat_pct is not None
-            scorecard["election"][election_dataset].update(partisan_metrics)
-
-            scorecard["election"][election_dataset]["proportionality"] = (
-                _rate_proportionality(
-                    scorecard["election"][election_dataset]["pr_deviation"],
-                    scorecard["election"][election_dataset]["estimated_vote_pct"],
-                    estimated_seat_pct,
-                )
-            )
-            scorecard["election"][election_dataset]["competitiveness"] = (
-                _rate_competitiveness(
-                    scorecard["election"][election_dataset]["competitive_districts"]
-                    / n_districts
-                )
+            score_partisan_mode(
+                aggs,
+                election_dataset,
+                n_districts,
+                precomputed,
+                scorecard,
             )
 
     if mode in ["all", "minority"]:
@@ -415,6 +390,42 @@ def score_general_mode(
     )
     deviation: float = general_metrics.pop("population_deviation")
     scorecard["census"][census_dataset]["population_deviation"] = deviation
+
+
+def score_partisan_mode(
+    aggs: Aggregates,
+    election_dataset: DatasetKey,
+    n_districts: int,
+    precomputed: Dict[str, Any],
+    scorecard: Dict[str, Any],  # NOTE - updated
+) -> None:
+    """Score the partisan mode."""
+
+    geographic_baselines: Dict[str, Any] = dict()
+    if (
+        precomputed
+        and "geographic_baseline" in precomputed
+        and election_dataset in precomputed["geographic_baseline"]
+    ):
+        geographic_baselines = precomputed["geographic_baseline"][election_dataset]
+    partisan_metrics: Dict[str, Optional[float]] = calc_partisan_category(
+        aggs["election"][election_dataset], n_districts, geographic_baselines
+    )
+    # estimated_seat_pct = partisan_metrics.pop("estimated_seat_pct")
+    estimated_seats = partisan_metrics["estimated_seats"]
+    assert estimated_seats is not None
+    estimated_seat_pct: float = estimated_seats / n_districts
+    assert estimated_seat_pct is not None
+    scorecard["election"][election_dataset].update(partisan_metrics)
+
+    scorecard["election"][election_dataset]["proportionality"] = _rate_proportionality(
+        scorecard["election"][election_dataset]["pr_deviation"],
+        scorecard["election"][election_dataset]["estimated_vote_pct"],
+        estimated_seat_pct,
+    )
+    scorecard["election"][election_dataset]["competitiveness"] = _rate_competitiveness(
+        scorecard["election"][election_dataset]["competitive_districts"] / n_districts
+    )
 
 
 ### RATING HELPERS ###
