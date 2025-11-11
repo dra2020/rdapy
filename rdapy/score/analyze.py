@@ -223,42 +223,16 @@ def score_plan(
             compactness_by_district,
         )
 
-    if mode in ["all", "splitting"]:
-        splitting_metrics: Dict[str, float]
-        splitting_by_district: Dict[str, List[float]]
-        splitting_metrics, splitting_by_district = calc_splitting_category(
-            aggs["census"][census_dataset], n_districts
-        )
-        scorecard["census"][census_dataset].update(splitting_metrics)
-        scorecard["census"][census_dataset]["splitting"] = _rate_splitting(
-            scorecard["census"][census_dataset]["county_splitting"],
-            scorecard["census"][census_dataset]["district_splitting"],
-            n_counties,
+    if mode in ["all", "splitting"]:  # 'splitting' mode
+        score_splitting_mode(
+            aggs,
+            census_dataset,
             n_districts,
+            n_counties,
+            scorecard,
+            splitting_by_district,
+            reverse_weight_splitting=reverse_weight_splitting,
         )
-
-        # 10-18-25 -- Added reverse-weighted splitting metrics
-
-        if reverse_weight_splitting:
-            temp: Dict[str, float]
-            temp, _ = calc_splitting_category(
-                aggs["census"][census_dataset],
-                n_districts,
-                reverse_weight=reverse_weight_splitting,
-            )
-            reverse_weighted_splitting_metrics: Dict[str, float] = {
-                "county_splitting_reverse": temp["county_splitting"],
-                # "district_splitting_reverse": temp["district_splitting"], # Same as normal
-            }
-            scorecard["census"][census_dataset].update(
-                reverse_weighted_splitting_metrics
-            )
-            scorecard["census"][census_dataset]["splitting_reverse"] = _rate_splitting(
-                scorecard["census"][census_dataset]["county_splitting_reverse"],
-                scorecard["census"][census_dataset]["district_splitting"],
-                n_counties,
-                n_districts,
-            )
 
     # Combine the by-district metrics
     new_aggs: Aggregates = aggs.copy()
@@ -476,6 +450,55 @@ def score_compactness_mode(
         scorecard["shapes"][shapes_dataset]["polsby_popper"],
     )
     compactness_by_district.update(by_district)
+
+
+def score_splitting_mode(
+    aggs: Aggregates,
+    census_dataset: DatasetKey,
+    n_districts: int,
+    n_counties: int,
+    scorecard: Dict[str, Any],  # NOTE - updated
+    splitting_by_district: Dict[str, List[float]],  # NOTE - updated
+    *,
+    reverse_weight_splitting: bool = False,
+):
+    """Score splitting mode."""
+
+    splitting_metrics: Dict[str, float]
+    by_district: Dict[str, List[float]]
+    splitting_metrics, by_district = calc_splitting_category(
+        aggs["census"][census_dataset], n_districts
+    )
+    scorecard["census"][census_dataset].update(splitting_metrics)
+    scorecard["census"][census_dataset]["splitting"] = _rate_splitting(
+        scorecard["census"][census_dataset]["county_splitting"],
+        scorecard["census"][census_dataset]["district_splitting"],
+        n_counties,
+        n_districts,
+    )
+
+    # 10-18-25 -- Added reverse-weighted splitting metrics for experimentation
+
+    if reverse_weight_splitting:
+        temp: Dict[str, float]
+        temp, _ = calc_splitting_category(
+            aggs["census"][census_dataset],
+            n_districts,
+            reverse_weight=reverse_weight_splitting,
+        )
+        reverse_weighted_splitting_metrics: Dict[str, float] = {
+            "county_splitting_reverse": temp["county_splitting"],
+            # "district_splitting_reverse": temp["district_splitting"], # Same as normal
+        }
+        scorecard["census"][census_dataset].update(reverse_weighted_splitting_metrics)
+        scorecard["census"][census_dataset]["splitting_reverse"] = _rate_splitting(
+            scorecard["census"][census_dataset]["county_splitting_reverse"],
+            scorecard["census"][census_dataset]["district_splitting"],
+            n_counties,
+            n_districts,
+        )
+
+    splitting_by_district.update(by_district)
 
 
 ### RATING HELPERS ###
