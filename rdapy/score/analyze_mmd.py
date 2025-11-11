@@ -32,7 +32,12 @@ from .categories import (
     calc_compactness_category,
     calc_splitting_category,
 )
-from .analyze import _rate_compactness, _rate_splitting, trim_scores  # MMD HACK
+from .analyze import (
+    _rate_compactness,
+    _rate_splitting,
+    trim_scores,
+    update_aggregates,
+)  # MMD HACK
 
 #####
 
@@ -272,17 +277,19 @@ def score_mmd_plan(
             n_districts,
         )
 
-    # Combine the by-district metrics
-    new_aggs: Aggregates = aggs.copy()
+    # Update the by-district aggregates
+    new_aggs: Aggregates = update_aggregates(
+        aggs,
+        mode,
+        shapes_dataset,
+        census_dataset,
+        compactness_by_district,
+        splitting_by_district,
+    )
     if mode in ["all"]:  # MMD HACK
         EI_aggs: List[Dict[str, List[float]]] = EI_to_aggregates(EI_by_district)
         for agg in EI_aggs:
             new_aggs["cvap"][cvap_dataset].update(agg)
-    if mode in ["all", "compactness"]:
-        new_aggs["shapes"][shapes_dataset].update(compactness_by_district)
-    if mode in ["all", "splitting"]:
-        new_aggs["census"][census_dataset].update(splitting_by_district)
-        new_aggs["census"][census_dataset].pop("CxD")
 
     # Trim the floating point numbers
     trim_scores(scorecard)
