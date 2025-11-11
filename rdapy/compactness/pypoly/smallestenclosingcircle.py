@@ -24,6 +24,8 @@
 import math
 import random
 
+random.seed(42)  # for reproducibility -- 11/10/25
+
 
 # Data conventions: A point is a pair of floats (x, y). A circle is a triple of floats (center x, center y, radius).
 

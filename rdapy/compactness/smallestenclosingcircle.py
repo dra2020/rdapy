@@ -7,6 +7,8 @@ from typing import NamedTuple, Iterator, Callable
 import math
 import random
 
+random.seed(42)  # for reproducibility -- 11/10/25
+
 
 class Point(NamedTuple):
     x: float

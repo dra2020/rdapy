@@ -2,7 +2,7 @@
 DATASET UTILTIES
 """
 
-from typing import Any, Dict, List, TypeAlias, Literal
+from typing import Any, Dict, List, Tuple, TypeAlias, Literal
 
 Metric: TypeAlias = str
 Aggregate: TypeAlias = List[int | float]
@@ -60,6 +60,19 @@ def dataset_key(datasets: Dict[str, str], dataset_type: str) -> str:
     dataset_key: str = datasets[dataset_type] if datasets[dataset_type] else "default"
 
     return dataset_key
+
+
+def get_dataset_keys(
+    data_metadata: Dict[str, Any],
+) -> Tuple[DatasetKey, DatasetKey, DatasetKey, List[DatasetKey], DatasetKey]:
+
+    census_dataset: DatasetKey = get_dataset(data_metadata, "census")
+    vap_dataset: DatasetKey = get_dataset(data_metadata, "vap")
+    cvap_dataset: DatasetKey = get_dataset(data_metadata, "cvap")
+    election_datasets: List[DatasetKey] = get_datasets(data_metadata, "election")
+    shapes_dataset: DatasetKey = get_dataset(data_metadata, "shapes")
+
+    return census_dataset, vap_dataset, cvap_dataset, election_datasets, shapes_dataset
 
 
 ### END ###
