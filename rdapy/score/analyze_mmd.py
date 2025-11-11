@@ -20,23 +20,12 @@ from ..base import (
     NamedAggregates,
 )
 
-from ..partisan import calc_electability_index, calc_gallagher_index
-from ..compactness import (
-    calc_cut_score,
-    calc_energy,
-)
-from ..minority import DEMOGRAPHICS
-from .categories import (
-    calc_general_category,
-    calc_partisan_category,
-    calc_minority_category,
-    calc_compactness_category,
-    calc_splitting_category,
-)
+from ..partisan import calc_electability_index, calc_gallagher_index  # MMD HACK
 from .analyze import (
-    _rate_compactness,
-    _rate_splitting,
     setup_scorecard,
+    score_general_mode,
+    score_partisan_mode,
+    score_minority_mode,
     score_compactness_mode,
     score_splitting_mode,
     update_aggregates,
@@ -129,6 +118,9 @@ def score_mmd_plan(
     data_map: Dict[str, Any],
     #
     mode: str = "all",  # Or one of "general", "partisan", "minority", "compactness", "splitting"
+    precomputed: Dict[str, Any] = dict(),
+    #
+    mmd_scoring: bool = True,  # If False, don't do MMD scoring for backwards compatibility w/ tests.
     reverse_weight_splitting: bool = False,
     #
     districts_override: Optional[int] = None,  # MMD HACK
@@ -176,64 +168,50 @@ def score_mmd_plan(
     )
     compactness_by_district: Dict[str, List[float]] = dict()
     splitting_by_district: Dict[str, List[float]] = dict()
+
+    EI_by_district: List[Dict[str, float]] = list()  # MMD HACK
     # endregion
 
-    if mode in ["all", "general"]:
-        general_metrics: Dict[str, Any] = calc_general_category(
-            aggs["census"][census_dataset],
+    if mode in ["all", "general"]:  # 'general' mode
+        score_general_mode(
+            aggs,
+            census_dataset,
             n_districts,
+            scorecard,
         )
-        deviation: float = general_metrics.pop("population_deviation")
-        scorecard["census"][census_dataset]["population_deviation"] = deviation
 
-    # if mode in ["all", "partisan"]: ...
+    # region - MMD HACK
+    # if mode in ["all", "partisan"]:  # 'partisan' mode
+    #     for election_dataset in election_datasets:
+    #         score_partisan_mode(
+    #             aggs,
+    #             election_dataset,
+    #             n_districts,
+    #             precomputed,
+    #             scorecard,
+    #         )
 
-    # if mode in ["all", "minority"]: ...
+    # if mode in ["all", "minority"]:  # 'minority' mode
+    #     score_minority_mode(
+    #         aggs,
+    #         vap_dataset,
+    #         cvap_dataset,
+    #         data_map,
+    #         n_districts,
+    #         scorecard,
+    #         mmd_scoring=mmd_scoring,
+    #     )
+    # endregion
 
-    ##### MMD ADDITIONS #####
-    # - Electability index -- by district (fractions) and for the plan (integers)
-    # - Statewide CVAP percentages
-    # - Gallagher Index
-
-    if mode in ["all"]:  # MMD HACK
-        # vap_keys: List[str] = list(get_fields(data_map, "vap", vap_dataset).keys())
-        cvap_keys: List[str] = list(get_fields(data_map, "cvap", cvap_dataset).keys())
-
-        district_magnitudes: List[int] = [district_magnitude] * n_districts
-
-        EI_by_district: List[Dict[str, float]] = calc_electability_indexes(
-            aggs["cvap"][cvap_dataset],
-            cvap_keys,
-            n_districts,
-            district_magnitudes,
-        )
-        demos: List[str] = list(EI_by_district[0].keys())
-        EI_summaries: Dict[str, int] = defaultdict(int)
-        for district in EI_by_district:
-            for demo in demos:
-                field: str = f"{demo}_EI"
-                EI_summaries[field] += int(district[demo])
-            minority_EI: float = EI_summaries.pop("minority_EI")
-            cumulative_EI: float = sum(EI_summaries.values())
-            EI_summaries["cumulative_EI"] = int(cumulative_EI)
-            EI_summaries["coalition_EI"] = int(minority_EI)
-
-        Sf_array: List[float] = [s / n_districts for s in EI_summaries.values()][
-            :-1
-        ]  # Exclude all minorities together
-        statewide_cvap: Dict[str, float] = statewide_demo_percentages(
-            aggs["cvap"][cvap_dataset], cvap_keys
-        )
-        Vf_array: List[float] = list(
-            statewide_demo_percentages(aggs["cvap"][cvap_dataset], cvap_keys).values()
-        )
-        GI: float = calc_gallagher_index(Vf_array, Sf_array)
-
-        scorecard["cvap"][cvap_dataset]["GI"] = GI
-        scorecard["cvap"][cvap_dataset].update(EI_summaries)
-        scorecard["cvap"][cvap_dataset].update(statewide_cvap)
-
-    ##### END MMD ADDITIONS #####
+    score_mmd_mode(
+        aggs,
+        n_districts,
+        district_magnitude,
+        cvap_dataset,
+        data_map,
+        scorecard,
+        EI_by_district,
+    )  # 'mmd' mode - MMD HACK
 
     if mode in ["all", "compactness"]:  # 'compactness' mode
         score_compactness_mode(
@@ -277,6 +255,64 @@ def score_mmd_plan(
     trim_scores(scorecard)
 
     return scorecard, new_aggs
+
+
+### HELPERS ###
+
+
+def score_mmd_mode(
+    aggs: Aggregates,
+    n_districts: int,
+    district_magnitude: int,
+    cvap_dataset: DatasetKey,
+    data_map: Dict[str, Any],
+    scorecard: Dict[str, Any],  # NOTE - updated
+    EI_by_district: List[Dict[str, float]],  # NOTE - updated
+):
+    """
+    Calulate MMD-specific scoring metrics.
+    - Electability index -- by district (fractions) and for the plan (integers)
+    - Statewide CVAP percentages
+    - Gallagher Index
+    """
+
+    cvap_keys: List[str] = list(get_fields(data_map, "cvap", cvap_dataset).keys())
+
+    district_magnitudes: List[int] = [district_magnitude] * n_districts
+
+    by_district: List[Dict[str, float]] = calc_electability_indexes(
+        aggs["cvap"][cvap_dataset],
+        cvap_keys,
+        n_districts,
+        district_magnitudes,
+    )
+    demos: List[str] = list(by_district[0].keys())
+    EI_summaries: Dict[str, int] = defaultdict(int)
+    for district in by_district:
+        for demo in demos:
+            field: str = f"{demo}_EI"
+            EI_summaries[field] += int(district[demo])
+        minority_EI: float = EI_summaries.pop("minority_EI")
+        cumulative_EI: float = sum(EI_summaries.values())
+        EI_summaries["cumulative_EI"] = int(cumulative_EI)
+        EI_summaries["coalition_EI"] = int(minority_EI)
+
+    Sf_array: List[float] = [s / n_districts for s in EI_summaries.values()][
+        :-1
+    ]  # Exclude all minorities together
+    statewide_cvap: Dict[str, float] = statewide_demo_percentages(
+        aggs["cvap"][cvap_dataset], cvap_keys
+    )
+    Vf_array: List[float] = list(
+        statewide_demo_percentages(aggs["cvap"][cvap_dataset], cvap_keys).values()
+    )
+    GI: float = calc_gallagher_index(Vf_array, Sf_array)
+
+    scorecard["cvap"][cvap_dataset]["GI"] = GI
+    scorecard["cvap"][cvap_dataset].update(EI_summaries)
+    scorecard["cvap"][cvap_dataset].update(statewide_cvap)
+
+    EI_by_district.extend(by_district)
 
 
 def calc_electability_indexes(
