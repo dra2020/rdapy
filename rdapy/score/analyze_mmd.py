@@ -45,8 +45,8 @@ def score_mmd_plans(
     adjacency_graph: Dict[str, List[str]],
     metadata: Dict[str, Any],
     *,
-    districts_override: int,
-    district_magnitude: int,
+    districts_override: int,  # MMD HACK
+    district_magnitude: int,  # MMD HACK
 ) -> None:
     """
     Read plans & district aggregates as JSONL from the input stream.
@@ -83,8 +83,8 @@ def score_mmd_plans(
                     graph=adjacency_graph,
                     metadata=metadata,
                     data_map=data_map,
-                    districts_override=districts_override,
-                    district_magnitude=district_magnitude,
+                    districts_override=districts_override,  # MMD HACK
+                    district_magnitude=district_magnitude,  # MMD HACK
                 )
 
                 tagged_scores: Dict[str, Any] = {
