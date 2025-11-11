@@ -168,7 +168,7 @@ def score_plan(
     )
     # endregion
 
-    # Set up the scorecard
+    # region - Set up the scorecard & new by-district aggregates
     scorecard: Dict[str, Any] = setup_scorecard(
         census_dataset,
         vap_dataset,
@@ -177,6 +177,9 @@ def score_plan(
         shapes_dataset,
         mode,
     )
+    compactness_by_district: Dict[str, List[float]] = dict()
+    splitting_by_district: Dict[str, List[float]] = dict()
+    # endregion
 
     if mode in ["all", "general"]:  # 'general' mode
         score_general_mode(
@@ -207,42 +210,17 @@ def score_plan(
             mmd_scoring=mmd_scoring,
         )
 
-    if mode in ["all", "compactness"]:
-        compactness_by_district: Dict[str, List[float]] = calc_compactness_category(
-            aggs["shapes"][shapes_dataset], n_districts
-        )
-        compactness_metrics: Dict[str, float] = {
-            "reock": compactness_by_district["reock"][0],
-            "polsby_popper": compactness_by_district["polsby_popper"][0],
-        }
-
-        # Additional discrete compactness metrics
-        cut_score: int = calc_cut_score(assignments, graph)
-        compactness_metrics["cut_score"] = cut_score
-
-        # NOTE - Too expensive for scoring plans in bulk.
-        # if add_spanning_tree_score:
-        #     district_graphs = _split_graph_by_districts(graph, assignments)
-        #     spanning_tree_by_district: List[Dict[str, float]] = [
-        #         {"spanning_tree_score": calc_spanning_tree_score(g)}
-        #         for g in district_graphs.values()
-        #     ]
-        #     spanning_tree_score: float = sum(
-        #         d["spanning_tree_score"] for d in spanning_tree_by_district
-        #     )
-        #     compactness_metrics["spanning_tree_score"] = spanning_tree_score
-
-        # Population compactness
-        census_dataset: DatasetKey = get_dataset(data_map, "census")
-        pop_field: str = get_fields(data_map, "census", census_dataset)["total_pop"]
-        energy: float = calc_energy(assignments, data, pop_field)  # type: ignore
-        compactness_metrics["population_compactness"] = energy
-
-        scorecard["shapes"][shapes_dataset].update(compactness_metrics)
-
-        scorecard["shapes"][shapes_dataset]["compactness"] = _rate_compactness(
-            scorecard["shapes"][shapes_dataset]["reock"],
-            scorecard["shapes"][shapes_dataset]["polsby_popper"],
+    if mode in ["all", "compactness"]:  # 'compactness' mode
+        score_compactness_mode(
+            aggs,
+            shapes_dataset,
+            n_districts,
+            assignments,
+            graph,
+            data,
+            data_map,
+            scorecard,
+            compactness_by_district,
         )
 
     if mode in ["all", "splitting"]:
@@ -446,6 +424,58 @@ def score_minority_mode(
         alt_minority_metrics["coalition_districts"],
         alt_minority_metrics["proportional_coalitions"],
     )
+
+
+def score_compactness_mode(
+    aggs: Aggregates,
+    shapes_dataset: DatasetKey,
+    n_districts: int,
+    assignments: Dict[Precinct, District],
+    graph: Dict[str, List[str]],
+    data: List[Dict[str, Any]],
+    data_map: Dict[str, Any],
+    scorecard: Dict[str, Any],  # NOTE - updated
+    compactness_by_district: Dict[str, List[float]],  # NOTE - updated
+):
+    """Score compactness mode."""
+
+    by_district: Dict[str, List[float]] = calc_compactness_category(
+        aggs["shapes"][shapes_dataset], n_districts
+    )
+    compactness_metrics: Dict[str, float] = {
+        "reock": by_district["reock"][0],
+        "polsby_popper": by_district["polsby_popper"][0],
+    }
+
+    # Additional discrete compactness metrics
+    cut_score: int = calc_cut_score(assignments, graph)
+    compactness_metrics["cut_score"] = cut_score
+
+    # NOTE - Too expensive for scoring plans in bulk.
+    # if add_spanning_tree_score:
+    #     district_graphs = _split_graph_by_districts(graph, assignments)
+    #     spanning_tree_by_district: List[Dict[str, float]] = [
+    #         {"spanning_tree_score": calc_spanning_tree_score(g)}
+    #         for g in district_graphs.values()
+    #     ]
+    #     spanning_tree_score: float = sum(
+    #         d["spanning_tree_score"] for d in spanning_tree_by_district
+    #     )
+    #     compactness_metrics["spanning_tree_score"] = spanning_tree_score
+
+    # Population compactness
+    census_dataset: DatasetKey = get_dataset(data_map, "census")
+    pop_field: str = get_fields(data_map, "census", census_dataset)["total_pop"]
+    energy: float = calc_energy(assignments, data, pop_field)  # type: ignore
+    compactness_metrics["population_compactness"] = energy
+
+    scorecard["shapes"][shapes_dataset].update(compactness_metrics)
+
+    scorecard["shapes"][shapes_dataset]["compactness"] = _rate_compactness(
+        scorecard["shapes"][shapes_dataset]["reock"],
+        scorecard["shapes"][shapes_dataset]["polsby_popper"],
+    )
+    compactness_by_district.update(by_district)
 
 
 ### RATING HELPERS ###
