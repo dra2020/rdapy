@@ -20,6 +20,7 @@ from ..base import (
     get_dataset,
     get_datasets,
     get_fields,
+    get_dataset_keys,
     DatasetKey,
     Aggregates,
     Precinct,
@@ -144,7 +145,6 @@ def score_plan(
 ) -> Tuple[Dict[str, Any], Aggregates]:
     """Score a plan."""
 
-    # Pulled 'extended' scoring out separately
     assert mode in [
         "all",
         "general",
@@ -152,41 +152,31 @@ def score_plan(
         "minority",
         "compactness",
         "splitting",
-    ]
+    ]  # Pulled 'extended' scoring out separately
 
     n_districts: int = metadata["D"]
     n_counties: int = metadata["C"]
 
-    # This assumes that the data map specifies datasets for each type ...
+    # region - Get the dataset keys
+    census_dataset: DatasetKey
+    vap_dataset: DatasetKey
+    cvap_dataset: DatasetKey
+    election_datasets: List[DatasetKey]
+    shapes_dataset: DatasetKey
+    census_dataset, vap_dataset, cvap_dataset, election_datasets, shapes_dataset = (
+        get_dataset_keys(data_map)
+    )
+    # endregion
 
-    census_dataset: DatasetKey = get_dataset(data_map, "census")
-    vap_dataset: DatasetKey = get_dataset(data_map, "vap")
-    cvap_dataset: DatasetKey = get_dataset(data_map, "cvap")
-    election_datasets: List[DatasetKey] = get_datasets(data_map, "election")
-    shapes_dataset: DatasetKey = get_dataset(data_map, "shapes")
-
-    scorecard: Dict[str, Any] = {
-        "census": {census_dataset: {}},
-        "vap": {vap_dataset: {}},
-        "cvap": {cvap_dataset: {}},
-        "election": {e: {} for e in election_datasets},
-        "shapes": {shapes_dataset: {}},
-    }
-
-    # ... but limit the scorecard to just the needed dataset types.
-
-    if mode not in ["all", "general", "splitting"]:
-        scorecard.pop("census", None)
-
-    if mode not in ["all", "minority"]:
-        scorecard.pop("vap", None)
-        scorecard.pop("cvap", None)
-
-    if mode not in ["all", "partisan"]:
-        scorecard.pop("election", None)
-
-    if mode not in ["all", "compactness"]:
-        scorecard.pop("shapes", None)
+    # Set up the scorecard
+    scorecard: Dict[str, Any] = setup_scorecard(
+        census_dataset,
+        vap_dataset,
+        cvap_dataset,
+        election_datasets,
+        shapes_dataset,
+        mode,
+    )
 
     if mode in ["all", "general"]:
         general_metrics: Dict[str, Any] = calc_general_category(
@@ -370,6 +360,45 @@ def score_plan(
                     scorecard[type_][dataset_][metric_] = round(value_, precision)
 
     return scorecard, new_aggs
+
+
+### SCORING HELPERS ###
+
+
+def setup_scorecard(
+    census_dataset: DatasetKey,
+    vap_dataset: DatasetKey,
+    cvap_dataset: DatasetKey,
+    election_datasets: List[DatasetKey],
+    shapes_dataset: DatasetKey,
+    mode: str,
+) -> Dict[str, Any]:
+    """Set up the scorecard structure."""
+
+    scorecard: Dict[str, Any] = {
+        "census": {census_dataset: {}},
+        "vap": {vap_dataset: {}},
+        "cvap": {cvap_dataset: {}},
+        "election": {e: {} for e in election_datasets},
+        "shapes": {shapes_dataset: {}},
+    }
+
+    # ... but limit the scorecard to just the needed dataset types.
+
+    if mode not in ["all", "general", "splitting"]:
+        scorecard.pop("census", None)
+
+    if mode not in ["all", "minority"]:
+        scorecard.pop("vap", None)
+        scorecard.pop("cvap", None)
+
+    if mode not in ["all", "partisan"]:
+        scorecard.pop("election", None)
+
+    if mode not in ["all", "compactness"]:
+        scorecard.pop("shapes", None)
+
+    return scorecard
 
 
 ### RATING HELPERS ###
