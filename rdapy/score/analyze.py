@@ -196,30 +196,15 @@ def score_plan(
                 scorecard,
             )
 
-    if mode in ["all", "minority"]:
-        vap_dataset: DatasetKey = get_dataset(data_map, "vap")
-        vap_keys: List[str] = list(get_fields(data_map, "vap", vap_dataset).keys())
-
-        if mmd_scoring:
-            mmd_counts: Dict[str, int] = calculate_mmd_simple(
-                aggs["cvap"][cvap_dataset]
-            )
-            scorecard["cvap"][cvap_dataset].update(mmd_counts)
-
-        # Revised minority ratings that don't click Black VAP % below 37%
-
-        alt_minority_metrics: Dict[str, float] = (
-            calc_minority_category(  # Was: calc_alt_minority_metrics(
-                aggs["vap"][vap_dataset], n_districts, vap_keys
-            )
-        )
-        scorecard["vap"][vap_dataset].update(alt_minority_metrics)
-
-        scorecard["vap"][vap_dataset]["minority"] = _rate_minority_opportunity(
-            alt_minority_metrics["opportunity_districts"],
-            alt_minority_metrics["proportional_opportunities"],
-            alt_minority_metrics["coalition_districts"],
-            alt_minority_metrics["proportional_coalitions"],
+    if mode in ["all", "minority"]:  # 'minority' mode
+        score_minority_mode(
+            aggs,
+            vap_dataset,
+            cvap_dataset,
+            data_map,
+            n_districts,
+            scorecard,
+            mmd_scoring=mmd_scoring,
         )
 
     if mode in ["all", "compactness"]:
@@ -425,6 +410,41 @@ def score_partisan_mode(
     )
     scorecard["election"][election_dataset]["competitiveness"] = _rate_competitiveness(
         scorecard["election"][election_dataset]["competitive_districts"] / n_districts
+    )
+
+
+def score_minority_mode(
+    aggs: Aggregates,
+    vap_dataset: DatasetKey,
+    cvap_dataset: DatasetKey,
+    data_map: Dict[str, Any],
+    n_districts: int,
+    scorecard: Dict[str, Any],
+    *,
+    mmd_scoring: bool = True,  # NOTE - This is majority-minority district (MMD) scoring!
+):
+    """Score minority mode."""
+
+    vap_keys: List[str] = list(get_fields(data_map, "vap", vap_dataset).keys())
+
+    if mmd_scoring:
+        mmd_counts: Dict[str, int] = calculate_mmd_simple(aggs["cvap"][cvap_dataset])
+        scorecard["cvap"][cvap_dataset].update(mmd_counts)
+
+    # Revised minority ratings that don't clip Black VAP % below 37%
+
+    alt_minority_metrics: Dict[str, float] = (
+        calc_minority_category(  # Was: calc_alt_minority_metrics(
+            aggs["vap"][vap_dataset], n_districts, vap_keys
+        )
+    )
+    scorecard["vap"][vap_dataset].update(alt_minority_metrics)
+
+    scorecard["vap"][vap_dataset]["minority"] = _rate_minority_opportunity(
+        alt_minority_metrics["opportunity_districts"],
+        alt_minority_metrics["proportional_opportunities"],
+        alt_minority_metrics["coalition_districts"],
+        alt_minority_metrics["proportional_coalitions"],
     )
 
 
