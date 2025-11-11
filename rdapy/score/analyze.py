@@ -178,13 +178,13 @@ def score_plan(
         mode,
     )
 
-    if mode in ["all", "general"]:
-        general_metrics: Dict[str, Any] = calc_general_category(
-            aggs["census"][census_dataset],
+    if mode in ["all", "general"]:  # Score general metrics
+        score_general_mode(
+            aggs,
+            census_dataset,
             n_districts,
+            scorecard,
         )
-        deviation: float = general_metrics.pop("population_deviation")
-        scorecard["census"][census_dataset]["population_deviation"] = deviation
 
     if mode in ["all", "partisan"]:
         for election_dataset in election_datasets:
@@ -399,6 +399,22 @@ def setup_scorecard(
         scorecard.pop("shapes", None)
 
     return scorecard
+
+
+def score_general_mode(
+    aggs: Aggregates,
+    census_dataset: DatasetKey,
+    n_districts: int,
+    scorecard: Dict[str, Any],  # NOTE - updated
+) -> None:
+    """Score the general mode."""
+
+    general_metrics: Dict[str, Any] = calc_general_category(
+        aggs["census"][census_dataset],
+        n_districts,
+    )
+    deviation: float = general_metrics.pop("population_deviation")
+    scorecard["census"][census_dataset]["population_deviation"] = deviation
 
 
 ### RATING HELPERS ###
