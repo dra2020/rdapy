@@ -15,7 +15,7 @@ usage() {
 
 # Initialize variables
 STATE=""
-OUTPUT=""
+OUTPUT="" # OUTPUT
 VERSION=""
 
 # Parse command line arguments

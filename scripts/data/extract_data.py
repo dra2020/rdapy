@@ -144,7 +144,7 @@ def parse_args() -> Namespace:
         "--data",
         help="The output JSON file",
         type=str,
-    )
+    )  # OUTPUT
 
     parser.add_argument(
         "-v", "--verbose", dest="verbose", action="store_true", help="Verbose mode"

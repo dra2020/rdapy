@@ -10,7 +10,7 @@ usage() {
 
 # Initialize variables
 INPUT_FILE=""
-OUTPUT_DIR=""
+OUTPUT_DIR="" # OUTPUT
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do

@@ -118,7 +118,7 @@ def parse_arguments():
         "--output",
         type=str,
         help="The output stream -- metadata or plan + scores + by-district aggregates",
-    )
+    )  # OUTPUT
 
     parser.add_argument(
         "-r",

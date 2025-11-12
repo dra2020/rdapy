@@ -162,7 +162,7 @@ def parse_args() -> Namespace:
         dest="data_map",
         help="The output JSON data map file",
         type=str,
-    )
+    )  # OUTPUT
     parser.add_argument(
         "--census",
         help="The census dataset to use",

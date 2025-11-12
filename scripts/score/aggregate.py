@@ -102,7 +102,7 @@ def parse_arguments():
         "--output",
         type=str,
         help="The output stream -- metadata or plan + by-district aggregates",
-    )
+    )  # OUTPUT
 
     # For MMD experiments
     parser.add_argument(
