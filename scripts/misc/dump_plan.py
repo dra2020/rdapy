@@ -83,19 +83,19 @@ def parse_arguments():
     parser.add_argument(
         "--plans",
         type=str,
-        # required=True,
+        required=True,
         help="Path to plans file (JSONL)",
     )
     parser.add_argument(
         "--plan",
         type=str,
-        # required=True,
+        required=True,
         help="The name of the plan to dump",
     )
     parser.add_argument(
         "--csv",
         type=str,
-        # required=True,
+        required=True,
         help="Path to output CSV file",
     )
 
