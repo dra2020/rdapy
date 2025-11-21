@@ -63,6 +63,9 @@ def main() -> None:
         implied_elections = [e for e in datasets.keys() if e.startswith("E_")]
     else:  # Grab the specified elections & their constituent elections
         for e in input_elections:
+            if e not in datasets:
+                print(f"Warning: Specified election dataset {e} not found in geojson.")
+                continue
             if "members" in datasets[e] and args.expand_composites:
                 for k, v in datasets[e]["members"].items():
                     if v in datasets:
