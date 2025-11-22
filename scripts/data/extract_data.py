@@ -83,7 +83,6 @@ def main() -> None:
     ]
 
     with smart_write(args.data) as output_stream:
-        # Write the scores metadata record to the by-district file
         metadata_record: Dict[str, Any] = {
             "_tag_": "metadata",
             "properties": data_map,
