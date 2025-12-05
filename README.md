@@ -26,7 +26,7 @@ The latest version of the package is 3.2.0.
 
 Then in your code, either `import rdapy` or `from rdapy import ...`.
 
-## Installing Command-Line Interface
+## Installing the Command-Line Interface
 
 Before installing the command-line interface (CLI),
 make sure you have the prerequisites installed.
