@@ -159,9 +159,6 @@ from .partisan import (
     unpack_neighborhood,
     calc_geographic_baseline,
     eval_partisan_lean,
-    #
-    calc_gallagher_index,
-    calc_electability_index,
 )
 
 from .rate import (
@@ -184,8 +181,6 @@ from .aggregate import (
 from .score import (
     score_plan,
     score_plans,
-    score_mmd_plan,
-    score_mmd_plans,
     #
     calc_general_category,
     calc_partisan_category,
