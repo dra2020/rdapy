@@ -47,7 +47,9 @@ def main():
     adjacency_graph: Dict[str, List[str]] = load_graph(args.graph)
 
     geoids: List[str] = sorted_geoids(input_data)
-    metadata: Dict[str, Any] = collect_metadata(args.state, args.plan_type, geoids)
+    metadata: Dict[str, Any] = collect_metadata(
+        args.state, args.plan_type, geoids, districts_override=args.districts_override
+    )
 
     precomputed: Dict[str, Any] = dict()
     if args.precomputed is not None:
@@ -120,12 +122,21 @@ def parse_arguments():
         help="The output stream -- metadata or plan + scores + by-district aggregates",
     )  # OUTPUT
 
+    # For reverse weight splitting experiments
     parser.add_argument(
         "-r",
         "--reverse-weight-splitting",
         dest="reverse_weight_splitting",
         action="store_true",
         help="Enable reverse weight splitting",
+    )
+
+    # For MMD experiments
+    parser.add_argument(
+        "--districts-override",
+        type=int,
+        dest="districts_override",
+        help="Number of districts to use for aggregation (overrides metadata)",
     )
 
     args: Namespace = parser.parse_args()
