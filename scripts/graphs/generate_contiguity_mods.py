@@ -13,7 +13,7 @@ $ scripts/graphs/generate_contiguity_mods.py \
 import argparse
 from argparse import ArgumentParser, Namespace
 
-from typing import Any, List, Dict
+from typing import Any, List, Dict, Tuple
 
 import os, sys, json
 
@@ -56,12 +56,14 @@ def main() -> None:
 
     # Graph is not fully connected.
 
-    connections = generate_contiguity_mods(geoids, adjacency_graph, locations_by_geoid)
+    connections: List[Tuple[str, str]] = generate_contiguity_mods(
+        geoids, adjacency_graph, locations_by_geoid
+    )
 
     # Generate these edges as additional connections ("mods")
 
-    for _, _, data in connections:
-        print(f"+,{data["geoid1"]},{data["geoid2"]}")
+    for g1, g2 in connections:
+        print(f"+,{g1},{g2}")
 
     pass
 
