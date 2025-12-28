@@ -8,6 +8,9 @@ $ scripts/graphs/generate_contiguity_mods.py \
 --locations /path/to/precinct-locations.json \
 > /path/to/contiguity_mods.csv
 
+NOTE - The 'better-island-contiguity' branch was an experiment to improve mainland/island connectivity.
+For the California Channel Islands--where a problem had been reported--the generated mods were the same as before.
+
 """
 
 import argparse
@@ -57,7 +60,7 @@ def main() -> None:
     # Graph is not fully connected.
 
     connections: List[Tuple[str, str]] = generate_contiguity_mods(
-        geoids, adjacency_graph, locations_by_geoid
+        geoids, adjacency_graph, locations_by_geoid, args.verbose
     )
 
     # Generate these edges as additional connections ("mods")
