@@ -166,4 +166,4 @@ Result: True (not a bottleneck - E is not a cluster)
 ## References
 
 - Tarjan, R. E. (1974). "A note on finding the bridges of a graph". *Information Processing Letters*.
-- Applications in computational redistricting and gerrymandering detection
+

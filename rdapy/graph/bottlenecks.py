@@ -1,9 +1,9 @@
 """
-Bottleneck detection for connected geographic units.
+BOTTLENECK DETECTION
 
-A bottleneck is a chain of degree-2 nodes connecting two clusters of geographies,
-resembling a dumbbell structure where the narrow connection creates a critical
-structural weakness in the district.
+A bottleneck is a chain of degree-2 nodes connecting or "bridging"
+between two clusters of geographies (precincts, blocks) and
+resembling a dumbbell or hourglass structure.
 """
 
 from typing import List, Dict, Any
@@ -11,20 +11,9 @@ from collections import defaultdict
 
 from .connected import is_connected
 
-"""
-Bottleneck detection for connected geographic units.
-
-A bottleneck is a chain of degree-2 nodes connecting two clusters of geographies,
-resembling a dumbbell structure where the narrow connection creates a critical
-structural weakness in the district.
-"""
-
-from typing import List, Dict, Any
-from collections import defaultdict
-
 
 def not_bottlenecked(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
-    r"""
+    """
     Returns True if the geographies are NOT bottlenecked (or are not connected).
     Returns False if they ARE connected AND a bottleneck exists.
     
@@ -40,12 +29,13 @@ def not_bottlenecked(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
         False if a bottleneck exists in a connected subgraph
         
     Algorithm:
-        1. Check connectivity (not connected → return True)
-        2. Build induced subgraph and classify nodes by degree
-        3. Contract all degree-2 chains into single skeleton edges
-        4. Use Tarjan's bridge algorithm to find bridges in skeleton
-        5. For each chain bridge, check if both components have 2+ nodes
-        6. Return False only if a chain bridge separates two true clusters
+        1. Check the trivial cases (empty or single-node → no bottleneck)
+        2. Check connectivity (not connected → return True)
+        3. Build induced subgraph and classify nodes by degree
+        4. Contract all degree-2 chains into single skeleton edges
+        5. Use Tarjan's bridge algorithm to find bridges in skeleton
+        6. For each chain bridge, check if both components have 2+ nodes
+        7. Return False only if a chain bridge separates two true clusters
     """
 
     # Handle default case of empty ids or single node (trivially not bottlenecked)
