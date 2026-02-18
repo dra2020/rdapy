@@ -1,29 +1,24 @@
 # Bottleneck Detection in Electoral Districts
 
-## Overview
+"Bridging" is a technique used in drawing redistricting maps that connects disparate geographic areas through narrow corridors.
+It can be used in real-world maps, but such egregious district engineering would typically not pass muster, e.g., wrto compactness.
+More commonly, however, it is used in maps in DRA to game the Notable Maps selection criteria which don't exclude such maps.
 
-A **bottleneck** in an electoral district is a structural weakness where two clusters of geographic units (precincts, census blocks, etc.) are connected only through a narrow chain of intermediate units. This creates a "dumbbell" topology that can indicate gerrymandering or poor district design.
+These bridges form bottlenecks in the district, and being able to detect bottlenecks would allow us to exclude such maps from
+consideration as Notable Maps.
 
 ## Definition
 
 A bottleneck exists when:
-1. The district is **connected** (all units form a single contiguous region)
+1. The district is **connected** (all units form a single contiguous region); and
 2. There exists a **chain** of one or more geographic units where:
    - Each interior unit in the chain has **exactly degree 2** (connected to exactly two neighbors)
    - The chain's endpoints connect to separate **clusters** of units (each cluster has 2 or more units)
    - Removing the chain would **disconnect** the district into two components
 
-This resembles a dumbbell: ●●━━━●●
+This resembles a dumbbell or hourglass shape.
 
 Note: A pendant arm (chain leading to a single isolated unit) or a linear chain connecting two isolated units are NOT bottlenecks, since bottlenecks require substantial clusters (2+ nodes) on both sides.
-
-## Why It Matters
-
-In redistricting analysis, bottlenecks can indicate:
-- **Gerrymandering**: Districts artificially connected through narrow corridors to include/exclude specific populations
-- **Poor compactness**: Districts with irregular shapes that stretch across geography
-- **Instability**: Districts vulnerable to small boundary changes
-- **Community splitting**: Natural communities separated by tenuous connections
 
 ## The Algorithm
 
