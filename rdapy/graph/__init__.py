@@ -2,5 +2,6 @@
 
 from .connected import *
 from .embedded import *
+from .bottlenecks import *
 
 name = "graph"
