@@ -7,9 +7,12 @@ resembling a dumbbell or hourglass structure.
 """
 
 from typing import List, Dict, Any
-from collections import defaultdict
+from collections import defaultdict, deque
 
 from .connected import is_connected
+
+# Minimum size for a component to be considered a "cluster"
+MIN_CLUSTER_SIZE = 2
 
 
 def not_bottlenecked(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
@@ -22,15 +25,17 @@ def not_bottlenecked(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
     
     Args:
         ids: List of geographic unit identifiers (e.g., precinct or block IDs)
-        graph: Adjacency list representing geographic neighbors
+        graph: Adjacency list representing geographic neighbors. Nodes in ids that
+               are not present in graph or have no neighbors are treated as isolated
+               (degree 0) and handled gracefully.
         
     Returns:
         True if no bottleneck exists or if the subgraph is disconnected
         False if a bottleneck exists in a connected subgraph
         
     Algorithm:
-        1. Check the trivial cases (empty or single-node → no bottleneck)
-        2. Check connectivity (not connected → return True)
+        1. Check the trivial cases (empty or single-node -> no bottleneck)
+        2. Check connectivity (not connected -> return True)
         3. Build induced subgraph and classify nodes by degree
         4. Contract all degree-2 chains into single skeleton edges
         5. Use Tarjan's bridge algorithm to find bridges in skeleton
@@ -42,7 +47,7 @@ def not_bottlenecked(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
     if len(ids) <= 1:
         return True
     
-    # Not connected → not bottlenecked per specification
+    # Not connected -> not bottlenecked per specification
     if not is_connected(ids, graph):
         return True
 
@@ -54,10 +59,10 @@ def not_bottlenecked(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
     }
     degree = {node: len(nbs) for node, nbs in induced.items()}
 
-    # Junction nodes (degree ≠ 2) anchor the skeleton graph
+    # Junction nodes (degree != 2) anchor the skeleton graph
     junction = {n for n, d in degree.items() if d != 2}
 
-    # Pure cycle (all degree 2) → no bottleneck possible
+    # Pure cycle (all degree 2) -> no bottleneck possible
     if not junction:
         return True
 
@@ -65,7 +70,7 @@ def not_bottlenecked(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
     # Build skeleton graph: contract degree-2 chains into single edges.
     # Each edge gets a unique ID to handle parallel edges correctly.
     # ------------------------------------------------------------------
-    skel_adj: Dict[Any, List[tuple]] = defaultdict(list)  # node → [(neighbor, edge_id)]
+    skel_adj: Dict[Any, List[tuple]] = defaultdict(list)  # node -> [(neighbor, edge_id)]
     edge_is_chain: Dict[int, bool] = {}
     eid = 0
 
@@ -116,17 +121,32 @@ def not_bottlenecked(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
                 # Skip the exact tree edge we arrived on
                 continue
             if v in disc:
-                # Back edge → update low-link
+                # Back edge -> update low-link
                 low[u] = min(low[u], disc[v])
             else:
-                # Tree edge → recurse
+                # Tree edge -> recurse
                 dfs(v, e)
                 low[u] = min(low[u], low[v])
                 if low[v] > disc[u] and edge_is_chain[e]:
-                    # Bridge AND it's a degree-2 chain → candidate bottleneck
+                    # Bridge AND it's a degree-2 chain -> candidate bottleneck
                     chain_bridges.append((u, v))
 
     dfs(next(iter(junction)), -1)
+
+    # Helper function to count component size
+    def count_component_size(start: Any, graph: Dict[Any, List[Any]]) -> int:
+        """Count nodes reachable from start in the given graph."""
+        visited = set()
+        stack = [start]
+        while stack:
+            node = stack.pop()
+            if node in visited:
+                continue
+            visited.add(node)
+            for neighbor in graph.get(node, []):
+                if neighbor not in visited:
+                    stack.append(neighbor)
+        return len(visited)
 
     # Check each chain bridge to see if it's a true bottleneck
     # A pendant arm (single node on one side) is NOT a bottleneck
@@ -137,11 +157,11 @@ def not_bottlenecked(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
         
         # BFS from u to v in induced graph, collecting degree-2 nodes
         visited = {u}
-        queue = [u]
+        queue = deque([u])
         parent = {u: None}
         
         while queue:
-            node = queue.pop(0)
+            node = queue.popleft()
             if node == v:
                 break
             for neighbor in induced[node]:
@@ -149,6 +169,11 @@ def not_bottlenecked(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
                     visited.add(neighbor)
                     parent[neighbor] = node
                     queue.append(neighbor)
+        
+        # Check if path was found (defensive check)
+        if v not in parent:
+            # This shouldn't happen if skeleton is correct, but handle gracefully
+            continue
         
         # Reconstruct path from u to v
         path = []
@@ -172,35 +197,11 @@ def not_bottlenecked(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
             if node not in chain_to_remove
         }
         
-        # BFS from u in temp_graph
-        visited_u = set()
-        stack = [u]
-        while stack:
-            node = stack.pop()
-            if node in visited_u:
-                continue
-            visited_u.add(node)
-            for neighbor in temp_graph.get(node, []):
-                if neighbor not in visited_u:
-                    stack.append(neighbor)
-        
-        # BFS from v in temp_graph
-        visited_v = set()
-        stack = [v]
-        while stack:
-            node = stack.pop()
-            if node in visited_v:
-                continue
-            visited_v.add(node)
-            for neighbor in temp_graph.get(node, []):
-                if neighbor not in visited_v:
-                    stack.append(neighbor)
-        
-        size_u = len(visited_u)
-        size_v = len(visited_v)
+        size_u = count_component_size(u, temp_graph)
+        size_v = count_component_size(v, temp_graph)
         
         # Bottleneck ONLY if both components are clusters (2+ nodes)
-        if size_u >= 2 and size_v >= 2:
+        if size_u >= MIN_CLUSTER_SIZE and size_v >= MIN_CLUSTER_SIZE:
             return False  # Found a genuine bottleneck
 
     return True  # No genuine bottlenecks found
