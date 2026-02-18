@@ -101,7 +101,7 @@ from .graph import (
     connected_subsets,
     generate_contiguity_mods,
     Connection,
-    not_bottlenecked,
+    is_bottlenecked,
 )
 
 from .minority import (

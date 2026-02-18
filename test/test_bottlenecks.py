@@ -8,7 +8,7 @@ Tests cover:
 - Edge cases (empty, single node, two nodes)
 """
 
-from rdapy import not_bottlenecked
+from rdapy import is_bottlenecked
 
 
 class TestBottleneckDetection:
@@ -29,7 +29,7 @@ class TestBottleneckDetection:
             'F': ['D', 'E'],
         }
         ids = ['A', 'B', 'C', 'D', 'E', 'F']
-        assert not_bottlenecked(ids, graph) == True  # Not connected → True
+        assert is_bottlenecked(ids, graph) == False  # Not connected → True
 
 
     def test_disconnected_isolated_node(self) -> None:
@@ -47,7 +47,7 @@ class TestBottleneckDetection:
             'D': [],
         }
         ids = ['A', 'B', 'C', 'D']
-        assert not_bottlenecked(ids, graph) == True  # Not connected → True
+        assert is_bottlenecked(ids, graph) == False  # Not connected → False
 
 
     def test_simple_triangle_no_bottleneck(self) -> None:
@@ -64,7 +64,7 @@ class TestBottleneckDetection:
             'C': ['A', 'B'],
         }
         ids = ['A', 'B', 'C']
-        assert not_bottlenecked(ids, graph) == True
+        assert is_bottlenecked(ids, graph) == False
 
 
     def test_pure_cycle_no_bottleneck(self) -> None:
@@ -82,7 +82,7 @@ class TestBottleneckDetection:
             'D': ['C', 'A'],
         }
         ids = ['A', 'B', 'C', 'D']
-        assert not_bottlenecked(ids, graph) == True
+        assert is_bottlenecked(ids, graph) == False
 
 
     def test_complete_graph_no_bottleneck(self) -> None:
@@ -103,7 +103,7 @@ class TestBottleneckDetection:
             'D': ['C', 'A', 'B'],
         }
         ids = ['A', 'B', 'C', 'D']
-        assert not_bottlenecked(ids, graph) == True
+        assert is_bottlenecked(ids, graph) == False
 
 
     def test_classic_dumbbell_bottleneck(self) -> None:
@@ -124,7 +124,7 @@ class TestBottleneckDetection:
             'G': ['E', 'F'],
         }
         ids = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-        assert not_bottlenecked(ids, graph) == False  # Has bottleneck
+        assert is_bottlenecked(ids, graph) == True  # Has bottleneck
 
 
     def test_long_chain_bottleneck(self) -> None:
@@ -147,7 +147,7 @@ class TestBottleneckDetection:
             'G': ['E', 'F'],
         }
         ids = ['A', 'B', 'C', '1', '2', '3', 'E', 'F', 'G']
-        assert not_bottlenecked(ids, graph) == False  # Has bottleneck
+        assert is_bottlenecked(ids, graph) == True  # Has bottleneck
 
 
     def test_direct_junction_bridge_no_bottleneck(self) -> None:
@@ -169,7 +169,7 @@ class TestBottleneckDetection:
             'G': ['E', 'F', 'C'],
         }
         ids = ['A', 'B', 'C', 'E', 'F', 'G']
-        assert not_bottlenecked(ids, graph) == True  # No degree-2 chain → not a bottleneck
+        assert is_bottlenecked(ids, graph) == False  # No degree-2 chain → not a bottleneck
 
 
     def test_parallel_chains_no_bottleneck(self) -> None:
@@ -198,7 +198,7 @@ class TestBottleneckDetection:
             'G': ['E', 'F', '2', '4'],
         }
         ids = ['A', 'B', 'C', '1', '2', '3', '4', 'E', 'F', 'G']
-        assert not_bottlenecked(ids, graph) == True  # No bottleneck (multiple paths)
+        assert is_bottlenecked(ids, graph) == False  # No bottleneck (multiple paths)
 
 
     def test_y_shape_no_bottleneck(self) -> None:
@@ -218,7 +218,7 @@ class TestBottleneckDetection:
             'D': ['B'],
         }
         ids = ['A', 'B', 'C', 'D']
-        assert not_bottlenecked(ids, graph) == True
+        assert is_bottlenecked(ids, graph) == False
 
 
     def test_pendant_chain_no_bottleneck(self) -> None:
@@ -241,7 +241,7 @@ class TestBottleneckDetection:
             'E': ['D'],
         }
         ids = ['A', 'B', 'C', 'D', 'E']
-        assert not_bottlenecked(ids, graph) == True
+        assert is_bottlenecked(ids, graph) == False
 
 
     def test_complex_dumbbell_bottleneck(self) -> None:
@@ -266,7 +266,7 @@ class TestBottleneckDetection:
             'K': ['H', 'I', 'J'],
         }
         ids = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K']
-        assert not_bottlenecked(ids, graph) == False  # Has bottleneck at F
+        assert is_bottlenecked(ids, graph) == True  # Has bottleneck at F
 
 
     def test_single_node(self) -> None:
@@ -277,7 +277,7 @@ class TestBottleneckDetection:
         """
         graph = {'A': []}
         ids = ['A']
-        assert not_bottlenecked(ids, graph) == True
+        assert is_bottlenecked(ids, graph) == False
 
 
     def test_two_nodes_connected(self) -> None:
@@ -291,7 +291,7 @@ class TestBottleneckDetection:
             'B': ['A'],
         }
         ids = ['A', 'B']
-        assert not_bottlenecked(ids, graph) == True
+        assert is_bottlenecked(ids, graph) == False
 
 
     def test_linear_chain_not_bottleneck(self) -> None:
@@ -309,14 +309,14 @@ class TestBottleneckDetection:
             'E': ['D'],
         }
         ids = ['A', 'B', 'C', 'D', 'E']
-        assert not_bottlenecked(ids, graph) == True
+        assert is_bottlenecked(ids, graph) == False
 
 
     def test_empty_ids(self) -> None:
         r"""Empty ids list"""
         graph = {'A': ['B'], 'B': ['A']}
         ids = []
-        assert not_bottlenecked(ids, graph) == True
+        assert is_bottlenecked(ids, graph) == False
 
 
     def test_star_no_bottleneck(self) -> None:
@@ -337,7 +337,7 @@ class TestBottleneckDetection:
             'E': ['A'],
         }
         ids = ['A', 'B', 'C', 'D', 'E']
-        assert not_bottlenecked(ids, graph) == True
+        assert is_bottlenecked(ids, graph) == False
 
 
     def test_hourglass_bottleneck(self) -> None:
@@ -364,6 +364,6 @@ class TestBottleneckDetection:
             'G': ['E', 'F'],
         }
         ids = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-        assert not_bottlenecked(ids, graph) == False  # Bottleneck at D
+        assert is_bottlenecked(ids, graph) == True  # Bottleneck at D
 
 ### END ###

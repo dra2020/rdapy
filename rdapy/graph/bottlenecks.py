@@ -14,11 +14,10 @@ from .connected import is_connected
 # Minimum size for a component to be considered a "cluster"
 MIN_CLUSTER_SIZE = 2
 
-
-def not_bottlenecked(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
+def is_bottlenecked(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
     """
-    Returns True if the geographies are NOT bottlenecked (or are not connected).
-    Returns False if they ARE connected AND a bottleneck exists.
+    Returns True if the geographies ARE bottlenecked.
+    Returns False if they are NOT bottlenecked (or are not connected).
     
     A bottleneck is defined as a chain of one or more degree-2 nodes whose removal
     would disconnect the subgraph into two clusters (each with 2+ nodes).
@@ -30,26 +29,26 @@ def not_bottlenecked(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
                (degree 0) and handled gracefully.
         
     Returns:
-        True if no bottleneck exists or if the subgraph is disconnected
-        False if a bottleneck exists in a connected subgraph
+        True if a bottleneck exists in a connected subgraph
+        False if no bottleneck exists or if the subgraph is disconnected
         
     Algorithm:
         1. Check the trivial cases (empty or single-node -> no bottleneck)
-        2. Check connectivity (not connected -> return True)
+        2. Check connectivity (not connected -> return False)
         3. Build induced subgraph and classify nodes by degree
         4. Contract all degree-2 chains into single skeleton edges
         5. Use Tarjan's bridge algorithm to find bridges in skeleton
         6. For each chain bridge, check if both components have 2+ nodes
-        7. Return False only if a chain bridge separates two true clusters
+        7. Return True only if a chain bridge separates two true clusters
     """
 
     # Handle default case of empty ids or single node (trivially not bottlenecked)
     if len(ids) <= 1:
-        return True
+        return False
     
     # Not connected -> not bottlenecked per specification
     if not is_connected(ids, graph):
-        return True
+        return False
 
     # Build induced subgraph restricted to ids
     id_set = set(ids)
@@ -64,7 +63,7 @@ def not_bottlenecked(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
 
     # Pure cycle (all degree 2) -> no bottleneck possible
     if not junction:
-        return True
+        return False
 
     # ------------------------------------------------------------------
     # Build skeleton graph: contract degree-2 chains into single edges.
@@ -202,8 +201,8 @@ def not_bottlenecked(ids: List[Any], graph: Dict[str, List[str]]) -> bool:
         
         # Bottleneck ONLY if both components are clusters (2+ nodes)
         if size_u >= MIN_CLUSTER_SIZE and size_v >= MIN_CLUSTER_SIZE:
-            return False  # Found a genuine bottleneck
+            return True  # Found a genuine bottleneck
 
-    return True  # No genuine bottlenecks found
+    return False  # No genuine bottlenecks found
 
 ### END ###
