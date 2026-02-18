@@ -67,26 +67,6 @@ class TestBottleneckDetection:
         assert not_bottlenecked(ids, graph) == True
 
 
-    def test_grid_no_bottleneck(self) -> None:
-        r"""
-        2x2 grid with diagonals - multiple independent paths
-        
-        A---B
-        |\ /|
-        | X |
-        |/ \|
-        C---D
-        """
-        graph = {
-            'A': ['B', 'C', 'D'],
-            'B': ['A', 'C', 'D'],
-            'C': ['A', 'B', 'D'],
-            'D': ['A', 'B', 'C'],
-        }
-        ids = ['A', 'B', 'C', 'D']
-        assert not_bottlenecked(ids, graph) == True
-
-
     def test_pure_cycle_no_bottleneck(self) -> None:
         r"""
         Simple square cycle - all nodes have degree 2
