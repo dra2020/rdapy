@@ -37,8 +37,8 @@ class TestBottleneckDetection:
         Triangle with isolated node
         
         A---B    D
-        \ /
-        C
+         \ /
+          C
         """
         graph = {
             'A': ['B', 'C'],
@@ -55,8 +55,8 @@ class TestBottleneckDetection:
         Simple triangle - no degree-2 nodes, fully connected
         
         A---B
-        \ /
-        C
+         \ /
+          C
         """
         graph = {
             'A': ['B', 'C'],
@@ -131,8 +131,8 @@ class TestBottleneckDetection:
         Classic dumbbell - two triangles connected by single degree-2 node
         
         A---B           E---F
-        \ /             \ /
-        C---D (d=2)---G
+         \ /             \ /
+          C---D (d=2)  ---G
         """
         graph = {
             'A': ['B', 'C'],
@@ -152,8 +152,8 @@ class TestBottleneckDetection:
         Two triangles connected by long chain of degree-2 nodes
         
         A---B               E---F
-        \ /                 \ /
-        C---1---2---3 (d=2)---G
+         \ /                 \ /
+          C--1---2---3 (d=2)--G
         """
         graph = {
             'A': ['B', 'C'],
@@ -175,8 +175,8 @@ class TestBottleneckDetection:
         Two triangles connected by junction-to-junction edge (no degree-2 chain)
         
         A---B       E---F
-        \ /         \ /
-        C---------G
+         \ /         \ /
+          C-----------G
         
         C and G both have degree 3, direct connection has no degree-2 nodes
         """
@@ -197,9 +197,9 @@ class TestBottleneckDetection:
         Two clusters connected by TWO independent degree-2 chains
         
         A---B       E---F
-        \ /         \ /
-        C---1---2---G
-        \         /
+         \ /         \ /
+          C---1---2---G
+           \         /
             3---4---/
         
         Chain 1: C-1-2-G (nodes 1,2 are degree-2)
@@ -228,8 +228,8 @@ class TestBottleneckDetection:
             A
             |
             B (d=3)
-        / \
-        C   D
+           / \
+          C   D
         """
         graph = {
             'A': ['B'],
@@ -269,8 +269,8 @@ class TestBottleneckDetection:
         Larger clusters connected by single degree-2 node
         
         A---B---C       G---H---I
-        \ / \ /         \ / \ /
-        D---E---F (d=2)---J---K
+         \ / \ /         \ / \ /
+          D---E--F (d=2)--J---K
         """
         graph = {
             'A': ['B', 'D'],
@@ -365,13 +365,13 @@ class TestBottleneckDetection:
         Hourglass - two triangles connected by degree-2 chain
         
         A---B
-        \ /
-        C
-        |
-        D (d=2)
-        |
-        E
-        / \
+         \ /
+          C
+          |
+          D (d=2)
+          |
+          E
+         / \
         F---G
         """
         graph = {
