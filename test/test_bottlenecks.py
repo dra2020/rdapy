@@ -17,8 +17,8 @@ class TestBottleneckDetection:
         Two separate triangles - not connected
         
         A---B       D---E
-        \ /         \ /
-        C           F
+         \ /         \ /
+          C           F
         """
         graph = {
             'A': ['B', 'C'],
@@ -132,7 +132,7 @@ class TestBottleneckDetection:
         
         A---B           E---F
          \ /             \ /
-          C---D (d=2)  ---G
+          C---D (d=2) ----G
         """
         graph = {
             'A': ['B', 'C'],
@@ -268,9 +268,9 @@ class TestBottleneckDetection:
         r"""
         Larger clusters connected by single degree-2 node
         
-        A---B---C       G---H---I
-         \ / \ /         \ / \ /
-          D---E--F (d=2)--J---K
+        A---B---C        G---H---I
+         \ / \ /          \ / \ /
+          D---E--F (d=2) --J---K
         """
         graph = {
             'A': ['B', 'D'],
