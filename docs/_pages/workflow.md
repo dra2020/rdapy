@@ -39,7 +39,7 @@ For those states, e.g., AK, CA, HI, NY, and RI in the 2020 cycle, edit and run t
 
 ## How & When to Find Precinct Neighborhoods
 
-Assuming we add Jon Eguia & Jeff Barton's new geographic advantage metric to the app,
+If we add Jon Eguia & Jeff Barton's new geographic advantage metric to the app,
 when we get a new census we need to two things to support it. 
 One is find precinct "neighborhoods" for each state and chamber combination.
 These only need to be found once per census cycle as neighborhods only depend on total population and precinct adjacency.
@@ -60,7 +60,7 @@ Moreover, because they are quite large, neighborhoods are stored in a highly com
 
 ## How & When to Precompute Geographic Baselines
 
-Once we have determined precinct neighborhoods for the census cycle, the other thing we need to do
+Once we have determined precinct neighborhoods for the census cycle, the other thing we would need to do
 is calculate geographic baselines for each state and chamber combination.
 
 ```bash
